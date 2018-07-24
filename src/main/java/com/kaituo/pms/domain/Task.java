@@ -32,6 +32,26 @@ public class Task implements Serializable {
 
     private String userName;
 
+    @Override
+    public String toString() {
+        return "Task{" +
+                "taskId=" + taskId +
+                ", taskName='" + taskName + '\'' +
+                ", taskDifficulty=" + taskDifficulty +
+                ", taskPrice=" + taskPrice +
+                ", taskAward=" + taskAward +
+                ", taskNumber=" + taskNumber +
+                ", taskTime=" + taskTime +
+                ", taskStarttime=" + taskStarttime +
+                ", taskEndtime=" + taskEndtime +
+                ", taskImage='" + taskImage + '\'' +
+                ", taskDescribe='" + taskDescribe + '\'' +
+                ", taskStatus=" + taskStatus +
+                ", userId=" + userId +
+                ", userName='" + userName + '\'' +
+                '}';
+    }
+
     public Integer getTaskId() {
         return taskId;
     }
