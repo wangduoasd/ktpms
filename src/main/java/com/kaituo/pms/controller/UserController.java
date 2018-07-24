@@ -25,8 +25,7 @@ public class UserController {
     @RequestMapping(value = "hello",method = RequestMethod.GET)
     public void hello(){
         System.out.println("aaa");
-        //大哥不好了！
-        //大哥太好了！
+
     }
 
 }
