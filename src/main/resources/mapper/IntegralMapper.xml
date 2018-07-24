@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kaituo.pms.dao.IntegralMapper">
+  <resultMap id="BaseResultMap" type="com.kaituo.pms.domain.Integral">
+    <id column="integral_id" jdbcType="INTEGER" property="integralId" />
+    <result column="integral_total" jdbcType="INTEGER" property="integralTotal" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="integral_changeStr" jdbcType="VARCHAR" property="integralChangestr" />
+    <result column="integral_time" jdbcType="TIMESTAMP" property="integralTime" />
+    <result column="integral_changeInt" jdbcType="INTEGER" property="integralChangeint" />
+    <result column="integral_status" jdbcType="INTEGER" property="integralStatus" />
+    <result column="integral_operator" jdbcType="VARCHAR" property="integralOperator" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    integral_id, integral_total, user_id, integral_changeStr, integral_time, integral_changeInt, 
+    integral_status, integral_operator
+  </sql>
+  <select id="selectByExample" parameterType="com.kaituo.pms.domain.IntegralExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from p_integral
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from p_integral
+    where integral_id = #{integralId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from p_integral
+    where integral_id = #{integralId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.kaituo.pms.domain.IntegralExample">
+    delete from p_integral
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.kaituo.pms.domain.Integral">
+    insert into p_integral (integral_id, integral_total, user_id, 
+      integral_changeStr, integral_time, integral_changeInt, 
+      integral_status, integral_operator)
+    values (#{integralId,jdbcType=INTEGER}, #{integralTotal,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, 
+      #{integralChangestr,jdbcType=VARCHAR}, #{integralTime,jdbcType=TIMESTAMP}, #{integralChangeint,jdbcType=INTEGER}, 
+      #{integralStatus,jdbcType=INTEGER}, #{integralOperator,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.kaituo.pms.domain.Integral">
+    insert into p_integral
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="integralId != null">
+        integral_id,
+      </if>
+      <if test="integralTotal != null">
+        integral_total,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="integralChangestr != null">
+        integral_changeStr,
+      </if>
+      <if test="integralTime != null">
+        integral_time,
+      </if>
+      <if test="integralChangeint != null">
+        integral_changeInt,
+      </if>
+      <if test="integralStatus != null">
+        integral_status,
+      </if>
+      <if test="integralOperator != null">
+        integral_operator,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="integralId != null">
+        #{integralId,jdbcType=INTEGER},
+      </if>
+      <if test="integralTotal != null">
+        #{integralTotal,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="integralChangestr != null">
+        #{integralChangestr,jdbcType=VARCHAR},
+      </if>
+      <if test="integralTime != null">
+        #{integralTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="integralChangeint != null">
+        #{integralChangeint,jdbcType=INTEGER},
+      </if>
+      <if test="integralStatus != null">
+        #{integralStatus,jdbcType=INTEGER},
+      </if>
+      <if test="integralOperator != null">
+        #{integralOperator,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.kaituo.pms.domain.IntegralExample" resultType="java.lang.Long">
+    select count(*) from p_integral
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update p_integral
+    <set>
+      <if test="record.integralId != null">
+        integral_id = #{record.integralId,jdbcType=INTEGER},
+      </if>
+      <if test="record.integralTotal != null">
+        integral_total = #{record.integralTotal,jdbcType=INTEGER},
+      </if>
+      <if test="record.userId != null">
+        user_id = #{record.userId,jdbcType=INTEGER},
+      </if>
+      <if test="record.integralChangestr != null">
+        integral_changeStr = #{record.integralChangestr,jdbcType=VARCHAR},
+      </if>
+      <if test="record.integralTime != null">
+        integral_time = #{record.integralTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.integralChangeint != null">
+        integral_changeInt = #{record.integralChangeint,jdbcType=INTEGER},
+      </if>
+      <if test="record.integralStatus != null">
+        integral_status = #{record.integralStatus,jdbcType=INTEGER},
+      </if>
+      <if test="record.integralOperator != null">
+        integral_operator = #{record.integralOperator,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update p_integral
+    set integral_id = #{record.integralId,jdbcType=INTEGER},
+      integral_total = #{record.integralTotal,jdbcType=INTEGER},
+      user_id = #{record.userId,jdbcType=INTEGER},
+      integral_changeStr = #{record.integralChangestr,jdbcType=VARCHAR},
+      integral_time = #{record.integralTime,jdbcType=TIMESTAMP},
+      integral_changeInt = #{record.integralChangeint,jdbcType=INTEGER},
+      integral_status = #{record.integralStatus,jdbcType=INTEGER},
+      integral_operator = #{record.integralOperator,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.kaituo.pms.domain.Integral">
+    update p_integral
+    <set>
+      <if test="integralTotal != null">
+        integral_total = #{integralTotal,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="integralChangestr != null">
+        integral_changeStr = #{integralChangestr,jdbcType=VARCHAR},
+      </if>
+      <if test="integralTime != null">
+        integral_time = #{integralTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="integralChangeint != null">
+        integral_changeInt = #{integralChangeint,jdbcType=INTEGER},
+      </if>
+      <if test="integralStatus != null">
+        integral_status = #{integralStatus,jdbcType=INTEGER},
+      </if>
+      <if test="integralOperator != null">
+        integral_operator = #{integralOperator,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where integral_id = #{integralId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.kaituo.pms.domain.Integral">
+    update p_integral
+    set integral_total = #{integralTotal,jdbcType=INTEGER},
+      user_id = #{userId,jdbcType=INTEGER},
+      integral_changeStr = #{integralChangestr,jdbcType=VARCHAR},
+      integral_time = #{integralTime,jdbcType=TIMESTAMP},
+      integral_changeInt = #{integralChangeint,jdbcType=INTEGER},
+      integral_status = #{integralStatus,jdbcType=INTEGER},
+      integral_operator = #{integralOperator,jdbcType=VARCHAR}
+    where integral_id = #{integralId,jdbcType=INTEGER}
+  </update>
+</mapper>

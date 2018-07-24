@@ -1,0 +1,25 @@
+#配置端口号server:
+server:
+  port: 8080
+  tomcat: #这个应该是配置中文乱码问题
+    uri-encoding: UTF-8
+
+spring:
+  datasource: #配置数据库
+    url: jdbc:mysql://192.168.3.124:3306/pms?useUnicode=true&amp;characterEncoding=utf-8
+    username: myuser  #需要更改这三个属性！
+    password: mypassword
+    driver-class-name: com.mysql.jdbc.Driver
+  jpa:
+    database: mysql
+  http: #这个应该是配置中文乱码问题
+    encoding:
+      force: true
+      charset: utf-8
+      enabled: true
+#配置mybatis
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.kaituo.pms.domain
+  config-location: classpath:/sqlMapConfig.xml
+
