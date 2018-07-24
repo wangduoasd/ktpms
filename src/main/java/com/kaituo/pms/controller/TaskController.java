@@ -46,7 +46,6 @@ public class TaskController {
         //将传递过来的参数转为
         int pageNumber = Integer.valueOf(page);
         int pageSize = Integer.valueOf(limit);
-
         //待领取任务的状态为1
         int status = 1;
         //查询所有待领取的任务总数
@@ -55,7 +54,7 @@ public class TaskController {
         //分页
         PageHelper.startPage(pageNumber,pageSize);
         List<Task> list = taskService.findTaskByStatus(status);
-
+        //封装map
         Map<String,Object> data = new HashMap<>();
         data.put("total",total);
         data.put("Task",list);
