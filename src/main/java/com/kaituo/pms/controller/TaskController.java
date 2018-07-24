@@ -41,11 +41,9 @@ public class TaskController {
      *@Date: 2018/7/24
     */
     @ResponseBody
-    @RequestMapping(value = "findTaskByPage",method = RequestMethod.GET)
-    public Map<String,Object> findTaskByPage(String page,String limit){
-        //将传递过来的参数转为
-        int pageNumber = Integer.valueOf(page);
-        int pageSize = Integer.valueOf(limit);
+    @RequestMapping(value = "findTaskByPage",method = RequestMethod.POST)
+    public Map<String,Object> findTaskByPage(int pageNumber,int pageSize){
+
         //待领取任务的状态为1
         int status = 1;
         //查询所有待领取的任务总数

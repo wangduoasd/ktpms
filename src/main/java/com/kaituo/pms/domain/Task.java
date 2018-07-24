@@ -1,5 +1,7 @@
 package com.kaituo.pms.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -17,9 +19,9 @@ public class Task implements Serializable {
     private Integer taskNumber;
 
     private Integer taskTime;
-
+    @JsonFormat(pattern = "yyyy.MM.dd")
     private Date taskStarttime;
-
+    @JsonFormat(pattern = "yyyy.MM.dd")
     private Date taskEndtime;
 
     private String taskImage;
