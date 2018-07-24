@@ -56,8 +56,8 @@ public class TaskController {
         List<Task> list = taskService.findTaskByStatus(status);
         //封装map
         Map<String,Object> data = new HashMap<>();
-        data.put("total",total);
-        data.put("Task",list);
+        data.put("total",total);//待领取任务的总数
+        data.put("Task",list);//待领取任务的数据
         Map<String,Object> map = MapUtil.setMap2("1","成功",data);
        return map;
     }
