@@ -22,10 +22,10 @@ public class UserController {
      *@Author: 郭士伟
      *@Date: 2018/7/23
     */
-    @RequestMapping(value = "hello",method = RequestMethod.GET)
+    @RequestMapping(value = "hello",method = RequestMethod.POST)
     public void hello(){
-        System.out.println("aaa");
 
+        System.out.println("222");
     }
 
 }
