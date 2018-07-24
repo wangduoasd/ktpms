@@ -15,15 +15,16 @@ public class DeptServiceImpl implements DeptService {
 
     @Autowired
     DeptMapper deptMapper;
+    @Override
     @Autowired
     public List<Dept> findAll() {
         DeptExample deptExample = new DeptExample();
         DeptExample.Criteria criteria = deptExample.createCriteria();
-        criteria.andDeptIdEqualTo(2);
-        //return deptMapper.selectByExample(deptExample);
-        Dept dept = deptMapper.selectByPrimaryKey(3);
-        List<Dept>list = new ArrayList<>();
-        list.add(dept);
-        return  list;
+//        criteria.andDeptIdEqualTo(2);
+        return deptMapper.selectByExample(deptExample);
+//        Dept dept = deptMapper.selectByPrimaryKey(3);
+//        List<Dept>list = new ArrayList<>();
+//        list.add(dept);
+//        return  list;
     }
 }

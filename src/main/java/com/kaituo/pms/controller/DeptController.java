@@ -3,12 +3,14 @@ package com.kaituo.pms.controller;
 
 import com.kaituo.pms.domain.Dept;
 import com.kaituo.pms.service.DeptService;
+import com.kaituo.pms.utils.MapUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -39,6 +41,12 @@ public class DeptController {
 
 
 
+    }
+
+    @RequestMapping(value = "findAllDeptName",method = RequestMethod.GET)
+    public Map<String , Object> findAllDeptName(){
+        List<Dept> list = deptService.findAll();
+        return MapUtil.setMap2("1","成功",list);
     }
 
 }
