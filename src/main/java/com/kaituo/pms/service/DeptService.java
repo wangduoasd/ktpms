@@ -13,4 +13,13 @@ public interface DeptService {
     * @Date: 2018/7/24 
     */ 
     List<Dept> findAll();
+
+    /**
+     * 根据部门id查部门
+     * @param deptID
+     * @return Dept
+     * @Author: su
+     * @Date: 2018/7/25
+     */
+    Dept findDeptNameByDeptID(int deptID);
 }
