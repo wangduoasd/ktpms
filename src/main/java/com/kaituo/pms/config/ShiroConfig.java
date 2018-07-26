@@ -25,17 +25,17 @@ import java.util.Map;
 @Configuration
 public class ShiroConfig {
 
-    @Bean
-    public ShiroFilterFactoryBean shiroFilter(SecurityManager securityManager){
-        ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
-        shiroFilterFactoryBean.setSecurityManager(securityManager);
-        //拦截器
-        Map<String,String> filterChainDefinitionMap = new LinkedHashMap<>();
-        //配置不会被拦截的连接，顺序判断
-        filterChainDefinitionMap.put("/static/*","anon");
-        //配置推出过滤器，其中具体代码shiro帮我们实现了
-        filterChainDefinitionMap.put("/logout","logout");
-
-        return null;
-    }
+//    @Bean
+//    public ShiroFilterFactoryBean shiroFilter(SecurityManager securityManager){
+//        ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
+//        shiroFilterFactoryBean.setSecurityManager(securityManager);
+//        //拦截器
+//        Map<String,String> filterChainDefinitionMap = new LinkedHashMap<>();
+//        //配置不会被拦截的连接，顺序判断
+//        filterChainDefinitionMap.put("/static/*","anon");
+//        //配置推出过滤器，其中具体代码shiro帮我们实现了
+//        filterChainDefinitionMap.put("/logout","logout");
+//
+//        return null;
+//    }
 }
