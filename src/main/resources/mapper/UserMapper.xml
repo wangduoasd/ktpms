@@ -181,7 +181,19 @@
       <include refid="Example_Where_Clause" />
     </if>
   </select>
-  <update id="updateByExampleSelective" parameterType="map">
+  <select id="selectNumberOfUserByCondition" resultType="java.lang.Long">
+    select count(*)
+    from p_user
+    where p_user.user_name like "%"+#{condition}+"%" or p_user.dept_id
+    in (select p_dept.dept_id from p_dept where p_dept.dept_name like "%"+#{condition}+"%")
+  </select>
+    <select id="selectByCondition" resultType="com.kaituo.pms.domain.User">
+        select *
+        from p_user
+        where p_user.user_name like "%"+#{condition}+"%" or p_user.dept_id
+        in (select p_dept.dept_id from p_dept where p_dept.dept_name like "%"+#{condition}+"%")
+    </select>
+    <update id="updateByExampleSelective" parameterType="map">
     update p_user
     <set>
       <if test="record.userId != null">
