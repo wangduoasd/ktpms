@@ -1,12 +1,11 @@
 package com.kaituo.pms.domain;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-public class UserExample implements Serializable {
+public class UserExample {
     protected String orderByClause;
 
     protected boolean distinct;
@@ -603,52 +602,52 @@ public class UserExample implements Serializable {
             return (Criteria) this;
         }
 
-        public Criteria andUserStatusEqualTo(Boolean value) {
+        public Criteria andUserStatusEqualTo(Integer value) {
             addCriterion("user_status =", value, "userStatus");
             return (Criteria) this;
         }
 
-        public Criteria andUserStatusNotEqualTo(Boolean value) {
+        public Criteria andUserStatusNotEqualTo(Integer value) {
             addCriterion("user_status <>", value, "userStatus");
             return (Criteria) this;
         }
 
-        public Criteria andUserStatusGreaterThan(Boolean value) {
+        public Criteria andUserStatusGreaterThan(Integer value) {
             addCriterion("user_status >", value, "userStatus");
             return (Criteria) this;
         }
 
-        public Criteria andUserStatusGreaterThanOrEqualTo(Boolean value) {
+        public Criteria andUserStatusGreaterThanOrEqualTo(Integer value) {
             addCriterion("user_status >=", value, "userStatus");
             return (Criteria) this;
         }
 
-        public Criteria andUserStatusLessThan(Boolean value) {
+        public Criteria andUserStatusLessThan(Integer value) {
             addCriterion("user_status <", value, "userStatus");
             return (Criteria) this;
         }
 
-        public Criteria andUserStatusLessThanOrEqualTo(Boolean value) {
+        public Criteria andUserStatusLessThanOrEqualTo(Integer value) {
             addCriterion("user_status <=", value, "userStatus");
             return (Criteria) this;
         }
 
-        public Criteria andUserStatusIn(List<Boolean> values) {
+        public Criteria andUserStatusIn(List<Integer> values) {
             addCriterion("user_status in", values, "userStatus");
             return (Criteria) this;
         }
 
-        public Criteria andUserStatusNotIn(List<Boolean> values) {
+        public Criteria andUserStatusNotIn(List<Integer> values) {
             addCriterion("user_status not in", values, "userStatus");
             return (Criteria) this;
         }
 
-        public Criteria andUserStatusBetween(Boolean value1, Boolean value2) {
+        public Criteria andUserStatusBetween(Integer value1, Integer value2) {
             addCriterion("user_status between", value1, value2, "userStatus");
             return (Criteria) this;
         }
 
-        public Criteria andUserStatusNotBetween(Boolean value1, Boolean value2) {
+        public Criteria andUserStatusNotBetween(Integer value1, Integer value2) {
             addCriterion("user_status not between", value1, value2, "userStatus");
             return (Criteria) this;
         }

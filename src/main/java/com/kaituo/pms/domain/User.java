@@ -1,9 +1,8 @@
 package com.kaituo.pms.domain;
 
-import java.io.Serializable;
 import java.util.Date;
 
-public class User implements Serializable {
+public class User {
     private Integer userId;
 
     private String userName;
@@ -18,7 +17,7 @@ public class User implements Serializable {
 
     private Integer deptId;
 
-    private Boolean userStatus;
+    private Integer userStatus;
 
     private Date userInductiontime;
 
@@ -78,11 +77,11 @@ public class User implements Serializable {
         this.deptId = deptId;
     }
 
-    public Boolean getUserStatus() {
+    public Integer getUserStatus() {
         return userStatus;
     }
 
-    public void setUserStatus(Boolean userStatus) {
+    public void setUserStatus(Integer userStatus) {
         this.userStatus = userStatus;
     }
 

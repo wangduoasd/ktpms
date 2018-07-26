@@ -9,7 +9,7 @@
     <result column="user_integral" jdbcType="INTEGER" property="userIntegral" />
     <result column="user_position" jdbcType="VARCHAR" property="userPosition" />
     <result column="dept_id" jdbcType="INTEGER" property="deptId" />
-    <result column="user_status" jdbcType="BIT" property="userStatus" />
+    <result column="user_status" jdbcType="INTEGER" property="userStatus" />
     <result column="user_inductiontime" jdbcType="DATE" property="userInductiontime" />
   </resultMap>
   <sql id="Example_Where_Clause">
@@ -111,7 +111,7 @@
       )
     values (#{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{userUsername,jdbcType=VARCHAR}, 
       #{userPassword,jdbcType=VARCHAR}, #{userIntegral,jdbcType=INTEGER}, #{userPosition,jdbcType=VARCHAR}, 
-      #{deptId,jdbcType=INTEGER}, #{userStatus,jdbcType=BIT}, #{userInductiontime,jdbcType=DATE}
+      #{deptId,jdbcType=INTEGER}, #{userStatus,jdbcType=INTEGER}, #{userInductiontime,jdbcType=DATE}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.kaituo.pms.domain.User">
@@ -168,7 +168,7 @@
         #{deptId,jdbcType=INTEGER},
       </if>
       <if test="userStatus != null">
-        #{userStatus,jdbcType=BIT},
+        #{userStatus,jdbcType=INTEGER},
       </if>
       <if test="userInductiontime != null">
         #{userInductiontime,jdbcType=DATE},
@@ -181,19 +181,7 @@
       <include refid="Example_Where_Clause" />
     </if>
   </select>
-  <select id="selectNumberOfUserByCondition" resultType="java.lang.Long">
-    select count(*)
-    from p_user
-    where p_user.user_name like "%"+#{condition}+"%" or p_user.dept_id
-    in (select p_dept.dept_id from p_dept where p_dept.dept_name like "%"+#{condition}+"%")
-  </select>
-    <select id="selectByCondition" resultType="com.kaituo.pms.domain.User">
-        select *
-        from p_user
-        where p_user.user_name like "%"+#{condition}+"%" or p_user.dept_id
-        in (select p_dept.dept_id from p_dept where p_dept.dept_name like "%"+#{condition}+"%")
-    </select>
-    <update id="updateByExampleSelective" parameterType="map">
+  <update id="updateByExampleSelective" parameterType="map">
     update p_user
     <set>
       <if test="record.userId != null">
@@ -218,7 +206,7 @@
         dept_id = #{record.deptId,jdbcType=INTEGER},
       </if>
       <if test="record.userStatus != null">
-        user_status = #{record.userStatus,jdbcType=BIT},
+        user_status = #{record.userStatus,jdbcType=INTEGER},
       </if>
       <if test="record.userInductiontime != null">
         user_inductiontime = #{record.userInductiontime,jdbcType=DATE},
@@ -237,7 +225,7 @@
       user_integral = #{record.userIntegral,jdbcType=INTEGER},
       user_position = #{record.userPosition,jdbcType=VARCHAR},
       dept_id = #{record.deptId,jdbcType=INTEGER},
-      user_status = #{record.userStatus,jdbcType=BIT},
+      user_status = #{record.userStatus,jdbcType=INTEGER},
       user_inductiontime = #{record.userInductiontime,jdbcType=DATE}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -265,7 +253,7 @@
         dept_id = #{deptId,jdbcType=INTEGER},
       </if>
       <if test="userStatus != null">
-        user_status = #{userStatus,jdbcType=BIT},
+        user_status = #{userStatus,jdbcType=INTEGER},
       </if>
       <if test="userInductiontime != null">
         user_inductiontime = #{userInductiontime,jdbcType=DATE},
@@ -281,7 +269,7 @@
       user_integral = #{userIntegral,jdbcType=INTEGER},
       user_position = #{userPosition,jdbcType=VARCHAR},
       dept_id = #{deptId,jdbcType=INTEGER},
-      user_status = #{userStatus,jdbcType=BIT},
+      user_status = #{userStatus,jdbcType=INTEGER},
       user_inductiontime = #{userInductiontime,jdbcType=DATE}
     where user_id = #{userId,jdbcType=INTEGER}
   </update>
