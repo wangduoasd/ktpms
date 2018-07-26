@@ -51,6 +51,7 @@
             <scope>runtime</scope>
             <optional>true</optional>
         </dependency>
+
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
@@ -82,6 +83,13 @@
             <artifactId>pagehelper</artifactId>
             <version>4.1.6</version>
         </dependency>
+
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>RELEASE</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -100,16 +108,7 @@
                     <overwrite>true</overwrite>
                 </configuration>
             </plugin>
-            <!--热部署插件-->
-      <!--      <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    &lt;!&ndash; 没有该配置，devtools 不生效 &ndash;&gt;
-                    <fork>true</fork>
-                    <addResources>true</addResources>
-                </configuration>
-            </plugin>-->
+
         </plugins>
     </build>
 

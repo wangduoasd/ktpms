@@ -43,4 +43,13 @@ public class TaskServiceImpl implements TaskService {
 
         return taskMapper.selectByExample(example);
     }
+    /**
+     *@Description: 新增任务信息
+     *@Author: 郭士伟
+     *@Date: 2018/7/26
+     */
+    @Override
+    public int addTask(Task task) {
+        return taskMapper.insertSelective(task);
+    }
 }

@@ -2,12 +2,11 @@ package com.kaituo.pms.dao;
 
 import com.kaituo.pms.domain.Exchange;
 import com.kaituo.pms.domain.ExchangeExample;
-import java.util.List;
-
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 @Mapper
 @Repository
 public interface ExchangeMapper {
@@ -32,4 +31,13 @@ public interface ExchangeMapper {
     int updateByPrimaryKeySelective(Exchange record);
 
     int updateByPrimaryKey(Exchange record);
+
+    /** 
+     *@Description: 自己添加的：根据搜索内容（用户名称或者商品名称）查询对应的兑换列表
+     *@Param: 
+     *@return: 
+     *@Author: 郭士伟
+     *@Date: 2018/7/25
+    */
+    List<Exchange> selectBySearch(String searchStr);
 }

@@ -15,8 +15,8 @@ public class MapUtil {
         return map;
 
     }
-    public static Map<String,Object> setMap2(String code, String message, Object data){
-        Map<String , Object> map = new HashMap<>();
+    public static HashMap<String,Object> setMap2(String code, String message, Object data){
+        HashMap<String , Object> map = new HashMap<>();
         map.put("code",code);
         map.put("message",message);
         map.put("data",data);

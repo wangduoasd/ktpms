@@ -1,11 +1,10 @@
 package com.kaituo.pms.domain;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class ExchangeExample implements Serializable {
+public class ExchangeExample {
     protected String orderByClause;
 
     protected boolean distinct;
@@ -476,52 +475,52 @@ public class ExchangeExample implements Serializable {
             return (Criteria) this;
         }
 
-        public Criteria andExchangeStatusEqualTo(Boolean value) {
+        public Criteria andExchangeStatusEqualTo(Integer value) {
             addCriterion("exchange_status =", value, "exchangeStatus");
             return (Criteria) this;
         }
 
-        public Criteria andExchangeStatusNotEqualTo(Boolean value) {
+        public Criteria andExchangeStatusNotEqualTo(Integer value) {
             addCriterion("exchange_status <>", value, "exchangeStatus");
             return (Criteria) this;
         }
 
-        public Criteria andExchangeStatusGreaterThan(Boolean value) {
+        public Criteria andExchangeStatusGreaterThan(Integer value) {
             addCriterion("exchange_status >", value, "exchangeStatus");
             return (Criteria) this;
         }
 
-        public Criteria andExchangeStatusGreaterThanOrEqualTo(Boolean value) {
+        public Criteria andExchangeStatusGreaterThanOrEqualTo(Integer value) {
             addCriterion("exchange_status >=", value, "exchangeStatus");
             return (Criteria) this;
         }
 
-        public Criteria andExchangeStatusLessThan(Boolean value) {
+        public Criteria andExchangeStatusLessThan(Integer value) {
             addCriterion("exchange_status <", value, "exchangeStatus");
             return (Criteria) this;
         }
 
-        public Criteria andExchangeStatusLessThanOrEqualTo(Boolean value) {
+        public Criteria andExchangeStatusLessThanOrEqualTo(Integer value) {
             addCriterion("exchange_status <=", value, "exchangeStatus");
             return (Criteria) this;
         }
 
-        public Criteria andExchangeStatusIn(List<Boolean> values) {
+        public Criteria andExchangeStatusIn(List<Integer> values) {
             addCriterion("exchange_status in", values, "exchangeStatus");
             return (Criteria) this;
         }
 
-        public Criteria andExchangeStatusNotIn(List<Boolean> values) {
+        public Criteria andExchangeStatusNotIn(List<Integer> values) {
             addCriterion("exchange_status not in", values, "exchangeStatus");
             return (Criteria) this;
         }
 
-        public Criteria andExchangeStatusBetween(Boolean value1, Boolean value2) {
+        public Criteria andExchangeStatusBetween(Integer value1, Integer value2) {
             addCriterion("exchange_status between", value1, value2, "exchangeStatus");
             return (Criteria) this;
         }
 
-        public Criteria andExchangeStatusNotBetween(Boolean value1, Boolean value2) {
+        public Criteria andExchangeStatusNotBetween(Integer value1, Integer value2) {
             addCriterion("exchange_status not between", value1, value2, "exchangeStatus");
             return (Criteria) this;
         }

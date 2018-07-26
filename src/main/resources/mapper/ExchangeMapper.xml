@@ -8,7 +8,7 @@
     <result column="exchange_count" jdbcType="INTEGER" property="exchangeCount" />
     <result column="exchange_price" jdbcType="INTEGER" property="exchangePrice" />
     <result column="exchange_time" jdbcType="TIMESTAMP" property="exchangeTime" />
-    <result column="exchange_status" jdbcType="BIT" property="exchangeStatus" />
+    <result column="exchange_status" jdbcType="INTEGER" property="exchangeStatus" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -107,7 +107,7 @@
       exchange_status)
     values (#{exchangeId,jdbcType=INTEGER}, #{prizeId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, 
       #{exchangeCount,jdbcType=INTEGER}, #{exchangePrice,jdbcType=INTEGER}, #{exchangeTime,jdbcType=TIMESTAMP}, 
-      #{exchangeStatus,jdbcType=BIT})
+      #{exchangeStatus,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.kaituo.pms.domain.Exchange">
     insert into p_exchange
@@ -154,7 +154,7 @@
         #{exchangeTime,jdbcType=TIMESTAMP},
       </if>
       <if test="exchangeStatus != null">
-        #{exchangeStatus,jdbcType=BIT},
+        #{exchangeStatus,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -186,7 +186,7 @@
         exchange_time = #{record.exchangeTime,jdbcType=TIMESTAMP},
       </if>
       <if test="record.exchangeStatus != null">
-        exchange_status = #{record.exchangeStatus,jdbcType=BIT},
+        exchange_status = #{record.exchangeStatus,jdbcType=INTEGER},
       </if>
     </set>
     <if test="_parameter != null">
@@ -201,7 +201,7 @@
       exchange_count = #{record.exchangeCount,jdbcType=INTEGER},
       exchange_price = #{record.exchangePrice,jdbcType=INTEGER},
       exchange_time = #{record.exchangeTime,jdbcType=TIMESTAMP},
-      exchange_status = #{record.exchangeStatus,jdbcType=BIT}
+      exchange_status = #{record.exchangeStatus,jdbcType=INTEGER}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -225,7 +225,7 @@
         exchange_time = #{exchangeTime,jdbcType=TIMESTAMP},
       </if>
       <if test="exchangeStatus != null">
-        exchange_status = #{exchangeStatus,jdbcType=BIT},
+        exchange_status = #{exchangeStatus,jdbcType=INTEGER},
       </if>
     </set>
     where exchange_id = #{exchangeId,jdbcType=INTEGER}
@@ -237,7 +237,16 @@
       exchange_count = #{exchangeCount,jdbcType=INTEGER},
       exchange_price = #{exchangePrice,jdbcType=INTEGER},
       exchange_time = #{exchangeTime,jdbcType=TIMESTAMP},
-      exchange_status = #{exchangeStatus,jdbcType=BIT}
+      exchange_status = #{exchangeStatus,jdbcType=INTEGER}
     where exchange_id = #{exchangeId,jdbcType=INTEGER}
   </update>
+
+  <!--自己添加的：根据搜索内容（用户名称或者商品名称）查询对应的兑换列表-->
+  <select id="selectBySearch" parameterType="java.lang.String"  resultMap="BaseResultMap">
+    SELECT *  FROM p_exchange WHERE user_id IN(
+      SELECT user_id FROM P_USER WHERE  user_name LIKE concat(concat('%',#{value}),'%')
+      ) OR prize_id IN(
+      SELECT prize_id FROM p_prize WHERE prize_name LIKE concat(concat('%',#{value}),'%')
+    );
+  </select>
 </mapper>

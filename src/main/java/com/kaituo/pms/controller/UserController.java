@@ -1,9 +1,10 @@
 package com.kaituo.pms.controller;
 
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
+
 /**
  *@Description:
  *@Param:
@@ -27,5 +28,6 @@ public class UserController {
 
         System.out.println("222");
     }
+
 
 }

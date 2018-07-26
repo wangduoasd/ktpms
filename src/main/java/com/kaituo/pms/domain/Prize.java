@@ -1,8 +1,6 @@
 package com.kaituo.pms.domain;
 
-import java.io.Serializable;
-
-public class Prize implements Serializable {
+public class Prize {
     private Integer prizeId;
 
     private String prizeName;

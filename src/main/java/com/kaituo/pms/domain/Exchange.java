@@ -1,5 +1,7 @@
 package com.kaituo.pms.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -13,10 +15,23 @@ public class Exchange implements Serializable {
     private Integer exchangeCount;
 
     private Integer exchangePrice;
-
+    @JsonFormat(pattern = "yyyy.MM.dd")
     private Date exchangeTime;
 
-    private Boolean exchangeStatus;
+    private Integer exchangeStatus;
+
+    @Override
+    public String toString() {
+        return "Exchange{" +
+                "exchangeId=" + exchangeId +
+                ", prizeId=" + prizeId +
+                ", userId=" + userId +
+                ", exchangeCount=" + exchangeCount +
+                ", exchangePrice=" + exchangePrice +
+                ", exchangeTime=" + exchangeTime +
+                ", exchangeStatus=" + exchangeStatus +
+                '}';
+    }
 
     public Integer getExchangeId() {
         return exchangeId;
@@ -66,11 +81,11 @@ public class Exchange implements Serializable {
         this.exchangeTime = exchangeTime;
     }
 
-    public Boolean getExchangeStatus() {
+    public Integer getExchangeStatus() {
         return exchangeStatus;
     }
 
-    public void setExchangeStatus(Boolean exchangeStatus) {
+    public void setExchangeStatus(Integer exchangeStatus) {
         this.exchangeStatus = exchangeStatus;
     }
 }

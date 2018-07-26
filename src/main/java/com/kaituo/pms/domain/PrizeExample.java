@@ -1,10 +1,9 @@
 package com.kaituo.pms.domain;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PrizeExample implements Serializable {
+public class PrizeExample {
     protected String orderByClause;
 
     protected boolean distinct;

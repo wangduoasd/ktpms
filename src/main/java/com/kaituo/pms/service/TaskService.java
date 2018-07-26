@@ -18,4 +18,13 @@ public interface TaskService {
      *@Date: 2018/7/24
      */
     List<Task> findTaskByStatus(int status);
+
+    /** 
+     *@Description: 新增任务信息
+     *@Param: 
+     *@return: 
+     *@Author: 郭士伟
+     *@Date: 2018/7/26
+    */
+    int addTask(Task task);
 }
