@@ -74,6 +74,15 @@
     prize_id, prize_name, prize_image, prize_amount, prize_price, prize_quota, prize_condition, 
     prize_status, prize_buy
   </sql>
+  <!--模糊查询-->
+  <select id="selectBykeyWord" parameterType="java.lang.String" resultMap="BaseResultMap">
+    SELECT
+      *
+    FROM
+      p_prize
+    WHERE
+      prize_name  LIKE concat(concat('%',#{prizeName}),'%')
+  </select>
   <select id="selectByExample" parameterType="com.kaituo.pms.domain.PrizeExample" resultMap="BaseResultMap">
     select
     <if test="distinct">

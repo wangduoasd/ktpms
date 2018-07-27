@@ -31,4 +31,6 @@ public interface PrizeMapper {
     int updateByPrimaryKeySelective(Prize record);
 
     int updateByPrimaryKey(Prize record);
+      /*模糊查询*/
+     List<Prize>  selectBykeyWord(@Param("prizeName") String prizeName);
 }
