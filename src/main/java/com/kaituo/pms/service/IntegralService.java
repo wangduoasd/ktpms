@@ -8,12 +8,12 @@ package com.kaituo.pms.service;
  **/
 
 public interface IntegralService {
-    /** 
-    * @Description: 添加员工时专用的添加积分记录 
-    * @Param:  
-    * @return:  
+    /**
+    * @Description: 添加员工时专用的添加积分记录
+    * @Param:
+    * @return:
     * @Author: su
-    * @Date: 2018/7/26 
-    */ 
+    * @Date: 2018/7/26
+    */
     int addNewUserIntegral(Integer user_id , int changeInt , String operator);
 }

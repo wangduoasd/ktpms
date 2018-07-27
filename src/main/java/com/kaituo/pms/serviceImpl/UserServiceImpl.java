@@ -6,14 +6,13 @@ import com.kaituo.pms.domain.User;
 import com.kaituo.pms.domain.UserExample;
 import com.kaituo.pms.service.DeptService;
 import com.kaituo.pms.service.UserService;
+import com.kaituo.pms.utils.Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @program: ktpms
@@ -94,10 +93,28 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean updateUserToPage(String userUserName ,String userName , String deptID , String position ,
-                                    String inductionTime , String userStatus){
-        Integer deptIDInt = Integer.parseInt(deptID);
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat();
-        return true;
+    public boolean updateUser(String userUserName ,String userName , String deptID , String position ,
+                                    String userPassword , String inductionTime , String userStatus){
+        UserExample userExample = new UserExample();
+        UserExample.Criteria criteria = userExample.createCriteria();
+        criteria.andUserUsernameEqualTo(userUserName);
+
+        Date date = Util.stampToDate(inductionTime);
+
+        User user = new User();
+        user.setUserName(userName);
+        user.setDeptId(Integer.parseInt(deptID));
+        user.setUserPosition(position);
+        user.setUserPassword(userPassword);
+        user.setUserInductiontime(date);
+        user.setUserStatus(Integer.parseInt(userStatus));
+
+        try {
+            userMapper.updateByExampleSelective(user , userExample);
+            return true;
+        }catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
     }
 }

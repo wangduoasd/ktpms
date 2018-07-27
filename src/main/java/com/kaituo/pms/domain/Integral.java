@@ -89,4 +89,17 @@ public class Integral implements Serializable {
         this.integralOperator = integralOperator == null ? null : integralOperator.trim();
     }
 
+    @Override
+    public String toString() {
+        return "Integral{" +
+                "integralId=" + integralId +
+                ", integralTotal=" + integralTotal +
+                ", userId=" + userId +
+                ", integralChangestr='" + integralChangestr + '\'' +
+                ", integralTime=" + integralTime +
+                ", integralChangeint=" + integralChangeint +
+                ", integralStatus=" + integralStatus +
+                ", integralOperator='" + integralOperator + '\'' +
+                '}';
+    }
 }

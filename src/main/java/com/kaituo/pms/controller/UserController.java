@@ -145,4 +145,18 @@ public class UserController {
             return map;
         }
     }
+
+    @PostMapping("updateUser")
+    public Map<String , Object> updateUser(String userUserName ,String userName , String deptID , String position ,
+                                                 String userPassword , String inductionTime , String userStatus){
+
+        Map<String,Object> map;
+
+        if (userService.updateUser(userUserName , userName , deptID , position , userPassword , inductionTime , userStatus)){
+            map = MapUtil.setMap2("1","变更成功",true);
+            return map;
+        }
+        map = MapUtil.setMap2("0","变更失败",false);
+        return map;
+    }
 }
