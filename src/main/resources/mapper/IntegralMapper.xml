@@ -166,6 +166,15 @@
       </if>
     </trim>
   </insert>
+  <!--实验下-->
+  <insert id="insert2" parameterType="com.kaituo.pms.domain.Integral">
+    insert into p_integral (integral_id, integral_total, user_id,
+                            integral_changeStr, integral_time, integral_changeInt,
+                            integral_status, integral_operator)
+    values (#{integralId,jdbcType=INTEGER}, #{integralTotal,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER},
+            #{integralChangestr,jdbcType=VARCHAR}, #{integralTime,jdbcType=TIMESTAMP}, #{integralChangeint,jdbcType=INTEGER},
+            #{integralStatus,jdbcType=INTEGER}, #{integralOperator,jdbcType=VARCHAR})
+  </insert>
   <select id="countByExample" parameterType="com.kaituo.pms.domain.IntegralExample" resultType="java.lang.Long">
     select count(*) from p_integral
     <if test="_parameter != null">
