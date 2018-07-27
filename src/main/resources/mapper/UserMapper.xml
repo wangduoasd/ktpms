@@ -181,6 +181,19 @@
       <include refid="Example_Where_Clause" />
     </if>
   </select>
+    <select id="selectNumberOfUserByCondition" resultType="java.lang.Long">
+      select concat(*) from p_user where user_name like concat(concat('%',#{condition}),'%')
+      or dept_id
+         in (select dept_id from p_dept where dept_name like concat(concat('%',#{condition}),'%')
+            )
+    </select>
+  <!--自定义SQL-->
+  <select id="selectByCondition" resultMap="BaseResultMap">
+    select * from p_user where user_name like concat(concat('%',#{condition}),'%')
+      or dept_id
+        in (select dept_id from p_dept where dept_name like concat(concat('%',#{condition}),'%')
+           )
+  </select>
   <update id="updateByExampleSelective" parameterType="map">
     update p_user
     <set>

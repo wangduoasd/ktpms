@@ -48,6 +48,13 @@ public class UserController {
         System.out.println("222");
     }
 
+    /**
+    * @Description: 默认员工分页
+    * @Param:
+    * @return:
+    * @Author: su
+    * @Date: 2018/7/26
+    */
     @PostMapping("findAllUserByPage")
     public Map<String,Object> findAllUserByPage(String pageNumber, String pageSize){
         Integer intPageNumber = Integer.parseInt(pageNumber);
@@ -55,40 +62,101 @@ public class UserController {
 
         //查询所有员工总数
         int total = (int) userService.findNumberOfUser();
+        Map<String,Object> map;
+        if (0>total){
         //查询所有待领取任务的信息
         //分页
         PageHelper.startPage(intPageNumber,intPpageSize);
         List<User> list = userService.findUsers();
+
         //修改用户数据，将部门ID变为部门名称
-        List<Map> userMapList = new ArrayList<>();
-        for(User user : list){
-            Map<String , Object> userMap = new HashMap<>(8);
-            //从旧数据中得到部门id
-            int DeptId= user.getDeptId();
-            //通过部门ID得到部门对象
-            Dept dept = deptService.findDeptNameByDeptID(DeptId);
-            //封装为新的数据
-            userMap.put("userId",user.getUserId());
-            userMap.put("userName",user.getUserName());
-            //部门名字
-            userMap.put("deptName",dept.getDeptName());
-            userMap.put("userPosition",user.getUserPosition());
-            userMap.put("userUsername",user.getUserUsername());
-            userMap.put("userInductiontime",user.getUserInductiontime());
-            userMap.put("userIntegral",user.getUserIntegral());
-            userMap.put("userStatus",user.getUserStatus());
-            //添加到新的集合中
-            userMapList.add(userMap);
-        }
+        List<Map> userMapList = userService.reconstituteUsers(list);
         //封装map
         Map<String,Object> data = new HashMap<>(2);
 
         //员工的总数
         data.put("total",total);
         //员工的信息
-        data.put("Task",userMapList);
-        Map<String,Object> map = MapUtil.setMap2("1","成功",data);
+        data.put("User",userMapList);
+            map = MapUtil.setMap2("1","成功",data);
+        }else {
+            map = MapUtil.setMap2("2","为啥没员工呢？",null);
+        }
         return map;
     }
 
+    /**
+    * @Description: 有条件的员工分页
+    * @Param:
+    * @return:
+    * @Author: su
+    * @Date: 2018/7/26
+    */
+    @PostMapping("searchUserByNameOrDept")
+    public Map<String,Object> searchUserByNameOrDept(String pageNumber, String pageSize,String condition){
+        Integer intPageNumber = Integer.parseInt(pageNumber);
+        Integer intPpageSize = Integer.parseInt(pageSize);
+
+        //查询条件满足的员工总数
+        int total = (int) userService.findNumberOfUserByCondition(condition);
+        Map<String,Object> map;
+        if (0>total){
+            //查询条件满足的员工的信息
+            //分页
+            PageHelper.startPage(intPageNumber,intPpageSize);
+            List<User> list = userService.findUserByCondition(condition);
+            //修改用户数据，将部门ID变为部门名称
+            List<Map> userMapList = userService.reconstituteUsers(list);
+            //封装map
+            Map<String,Object> data = new HashMap<>(2);
+
+            //员工的总数
+            data.put("total",total);
+            //员工的信息
+            data.put("User",userMapList);
+            map = MapUtil.setMap2("1","成功",data);
+        }else {
+            map = MapUtil.setMap2("2","未找到相应员工",null);
+        }
+
+        return map;
+    }
+
+    /**
+    * @Description: 添加用户
+    * @Param:
+    * @return:
+    * @Author: su
+    * @Date: 2018/7/26
+    */
+//    public Map<String , Object> addUser(){
+//
+//        return map;
+//    }
+
+    @PostMapping("checkUserUserName")
+    public Map<String , Object> checkUserUserName(String condition){
+        Map<String,Object> map;
+        if (!userService.findUserUserName(condition)){
+            map = MapUtil.setMap2("0","可以使用",true);
+            return map;
+        }else{
+            map = MapUtil.setMap2("1","账号重复，请重新输入",false);
+            return map;
+        }
+    }
+
+    @PostMapping("updateUser")
+    public Map<String , Object> updateUser(String userUserName ,String userName , String deptID , String position ,
+                                                 String userPassword , String inductionTime , String userStatus){
+
+        Map<String,Object> map;
+
+        if (userService.updateUser(userUserName , userName , deptID , position , userPassword , inductionTime , userStatus)){
+            map = MapUtil.setMap2("1","变更成功",true);
+            return map;
+        }
+        map = MapUtil.setMap2("0","变更失败",false);
+        return map;
+    }
 }

@@ -28,4 +28,25 @@ public class DeptServiceImpl implements DeptService {
         DeptExample.Criteria criteria = deptExample.createCriteria();
         return deptMapper.selectByPrimaryKey(deptID);
     }
+
+    @Override
+    public void addDept(Dept dept) {
+        DeptExample deptExample = new DeptExample();
+        DeptExample.Criteria criteria = deptExample.createCriteria();
+        deptMapper.insertSelective(dept);
+    }
+
+    @Override
+    public void updateDeptById(Dept dept) {
+        DeptExample deptExample = new DeptExample();
+        DeptExample.Criteria criteria = deptExample.createCriteria();
+        deptMapper.updateByPrimaryKey(dept);
+    }
+
+    @Override
+    public void deleteDeptById(Integer deptId) {
+        DeptExample deptExample = new DeptExample();
+        DeptExample.Criteria criteria = deptExample.createCriteria();
+        deptMapper.deleteByPrimaryKey(deptId);
+    }
 }

@@ -2,10 +2,13 @@ package com.kaituo.pms.dao;
 
 import com.kaituo.pms.domain.User;
 import com.kaituo.pms.domain.UserExample;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
-
+@Mapper
+@Repository
 public interface UserMapper {
     long countByExample(UserExample example);
 
@@ -28,4 +31,15 @@ public interface UserMapper {
     int updateByPrimaryKeySelective(User record);
 
     int updateByPrimaryKey(User record);
+
+    long selectNumberOfUserByCondition(String condition);
+
+    /**
+    * @Description: 自定义的用于根据条件查询SQL
+    * @Param:
+    * @return:
+    * @Author: su
+    * @Date: 2018/7/27
+    */
+    List<User> selectByCondition(String condition);
 }
