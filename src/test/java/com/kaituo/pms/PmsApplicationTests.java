@@ -12,8 +12,8 @@ public class PmsApplicationTests {
 
     @Test
     public void contextLoads() {
-        InterfaceServiceImpl interfaceService = new InterfaceServiceImpl();
-        System.out.println(interfaceService.addNewUserIntegral(2,0,"张三"));
+//        InterfaceServiceImpl interfaceService = new InterfaceServiceImpl();
+//        System.out.println(interfaceService.addNewUserIntegral(2,0,"张三"));
 
     }
 

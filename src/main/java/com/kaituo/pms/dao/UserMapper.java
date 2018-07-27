@@ -34,5 +34,12 @@ public interface UserMapper {
 
     long selectNumberOfUserByCondition(String condition);
 
+    /**
+    * @Description: 自定义的用于根据条件查询SQL
+    * @Param:
+    * @return:
+    * @Author: su
+    * @Date: 2018/7/27
+    */
     List<User> selectByCondition(String condition);
 }

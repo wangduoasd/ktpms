@@ -57,6 +57,9 @@ public class DeptController {
     @RequestMapping(value = "findAllDeptName",method = RequestMethod.POST)
     public Map<String , Object> findAllDeptName(){
         List<Dept> list = deptService.findAll();
+        if (null==list || list.size()<=0){
+            return MapUtil.setMap2("0","数据库空空如也",list);
+        }
         return MapUtil.setMap2("1","成功",list);
     }
     /*部门添加*/

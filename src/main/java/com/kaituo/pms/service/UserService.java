@@ -67,7 +67,7 @@ public interface UserService {
     * @Author: su
     * @Date: 2018/7/26
     */
-    boolean updateUserToPage(String userUserName ,String userName , String deptID , String position ,
-                             String inductionTime , String userStatus);
+    boolean updateUser(String userUserName ,String userName , String deptID , String position ,
+                             String userPassword , String inductionTime , String userStatus);
 
 }

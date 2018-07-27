@@ -187,6 +187,7 @@
          in (select dept_id from p_dept where dept_name like concat(concat('%',#{condition}),'%')
             )
     </select>
+  <!--自定义SQL-->
   <select id="selectByCondition" resultMap="BaseResultMap">
     select * from p_user where user_name like concat(concat('%',#{condition}),'%')
       or dept_id
