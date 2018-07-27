@@ -30,7 +30,7 @@ public class TaskServiceImpl implements TaskService {
         return taskMapper.countByExample(example);
     }
     /**
-     *@Description: 查询所有待领取任务的信息
+     *@Description: 查询所有状态任务的信息
      *@Author: 郭士伟
      *@Date: 2018/7/24
      */
@@ -52,4 +52,16 @@ public class TaskServiceImpl implements TaskService {
     public int addTask(Task task) {
         return taskMapper.insertSelective(task);
     }
+    /**
+     *@Description: 已发布任务信息
+     *@Param:
+     *@return:List<Task>
+     *@Author: 张金行
+     *@Date: 2018/7/27
+     */
+    @Override
+    public List<Task> findAllTaskByPage() {
+        return null;
+    }
+
 }

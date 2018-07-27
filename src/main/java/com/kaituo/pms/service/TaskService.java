@@ -27,4 +27,14 @@ public interface TaskService {
      *@Date: 2018/7/26
     */
     int addTask(Task task);
+    /**
+     *@Description: 已发布任务信息
+     *@Param:
+     *@return:List<Task>
+     *@Author: 张金行
+     *@Date: 2018/7/27
+            */
+    List<Task> findAllTaskByPage();
+
+
 }
