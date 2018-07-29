@@ -99,9 +99,32 @@ public interface ExchangeService {
     */ 
     Exchange findExchangeById(String exchangeId);
 
+    /** 
+    * @Description: confirmReceive
+    * @Param:  
+    * @return:  
+    * @Author: su
+    * @Date: 2018/7/29 
+    */ 
     Map<String , Object> confirmReceive(String exchangeId , String userId);
+    /** 
+    *  通过员工id和商品id检索兑换记录
+    * @param userID :员工id
+    * @param prizeId 商品id
+    * @return:  
+    * @Author: su
+    * @Date: 2018/7/29 
+    */ 
+    List<Exchange> findExchangeByUserIDAndPrizeID(int userID , int prizeId);
 
-
+    /** 
+    * 其他service调用Exchange的插入SQL
+    * @param exchange Exchange
+    * @return:  
+    * @Author: su
+    * @Date: 2018/7/29 
+    */ 
+    int insert(Exchange exchange);
 
 
 }

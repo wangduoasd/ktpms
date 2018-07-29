@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -159,4 +161,36 @@ public class UserController {
         map = MapUtil.setMap2("0","变更失败",false);
         return map;
     }
+    
+    /** 
+    * @Description: 个人中心个人信息展示（备选1）
+    * @Param:  
+    * @return:  
+    * @Author: su
+    * @Date: 2018/7/29 
+    */ 
+    @PostMapping("findPersonalDetail")
+    public Map<String , Object> findPersonalDetail(String userID){
+        Integer userIDInt = Integer.parseInt(userID);
+        return userService.findPersonalDetail(userIDInt);
+    }
+
+    /** 
+    * @Description: 个人中心个人信息展示（备选2）
+    * @Param:  
+    * @return:  
+    * @Author: su
+    * @Date: 2018/7/29 
+    */ 
+//    @PostMapping("findPersonalDetail")
+//    public Map<String , Object> findPersonalDetail(HttpServletRequest request){
+//        HttpSession session = request.getSession();
+//        User user = (User) session.getAttribute("user");
+//        if (null!=user) {
+//            int userID = user.getUserId();
+//            return userService.findPersonalDetail(userID);
+//        }else {
+//            return MapUtil.setMap2("1","获取员工id失败",null);
+//        }
+//    }
 }

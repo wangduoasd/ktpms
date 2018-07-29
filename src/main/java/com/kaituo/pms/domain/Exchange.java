@@ -1,6 +1,7 @@
 package com.kaituo.pms.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -15,6 +16,7 @@ public class Exchange implements Serializable {
     private Integer exchangeCount;
 
     private Integer exchangePrice;
+    @DateTimeFormat(pattern = "yyyy.MM.dd")
     @JsonFormat(pattern = "yyyy.MM.dd")
     private Date exchangeTime;
 

@@ -4,14 +4,13 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.kaituo.pms.domain.Prize;
 import com.kaituo.pms.service.PrizeService;
+import com.kaituo.pms.utils.MapUtil;
 import com.kaituo.pms.utils.Msg;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("prize")
@@ -79,5 +78,33 @@ prizeService.updatePrizeBuId(prize);
         prize.setPrizeStatus(true);
         prizeService.releasePrizeById(prize);
         return Msg.success();
+    }
+
+    /** 
+    * @Description: 兑换按钮
+    * @Param:  
+    * @return:  
+    * @Author: su
+    * @Date: 2018/7/30 
+    */ 
+    @PostMapping("exchangePrize")
+    public Map<String , Object> exchangePrize(String prizeID , String userID , String number){
+        Integer intPrizeID = Integer.parseInt(prizeID);
+        Integer intUserID = Integer.parseInt(userID);
+        Integer intNnumber = Integer.parseInt(number);
+        return prizeService.exchangePrize(intPrizeID,intUserID,intNnumber);
+    }
+
+    /** 按条件搜索商品
+     * @Param:
+     * @return:
+     * @Author: su
+     * @Date: 2018/7/30
+     */
+    @PostMapping("searchByPrize")
+    public Map<String , Object> searchByPrize(String pageNumber , String pageSize , String search){
+        Integer intPageNumber = Integer.parseInt(pageNumber);
+        Integer intPageSize = Integer.parseInt(pageSize);
+        return prizeService.searchByPrize(intPageNumber, intPageSize , search);
     }
 }

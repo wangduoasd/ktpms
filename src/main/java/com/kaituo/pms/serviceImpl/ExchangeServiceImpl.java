@@ -262,4 +262,19 @@ public class ExchangeServiceImpl implements ExchangeService {
         }
         return map;
     }
+
+    @Override
+    public List<Exchange> findExchangeByUserIDAndPrizeID(int userID, int prizeId) {
+        ExchangeExample example = new ExchangeExample();
+        ExchangeExample.Criteria criteria = example.createCriteria();
+        criteria.andUserIdEqualTo(userID);
+        criteria.andPrizeIdEqualTo(prizeId);
+        List<Exchange> exchangeList = exchangeMapper.selectByExample(example);
+        return exchangeList;
+    }
+
+    @Override
+    public int insert(Exchange exchange) {
+        return exchangeMapper.insert(exchange);
+    }
 }

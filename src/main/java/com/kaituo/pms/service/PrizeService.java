@@ -1,8 +1,10 @@
 package com.kaituo.pms.service;
 
 import com.kaituo.pms.domain.Prize;
+import com.kaituo.pms.domain.User;
 
 import java.util.List;
+import java.util.Map;
 
 public interface PrizeService {
     /**
@@ -44,4 +46,31 @@ public interface PrizeService {
     */
     Prize findPrizeByID(Integer prizeId);
 
+    /** 
+    * @Description: 兑换商品
+    * @Param:  
+    * @return:  
+    * @Author: su
+    * @Date: 2018/7/29 
+    */ 
+    Map<String , Object> exchangePrize(int prizeID , int userID , int number);
+
+    /** 
+    * @Description: 兑换商品。操作数据
+    * @Param:  
+    * @return:  
+    * @Author: su
+    * @Date: 2018/7/29 
+    */
+    Map<String , Object> exchangePrizeDate(int userID , int prizeID , int number , int totalPrice , User user ,
+                                           Prize prize);
+
+    /** 
+    * @Description: 搜索所有奖品按钮
+    * @Param:  
+    * @return:  
+    * @Author: su
+    * @Date: 2018/7/29 
+    */ 
+    Map<String , Object> searchByPrize(int pageNumber , int pageSize , String search);
 }

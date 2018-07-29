@@ -253,7 +253,7 @@
   <select id="findNumberOfExchangeByUserIDAndSearchStr" resultType="java.lang.Integer">
     SELECT count(*)  FROM p_exchange WHERE user_id =#{userID} AND prize_id IN(
       SELECT prize_id FROM p_prize WHERE prize_name LIKE concat(concat('%',#{prizeID}),'%')
-    );
+    )
   </select>
   <!--自己添加的：根据搜索内容（用户名称或者商品名称）和员工id查询对应的兑换列表数据【苏泽华】-->
   <select id="findExchangeByUserIDAndSearchStr" resultMap="BaseResultMap">
@@ -262,7 +262,7 @@
     WHERE user_id =#{userID} AND prize_id IN(
       SELECT prize_id
       FROM p_prize
-      WHERE prize_name LIKE concat(concat('%',#{prizeID}),'%') );
+      WHERE prize_name LIKE concat(concat('%',#{prizeID}),'%') )
   </select>
 
 

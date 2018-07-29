@@ -6,6 +6,7 @@ import com.kaituo.pms.domain.User;
 import com.kaituo.pms.domain.UserExample;
 import com.kaituo.pms.service.DeptService;
 import com.kaituo.pms.service.UserService;
+import com.kaituo.pms.utils.MapUtil;
 import com.kaituo.pms.utils.Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -116,5 +117,47 @@ public class UserServiceImpl implements UserService {
             e.printStackTrace();
             return false;
         }
+    }
+
+    @Override
+    public Map<String, Object> findPersonalDetail(Integer userID) {
+        User user = userMapper.selectByPrimaryKey(userID);
+        Map<String , Object> map = null;
+        List<Map> userMapList = new ArrayList<>();
+        Map<String , Object> userMap = new HashMap<>(8);
+        //从旧数据中得到部门id
+        int DeptId= user.getDeptId();
+        //通过部门ID得到部门对象
+        Dept dept = deptService.findDeptNameByDeptID(DeptId);
+        //封装为新的数据
+        userMap.put("userId",user.getUserId());
+        userMap.put("userName",user.getUserName());
+        //部门名字
+        userMap.put("deptName",dept.getDeptName());
+        userMap.put("userPosition",user.getUserPosition());
+        userMap.put("userUsername",user.getUserUsername());
+        userMap.put("userInductiontime",user.getUserInductiontime());
+        userMap.put("userIntegral",user.getUserIntegral());
+        userMap.put("userStatus",user.getUserStatus());
+        //添加到新的集合中
+        userMapList.add(userMap);
+        //封装map
+        Map<String,Object> data = new HashMap<>(2);
+
+        //员工的信息
+        data.put("User",userMapList);
+        map = MapUtil.setMap2("0","成功",data);
+        return map;
+    }
+
+    @Override
+    public User findUserByID(int userID) {
+        User user = userMapper.selectByPrimaryKey(userID);
+        return user;
+    }
+
+    @Override
+    public int upDate(User record, UserExample example) {
+        return userMapper.updateByExample(record,example);
     }
 }

@@ -22,18 +22,4 @@ mybatis:
   mapper-locations: classpath:mapper/*.xml
   type-aliases-package: com.kaituo.pms.domain
   config-location: classpath:/sqlMapConfig.xml
-#日志
-#logging.level.org.springframework=WARN
-#logging.level.org.spring.springboot.dao=DEBUG
-##com.kaituo.controller 日志 WARN级别输出
-#logging.level.com.gs.controller=WARN
-##com.kaituo.dao sql日志 DEBUG级别输出
-#logging.level.com.gs.dao=DEBUG
-#logging.file=logs/spring-boot-logging.log
-#logging.pattern.console=%d{yyyy/MM/dd-HH:mm:ss} [%thread] %-5level %logger- %msg%n
-#logging.pattern.file=%d{yyyy/MM/dd-HH:mm} [%thread] %-5level %logger- %msg%n
-#logging:
-#  pattern:
-#    console: %d{yyyy/MM/dd-HH:mm:ss} [%thread] %-5level %logger- %msg%n
-#    file: %d{yyyy/MM/dd-HH:mm} [%thread] %-5level %logger- %msg%n
-#  file: logs/spring-boot-logging.log
+

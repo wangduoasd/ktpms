@@ -1,6 +1,7 @@
 package com.kaituo.pms.service;
 
 import com.kaituo.pms.domain.User;
+import com.kaituo.pms.domain.UserExample;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
@@ -70,4 +71,30 @@ public interface UserService {
     boolean updateUser(String userUserName ,String userName , String deptID , String position ,
                              String userPassword , String inductionTime , String userStatus);
 
+    /** 
+    * @Description: 个人中心，查询自己的信息
+    * @Param:  
+    * @return:  
+    * @Author: su
+    * @Date: 2018/7/29 
+    */
+    Map<String , Object> findPersonalDetail(Integer userID);
+    
+    /** 
+    * @Description: 查询对应userID的员工
+    * @Param:  
+    * @return:  
+    * @Author: su
+    * @Date: 2018/7/29 
+    */
+    User findUserByID(int userID);
+
+    /** 
+    * @Description: 其他service调用userMapper时用的
+    * @Param:  
+    * @return:  
+    * @Author: su
+    * @Date: 2018/7/29 
+    */ 
+    int upDate(User record, UserExample example);
 }
