@@ -4,6 +4,7 @@ import com.kaituo.pms.dao.PrizeMapper;
 import com.kaituo.pms.domain.Prize;
 import com.kaituo.pms.domain.PrizeExample;
 import com.kaituo.pms.service.PrizeService;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -64,4 +65,17 @@ public class PrizeServiceImpl implements PrizeService {
         prizeMapper.updateByPrimaryKey(prize);
 
     }
+
+    /** 
+    * @Description: 通过id查找商品
+    * @Param:  
+    * @return:  
+    * @Author: su
+    * @Date: 2018/7/27 
+    */ 
+    @Override
+    public Prize findPrizeByID(Integer prizeId) {
+        return prizeMapper.selectByPrimaryKey(prizeId);
+    }
+
 }

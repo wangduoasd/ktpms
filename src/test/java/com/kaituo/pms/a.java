@@ -15,6 +15,7 @@ import java.util.Date;
 public class a {
 
     public static void main(String[] args){
-
+        InterfaceServiceImpl interfaceService = new InterfaceServiceImpl();
+        interfaceService.addNewUserIntegral(1, 0 , "张三");
     }
 }

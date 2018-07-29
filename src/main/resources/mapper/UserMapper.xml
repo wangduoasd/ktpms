@@ -181,13 +181,14 @@
       <include refid="Example_Where_Clause" />
     </if>
   </select>
+  <!--自定义SQL，对应员工数据总条数-->
     <select id="selectNumberOfUserByCondition" resultType="java.lang.Long">
-      select concat(*) from p_user where user_name like concat(concat('%',#{condition}),'%')
+      select count(*) from p_user where user_name like concat(concat('%',#{condition}),'%')
       or dept_id
          in (select dept_id from p_dept where dept_name like concat(concat('%',#{condition}),'%')
             )
     </select>
-  <!--自定义SQL-->
+  <!--自定义SQL对应员工数据-->
   <select id="selectByCondition" resultMap="BaseResultMap">
     select * from p_user where user_name like concat(concat('%',#{condition}),'%')
       or dept_id

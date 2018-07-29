@@ -24,18 +24,19 @@ public class InterfaceServiceImpl implements IntegralService {
     IntegralMapper integralMapper;
     @Override
     public int addNewUserIntegral(Integer user_id, int changeInt , String operator) {
-//        Integral integral = new Integral();
-//        integral.setIntegralId(null);
-//        integral.setIntegralTotal(0);
-//        integral.setUserId(user_id);
-//        integral.setIntegralChangestr("初始积分");
-//        integral.setIntegralTime(new Date());
-//        integral.setIntegralStatus(1);
-//        integral.setIntegralChangeint(changeInt);
-//        integral.setIntegralOperator(operator);
-//        Integer integer = integralMapper.insert2(null,0,user_id,"初始积分",integral.getIntegralTime(),
-//        1,changeInt,operator);
-//        return integer;
-        return 0;
+        Integral integral = new Integral();
+        integral.setIntegralId(null);
+        integral.setIntegralTotal(changeInt);
+        integral.setUserId(user_id);
+        integral.setIntegralChangestr("初始积分");
+        integral.setIntegralTime(new Date());
+        integral.setIntegralStatus(1);
+        integral.setIntegralChangeint(changeInt);
+        integral.setIntegralOperator(operator);
+//        Integer integer = integralMapper.insert(integral);
+        Integer integer = integralMapper.insert2(null,changeInt,user_id,"初始积分",integral.getIntegralTime(),
+        1,changeInt,operator);
+        return integer;
+//        return 0;
     }
 }

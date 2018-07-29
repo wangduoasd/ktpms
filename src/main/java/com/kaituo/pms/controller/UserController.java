@@ -63,7 +63,7 @@ public class UserController {
         //查询所有员工总数
         int total = (int) userService.findNumberOfUser();
         Map<String,Object> map;
-        if (0>total){
+        if (0<total){
         //查询所有待领取任务的信息
         //分页
         PageHelper.startPage(intPageNumber,intPpageSize);
@@ -86,7 +86,7 @@ public class UserController {
     }
 
     /**
-    * @Description: 有条件的员工分页
+    * @Description: 带检索条件的员工分页
     * @Param:
     * @return:
     * @Author: su
@@ -100,7 +100,7 @@ public class UserController {
         //查询条件满足的员工总数
         int total = (int) userService.findNumberOfUserByCondition(condition);
         Map<String,Object> map;
-        if (0>total){
+        if (0<total){
             //查询条件满足的员工的信息
             //分页
             PageHelper.startPage(intPageNumber,intPpageSize);
@@ -116,7 +116,7 @@ public class UserController {
             data.put("User",userMapList);
             map = MapUtil.setMap2("1","成功",data);
         }else {
-            map = MapUtil.setMap2("2","未找到相应员工",null);
+            map = MapUtil.setMap2("0","未找到相应员工",null);
         }
 
         return map;

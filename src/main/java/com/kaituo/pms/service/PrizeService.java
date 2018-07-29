@@ -35,4 +35,13 @@ public interface PrizeService {
      * 张金行
      */
     void releasePrizeById(Prize prize);
+    /** 
+    * @Description:
+    * @Param:  
+    * @return:  
+    * @Author: su
+    * @Date: 2018/7/27 
+    */
+    Prize findPrizeByID(Integer prizeId);
+
 }
