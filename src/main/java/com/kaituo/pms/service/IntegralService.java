@@ -5,6 +5,7 @@ import com.kaituo.pms.domain.Integral;
 import java.util.Map;
 
 import com.kaituo.pms.domain.Integral;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -15,6 +16,7 @@ import java.util.List;
  * @create: 2018-07-26 16:22
  **/
 
+@Service
 public interface IntegralService {
     /**
     * @Description: 添加员工时专用的添加积分记录
