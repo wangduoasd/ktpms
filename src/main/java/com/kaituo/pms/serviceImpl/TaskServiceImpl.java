@@ -17,19 +17,6 @@ public class TaskServiceImpl implements TaskService {
     @Autowired
     TaskMapper taskMapper;
     /**
-     *@Description: 查询所有待领取任务的数量
-     *@Author: 郭士伟
-     *@Date: 2018/7/24
-     */
-    @Override
-    public long findNumberOfTaskByStatus(int status) {
-        TaskExample example = new TaskExample();
-        TaskExample.Criteria criteria = example.createCriteria();
-        criteria.andTaskStatusEqualTo(status);
-
-        return taskMapper.countByExample(example);
-    }
-    /**
      *@Description: 查询所有状态任务的信息
      *@Author: 郭士伟
      *@Date: 2018/7/24
@@ -60,8 +47,7 @@ public class TaskServiceImpl implements TaskService {
      *@Date: 2018/7/27
      */
     @Override
-    public List<Task> findAllTaskByPage() {
-        return null;
+    public int changeStatus(Task task) {
+     return    taskMapper.updateByPrimaryKey(task);
     }
-
 }

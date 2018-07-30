@@ -1,5 +1,9 @@
 package com.kaituo.pms.service;
 
+import com.kaituo.pms.domain.Integral;
+
+import java.util.List;
+
 /**
  * @program: pms
  * @description: 关于积分的
@@ -15,5 +19,7 @@ public interface IntegralService {
     * @Author: su
     * @Date: 2018/7/26
     */
-    int addNewUserIntegral(Integer user_id , int changeInt , String operator);
+    int upUserIntegral(Integral integral);
+
+    List<Integral> findIntegralDetail(Integer userid);
 }

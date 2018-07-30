@@ -23,7 +23,7 @@ public class PrizeServiceImpl implements PrizeService {
         return prizeMapper.selectByExample(prizeExample);
     }
     /**
-     * 商品列表_搜索按钮 返回商品list
+     * 商品列表_搜索按钮  模糊查询 返回商品list
      * 张金行
      */
     @Override

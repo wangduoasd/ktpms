@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
+import java.util.List;
 
 public class User {
     private Integer userId;
@@ -25,6 +26,8 @@ public class User {
     @DateTimeFormat(pattern = "yyyy.MM.dd")
     @JsonFormat(pattern = "yyyy.MM.dd")
     private Date userInductiontime;
+
+    private List<Role> roles;
 
     public Integer getUserId() {
         return userId;
@@ -96,5 +99,12 @@ public class User {
 
     public void setUserInductiontime(Date userInductiontime) {
         this.userInductiontime = userInductiontime;
+    }
+    public List<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
     }
 }

@@ -69,5 +69,37 @@ public interface UserService {
     */
     boolean updateUser(String userUserName ,String userName , String deptID , String position ,
                              String userPassword , String inductionTime , String userStatus);
-
+    /**
+     * @Description: 积分中心—积分排行榜-分页查询
+     * @Param:
+     * @return:
+     * @Author: 张金行
+     * @Date: 2018/7/28
+     */
+    List<User> findRankingByPage();
+    /**
+     * @Description: 积分中心—积分排行榜-搜索按钮
+     * @Param:
+     * @return:
+     * @Author: 张金行
+     * @Date: 2018/7/28
+     */
+    List<User>searchRanking(String keyword);
+    /**
+     * @Description: 个人中心-我的信息
+     * @Param:pn页数
+     * @return:
+     * @Author: 张金行
+     * @Date: 2018/7/26
+     */
+    User findPersonalDetail(Integer userid);
+    /**
+     * @Description: 登录
+     * @Param:
+     * @return:
+     * @Author: 张金行
+     * @Date: 2018/7/29
+     */
+    User login(User user);
+  /*  User findByUserName(String username);*/
 }
