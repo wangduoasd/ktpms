@@ -34,30 +34,9 @@
                     <artifactId>spring-boot-starter-logging</artifactId>
                 </exclusion>
 
-
-
-                <!--               <exclusion>外部tomcat
-
-                                   <groupId>org.springframework.boot</groupId>
-
-                                   <artifactId>spring-boot-starter-tomcat</artifactId>
-
-                               </exclusion>
-
-                               </exclusions>-->
             </exclusions>
         </dependency>
-        <!--        <dependency>  外部tomcat
 
-                <groupId>javax.servlet</groupId>
-
-                <artifactId>javax.servlet-api</artifactId>
-
-                <version>3.1.0</version>
-
-                <scope>provided</scope>
-
-            </dependency>-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>

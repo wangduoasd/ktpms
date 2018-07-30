@@ -9,7 +9,7 @@
     <result column="prize_price" jdbcType="INTEGER" property="prizePrice" />
     <result column="prize_quota" jdbcType="INTEGER" property="prizeQuota" />
     <result column="prize_condition" jdbcType="INTEGER" property="prizeCondition" />
-    <result column="prize_status" jdbcType="BIT" property="prizeStatus" />
+    <result column="prize_status" jdbcType="INTEGER" property="prizeStatus" />
     <result column="prize_buy" jdbcType="INTEGER" property="prizeBuy" />
   </resultMap>
   <sql id="Example_Where_Clause">
@@ -120,7 +120,7 @@
       )
     values (#{prizeId,jdbcType=INTEGER}, #{prizeName,jdbcType=VARCHAR}, #{prizeImage,jdbcType=VARCHAR}, 
       #{prizeAmount,jdbcType=INTEGER}, #{prizePrice,jdbcType=INTEGER}, #{prizeQuota,jdbcType=INTEGER}, 
-      #{prizeCondition,jdbcType=INTEGER}, #{prizeStatus,jdbcType=BIT}, #{prizeBuy,jdbcType=INTEGER}
+      #{prizeCondition,jdbcType=INTEGER}, #{prizeStatus,jdbcType=INTEGER}, #{prizeBuy,jdbcType=INTEGER}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.kaituo.pms.domain.Prize">
@@ -177,7 +177,7 @@
         #{prizeCondition,jdbcType=INTEGER},
       </if>
       <if test="prizeStatus != null">
-        #{prizeStatus,jdbcType=BIT},
+        #{prizeStatus,jdbcType=INTEGER},
       </if>
       <if test="prizeBuy != null">
         #{prizeBuy,jdbcType=INTEGER},
@@ -215,7 +215,7 @@
         prize_condition = #{record.prizeCondition,jdbcType=INTEGER},
       </if>
       <if test="record.prizeStatus != null">
-        prize_status = #{record.prizeStatus,jdbcType=BIT},
+        prize_status = #{record.prizeStatus,jdbcType=INTEGER},
       </if>
       <if test="record.prizeBuy != null">
         prize_buy = #{record.prizeBuy,jdbcType=INTEGER},
@@ -234,7 +234,7 @@
       prize_price = #{record.prizePrice,jdbcType=INTEGER},
       prize_quota = #{record.prizeQuota,jdbcType=INTEGER},
       prize_condition = #{record.prizeCondition,jdbcType=INTEGER},
-      prize_status = #{record.prizeStatus,jdbcType=BIT},
+      prize_status = #{record.prizeStatus,jdbcType=INTEGER},
       prize_buy = #{record.prizeBuy,jdbcType=INTEGER}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -262,7 +262,7 @@
         prize_condition = #{prizeCondition,jdbcType=INTEGER},
       </if>
       <if test="prizeStatus != null">
-        prize_status = #{prizeStatus,jdbcType=BIT},
+        prize_status = #{prizeStatus,jdbcType=INTEGER},
       </if>
       <if test="prizeBuy != null">
         prize_buy = #{prizeBuy,jdbcType=INTEGER},
@@ -278,7 +278,7 @@
       prize_price = #{prizePrice,jdbcType=INTEGER},
       prize_quota = #{prizeQuota,jdbcType=INTEGER},
       prize_condition = #{prizeCondition,jdbcType=INTEGER},
-      prize_status = #{prizeStatus,jdbcType=BIT},
+      prize_status = #{prizeStatus,jdbcType=INTEGER},
       prize_buy = #{prizeBuy,jdbcType=INTEGER}
     where prize_id = #{prizeId,jdbcType=INTEGER}
   </update>

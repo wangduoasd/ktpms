@@ -2,13 +2,10 @@ package com.kaituo.pms.dao;
 
 import com.kaituo.pms.domain.Prize;
 import com.kaituo.pms.domain.PrizeExample;
-import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
-@Mapper
-@Repository
+
 public interface PrizeMapper {
     long countByExample(PrizeExample example);
 

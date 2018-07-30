@@ -15,7 +15,7 @@ public class Prize {
 
     private Integer prizeCondition;
 
-    private Boolean prizeStatus;
+    private Integer prizeStatus;
 
     private Integer prizeBuy;
 
@@ -75,11 +75,11 @@ public class Prize {
         this.prizeCondition = prizeCondition;
     }
 
-    public Boolean getPrizeStatus() {
+    public Integer getPrizeStatus() {
         return prizeStatus;
     }
 
-    public void setPrizeStatus(Boolean prizeStatus) {
+    public void setPrizeStatus(Integer prizeStatus) {
         this.prizeStatus = prizeStatus;
     }
 

@@ -554,52 +554,52 @@ public class PrizeExample {
             return (Criteria) this;
         }
 
-        public Criteria andPrizeStatusEqualTo(Boolean value) {
+        public Criteria andPrizeStatusEqualTo(Integer value) {
             addCriterion("prize_status =", value, "prizeStatus");
             return (Criteria) this;
         }
 
-        public Criteria andPrizeStatusNotEqualTo(Boolean value) {
+        public Criteria andPrizeStatusNotEqualTo(Integer value) {
             addCriterion("prize_status <>", value, "prizeStatus");
             return (Criteria) this;
         }
 
-        public Criteria andPrizeStatusGreaterThan(Boolean value) {
+        public Criteria andPrizeStatusGreaterThan(Integer value) {
             addCriterion("prize_status >", value, "prizeStatus");
             return (Criteria) this;
         }
 
-        public Criteria andPrizeStatusGreaterThanOrEqualTo(Boolean value) {
+        public Criteria andPrizeStatusGreaterThanOrEqualTo(Integer value) {
             addCriterion("prize_status >=", value, "prizeStatus");
             return (Criteria) this;
         }
 
-        public Criteria andPrizeStatusLessThan(Boolean value) {
+        public Criteria andPrizeStatusLessThan(Integer value) {
             addCriterion("prize_status <", value, "prizeStatus");
             return (Criteria) this;
         }
 
-        public Criteria andPrizeStatusLessThanOrEqualTo(Boolean value) {
+        public Criteria andPrizeStatusLessThanOrEqualTo(Integer value) {
             addCriterion("prize_status <=", value, "prizeStatus");
             return (Criteria) this;
         }
 
-        public Criteria andPrizeStatusIn(List<Boolean> values) {
+        public Criteria andPrizeStatusIn(List<Integer> values) {
             addCriterion("prize_status in", values, "prizeStatus");
             return (Criteria) this;
         }
 
-        public Criteria andPrizeStatusNotIn(List<Boolean> values) {
+        public Criteria andPrizeStatusNotIn(List<Integer> values) {
             addCriterion("prize_status not in", values, "prizeStatus");
             return (Criteria) this;
         }
 
-        public Criteria andPrizeStatusBetween(Boolean value1, Boolean value2) {
+        public Criteria andPrizeStatusBetween(Integer value1, Integer value2) {
             addCriterion("prize_status between", value1, value2, "prizeStatus");
             return (Criteria) this;
         }
 
-        public Criteria andPrizeStatusNotBetween(Boolean value1, Boolean value2) {
+        public Criteria andPrizeStatusNotBetween(Integer value1, Integer value2) {
             addCriterion("prize_status not between", value1, value2, "prizeStatus");
             return (Criteria) this;
         }
