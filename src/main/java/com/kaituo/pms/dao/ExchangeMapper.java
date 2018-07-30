@@ -40,4 +40,24 @@ public interface ExchangeMapper {
      *@Date: 2018/7/25
     */
     List<Exchange> selectBySearch(String searchStr);
+    
+    /** 
+    * @Description:  自己添加的：根据搜索内容（用户名称或者商品名称）和员工id查询对应的兑换列表数据总数
+    * @Param:  
+    * @return:  
+    * @Author: su
+    * @Date: 2018/7/27 
+    */ 
+    int findNumberOfExchangeByUserIDAndSearchStr(@Param("userID") int userID,@Param("prizeID")String prizeID);
+
+    /**
+     * @Description:  自己添加的：根据搜索内容（用户名称或者商品名称）和员工id查询对应的兑换列表数据
+     * @Param:
+     * @return:
+     * @Author: su
+     * @Date: 2018/7/27
+     */
+    List<Exchange> findExchangeByUserIDAndSearchStr(@Param("userID") int userID,@Param("prizeID")String prizeID);
+
+
 }

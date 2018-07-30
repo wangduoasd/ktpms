@@ -8,7 +8,6 @@ import com.kaituo.pms.service.DeptService;
 import com.kaituo.pms.utils.MapUtil;
 import com.kaituo.pms.utils.Msg;
 import lombok.extern.slf4j.Slf4j;
-import net.sf.jsqlparser.expression.MySQLGroupConcat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

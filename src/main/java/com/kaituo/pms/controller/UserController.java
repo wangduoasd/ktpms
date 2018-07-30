@@ -13,6 +13,8 @@ import com.kaituo.pms.utils.Msg;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,7 +35,7 @@ public class UserController {
     UserService userService;
    /* *//**
      * @Description: 登录
-     * @Param: 
+     * @Param:
      * @return:
      * @Author: 张金行
      * @Date: 2018/7/26
@@ -61,7 +63,7 @@ public class UserController {
         //查询所有员工总数
         int total = (int) userService.findNumberOfUser();
         Map<String,Object> map;
-        if (0>total){
+        if (0<total){
         //查询所有待领取任务的信息
         //分页
         PageHelper.startPage(intPageNumber,intPpageSize);
@@ -98,7 +100,7 @@ public class UserController {
         //查询条件满足的员工总数
         int total = (int) userService.findNumberOfUserByCondition(condition);
         Map<String,Object> map;
-        if (0>total){
+        if (0<total){
             //查询条件满足的员工的信息
             //分页
             PageHelper.startPage(intPageNumber,intPpageSize);
@@ -114,7 +116,7 @@ public class UserController {
             data.put("User",userMapList);
             map = MapUtil.setMap2("1","成功",data);
         }else {
-            map = MapUtil.setMap2("2","未找到相应员工",null);
+            map = MapUtil.setMap2("0","未找到相应员工",null);
         }
 
         return map;
@@ -188,15 +190,46 @@ public class UserController {
      * @Description: 个人中心-我的信息
      * @Param: userid 用户ID
      * @return:
-     * @Author: 张金行
+             * @Author: 张金行
      * @Date: 2018/7/26
-     *//*
+            *//*
     @PostMapping("findPersonalDetail")
-   public Msg findPersonalDetail(Integer userid){
-       User user = userService.findPersonalDetail(userid);
-       if(user!=null)
-       return Msg.success().add("user",user);
-       else
-           return Msg.fail();
-   }*/
+    public Msg findPersonalDetail(Integer userid){
+        User user = userService.findPersonalDetail(userid);
+        if(user!=null)
+            return Msg.success().add("user",user);
+        else
+            return Msg.fail();
+    }*/
+    /**
+     * @Description: 个人中心个人信息展示（备选1）
+     * @Param:
+     * @return:
+     * @Author: su
+     * @Date: 2018/7/29
+     */
+    @PostMapping("findPersonalDetail")
+    public Map<String , Object> findPersonalDetail(String userID){
+        Integer userIDInt = Integer.parseInt(userID);
+        return userService.findPersonalDetail(userIDInt);
+    }
+
+    /**
+     * @Description: 个人中心个人信息展示（备选2）
+     * @Param:
+     * @return:
+     * @Author: su
+     * @Date: 2018/7/29
+     */
+//    @PostMapping("findPersonalDetail")
+//    public Map<String , Object> findPersonalDetail(HttpServletRequest request){
+//        HttpSession session = request.getSession();
+//        User user = (User) session.getAttribute("user");
+//        if (null!=user) {
+//            int userID = user.getUserId();
+//            return userService.findPersonalDetail(userID);
+//        }else {
+//            return MapUtil.setMap2("1","获取员工id失败",null);
+//        }
+//    }
 }

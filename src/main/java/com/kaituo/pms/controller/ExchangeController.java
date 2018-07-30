@@ -3,11 +3,15 @@ package com.kaituo.pms.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.kaituo.pms.domain.Exchange;
+import com.kaituo.pms.domain.Integral;
+import com.kaituo.pms.domain.User;
 import com.kaituo.pms.service.ExchangeService;
 import com.kaituo.pms.utils.MapUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -90,4 +94,94 @@ public class ExchangeController {
         }
        return MapUtil.setMap2("0","没有查询出结果",null);
     }
+
+    /** 
+    * @Description: 普通用户的兑换记录记录分页(备选方法1)
+    * @Param:  
+    * @return:  
+    * @Author: su
+    * @Date: 2018/7/27 
+    */
+    @PostMapping("findExchangeRecordByUser")
+    public Map<String , Object> findExchangeRecordByUser(String pageNumber, String pageSize,Integer userID){
+        return exchangeService.findExchangeRecordByUser(pageNumber,pageSize,userID);
+    }
+
+    /**
+     * @Description: 普通用户的兑换记录记录分页(备选方法2)
+     * @Param:
+     * @return:
+     * @Author: su
+     * @Date: 2018/7/27
+     */
+//    @PostMapping("findExchangeRecordByUser")
+//    public Map<String , Object> findExchangeRecordByUser(String pageNumber, String pageSize, HttpServletRequest request){
+//        HttpSession session = request.getSession();
+//        User user = (User)session.getAttribute("user");
+//        Integer userID = user.getUserId();
+//        if (null==userID){
+//            return MapUtil.setMap2("0","未获取到用户信息",null);
+//        }
+//        return exchangeService.findExchangeRecordByUser(pageNumber,pageSize,userID);
+//    }
+
+    /**
+     * @Description: 带检索条件的普通用户的兑换记录记录分页(备选方法1)
+     * @Param:
+     * @return:
+     * @Author: su
+     * @Date: 2018/7/27
+     */
+    @PostMapping("searchExchangeRecord")
+    public Map<String , Object> searchExchangeRecord(String pageNumber, String pageSize,Integer userID , String searchStr){
+        return exchangeService.searchExchangeRecord(pageNumber,pageSize,userID,searchStr);
+    }
+
+    /**
+     * @Description: 带检索条件的普通用户的兑换记录记录分页(备选方法2)
+     * @Param:
+     * @return:
+     * @Author: su
+     * @Date: 2018/7/27
+     */
+//    @PostMapping("searchExchangeRecord")
+//    public Map<String , Object> searchExchangeRecord(String pageNumber, String pageSize, HttpServletRequest request , String searchStr){
+//        HttpSession session = request.getSession();
+//        User user = (User)session.getAttribute("user");
+//        Integer userID = user.getUserId();
+//        if (null==userID){
+//            return MapUtil.setMap2("0","未获取到用户信息",null);
+//        }
+//        return exchangeService.searchExchangeRecord(pageNumber,pageSize,userID,searchStr);
+//    }
+    
+    /** 
+    * @Description: 点击确认已领取按钮修改兑换状态
+    * @Param:  
+    * @return:  
+    * @Author: su
+    * @Date: 2018/7/29 
+    */ 
+    @PostMapping("confirmReceive")
+    public Map<String , Object> confirmReceive(String exchangeId , String userId){
+        return exchangeService.confirmReceive(exchangeId , userId);
+    }
+
+    /** 
+    * @Description:  点击确认已领取按钮修改兑换状态(备选方法2)
+    * @Param:  
+    * @return:  
+    * @Author: su
+    * @Date: 2018/7/29 
+    */
+//    @PostMapping("confirmReceive")
+//    public Map<String , Object> confirmReceive(String exchangeId , String userId , HttpServletRequest request){
+//        HttpSession session = request.getSession();
+//        User user = (User)session.getAttribute("user");
+//        Integer userID = user.getUserId();
+//        if (null==userID){
+//            return MapUtil.setMap2("3","未获取到用户信息",null);
+//        }
+//        return exchangeService.confirmReceive(exchangeId , userId);
+//    }
 }
