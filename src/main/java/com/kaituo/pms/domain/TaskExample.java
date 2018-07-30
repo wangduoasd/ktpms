@@ -1,12 +1,11 @@
 package com.kaituo.pms.domain;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-public class TaskExample implements Serializable {
+public class TaskExample {
     protected String orderByClause;
 
     protected boolean distinct;
@@ -1010,6 +1009,66 @@ public class TaskExample implements Serializable {
 
         public Criteria andUserNameNotBetween(String value1, String value2) {
             addCriterion("user_name not between", value1, value2, "userName");
+            return (Criteria) this;
+        }
+
+        public Criteria andTaskCompletenumberIsNull() {
+            addCriterion("task_completenumber is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTaskCompletenumberIsNotNull() {
+            addCriterion("task_completenumber is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTaskCompletenumberEqualTo(Integer value) {
+            addCriterion("task_completenumber =", value, "taskCompletenumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andTaskCompletenumberNotEqualTo(Integer value) {
+            addCriterion("task_completenumber <>", value, "taskCompletenumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andTaskCompletenumberGreaterThan(Integer value) {
+            addCriterion("task_completenumber >", value, "taskCompletenumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andTaskCompletenumberGreaterThanOrEqualTo(Integer value) {
+            addCriterion("task_completenumber >=", value, "taskCompletenumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andTaskCompletenumberLessThan(Integer value) {
+            addCriterion("task_completenumber <", value, "taskCompletenumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andTaskCompletenumberLessThanOrEqualTo(Integer value) {
+            addCriterion("task_completenumber <=", value, "taskCompletenumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andTaskCompletenumberIn(List<Integer> values) {
+            addCriterion("task_completenumber in", values, "taskCompletenumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andTaskCompletenumberNotIn(List<Integer> values) {
+            addCriterion("task_completenumber not in", values, "taskCompletenumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andTaskCompletenumberBetween(Integer value1, Integer value2) {
+            addCriterion("task_completenumber between", value1, value2, "taskCompletenumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andTaskCompletenumberNotBetween(Integer value1, Integer value2) {
+            addCriterion("task_completenumber not between", value1, value2, "taskCompletenumber");
             return (Criteria) this;
         }
     }

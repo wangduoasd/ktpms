@@ -49,15 +49,15 @@
 
       <!--  <table schema="" tableName="p_dept"><domainObjectRenamingRule searchString="^P" replaceString="" /></table>
         <table schema="" tableName="p_dept_position"><domainObjectRenamingRule searchString="^P" replaceString="" /></table>-->
-        <table schema="" tableName="p_exchange"><domainObjectRenamingRule searchString="^P" replaceString="" /></table>
-        <!--<table schema="" tableName="p_position"><domainObjectRenamingRule searchString="^P" replaceString="" /></table>
-        <table schema="" tableName="p_prize"><domainObjectRenamingRule searchString="^P" replaceString="" /></table>
-        <table schema="" tableName="p_role"><domainObjectRenamingRule searchString="^P" replaceString="" /></table>
+     <!--   <table schema="" tableName="p_exchange"><domainObjectRenamingRule searchString="^P" replaceString="" /></table>-->
+        <!--<table schema="" tableName="p_position"><domainObjectRenamingRule searchString="^P" replaceString="" /></table>-->
+        <!--<table schema="" tableName="p_prize"><domainObjectRenamingRule searchString="^P" replaceString="" /></table>-->
+        <!--<table schema="" tableName="p_role"><domainObjectRenamingRule searchString="^P" replaceString="" /></table>-->
         <table schema="" tableName="p_task"><domainObjectRenamingRule searchString="^P" replaceString="" /></table>
-        <table schema="" tableName="p_user"><domainObjectRenamingRule searchString="^P" replaceString="" /></table>
-        <table schema="" tableName="p_user_role"><domainObjectRenamingRule searchString="^P" replaceString="" /></table>
-        <table schema="" tableName="p_permission"><domainObjectRenamingRule searchString="^P" replaceString="" /></table>
-        <table schema="" tableName="p_integral"><domainObjectRenamingRule searchString="^P" replaceString="" /></table>-->
+        <!--<table schema="" tableName="p_user"><domainObjectRenamingRule searchString="^P" replaceString="" /></table>-->
+        <!--<table schema="" tableName="p_user_role"><domainObjectRenamingRule searchString="^P" replaceString="" /></table>-->
+        <!--<table schema="" tableName="p_permission"><domainObjectRenamingRule searchString="^P" replaceString="" /></table>-->
+        <!--<table schema="" tableName="p_integral"><domainObjectRenamingRule searchString="^P" replaceString="" /></table>-->
 
     </context>
 </generatorConfiguration>

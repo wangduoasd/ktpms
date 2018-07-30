@@ -1,8 +1,5 @@
 package com.kaituo.pms.domain;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import org.springframework.format.annotation.DateTimeFormat;
-
 import java.io.Serializable;
 import java.util.Date;
 
@@ -20,11 +17,9 @@ public class Task implements Serializable {
     private Integer taskNumber;
 
     private Integer taskTime;
-    @DateTimeFormat(pattern = "yyyy.MM.dd")
-    @JsonFormat(pattern = "yyyy.MM.dd")
+
     private Date taskStarttime;
-    @DateTimeFormat(pattern = "yyyy.MM.dd")
-    @JsonFormat(pattern = "yyyy.MM.dd")
+
     private Date taskEndtime;
 
     private String taskImage;
@@ -37,25 +32,7 @@ public class Task implements Serializable {
 
     private String userName;
 
-    @Override
-    public String toString() {
-        return "Task{" +
-                "taskId=" + taskId +
-                ", taskName='" + taskName + '\'' +
-                ", taskDifficulty=" + taskDifficulty +
-                ", taskPrice=" + taskPrice +
-                ", taskAward=" + taskAward +
-                ", taskNumber=" + taskNumber +
-                ", taskTime=" + taskTime +
-                ", taskStarttime=" + taskStarttime +
-                ", taskEndtime=" + taskEndtime +
-                ", taskImage='" + taskImage + '\'' +
-                ", taskDescribe='" + taskDescribe + '\'' +
-                ", taskStatus=" + taskStatus +
-                ", userId=" + userId +
-                ", userName='" + userName + '\'' +
-                '}';
-    }
+    private Integer taskCompletenumber;
 
     public Integer getTaskId() {
         return taskId;
@@ -167,5 +144,13 @@ public class Task implements Serializable {
 
     public void setUserName(String userName) {
         this.userName = userName == null ? null : userName.trim();
+    }
+
+    public Integer getTaskCompletenumber() {
+        return taskCompletenumber;
+    }
+
+    public void setTaskCompletenumber(Integer taskCompletenumber) {
+        this.taskCompletenumber = taskCompletenumber;
     }
 }

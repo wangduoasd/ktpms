@@ -75,7 +75,7 @@ prizeService.updatePrizeBuId(prize);
      * 张金行
      */
     public  Msg releasePrizeById(Prize prize){
-        prize.setPrizeStatus(true);
+        prize.setPrizeStatus(1);
         prizeService.releasePrizeById(prize);
         return Msg.success();
     }
