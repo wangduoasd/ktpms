@@ -58,4 +58,5 @@ public class IntegralController {
 //        int userID = user.getUserId();
 //        return integralService.findIntegralDetail(intPageNumber , intPageSize , userID);
 //    }
+
 }

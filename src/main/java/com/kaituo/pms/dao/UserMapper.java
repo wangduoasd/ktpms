@@ -43,4 +43,6 @@ public interface UserMapper {
     * @Date: 2018/7/27
     */
     List<User> selectByCondition(String condition);
+    List<User> selectBykeyWord(@Param("keyword")String keyword);
+    User findByUserName(@Param("username")String username);
 }

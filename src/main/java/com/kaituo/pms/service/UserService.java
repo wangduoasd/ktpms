@@ -71,30 +71,47 @@ public interface UserService {
     boolean updateUser(String userUserName ,String userName , String deptID , String position ,
                              String userPassword , String inductionTime , String userStatus);
 
-    /** 
+    /**
     * @Description: 个人中心，查询自己的信息
-    * @Param:  
-    * @return:  
+    * @Param:
+    * @return:
     * @Author: su
-    * @Date: 2018/7/29 
+    * @Date: 2018/7/29
     */
     Map<String , Object> findPersonalDetail(Integer userID);
-    
-    /** 
+
+    /**
     * @Description: 查询对应userID的员工
-    * @Param:  
-    * @return:  
+    * @Param:
+    * @return:
     * @Author: su
-    * @Date: 2018/7/29 
+    * @Date: 2018/7/29
     */
     User findUserByID(int userID);
 
-    /** 
+    /**
     * @Description: 其他service调用userMapper时用的
-    * @Param:  
-    * @return:  
+    * @Param:
+    * @return:
     * @Author: su
-    * @Date: 2018/7/29 
-    */ 
+    * @Date: 2018/7/29
+    */
     int upDate(User record, UserExample example);
+
+    /**
+     * @Description: 积分中心—积分排行榜-分页查询
+     * @Param:
+     * @return:
+     * @Author: 张金行
+     * @Date: 2018/7/28
+     */
+    List<User> findRankingByPage();
+    /**
+     * @Description: 积分中心—积分排行榜-搜索按钮
+     * @Param:
+     * @return:
+     * @Author: 张金行
+     * @Date: 2018/7/28
+     */
+    List<User>searchRanking(String keyword);
 }

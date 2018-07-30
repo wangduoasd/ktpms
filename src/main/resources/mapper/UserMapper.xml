@@ -74,6 +74,28 @@
     user_id, user_name, user_username, user_password, user_integral, user_position, dept_id, 
     user_status, user_inductiontime
   </sql>
+  <resultMap id="userMap" type="com.kaituo.pms.domain.User">
+    <id column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="user_username" jdbcType="VARCHAR" property="userUsername" />
+    <result column="user_password" jdbcType="VARCHAR" property="userPassword" />
+    <result column="user_integral" jdbcType="INTEGER" property="userIntegral" />
+    <result column="user_position" jdbcType="VARCHAR" property="userPosition" />
+    <result column="dept_id" jdbcType="INTEGER" property="deptId" />
+    <result column="user_status" jdbcType="INTEGER" property="userStatus" />
+    <result column="user_inductiontime" jdbcType="DATE" property="userInductiontime" />
+    <collection property="roles" ofType="com.kaituo.pms.domain.Role">
+      <result column="role_name" property="roleName"/>
+    </collection>
+  </resultMap>
+  <select id="findByUserName" parameterType="String" resultMap="userMap">
+           select u.*
+        ,r.role_name,r.role_affiliation
+        from p_user u
+        LEFT JOIN p_user_role sru on u.user_id= sru.user_id
+        LEFT JOIN p_role r on sru.role_id=r.role_id
+        where u.user_username=#{username}
+    </select>
   <select id="selectByExample" parameterType="com.kaituo.pms.domain.UserExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
@@ -194,6 +216,15 @@
       or dept_id
         in (select dept_id from p_dept where dept_name like concat(concat('%',#{condition}),'%')
            )
+  </select>
+  <!--模糊查询-->
+  <select id="selectBykeyWord" parameterType="java.lang.String" resultMap="BaseResultMap">
+    SELECT
+      *
+    FROM
+      p_user
+    WHERE
+      user_name  LIKE concat(concat('%',#{keyword}),'%')
   </select>
   <update id="updateByExampleSelective" parameterType="map">
     update p_user

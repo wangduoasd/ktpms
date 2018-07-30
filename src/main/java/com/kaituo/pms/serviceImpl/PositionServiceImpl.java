@@ -61,4 +61,9 @@ public class PositionServiceImpl implements PositionService {
         }
         return positionList;
     }
+
+    @Override
+    public int addPostion(Position position) {
+        return positionMapper.insertSelective( position);
+    }
 }

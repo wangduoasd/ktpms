@@ -2,6 +2,7 @@ package com.kaituo.pms.serviceImpl;
 
 import com.kaituo.pms.dao.UserMapper;
 import com.kaituo.pms.domain.Dept;
+import com.kaituo.pms.domain.Role;
 import com.kaituo.pms.domain.User;
 import com.kaituo.pms.domain.UserExample;
 import com.kaituo.pms.service.DeptService;
@@ -9,6 +10,12 @@ import com.kaituo.pms.service.UserService;
 import com.kaituo.pms.utils.MapUtil;
 import com.kaituo.pms.utils.Util;
 import org.springframework.beans.factory.annotation.Autowired;
+/*import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;*/
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
@@ -22,13 +29,15 @@ import java.util.*;
  * @create: 2018-07-25 13:52
  **/
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService/*,UserDetailsService */{
 
     @Autowired
     UserMapper userMapper;
 
     @Autowired
     DeptService deptService;
+/*    @Autowired
+    private PasswordEncoder passwordEncoder;*/
 
     @Override
     public long findNumberOfUser() {
@@ -118,6 +127,53 @@ public class UserServiceImpl implements UserService {
             return false;
         }
     }
+
+    @Override
+    public List<User> findRankingByPage() {
+        UserExample userExample = new UserExample();
+        UserExample.Criteria criteria = userExample.createCriteria();
+        /*根据user_integral字段升序*/
+        userExample.setOrderByClause("'user_integral' DESC");
+       return userMapper.selectByExample(userExample);
+    }
+
+    @Override
+    public List<User> searchRanking(String keyword) {
+        return userMapper.selectBykeyWord(keyword);
+
+    }
+
+//    @Override
+//    public User findPersonalDetail(Integer userid) {
+//        return userMapper.selectByPrimaryKey(userid);
+//    }
+
+//    @Override
+//    public User login(User user) {
+//        UserExample userExample = new UserExample();
+//        UserExample.Criteria criteria = userExample.createCriteria();
+//        criteria.andUserUsernameEqualTo(user.getUserUsername()).andUserPasswordEqualTo(user.getUserPassword());
+//        List<User> users = userMapper.selectByExample(userExample);
+//        return  users.get(0);
+//    }
+
+/*    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {//重写loadUserByUsername 方法获得 userdetails 类型用户
+        User user = userMapper.findByUserName(username);
+        if(user == null){
+            throw new UsernameNotFoundException("用户名不存在");
+        }
+        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        //用于添加用户的权限。只要把用户权限添加到authorities 就万事大吉。
+        for(Role role:user.getRoles())
+        {
+            authorities.add(new SimpleGrantedAuthority(role.getRoleName()));
+        }
+ String ps=passwordEncoder.encode(user.getUserPassword());
+        System.out.println(ps);
+        return new org.springframework.security.core.userdetails.User(user.getUserUsername(), ps, *//*AuthorityUtils.commaSeparatedStringToAuthorityList("admin")*//*authorities);
+
+    }*/
 
     @Override
     public Map<String, Object> findPersonalDetail(Integer userID) {

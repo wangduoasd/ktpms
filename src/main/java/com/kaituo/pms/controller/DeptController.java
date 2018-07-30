@@ -9,10 +9,7 @@ import com.kaituo.pms.utils.MapUtil;
 import com.kaituo.pms.utils.Msg;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -41,9 +38,16 @@ public class DeptController {
     /*REST URI风格的请求
      *  /emp/{id} GET 查询请求
      *  /emp    POST 保存请求
-     *   /emp/{id} PUT 修改员工
-     *   /emp/{id} DELETE 删除员工*/
-    @RequestMapping(value = "findAll",method = RequestMethod.POST)
+     *   /emp/{id} PUT 修改
+     *   /emp/{id} DELETE 删除*/
+    /**
+     * @Description: 风控中心-部门设置-分页查询
+     * @Param:
+     * @return:
+     * @Author: 张金行
+     * @Date: 2018/7/26
+     */
+    @PostMapping("findAll")
     public Msg findAll(@RequestParam(value="pn",defaultValue="1") Integer pn){
         PageHelper.startPage(pn,5);
         List<Dept> depts = deptService.findAll();
@@ -60,7 +64,13 @@ public class DeptController {
         }
         return MapUtil.setMap2("1","成功",list);
     }
-    /*部门添加*/
+    /**
+     * @Description: 风控中心-部门设置-新建部门-完成按钮
+     * @Param:
+     * @return:
+     * @Author: 张金行
+     * @Date: 2018/7/26
+     */
     @RequestMapping(value = "addDept",method = RequestMethod.POST)
     public Msg addDept(Dept dept){
         deptService.addDept(dept);

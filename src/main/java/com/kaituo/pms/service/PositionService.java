@@ -24,4 +24,12 @@ public interface PositionService {
     * @Date: 2018/7/24 
     */ 
     List<Position> findPosition(String deptId);
+    /**
+     * @Description: 风控中心-部门设置-新建部门按钮-添加按钮
+     * @Param:
+     * @return:
+     * @Author: 张金行
+     * @Date: 2018/7/26
+     */
+    int addPostion(Position position);
 }
