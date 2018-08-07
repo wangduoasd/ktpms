@@ -1,0 +1,552 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kaituo.pms.dao.p_taskMapper">
+  <resultMap id="BaseResultMap" type="com.kaituo.pms.bean.p_task">
+    <constructor>
+      <idArg column="task_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="task_name" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="task_difficulty" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="task_price" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="task_award" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="task_number" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="task_time" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="task_starttime" javaType="java.util.Date" jdbcType="DATE" />
+      <arg column="task_endtime" javaType="java.util.Date" jdbcType="DATE" />
+      <arg column="task_image" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="task_describe" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="task_status" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="user_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="user_name" javaType="java.lang.String" jdbcType="VARCHAR" />
+    </constructor>
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    task_id, task_name, task_difficulty, task_price, task_award, task_number, task_time, 
+    task_starttime, task_endtime, task_image, task_describe, task_status, user_id, user_name
+  </sql>
+  <select id="selectByExample" parameterType="com.kaituo.pms.bean.p_taskExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from p_task
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from p_task
+    where task_id = #{taskId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from p_task
+    where task_id = #{taskId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.kaituo.pms.bean.p_taskExample">
+    delete from p_task
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.kaituo.pms.bean.p_task">
+    insert into p_task (task_id, task_name, task_difficulty, 
+      task_price, task_award, task_number, 
+      task_time, task_starttime, task_endtime, 
+      task_image, task_describe, task_status, 
+      user_id, user_name)
+    values (#{taskId,jdbcType=INTEGER}, #{taskName,jdbcType=VARCHAR}, #{taskDifficulty,jdbcType=INTEGER}, 
+      #{taskPrice,jdbcType=INTEGER}, #{taskAward,jdbcType=INTEGER}, #{taskNumber,jdbcType=INTEGER}, 
+      #{taskTime,jdbcType=INTEGER}, #{taskStarttime,jdbcType=DATE}, #{taskEndtime,jdbcType=DATE}, 
+      #{taskImage,jdbcType=VARCHAR}, #{taskDescribe,jdbcType=VARCHAR}, #{taskStatus,jdbcType=INTEGER}, 
+      #{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.kaituo.pms.bean.p_task">
+    insert into p_task
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="taskId != null">
+        task_id,
+      </if>
+      <if test="taskName != null">
+        task_name,
+      </if>
+      <if test="taskDifficulty != null">
+        task_difficulty,
+      </if>
+      <if test="taskPrice != null">
+        task_price,
+      </if>
+      <if test="taskAward != null">
+        task_award,
+      </if>
+      <if test="taskNumber != null">
+        task_number,
+      </if>
+      <if test="taskTime != null">
+        task_time,
+      </if>
+      <if test="taskStarttime != null">
+        task_starttime,
+      </if>
+      <if test="taskEndtime != null">
+        task_endtime,
+      </if>
+      <if test="taskImage != null">
+        task_image,
+      </if>
+      <if test="taskDescribe != null">
+        task_describe,
+      </if>
+      <if test="taskStatus != null">
+        task_status,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="userName != null">
+        user_name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="taskId != null">
+        #{taskId,jdbcType=INTEGER},
+      </if>
+      <if test="taskName != null">
+        #{taskName,jdbcType=VARCHAR},
+      </if>
+      <if test="taskDifficulty != null">
+        #{taskDifficulty,jdbcType=INTEGER},
+      </if>
+      <if test="taskPrice != null">
+        #{taskPrice,jdbcType=INTEGER},
+      </if>
+      <if test="taskAward != null">
+        #{taskAward,jdbcType=INTEGER},
+      </if>
+      <if test="taskNumber != null">
+        #{taskNumber,jdbcType=INTEGER},
+      </if>
+      <if test="taskTime != null">
+        #{taskTime,jdbcType=INTEGER},
+      </if>
+      <if test="taskStarttime != null">
+        #{taskStarttime,jdbcType=DATE},
+      </if>
+      <if test="taskEndtime != null">
+        #{taskEndtime,jdbcType=DATE},
+      </if>
+      <if test="taskImage != null">
+        #{taskImage,jdbcType=VARCHAR},
+      </if>
+      <if test="taskDescribe != null">
+        #{taskDescribe,jdbcType=VARCHAR},
+      </if>
+      <if test="taskStatus != null">
+        #{taskStatus,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="userName != null">
+        #{userName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.kaituo.pms.bean.p_taskExample" resultType="java.lang.Integer">
+    select count(*) from p_task
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update p_task
+    <set>
+      <if test="record.taskId != null">
+        task_id = #{record.taskId,jdbcType=INTEGER},
+      </if>
+      <if test="record.taskName != null">
+        task_name = #{record.taskName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.taskDifficulty != null">
+        task_difficulty = #{record.taskDifficulty,jdbcType=INTEGER},
+      </if>
+      <if test="record.taskPrice != null">
+        task_price = #{record.taskPrice,jdbcType=INTEGER},
+      </if>
+      <if test="record.taskAward != null">
+        task_award = #{record.taskAward,jdbcType=INTEGER},
+      </if>
+      <if test="record.taskNumber != null">
+        task_number = #{record.taskNumber,jdbcType=INTEGER},
+      </if>
+      <if test="record.taskTime != null">
+        task_time = #{record.taskTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.taskStarttime != null">
+        task_starttime = #{record.taskStarttime,jdbcType=DATE},
+      </if>
+      <if test="record.taskEndtime != null">
+        task_endtime = #{record.taskEndtime,jdbcType=DATE},
+      </if>
+      <if test="record.taskImage != null">
+        task_image = #{record.taskImage,jdbcType=VARCHAR},
+      </if>
+      <if test="record.taskDescribe != null">
+        task_describe = #{record.taskDescribe,jdbcType=VARCHAR},
+      </if>
+      <if test="record.taskStatus != null">
+        task_status = #{record.taskStatus,jdbcType=INTEGER},
+      </if>
+      <if test="record.userId != null">
+        user_id = #{record.userId,jdbcType=INTEGER},
+      </if>
+      <if test="record.userName != null">
+        user_name = #{record.userName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update p_task
+    set task_id = #{record.taskId,jdbcType=INTEGER},
+      task_name = #{record.taskName,jdbcType=VARCHAR},
+      task_difficulty = #{record.taskDifficulty,jdbcType=INTEGER},
+      task_price = #{record.taskPrice,jdbcType=INTEGER},
+      task_award = #{record.taskAward,jdbcType=INTEGER},
+      task_number = #{record.taskNumber,jdbcType=INTEGER},
+      task_time = #{record.taskTime,jdbcType=INTEGER},
+      task_starttime = #{record.taskStarttime,jdbcType=DATE},
+      task_endtime = #{record.taskEndtime,jdbcType=DATE},
+      task_image = #{record.taskImage,jdbcType=VARCHAR},
+      task_describe = #{record.taskDescribe,jdbcType=VARCHAR},
+      task_status = #{record.taskStatus,jdbcType=INTEGER},
+      user_id = #{record.userId,jdbcType=INTEGER},
+      user_name = #{record.userName,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.kaituo.pms.bean.p_task">
+    update p_task
+    <set>
+      <if test="taskName != null">
+        task_name = #{taskName,jdbcType=VARCHAR},
+      </if>
+      <if test="taskDifficulty != null">
+        task_difficulty = #{taskDifficulty,jdbcType=INTEGER},
+      </if>
+      <if test="taskPrice != null">
+        task_price = #{taskPrice,jdbcType=INTEGER},
+      </if>
+      <if test="taskAward != null">
+        task_award = #{taskAward,jdbcType=INTEGER},
+      </if>
+      <if test="taskNumber != null">
+        task_number = #{taskNumber,jdbcType=INTEGER},
+      </if>
+      <if test="taskTime != null">
+        task_time = #{taskTime,jdbcType=INTEGER},
+      </if>
+      <if test="taskStarttime != null">
+        task_starttime = #{taskStarttime,jdbcType=DATE},
+      </if>
+      <if test="taskEndtime != null">
+        task_endtime = #{taskEndtime,jdbcType=DATE},
+      </if>
+      <if test="taskImage != null">
+        task_image = #{taskImage,jdbcType=VARCHAR},
+      </if>
+      <if test="taskDescribe != null">
+        task_describe = #{taskDescribe,jdbcType=VARCHAR},
+      </if>
+      <if test="taskStatus != null">
+        task_status = #{taskStatus,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="userName != null">
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where task_id = #{taskId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.kaituo.pms.bean.p_task">
+    update p_task
+    set task_name = #{taskName,jdbcType=VARCHAR},
+      task_difficulty = #{taskDifficulty,jdbcType=INTEGER},
+      task_price = #{taskPrice,jdbcType=INTEGER},
+      task_award = #{taskAward,jdbcType=INTEGER},
+      task_number = #{taskNumber,jdbcType=INTEGER},
+      task_time = #{taskTime,jdbcType=INTEGER},
+      task_starttime = #{taskStarttime,jdbcType=DATE},
+      task_endtime = #{taskEndtime,jdbcType=DATE},
+      task_image = #{taskImage,jdbcType=VARCHAR},
+      task_describe = #{taskDescribe,jdbcType=VARCHAR},
+      task_status = #{taskStatus,jdbcType=INTEGER},
+      user_id = #{userId,jdbcType=INTEGER},
+      user_name = #{userName,jdbcType=VARCHAR}
+    where task_id = #{taskId,jdbcType=INTEGER}
+  </update>
+  <resultMap id="BaseResultMap" type="com.kaituo.pms.bean.p_task">
+    <constructor>
+      <idArg column="task_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="task_name" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="task_difficulty" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="task_price" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="task_award" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="task_number" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="task_time" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="task_starttime" javaType="java.util.Date" jdbcType="DATE" />
+      <arg column="task_endtime" javaType="java.util.Date" jdbcType="DATE" />
+      <arg column="task_image" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="task_describe" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="task_status" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="user_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="user_name" javaType="java.lang.String" jdbcType="VARCHAR" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    task_id, task_name, task_difficulty, task_price, task_award, task_number, task_time, 
+    task_starttime, task_endtime, task_image, task_describe, task_status, user_id, user_name
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from p_task
+    where task_id = #{taskId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from p_task
+    where task_id = #{taskId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.kaituo.pms.bean.p_task">
+    insert into p_task (task_id, task_name, task_difficulty, 
+      task_price, task_award, task_number, 
+      task_time, task_starttime, task_endtime, 
+      task_image, task_describe, task_status, 
+      user_id, user_name)
+    values (#{taskId,jdbcType=INTEGER}, #{taskName,jdbcType=VARCHAR}, #{taskDifficulty,jdbcType=INTEGER}, 
+      #{taskPrice,jdbcType=INTEGER}, #{taskAward,jdbcType=INTEGER}, #{taskNumber,jdbcType=INTEGER}, 
+      #{taskTime,jdbcType=INTEGER}, #{taskStarttime,jdbcType=DATE}, #{taskEndtime,jdbcType=DATE}, 
+      #{taskImage,jdbcType=VARCHAR}, #{taskDescribe,jdbcType=VARCHAR}, #{taskStatus,jdbcType=INTEGER}, 
+      #{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.kaituo.pms.bean.p_task">
+    insert into p_task
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="taskId != null">
+        task_id,
+      </if>
+      <if test="taskName != null">
+        task_name,
+      </if>
+      <if test="taskDifficulty != null">
+        task_difficulty,
+      </if>
+      <if test="taskPrice != null">
+        task_price,
+      </if>
+      <if test="taskAward != null">
+        task_award,
+      </if>
+      <if test="taskNumber != null">
+        task_number,
+      </if>
+      <if test="taskTime != null">
+        task_time,
+      </if>
+      <if test="taskStarttime != null">
+        task_starttime,
+      </if>
+      <if test="taskEndtime != null">
+        task_endtime,
+      </if>
+      <if test="taskImage != null">
+        task_image,
+      </if>
+      <if test="taskDescribe != null">
+        task_describe,
+      </if>
+      <if test="taskStatus != null">
+        task_status,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="userName != null">
+        user_name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="taskId != null">
+        #{taskId,jdbcType=INTEGER},
+      </if>
+      <if test="taskName != null">
+        #{taskName,jdbcType=VARCHAR},
+      </if>
+      <if test="taskDifficulty != null">
+        #{taskDifficulty,jdbcType=INTEGER},
+      </if>
+      <if test="taskPrice != null">
+        #{taskPrice,jdbcType=INTEGER},
+      </if>
+      <if test="taskAward != null">
+        #{taskAward,jdbcType=INTEGER},
+      </if>
+      <if test="taskNumber != null">
+        #{taskNumber,jdbcType=INTEGER},
+      </if>
+      <if test="taskTime != null">
+        #{taskTime,jdbcType=INTEGER},
+      </if>
+      <if test="taskStarttime != null">
+        #{taskStarttime,jdbcType=DATE},
+      </if>
+      <if test="taskEndtime != null">
+        #{taskEndtime,jdbcType=DATE},
+      </if>
+      <if test="taskImage != null">
+        #{taskImage,jdbcType=VARCHAR},
+      </if>
+      <if test="taskDescribe != null">
+        #{taskDescribe,jdbcType=VARCHAR},
+      </if>
+      <if test="taskStatus != null">
+        #{taskStatus,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="userName != null">
+        #{userName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.kaituo.pms.bean.p_task">
+    update p_task
+    <set>
+      <if test="taskName != null">
+        task_name = #{taskName,jdbcType=VARCHAR},
+      </if>
+      <if test="taskDifficulty != null">
+        task_difficulty = #{taskDifficulty,jdbcType=INTEGER},
+      </if>
+      <if test="taskPrice != null">
+        task_price = #{taskPrice,jdbcType=INTEGER},
+      </if>
+      <if test="taskAward != null">
+        task_award = #{taskAward,jdbcType=INTEGER},
+      </if>
+      <if test="taskNumber != null">
+        task_number = #{taskNumber,jdbcType=INTEGER},
+      </if>
+      <if test="taskTime != null">
+        task_time = #{taskTime,jdbcType=INTEGER},
+      </if>
+      <if test="taskStarttime != null">
+        task_starttime = #{taskStarttime,jdbcType=DATE},
+      </if>
+      <if test="taskEndtime != null">
+        task_endtime = #{taskEndtime,jdbcType=DATE},
+      </if>
+      <if test="taskImage != null">
+        task_image = #{taskImage,jdbcType=VARCHAR},
+      </if>
+      <if test="taskDescribe != null">
+        task_describe = #{taskDescribe,jdbcType=VARCHAR},
+      </if>
+      <if test="taskStatus != null">
+        task_status = #{taskStatus,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="userName != null">
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where task_id = #{taskId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.kaituo.pms.bean.p_task">
+    update p_task
+    set task_name = #{taskName,jdbcType=VARCHAR},
+      task_difficulty = #{taskDifficulty,jdbcType=INTEGER},
+      task_price = #{taskPrice,jdbcType=INTEGER},
+      task_award = #{taskAward,jdbcType=INTEGER},
+      task_number = #{taskNumber,jdbcType=INTEGER},
+      task_time = #{taskTime,jdbcType=INTEGER},
+      task_starttime = #{taskStarttime,jdbcType=DATE},
+      task_endtime = #{taskEndtime,jdbcType=DATE},
+      task_image = #{taskImage,jdbcType=VARCHAR},
+      task_describe = #{taskDescribe,jdbcType=VARCHAR},
+      task_status = #{taskStatus,jdbcType=INTEGER},
+      user_id = #{userId,jdbcType=INTEGER},
+      user_name = #{userName,jdbcType=VARCHAR}
+    where task_id = #{taskId,jdbcType=INTEGER}
+  </update>
+</mapper>

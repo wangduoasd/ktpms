@@ -9,7 +9,7 @@
     <appenders>
         <!--打印SQLLOG-->
         <Console name="consolePrint" target="SYSTEM_OUT">
-            <PatternLayout pattern="%d{HH:mm:ss} [%t] %-5level %logger{36} - %msg%n" />
+            <PatternLayout pattern="%d{HH:mm:ss} [%t] %-5level %logger{36} - %msg%n"/>
         </Console>
         <!--这个输出控制台的配置-->
         <console name="Console" target="SYSTEM_OUT">
@@ -78,7 +78,7 @@
             <appender-ref ref="RollingFileInfo"/>
             <appender-ref ref="RollingFileWarn"/>
             <appender-ref ref="RollingFileError"/>
-            <appender-ref ref="consolePrint" />
+            <appender-ref ref="consolePrint"/>
         </root>
     </loggers>
 </configuration>

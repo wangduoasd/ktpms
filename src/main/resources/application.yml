@@ -6,9 +6,9 @@ server:
 #192.168.3.124:3306
 spring:
   datasource: #配置数据库
-    url: jdbc:mysql://192.168.3.124:3306/pms?useUnicode=true&amp;characterEncoding=utf-8
-    username: myuser  #需要更改这三个属性！
-    password: mypassword
+    url: jdbc:mysql:///pms?useUnicode=true&amp;characterEncoding=utf-8
+    username: root  #需要更改这三个属性！
+    password: 19960209
     driver-class-name: com.mysql.jdbc.Driver
   jpa:
     database: mysql
@@ -22,4 +22,3 @@ mybatis:
   mapper-locations: classpath:mapper/*.xml
   type-aliases-package: com.kaituo.pms.domain
   config-location: classpath:/sqlMapConfig.xml
-
