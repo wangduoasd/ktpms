@@ -43,7 +43,7 @@ public interface UserMapper {
      * @Author: 苏泽华
      * @Date: 2018/8/8
      */
-    List<LeaderboardVO> selectUsersByView();
+    List<User> selectUsersByView();
 
     User findPersonalDetail(@Param("userId") int id);
 }

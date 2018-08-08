@@ -36,9 +36,10 @@ public class UserServiceImpl implements UserService {
     * @Date: 2018/8/8
     */
     @Override
-    public List<LeaderboardVO> listUserRankingByPage() {
-        List<LeaderboardVO> userList = userMapper.selectUsersByView();
+    public List<User> listUserRankingByPage() {
+        List<User> userList = userMapper.selectUsersByView();
         return userList;
+    }
     @Override
     public User findPersonalDetail(int userid) {
         return userMapper.findPersonalDetail(userid);

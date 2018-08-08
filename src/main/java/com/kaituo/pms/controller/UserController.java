@@ -36,7 +36,7 @@ public class UserController {
         PageHelper.startPage(pageNumber, pageSize);
         //从用户视图中获取除超级管理员外全部数据
         try {
-            List<LeaderboardVO> leaderboardList = userService.listUserRankingByPage();
+            List<User> leaderboardList = userService.listUserRankingByPage();
             //未获得员工信息的情况下
             if (null==leaderboardList||leaderboardList.size()<=0){
                 return MapUtil.setMap(CodeAndMessageEnum.USER_FIND_RANKING_BY_PAGE_NULL,null);
