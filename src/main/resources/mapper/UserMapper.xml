@@ -12,6 +12,20 @@
       <arg column="user_inductiontime" jdbcType="DATE" javaType="java.util.Date" />
     </constructor>
   </resultMap>
+<!--积分排行实体-->
+  <resultMap id="LeaderboardMap" type="com.kaituo.pms.vo.LeaderboardVO" >
+    <constructor >
+      <arg column="num" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="user_name" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="dept_name" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="position_name" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="user_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="user_inductiontime" jdbcType="DATE" javaType="java.util.Date" />
+      <arg column="user_integral" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="user_status" jdbcType="INTEGER" javaType="java.lang.Integer" />
+
+    </constructor>
+  </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
       <foreach collection="oredCriteria" item="criteria" separator="or" >
@@ -167,7 +181,12 @@
       <include refid="Example_Where_Clause" />
     </if>
   </select>
-  <update id="updateByExampleSelective" parameterType="map" >
+  <!--积分排行榜-->
+    <select id="selectUsersByView" resultMap="LeaderboardMap">
+      select * from v_userinfo where user_status != ${5}
+    </select>
+
+    <update id="updateByExampleSelective" parameterType="map" >
     update p_user
     <set >
       <if test="record.userId != null" >

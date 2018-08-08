@@ -4,6 +4,7 @@ import com.kaituo.pms.bean.User;
 import com.kaituo.pms.bean.UserExample;
 import java.util.List;
 
+import com.kaituo.pms.vo.LeaderboardVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -32,4 +33,14 @@ public interface UserMapper {
     int updateByPrimaryKeySelective(User record);
 
     int updateByPrimaryKey(User record);
+
+    /**
+     * 从用户视图中获取除超级管理员外全部数据
+     * @Param:
+     * @return:
+     * @Author: 苏泽华
+     * @Date: 2018/8/8
+     */
+    List<LeaderboardVO> selectUsersByView();
+
 }
