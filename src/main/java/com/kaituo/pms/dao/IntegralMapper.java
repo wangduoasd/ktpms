@@ -3,9 +3,15 @@ package com.kaituo.pms.dao;
 import com.kaituo.pms.bean.Integral;
 import com.kaituo.pms.bean.IntegralExample;
 import java.util.List;
-import org.apache.ibatis.annotations.Param;
 
-public interface IntegralMapper {
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
+
+@Repository
+@Mapper
+public interface
+IntegralMapper {
     int countByExample(IntegralExample example);
 
     int deleteByExample(IntegralExample example);

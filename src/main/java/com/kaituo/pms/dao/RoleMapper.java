@@ -3,8 +3,13 @@ package com.kaituo.pms.dao;
 import com.kaituo.pms.bean.Role;
 import com.kaituo.pms.bean.RoleExample;
 import java.util.List;
-import org.apache.ibatis.annotations.Param;
 
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
+
+@Repository
+@Mapper
 public interface RoleMapper {
     int countByExample(RoleExample example);
 
