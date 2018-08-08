@@ -32,4 +32,7 @@ public interface ExchangeMapper {
     int updateByPrimaryKeySelective(Exchange record);
 
     int updateByPrimaryKey(Exchange record);
+
+    List<Exchange> findExchangeRecord(@Param("userId") int userId);
+    List<Exchange> selectBykeyWord(@Param("keyWord") String keyWord);
 }

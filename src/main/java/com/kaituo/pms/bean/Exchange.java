@@ -14,7 +14,24 @@ public class Exchange {
     private Date exchangeTime;
 
     private Integer exchangeStatus;
+    private String prizeImage;
+    private String prizeName;
 
+    public String getPrizeImage() {
+        return prizeImage;
+    }
+
+    public void setPrizeImage(String prizeImage) {
+        this.prizeImage = prizeImage;
+    }
+
+    public String getPrizeName() {
+        return prizeName;
+    }
+
+    public void setPrizeName(String prizeName) {
+        this.prizeName = prizeName;
+    }
     public Exchange(Integer exchangeId, Integer prizeId, Integer userId, Integer exchangeCount, Date exchangeTime, Integer exchangeStatus) {
         this.exchangeId = exchangeId;
         this.prizeId = prizeId;
@@ -23,7 +40,15 @@ public class Exchange {
         this.exchangeTime = exchangeTime;
         this.exchangeStatus = exchangeStatus;
     }
-
+    public Exchange( Integer exchangeId, Integer userId, Integer exchangeCount, Date exchangeTime, Integer exchangeStatus, String prizeImage, String prizeName) {
+        this.userId = userId;
+        this.exchangeId = exchangeId;
+        this.exchangeCount = exchangeCount;
+        this.exchangeTime = exchangeTime;
+        this.exchangeStatus = exchangeStatus;
+        this.prizeImage = prizeImage;
+        this.prizeName = prizeName;
+    }
     public Exchange() {
         super();
     }

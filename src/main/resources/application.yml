@@ -13,7 +13,7 @@ spring:
   jpa:
     database: mysql
   http: #这个应该是配置中文乱码问题
-    encoding:
+      encoding:
       force: true
       charset: utf-8
       enabled: true

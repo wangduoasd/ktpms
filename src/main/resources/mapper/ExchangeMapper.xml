@@ -11,6 +11,17 @@
       <arg column="exchange_status" jdbcType="INTEGER" javaType="java.lang.Integer" />
     </constructor>
   </resultMap>
+  <resultMap id="MyResultMap" type="com.kaituo.pms.bean.Exchange" >
+    <constructor >
+      <idArg column="exchange_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="user_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="exchange_count" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="exchange_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+      <arg column="exchange_status" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="prize_image" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="prize_name" jdbcType="VARCHAR" javaType="java.lang.String" />
+    </constructor>
+  </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
       <foreach collection="oredCriteria" item="criteria" separator="or" >
@@ -227,4 +238,17 @@
       exchange_status = #{exchangeStatus,jdbcType=INTEGER}
     where exchange_id = #{exchangeId,jdbcType=INTEGER}
   </update>
+  <!--findExchangeRecord-->
+  <select id="findExchangeRecord" resultMap="MyResultMap" parameterType="java.lang.Integer" >
+    select * from v_exchangerecord where user_id=#{userId} and exchange_status=1
+  </select>
+  <!--模糊查询-->
+  <select id="selectBykeyWord" parameterType="java.lang.String" resultMap="MyResultMap">
+        SELECT
+        *
+        FROM
+        v_exchangerecord
+        WHERE
+        prize_name LIKE concat(concat('%',#{keyWord}),'%')
+    </select>
 </mapper>
