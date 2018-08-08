@@ -3,11 +3,14 @@ package com.kaituo.pms.dao;
 import com.kaituo.pms.bean.Dept;
 import com.kaituo.pms.bean.DeptExample;
 import java.util.List;
+
+import com.kaituo.pms.bean.User;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface DeptMapper {
+public interface
+DeptMapper {
     int countByExample(DeptExample example);
 
     int deleteByExample(DeptExample example);
@@ -29,4 +32,5 @@ public interface DeptMapper {
     int updateByPrimaryKeySelective(Dept record);
 
     int updateByPrimaryKey(Dept record);
+
 }

@@ -12,6 +12,18 @@
       <arg column="user_inductiontime" jdbcType="DATE" javaType="java.util.Date" />
     </constructor>
   </resultMap>
+  <resultMap id="MyResultMap" type="com.kaituo.pms.bean.User" >
+    <constructor >
+      <arg column="num" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="user_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="user_name" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="user_integral" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="dept_name" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="position_name" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="user_status" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="user_inductiontime" jdbcType="DATE" javaType="java.util.Date" />
+    </constructor>
+  </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
       <foreach collection="oredCriteria" item="criteria" separator="or" >
@@ -243,4 +255,9 @@
       user_inductiontime = #{userInductiontime,jdbcType=DATE}
     where user_id = #{userId,jdbcType=INTEGER}
   </update>
+<!--自定义个人信息-->
+  <select id="findPersonalDetail" parameterType="java.lang.Integer" resultMap="MyResultMap">
+    select * from v_userinfo where user_id=#{userId}
+
+  </select>
 </mapper>

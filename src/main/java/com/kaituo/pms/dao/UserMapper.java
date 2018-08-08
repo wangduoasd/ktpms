@@ -3,8 +3,13 @@ package com.kaituo.pms.dao;
 import com.kaituo.pms.bean.User;
 import com.kaituo.pms.bean.UserExample;
 import java.util.List;
-import org.apache.ibatis.annotations.Param;
 
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
+
+@Repository
+@Mapper
 public interface UserMapper {
     int countByExample(UserExample example);
 
@@ -27,4 +32,5 @@ public interface UserMapper {
     int updateByPrimaryKeySelective(User record);
 
     int updateByPrimaryKey(User record);
+    User findPersonalDetail(@Param("userId") int id);
 }
