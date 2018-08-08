@@ -4,6 +4,8 @@ import com.kaituo.pms.bean.User;
 import com.kaituo.pms.bean.UserExample;
 import java.util.List;
 
+import org.apache.ibatis.annotations.Mapper;
+
 import com.kaituo.pms.vo.LeaderboardVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -43,4 +45,5 @@ public interface UserMapper {
      */
     List<LeaderboardVO> selectUsersByView();
 
+    User findPersonalDetail(@Param("userId") int id);
 }
