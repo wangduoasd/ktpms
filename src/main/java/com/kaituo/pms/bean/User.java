@@ -3,15 +3,43 @@ package com.kaituo.pms.bean;
 import java.util.Date;
 
 public class User {
+    private int num;
+
+    public int getNum() {
+        return num;
+    }
+
+    public void setNum(int num) {
+        this.num = num;
+    }
+
     private Integer userId;
 
-    private String userName;
+private String userName;
 
     private String userPassword;
 
     private Integer userIntegral;
 
     private Integer userDeptPosition;
+    private  String deptName;
+    private  String positionName;
+
+    public String getDeptName() {
+        return deptName;
+    }
+
+    public void setDeptName(String deptName) {
+        this.deptName = deptName;
+    }
+
+    public String getPositionName() {
+        return positionName;
+    }
+
+    public void setPositionName(String positionName) {
+        this.positionName = positionName;
+    }
 
     private Integer userStatus;
 
@@ -23,6 +51,17 @@ public class User {
         this.userPassword = userPassword;
         this.userIntegral = userIntegral;
         this.userDeptPosition = userDeptPosition;
+        this.userStatus = userStatus;
+        this.userInductiontime = userInductiontime;
+    }
+
+    public User(Integer num,Integer userId, String userName, Integer userIntegral, String deptName, String positionName, Integer userStatus, Date userInductiontime) {
+        this.num=num;
+        this.userId = userId;
+        this.userName = userName;
+        this.userIntegral = userIntegral;
+        this.deptName = deptName;
+        this.positionName = positionName;
         this.userStatus = userStatus;
         this.userInductiontime = userInductiontime;
     }
