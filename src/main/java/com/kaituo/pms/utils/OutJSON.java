@@ -47,9 +47,7 @@ public class OutJSON {
       OutJSON outJSON = new OutJSON();
       outJSON.code = codeAndMessageEnum.getCode();
       outJSON.message = codeAndMessageEnum.getMessage();
-      Map<String , Object> map = new HashMap<>();
-      map.put("code:",outJSON.getCode());
-      map.put("message:",outJSON.getMessage());
+      Map<String , Object> map = new HashMap<>(1);
       map.put("data:",data);
       outJSON.data = map;
       return  outJSON;
@@ -59,9 +57,7 @@ public class OutJSON {
         OutJSON outJSON = new OutJSON();
         outJSON.code = codeAndMessageEnum.getCode();
         outJSON.message = codeAndMessageEnum.getMessage();
-        Map<String , Object> map = new HashMap<>();
-        map.put("code:",outJSON.getCode());
-        map.put("message:",outJSON.getMessage());
+        Map<String , Object> map = new HashMap<>(1);
         map.put("data:","");
         outJSON.data = map;
         return  outJSON;

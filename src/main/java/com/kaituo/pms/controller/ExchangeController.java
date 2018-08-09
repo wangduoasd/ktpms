@@ -43,10 +43,10 @@ public class ExchangeController {
            //根据userId查询视图中该用户所有兑换列表
            List<Exchange> list = exchangeService.findExchangeRecord(userId);
            PageInfo pageInfo = new PageInfo(list, 5);
-           return OutJSON.getInstance(CodeAndMessageEnum.USER_FIND_RANKING_BY_PAGE_SUCCESS,pageInfo);
+           return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,pageInfo);
        }catch (Exception e){
            log.error(""+e.getMessage());
-           return  OutJSON.getInstance(CodeAndMessageEnum.USER_FIND_RANKING_BY_PAGE_ERROR);
+           return  OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
        }
     }
     /**
@@ -62,10 +62,10 @@ public class ExchangeController {
     public OutJSON updateExchange(@PathVariable("exchangeId") int exchangeId) {
         try {
             exchangeService.updateExchange(exchangeId);
-            return OutJSON.getInstance(CodeAndMessageEnum.USER_FIND_RANKING_BY_PAGE_SUCCESS);
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);
         }catch (Exception e){
             log.error(""+e.getMessage());
-            return  OutJSON.getInstance(CodeAndMessageEnum.USER_FIND_RANKING_BY_PAGE_ERROR);
+            return  OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
         }
     }
     /**
@@ -84,10 +84,10 @@ public class ExchangeController {
             System.out.println(keyWord);
             List<Exchange> list = exchangeService.selectBykeyWord(keyWord);
             PageInfo pageInfo = new PageInfo(list, 5);
-            return OutJSON.getInstance(CodeAndMessageEnum.USER_FIND_RANKING_BY_PAGE_SUCCESS,pageInfo);
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,pageInfo);
             } catch (Exception e) {
             log.error("" + e.getMessage());
-            return  OutJSON.getInstance(CodeAndMessageEnum.USER_FIND_RANKING_BY_PAGE_ERROR);
+            return  OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
         }
     }
 }
