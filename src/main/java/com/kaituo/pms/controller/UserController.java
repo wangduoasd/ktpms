@@ -12,19 +12,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-
 import java.util.List;
-import java.util.Map;
 
-/**
- * @program: ktpms
- * @description: 有关用户的controller
- * @author: 由苏泽华创建
- * @create: 2018-08-08 13:54
- **/
 @Slf4j
 @RestController
-@RequestMapping("user")
 public class UserController {
 
     @Autowired
@@ -32,9 +23,9 @@ public class UserController {
 
     @GetMapping(value = "userIntegrals/{pageNumber}/{pageSize}")
     public OutJSON findRankingByPage(@PathVariable(value = "pageNumber") @RequestParam(defaultValue = "1")
-                                                              int pageNumber,
+                                             int pageNumber,
                                      @PathVariable(value = "pageSize") @RequestParam(defaultValue = "8")
-                                                          int pageSize){
+                                             int pageSize){
         PageHelper.startPage(pageNumber, pageSize);
         //从用户视图中获取除超级管理员外全部数据
         try {
@@ -63,10 +54,8 @@ public class UserController {
     /*@GetMapping(value="users/{id}")
     public OutJSON findPersonalDetail(@PathVariable("id") int id) {
 
-          /*      PageHelper.startPage(1,5);
-                Map<String, Object> personalDetail = userService.findPersonalDetail(id);
-                PageInfo pageInfo = new PageInfo(personalDetail,5);*/
-        User personalDetail = userService.findPersonalDetail(id);
-        return MapUtils.setMap2("1","获取员工信息失败",personalDetail);
-    }
+                User personalDetail = userService.findPersonalDetail(id);
+                return MapUtils.setMap2("1","获取员工信息失败",personalDetail);
+        }*/
+
 }
