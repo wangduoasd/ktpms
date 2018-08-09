@@ -29,10 +29,8 @@ public class UserController {
     UserService userService;
 
     @GetMapping(value = "userIntegrals/{pageNumber}/{pageSize}")
-    public Map<String , Object> findRankingByPage(@PathVariable(value = "pageNumber") @RequestParam(defaultValue = "1")
-                                                              int pageNumber,
-                                                  @PathVariable(value = "pageSize") @RequestParam(defaultValue = "8")
-                                                          int pageSize){
+    public Map<String , Object> findRankingByPage(@PathVariable(value = "pageNumber") int pageNumber,
+                                                  @PathVariable(value = "pageSize") int pageSize){
         PageHelper.startPage(pageNumber, pageSize);
         //从用户视图中获取除超级管理员外全部数据
         try {
