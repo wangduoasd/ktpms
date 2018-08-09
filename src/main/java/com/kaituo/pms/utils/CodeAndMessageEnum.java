@@ -1,4 +1,4 @@
-package com.kaituo.pms.util;
+package com.kaituo.pms.utils;
 /** 
 * @Description: 枚举返回值定义类
 * @Author: su

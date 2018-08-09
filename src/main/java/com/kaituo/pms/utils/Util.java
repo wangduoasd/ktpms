@@ -1,4 +1,4 @@
-package com.kaituo.pms.util;
+package com.kaituo.pms.utils;
 
 import org.springframework.web.multipart.MultipartFile;
 

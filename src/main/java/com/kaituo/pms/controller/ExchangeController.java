@@ -4,15 +4,14 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.kaituo.pms.bean.Exchange;
 import com.kaituo.pms.service.ExchangeService;
-import com.kaituo.pms.util.Msg;
+import com.kaituo.pms.utils.CodeAndMessageEnum;
+import com.kaituo.pms.utils.OutJSON;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author 张金行
@@ -28,7 +27,6 @@ public class ExchangeController {
 
     @Autowired
     ExchangeService exchangeService;
-
     /**
      　  * @Description: 兑换中心_兑换记录_分页查询
      　　* @param [pageNumber, pageSize] userId
@@ -39,13 +37,17 @@ public class ExchangeController {
      　　*/
     @ResponseBody
     @GetMapping (value = "exchangeRecords/{userId}/pn={pn}")
-    public Msg findExchangeList(@PathVariable(value = "pn") int pageNumber,@RequestParam(value = "pageNumber", defaultValue = "5") int pageSize,@PathVariable("userId") int userId) {
-        PageHelper.startPage(pageNumber, pageSize);
-        //根据视图查询该用户所有兑换列表
-        log.info(""+userId);
-         List<Exchange> list=exchangeService.findExchangeRecord(userId);
-        PageInfo pageInfo = new PageInfo(list, 5);
-        return Msg.success().add("pageInfo", pageInfo);
+    public OutJSON findExchangeList(@PathVariable(value = "pn") int pageNumber, @RequestParam(value = "pageNumber", defaultValue = "5") int pageSize, @PathVariable("userId") int userId) {
+       try {
+           PageHelper.startPage(pageNumber, pageSize);
+           //根据userId查询视图中该用户所有兑换列表
+           List<Exchange> list = exchangeService.findExchangeRecord(userId);
+           PageInfo pageInfo = new PageInfo(list, 5);
+           return OutJSON.getInstance(CodeAndMessageEnum.USER_FIND_RANKING_BY_PAGE_SUCCESS,pageInfo);
+       }catch (Exception e){
+           log.error(""+e.getMessage());
+           return  OutJSON.getInstance(CodeAndMessageEnum.USER_FIND_RANKING_BY_PAGE_ERROR);
+       }
     }
     /**
      　  * @Description:
@@ -57,14 +59,14 @@ public class ExchangeController {
      　　*/
     @ResponseBody
     @PutMapping (value = "exchangeRecords/{exchangeId}/")
-    public Msg updateExchange(@PathVariable("exchangeId") int exchangeId) {
-
-        int i = exchangeService.updateExchange(exchangeId);
-        if(i==1) {
-            return Msg.success();
+    public OutJSON updateExchange(@PathVariable("exchangeId") int exchangeId) {
+        try {
+            exchangeService.updateExchange(exchangeId);
+            return OutJSON.getInstance(CodeAndMessageEnum.USER_FIND_RANKING_BY_PAGE_SUCCESS);
+        }catch (Exception e){
+            log.error(""+e.getMessage());
+            return  OutJSON.getInstance(CodeAndMessageEnum.USER_FIND_RANKING_BY_PAGE_ERROR);
         }
-        else
-            return  Msg.fail();
     }
     /**
      　  * @Description:
@@ -76,12 +78,16 @@ public class ExchangeController {
      　　*/
     @ResponseBody
     @GetMapping (value = "exchangeRecords/s/{keyWord}/pn={pn}")
-    public Msg findExchange(@PathVariable(value = "pn") int pageNumber,@RequestParam(value = "pageNumber", defaultValue = "5") int pageSize,@PathVariable("keyWord") String keyWord) {
-
-        PageHelper.startPage(pageNumber, pageSize);
-        System.out.println(keyWord);
-        List<Exchange> list=exchangeService.selectBykeyWord(keyWord);
-        PageInfo pageInfo = new PageInfo(list, 5);
-        return Msg.success().add("pageInfo", pageInfo);
+    public OutJSON findExchange(@PathVariable(value = "pn") int pageNumber,@RequestParam(value = "pageNumber", defaultValue = "5") int pageSize,@PathVariable("keyWord") String keyWord) {
+        try {
+            PageHelper.startPage(pageNumber, pageSize);
+            System.out.println(keyWord);
+            List<Exchange> list = exchangeService.selectBykeyWord(keyWord);
+            PageInfo pageInfo = new PageInfo(list, 5);
+            return OutJSON.getInstance(CodeAndMessageEnum.USER_FIND_RANKING_BY_PAGE_SUCCESS,pageInfo);
+            } catch (Exception e) {
+            log.error("" + e.getMessage());
+            return  OutJSON.getInstance(CodeAndMessageEnum.USER_FIND_RANKING_BY_PAGE_ERROR);
+        }
     }
 }
