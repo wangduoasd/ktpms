@@ -3,10 +3,13 @@ package com.kaituo.pms.dao;
 import com.kaituo.pms.bean.Exchange;
 import com.kaituo.pms.bean.ExchangeExample;
 import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
+@Mapper
 public interface ExchangeMapper {
     int countByExample(ExchangeExample example);
 

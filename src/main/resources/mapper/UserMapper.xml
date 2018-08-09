@@ -179,7 +179,12 @@
       <include refid="Example_Where_Clause" />
     </if>
   </select>
-  <update id="updateByExampleSelective" parameterType="map" >
+  <!--积分排行榜-->
+    <select id="selectUsersByView" resultMap="MyResultMap">
+      select * from v_userinfo where user_status != ${5}
+    </select>
+
+    <update id="updateByExampleSelective" parameterType="map" >
     update p_user
     <set >
       <if test="record.userId != null" >
