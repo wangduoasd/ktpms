@@ -28,7 +28,6 @@ public class ExchangeController {
 
     @Autowired
     ExchangeService exchangeService;
-
     /**
      　  * @Description: 兑换中心_兑换记录_分页查询
      　　* @param [pageNumber, pageSize] userId
@@ -40,12 +39,16 @@ public class ExchangeController {
     @ResponseBody
     @GetMapping (value = "exchangeRecords/{userId}/pn={pn}")
     public Msg findExchangeList(@PathVariable(value = "pn") int pageNumber,@RequestParam(value = "pageNumber", defaultValue = "5") int pageSize,@PathVariable("userId") int userId) {
-        PageHelper.startPage(pageNumber, pageSize);
-        //根据视图查询该用户所有兑换列表
-        log.info(""+userId);
-         List<Exchange> list=exchangeService.findExchangeRecord(userId);
-        PageInfo pageInfo = new PageInfo(list, 5);
-        return Msg.success().add("pageInfo", pageInfo);
+       try {
+           PageHelper.startPage(pageNumber, pageSize);
+           //根据userId查询视图中该用户所有兑换列表
+           List<Exchange> list = exchangeService.findExchangeRecord(userId);
+           PageInfo pageInfo = new PageInfo(list, 5);
+           return Msg.success().add("pageInfo", pageInfo);
+       }catch (Exception e){
+           log.error(""+e.getMessage());
+           return  Msg.fail();
+       }
     }
     /**
      　  * @Description:
@@ -58,13 +61,13 @@ public class ExchangeController {
     @ResponseBody
     @PutMapping (value = "exchangeRecords/{exchangeId}/")
     public Msg updateExchange(@PathVariable("exchangeId") int exchangeId) {
-
-        int i = exchangeService.updateExchange(exchangeId);
-        if(i==1) {
+        try {
+            exchangeService.updateExchange(exchangeId);
             return Msg.success();
-        }
-        else
+        }catch (Exception e){
+            log.error(""+e.getMessage());
             return  Msg.fail();
+        }
     }
     /**
      　  * @Description:
@@ -77,11 +80,15 @@ public class ExchangeController {
     @ResponseBody
     @GetMapping (value = "exchangeRecords/s/{keyWord}/pn={pn}")
     public Msg findExchange(@PathVariable(value = "pn") int pageNumber,@RequestParam(value = "pageNumber", defaultValue = "5") int pageSize,@PathVariable("keyWord") String keyWord) {
-
-        PageHelper.startPage(pageNumber, pageSize);
-        System.out.println(keyWord);
-        List<Exchange> list=exchangeService.selectBykeyWord(keyWord);
-        PageInfo pageInfo = new PageInfo(list, 5);
-        return Msg.success().add("pageInfo", pageInfo);
+        try {
+            PageHelper.startPage(pageNumber, pageSize);
+            System.out.println(keyWord);
+            List<Exchange> list = exchangeService.selectBykeyWord(keyWord);
+            PageInfo pageInfo = new PageInfo(list, 5);
+            return Msg.success().add("pageInfo", pageInfo);
+            } catch (Exception e) {
+            log.error("" + e.getMessage());
+            return Msg.fail();
+        }
     }
 }
