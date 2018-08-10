@@ -1011,6 +1011,66 @@ public class TaskExample {
             addCriterion("user_name not between", value1, value2, "userName");
             return (Criteria) this;
         }
+
+        public Criteria andTaskGettimeIsNull() {
+            addCriterion("task_gettime is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTaskGettimeIsNotNull() {
+            addCriterion("task_gettime is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTaskGettimeEqualTo(Date value) {
+            addCriterionForJDBCDate("task_gettime =", value, "taskGettime");
+            return (Criteria) this;
+        }
+
+        public Criteria andTaskGettimeNotEqualTo(Date value) {
+            addCriterionForJDBCDate("task_gettime <>", value, "taskGettime");
+            return (Criteria) this;
+        }
+
+        public Criteria andTaskGettimeGreaterThan(Date value) {
+            addCriterionForJDBCDate("task_gettime >", value, "taskGettime");
+            return (Criteria) this;
+        }
+
+        public Criteria andTaskGettimeGreaterThanOrEqualTo(Date value) {
+            addCriterionForJDBCDate("task_gettime >=", value, "taskGettime");
+            return (Criteria) this;
+        }
+
+        public Criteria andTaskGettimeLessThan(Date value) {
+            addCriterionForJDBCDate("task_gettime <", value, "taskGettime");
+            return (Criteria) this;
+        }
+
+        public Criteria andTaskGettimeLessThanOrEqualTo(Date value) {
+            addCriterionForJDBCDate("task_gettime <=", value, "taskGettime");
+            return (Criteria) this;
+        }
+
+        public Criteria andTaskGettimeIn(List<Date> values) {
+            addCriterionForJDBCDate("task_gettime in", values, "taskGettime");
+            return (Criteria) this;
+        }
+
+        public Criteria andTaskGettimeNotIn(List<Date> values) {
+            addCriterionForJDBCDate("task_gettime not in", values, "taskGettime");
+            return (Criteria) this;
+        }
+
+        public Criteria andTaskGettimeBetween(Date value1, Date value2) {
+            addCriterionForJDBCDate("task_gettime between", value1, value2, "taskGettime");
+            return (Criteria) this;
+        }
+
+        public Criteria andTaskGettimeNotBetween(Date value1, Date value2) {
+            addCriterionForJDBCDate("task_gettime not between", value1, value2, "taskGettime");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

@@ -3,13 +3,8 @@ package com.kaituo.pms.dao;
 import com.kaituo.pms.bean.Task;
 import com.kaituo.pms.bean.TaskExample;
 import java.util.List;
-
-import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.stereotype.Repository;
 
-@Repository
-@Mapper
 public interface TaskMapper {
     int countByExample(TaskExample example);
 
