@@ -44,10 +44,10 @@ public class ExchangeController {
             //根据userId查询视图中该用户所有状态 状态1（显示为：未发送）  状态2（显示为：确定领取），状态3（显示为：已经领取）  的兑换列表
             List<Exchange> list = exchangeService.findExchangeRecord(userId);
             PageInfo pageInfo = new PageInfo(list, 5);
-            return OutJSON.getInstance(CodeAndMessageEnum.USER_FIND_RANKING_BY_PAGE_SUCCESS, pageInfo);
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, pageInfo);
         } catch (Exception e) {
             log.error( e.getMessage());
-            return OutJSON.getInstance(CodeAndMessageEnum.USER_FIND_RANKING_BY_PAGE_ERROR);
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
         }
     }
 
@@ -66,10 +66,10 @@ public class ExchangeController {
         try {
             //根据userId将视图中该用户状态从  状态2（显示为：确定领取）改变到 状态3（显示为：已经领取）
             exchangeService.updateExchange(exchangeId,3);
-            return OutJSON.getInstance(CodeAndMessageEnum.USER_FIND_RANKING_BY_PAGE_SUCCESS);
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);
         } catch (Exception e) {
             log.error(e.getMessage());
-            return OutJSON.getInstance(CodeAndMessageEnum.USER_FIND_RANKING_BY_PAGE_ERROR);
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
         }
     }
 
@@ -90,10 +90,10 @@ public class ExchangeController {
             //根据商品名keyWord搜索视图中该用户所有状态 状态1（显示为：未发送）  状态2（显示为：确定领取），状态3（显示为：已经领取）  的兑换列表
             List<Exchange> list = exchangeService.selectBykeyWord(keyWord, userId);
             PageInfo pageInfo = new PageInfo(list, 5);
-            return OutJSON.getInstance(CodeAndMessageEnum.USER_FIND_RANKING_BY_PAGE_SUCCESS, pageInfo);
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, pageInfo);
         } catch (Exception e) {
             log.error( e.getMessage());
-            return OutJSON.getInstance(CodeAndMessageEnum.USER_FIND_RANKING_BY_PAGE_ERROR);
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
         }
     }
     //综服中心
@@ -105,10 +105,10 @@ public class ExchangeController {
             //查询视图中所有用户   状态2（显示为：确定兑换），状态3（显示为：已兑换）  的兑换列表
             List<Exchange> list = exchangeService.getExchangeLists();
             PageInfo pageInfo = new PageInfo(list, 5);
-            return OutJSON.getInstance(CodeAndMessageEnum.USER_FIND_RANKING_BY_PAGE_SUCCESS, pageInfo);
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, pageInfo);
         } catch (Exception e) {
             log.error("" + e.getMessage());
-            return OutJSON.getInstance(CodeAndMessageEnum.USER_FIND_RANKING_BY_PAGE_ERROR);
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
         }
     }
     @ResponseBody
@@ -117,10 +117,10 @@ public class ExchangeController {
         try {
             //根据商品名keyWord搜索视图中所有用户   状态2（显示为：确定兑换），状态3（显示为：已兑换）  的兑换列表
             exchangeService.updateExchange(exchangeId,2);
-            return OutJSON.getInstance(CodeAndMessageEnum.USER_FIND_RANKING_BY_PAGE_SUCCESS);
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);
         } catch (Exception e) {
             log.error(e.getMessage());
-            return OutJSON.getInstance(CodeAndMessageEnum.USER_FIND_RANKING_BY_PAGE_ERROR);
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
         }
     }
 }
