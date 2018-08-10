@@ -31,16 +31,23 @@ public class ExchangeServiceImpl implements ExchangeService {
 
     @Override
     @Transactional
-    public int updateExchange(int exchangeId) {
+    public int updateExchange(int exchangeId,int status) {
         Exchange exchange = new Exchange();
         exchange.setExchangeId(exchangeId);
-        exchange.setExchangeStatus(3);
+        exchange.setExchangeStatus(status);
         return exchangeMapper.updateByPrimaryKeySelective(exchange);
     }
 
     @Override
     @Transactional
-    public List<Exchange> selectBykeyWord(String keyWord) {
-        return exchangeMapper.selectBykeyWord(keyWord);
+    public List<Exchange> selectBykeyWord(String keyWord,int userId) {
+        return exchangeMapper.selectBykeyWord(keyWord, userId);
     }
+
+    @Override
+    @Transactional
+    public List<Exchange> getExchangeLists() {
+        return exchangeMapper.getExchangeLists();
+    }
+
 }

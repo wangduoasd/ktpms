@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kaituo.pms.dao.VersionMapper" >
+  <resultMap id="BaseResultMap" type="com.kaituo.pms.bean.Version" >
+    <constructor >
+      <idArg column="version_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="version_current" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="version_history" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="version_overview" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="version_company" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="version_developer" jdbcType="VARCHAR" javaType="java.lang.String" />
+    </constructor>
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    version_id, version_current, version_history, version_overview, version_company, 
+    version_developer
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.kaituo.pms.bean.VersionExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from p_version
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from p_version
+    where version_id = #{versionId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from p_version
+    where version_id = #{versionId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.kaituo.pms.bean.VersionExample" >
+    delete from p_version
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.kaituo.pms.bean.Version" >
+    insert into p_version (version_id, version_current, version_history, 
+      version_overview, version_company, version_developer
+      )
+    values (#{versionId,jdbcType=INTEGER}, #{versionCurrent,jdbcType=VARCHAR}, #{versionHistory,jdbcType=VARCHAR}, 
+      #{versionOverview,jdbcType=VARCHAR}, #{versionCompany,jdbcType=VARCHAR}, #{versionDeveloper,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.kaituo.pms.bean.Version" >
+    insert into p_version
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="versionId != null" >
+        version_id,
+      </if>
+      <if test="versionCurrent != null" >
+        version_current,
+      </if>
+      <if test="versionHistory != null" >
+        version_history,
+      </if>
+      <if test="versionOverview != null" >
+        version_overview,
+      </if>
+      <if test="versionCompany != null" >
+        version_company,
+      </if>
+      <if test="versionDeveloper != null" >
+        version_developer,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="versionId != null" >
+        #{versionId,jdbcType=INTEGER},
+      </if>
+      <if test="versionCurrent != null" >
+        #{versionCurrent,jdbcType=VARCHAR},
+      </if>
+      <if test="versionHistory != null" >
+        #{versionHistory,jdbcType=VARCHAR},
+      </if>
+      <if test="versionOverview != null" >
+        #{versionOverview,jdbcType=VARCHAR},
+      </if>
+      <if test="versionCompany != null" >
+        #{versionCompany,jdbcType=VARCHAR},
+      </if>
+      <if test="versionDeveloper != null" >
+        #{versionDeveloper,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.kaituo.pms.bean.VersionExample" resultType="java.lang.Integer" >
+    select count(*) from p_version
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update p_version
+    <set >
+      <if test="record.versionId != null" >
+        version_id = #{record.versionId,jdbcType=INTEGER},
+      </if>
+      <if test="record.versionCurrent != null" >
+        version_current = #{record.versionCurrent,jdbcType=VARCHAR},
+      </if>
+      <if test="record.versionHistory != null" >
+        version_history = #{record.versionHistory,jdbcType=VARCHAR},
+      </if>
+      <if test="record.versionOverview != null" >
+        version_overview = #{record.versionOverview,jdbcType=VARCHAR},
+      </if>
+      <if test="record.versionCompany != null" >
+        version_company = #{record.versionCompany,jdbcType=VARCHAR},
+      </if>
+      <if test="record.versionDeveloper != null" >
+        version_developer = #{record.versionDeveloper,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update p_version
+    set version_id = #{record.versionId,jdbcType=INTEGER},
+      version_current = #{record.versionCurrent,jdbcType=VARCHAR},
+      version_history = #{record.versionHistory,jdbcType=VARCHAR},
+      version_overview = #{record.versionOverview,jdbcType=VARCHAR},
+      version_company = #{record.versionCompany,jdbcType=VARCHAR},
+      version_developer = #{record.versionDeveloper,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.kaituo.pms.bean.Version" >
+    update p_version
+    <set >
+      <if test="versionCurrent != null" >
+        version_current = #{versionCurrent,jdbcType=VARCHAR},
+      </if>
+      <if test="versionHistory != null" >
+        version_history = #{versionHistory,jdbcType=VARCHAR},
+      </if>
+      <if test="versionOverview != null" >
+        version_overview = #{versionOverview,jdbcType=VARCHAR},
+      </if>
+      <if test="versionCompany != null" >
+        version_company = #{versionCompany,jdbcType=VARCHAR},
+      </if>
+      <if test="versionDeveloper != null" >
+        version_developer = #{versionDeveloper,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where version_id = #{versionId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.kaituo.pms.bean.Version" >
+    update p_version
+    set version_current = #{versionCurrent,jdbcType=VARCHAR},
+      version_history = #{versionHistory,jdbcType=VARCHAR},
+      version_overview = #{versionOverview,jdbcType=VARCHAR},
+      version_company = #{versionCompany,jdbcType=VARCHAR},
+      version_developer = #{versionDeveloper,jdbcType=VARCHAR}
+    where version_id = #{versionId,jdbcType=INTEGER}
+  </update>
+</mapper>

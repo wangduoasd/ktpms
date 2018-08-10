@@ -1,34 +1,34 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.kaituo.pms.dao.DeptMapper" >
-  <resultMap id="BaseResultMap" type="com.kaituo.pms.bean.Dept" >
-    <constructor >
-      <idArg column="dept_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="dept_name" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="dept_describe" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="dept_inductiontime" jdbcType="DATE" javaType="java.util.Date" />
-      <arg column="dept_status" jdbcType="INTEGER" javaType="java.lang.Integer" />
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kaituo.pms.dao.DeptMapper">
+  <resultMap id="BaseResultMap" type="com.kaituo.pms.bean.Dept">
+    <constructor>
+      <idArg column="dept_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="dept_name" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="dept_describe" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="dept_inductiontime" javaType="java.util.Date" jdbcType="DATE" />
+      <arg column="dept_status" javaType="java.lang.Integer" jdbcType="INTEGER" />
     </constructor>
   </resultMap>
-  <sql id="Example_Where_Clause" >
-    <where >
-      <foreach collection="oredCriteria" item="criteria" separator="or" >
-        <if test="criteria.valid" >
-          <trim prefix="(" suffix=")" prefixOverrides="and" >
-            <foreach collection="criteria.criteria" item="criterion" >
-              <choose >
-                <when test="criterion.noValue" >
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
                   and ${criterion.condition}
                 </when>
-                <when test="criterion.singleValue" >
+                <when test="criterion.singleValue">
                   and ${criterion.condition} #{criterion.value}
                 </when>
-                <when test="criterion.betweenValue" >
+                <when test="criterion.betweenValue">
                   and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
                 </when>
-                <when test="criterion.listValue" >
+                <when test="criterion.listValue">
                   and ${criterion.condition}
-                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
                     #{listItem}
                   </foreach>
                 </when>
@@ -39,25 +39,25 @@
       </foreach>
     </where>
   </sql>
-  <sql id="Update_By_Example_Where_Clause" >
-    <where >
-      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
-        <if test="criteria.valid" >
-          <trim prefix="(" suffix=")" prefixOverrides="and" >
-            <foreach collection="criteria.criteria" item="criterion" >
-              <choose >
-                <when test="criterion.noValue" >
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
                   and ${criterion.condition}
                 </when>
-                <when test="criterion.singleValue" >
+                <when test="criterion.singleValue">
                   and ${criterion.condition} #{criterion.value}
                 </when>
-                <when test="criterion.betweenValue" >
+                <when test="criterion.betweenValue">
                   and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
                 </when>
-                <when test="criterion.listValue" >
+                <when test="criterion.listValue">
                   and ${criterion.condition}
-                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
                     #{listItem}
                   </foreach>
                 </when>
@@ -68,141 +68,559 @@
       </foreach>
     </where>
   </sql>
-  <sql id="Base_Column_List" >
+  <sql id="Base_Column_List">
     dept_id, dept_name, dept_describe, dept_inductiontime, dept_status
   </sql>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.kaituo.pms.bean.DeptExample" >
+  <select id="selectByExample" parameterType="com.kaituo.pms.bean.DeptExample" resultMap="BaseResultMap">
     select
-    <if test="distinct" >
+    <if test="distinct">
       distinct
     </if>
     <include refid="Base_Column_List" />
     from p_dept
-    <if test="_parameter != null" >
+    <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
-    <if test="orderByClause != null" >
+    <if test="orderByClause != null">
       order by ${orderByClause}
     </if>
   </select>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from p_dept
     where dept_id = #{deptId,jdbcType=INTEGER}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from p_dept
     where dept_id = #{deptId,jdbcType=INTEGER}
   </delete>
-  <delete id="deleteByExample" parameterType="com.kaituo.pms.bean.DeptExample" >
+  <delete id="deleteByExample" parameterType="com.kaituo.pms.bean.DeptExample">
     delete from p_dept
-    <if test="_parameter != null" >
+    <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.kaituo.pms.bean.Dept" >
+  <insert id="insert" parameterType="com.kaituo.pms.bean.Dept">
     insert into p_dept (dept_id, dept_name, dept_describe, 
       dept_inductiontime, dept_status)
     values (#{deptId,jdbcType=INTEGER}, #{deptName,jdbcType=VARCHAR}, #{deptDescribe,jdbcType=VARCHAR}, 
       #{deptInductiontime,jdbcType=DATE}, #{deptStatus,jdbcType=INTEGER})
   </insert>
-  <insert id="insertSelective" parameterType="com.kaituo.pms.bean.Dept" >
+  <insert id="insertSelective" parameterType="com.kaituo.pms.bean.Dept">
     insert into p_dept
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="deptId != null" >
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="deptId != null">
         dept_id,
       </if>
-      <if test="deptName != null" >
+      <if test="deptName != null">
         dept_name,
       </if>
-      <if test="deptDescribe != null" >
+      <if test="deptDescribe != null">
         dept_describe,
       </if>
-      <if test="deptInductiontime != null" >
+      <if test="deptInductiontime != null">
         dept_inductiontime,
       </if>
-      <if test="deptStatus != null" >
+      <if test="deptStatus != null">
         dept_status,
       </if>
     </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="deptId != null" >
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="deptId != null">
         #{deptId,jdbcType=INTEGER},
       </if>
-      <if test="deptName != null" >
+      <if test="deptName != null">
         #{deptName,jdbcType=VARCHAR},
       </if>
-      <if test="deptDescribe != null" >
+      <if test="deptDescribe != null">
         #{deptDescribe,jdbcType=VARCHAR},
       </if>
-      <if test="deptInductiontime != null" >
+      <if test="deptInductiontime != null">
         #{deptInductiontime,jdbcType=DATE},
       </if>
-      <if test="deptStatus != null" >
+      <if test="deptStatus != null">
         #{deptStatus,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.kaituo.pms.bean.DeptExample" resultType="java.lang.Integer" >
+  <select id="countByExample" parameterType="com.kaituo.pms.bean.DeptExample" resultType="java.lang.Integer">
     select count(*) from p_dept
-    <if test="_parameter != null" >
+    <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </select>
-  <update id="updateByExampleSelective" parameterType="map" >
+  <update id="updateByExampleSelective" parameterType="map">
     update p_dept
-    <set >
-      <if test="record.deptId != null" >
+    <set>
+      <if test="record.deptId != null">
         dept_id = #{record.deptId,jdbcType=INTEGER},
       </if>
-      <if test="record.deptName != null" >
+      <if test="record.deptName != null">
         dept_name = #{record.deptName,jdbcType=VARCHAR},
       </if>
-      <if test="record.deptDescribe != null" >
+      <if test="record.deptDescribe != null">
         dept_describe = #{record.deptDescribe,jdbcType=VARCHAR},
       </if>
-      <if test="record.deptInductiontime != null" >
+      <if test="record.deptInductiontime != null">
         dept_inductiontime = #{record.deptInductiontime,jdbcType=DATE},
       </if>
-      <if test="record.deptStatus != null" >
+      <if test="record.deptStatus != null">
         dept_status = #{record.deptStatus,jdbcType=INTEGER},
       </if>
     </set>
-    <if test="_parameter != null" >
+    <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByExample" parameterType="map" >
+  <update id="updateByExample" parameterType="map">
     update p_dept
     set dept_id = #{record.deptId,jdbcType=INTEGER},
       dept_name = #{record.deptName,jdbcType=VARCHAR},
       dept_describe = #{record.deptDescribe,jdbcType=VARCHAR},
       dept_inductiontime = #{record.deptInductiontime,jdbcType=DATE},
       dept_status = #{record.deptStatus,jdbcType=INTEGER}
-    <if test="_parameter != null" >
+    <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.kaituo.pms.bean.Dept" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.kaituo.pms.bean.Dept">
     update p_dept
-    <set >
-      <if test="deptName != null" >
+    <set>
+      <if test="deptName != null">
         dept_name = #{deptName,jdbcType=VARCHAR},
       </if>
-      <if test="deptDescribe != null" >
+      <if test="deptDescribe != null">
         dept_describe = #{deptDescribe,jdbcType=VARCHAR},
       </if>
-      <if test="deptInductiontime != null" >
+      <if test="deptInductiontime != null">
         dept_inductiontime = #{deptInductiontime,jdbcType=DATE},
       </if>
-      <if test="deptStatus != null" >
+      <if test="deptStatus != null">
         dept_status = #{deptStatus,jdbcType=INTEGER},
       </if>
     </set>
     where dept_id = #{deptId,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.kaituo.pms.bean.Dept" >
+  <update id="updateByPrimaryKey" parameterType="com.kaituo.pms.bean.Dept">
+    update p_dept
+    set dept_name = #{deptName,jdbcType=VARCHAR},
+      dept_describe = #{deptDescribe,jdbcType=VARCHAR},
+      dept_inductiontime = #{deptInductiontime,jdbcType=DATE},
+      dept_status = #{deptStatus,jdbcType=INTEGER}
+    where dept_id = #{deptId,jdbcType=INTEGER}
+  </update>
+  <resultMap id="BaseResultMap" type="com.kaituo.pms.bean.Dept">
+    <constructor>
+      <idArg column="dept_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="dept_name" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="dept_describe" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="dept_inductiontime" javaType="java.util.Date" jdbcType="DATE" />
+      <arg column="dept_status" javaType="java.lang.Integer" jdbcType="INTEGER" />
+    </constructor>
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    dept_id, dept_name, dept_describe, dept_inductiontime, dept_status
+  </sql>
+  <select id="selectByExample" parameterType="com.kaituo.pms.bean.DeptExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from p_dept
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from p_dept
+    where dept_id = #{deptId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from p_dept
+    where dept_id = #{deptId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.kaituo.pms.bean.DeptExample">
+    delete from p_dept
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.kaituo.pms.bean.Dept">
+    insert into p_dept (dept_id, dept_name, dept_describe, 
+      dept_inductiontime, dept_status)
+    values (#{deptId,jdbcType=INTEGER}, #{deptName,jdbcType=VARCHAR}, #{deptDescribe,jdbcType=VARCHAR}, 
+      #{deptInductiontime,jdbcType=DATE}, #{deptStatus,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.kaituo.pms.bean.Dept">
+    insert into p_dept
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="deptId != null">
+        dept_id,
+      </if>
+      <if test="deptName != null">
+        dept_name,
+      </if>
+      <if test="deptDescribe != null">
+        dept_describe,
+      </if>
+      <if test="deptInductiontime != null">
+        dept_inductiontime,
+      </if>
+      <if test="deptStatus != null">
+        dept_status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="deptId != null">
+        #{deptId,jdbcType=INTEGER},
+      </if>
+      <if test="deptName != null">
+        #{deptName,jdbcType=VARCHAR},
+      </if>
+      <if test="deptDescribe != null">
+        #{deptDescribe,jdbcType=VARCHAR},
+      </if>
+      <if test="deptInductiontime != null">
+        #{deptInductiontime,jdbcType=DATE},
+      </if>
+      <if test="deptStatus != null">
+        #{deptStatus,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.kaituo.pms.bean.DeptExample" resultType="java.lang.Integer">
+    select count(*) from p_dept
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update p_dept
+    <set>
+      <if test="record.deptId != null">
+        dept_id = #{record.deptId,jdbcType=INTEGER},
+      </if>
+      <if test="record.deptName != null">
+        dept_name = #{record.deptName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.deptDescribe != null">
+        dept_describe = #{record.deptDescribe,jdbcType=VARCHAR},
+      </if>
+      <if test="record.deptInductiontime != null">
+        dept_inductiontime = #{record.deptInductiontime,jdbcType=DATE},
+      </if>
+      <if test="record.deptStatus != null">
+        dept_status = #{record.deptStatus,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update p_dept
+    set dept_id = #{record.deptId,jdbcType=INTEGER},
+      dept_name = #{record.deptName,jdbcType=VARCHAR},
+      dept_describe = #{record.deptDescribe,jdbcType=VARCHAR},
+      dept_inductiontime = #{record.deptInductiontime,jdbcType=DATE},
+      dept_status = #{record.deptStatus,jdbcType=INTEGER}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.kaituo.pms.bean.Dept">
+    update p_dept
+    <set>
+      <if test="deptName != null">
+        dept_name = #{deptName,jdbcType=VARCHAR},
+      </if>
+      <if test="deptDescribe != null">
+        dept_describe = #{deptDescribe,jdbcType=VARCHAR},
+      </if>
+      <if test="deptInductiontime != null">
+        dept_inductiontime = #{deptInductiontime,jdbcType=DATE},
+      </if>
+      <if test="deptStatus != null">
+        dept_status = #{deptStatus,jdbcType=INTEGER},
+      </if>
+    </set>
+    where dept_id = #{deptId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.kaituo.pms.bean.Dept">
+    update p_dept
+    set dept_name = #{deptName,jdbcType=VARCHAR},
+      dept_describe = #{deptDescribe,jdbcType=VARCHAR},
+      dept_inductiontime = #{deptInductiontime,jdbcType=DATE},
+      dept_status = #{deptStatus,jdbcType=INTEGER}
+    where dept_id = #{deptId,jdbcType=INTEGER}
+  </update>
+  <resultMap id="BaseResultMap" type="com.kaituo.pms.bean.Dept">
+    <constructor>
+      <idArg column="dept_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="dept_name" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="dept_describe" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="dept_inductiontime" javaType="java.util.Date" jdbcType="DATE" />
+      <arg column="dept_status" javaType="java.lang.Integer" jdbcType="INTEGER" />
+    </constructor>
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    dept_id, dept_name, dept_describe, dept_inductiontime, dept_status
+  </sql>
+  <select id="selectByExample" parameterType="com.kaituo.pms.bean.DeptExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from p_dept
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from p_dept
+    where dept_id = #{deptId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from p_dept
+    where dept_id = #{deptId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.kaituo.pms.bean.DeptExample">
+    delete from p_dept
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.kaituo.pms.bean.Dept">
+    insert into p_dept (dept_id, dept_name, dept_describe, 
+      dept_inductiontime, dept_status)
+    values (#{deptId,jdbcType=INTEGER}, #{deptName,jdbcType=VARCHAR}, #{deptDescribe,jdbcType=VARCHAR}, 
+      #{deptInductiontime,jdbcType=DATE}, #{deptStatus,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.kaituo.pms.bean.Dept">
+    insert into p_dept
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="deptId != null">
+        dept_id,
+      </if>
+      <if test="deptName != null">
+        dept_name,
+      </if>
+      <if test="deptDescribe != null">
+        dept_describe,
+      </if>
+      <if test="deptInductiontime != null">
+        dept_inductiontime,
+      </if>
+      <if test="deptStatus != null">
+        dept_status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="deptId != null">
+        #{deptId,jdbcType=INTEGER},
+      </if>
+      <if test="deptName != null">
+        #{deptName,jdbcType=VARCHAR},
+      </if>
+      <if test="deptDescribe != null">
+        #{deptDescribe,jdbcType=VARCHAR},
+      </if>
+      <if test="deptInductiontime != null">
+        #{deptInductiontime,jdbcType=DATE},
+      </if>
+      <if test="deptStatus != null">
+        #{deptStatus,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.kaituo.pms.bean.DeptExample" resultType="java.lang.Integer">
+    select count(*) from p_dept
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update p_dept
+    <set>
+      <if test="record.deptId != null">
+        dept_id = #{record.deptId,jdbcType=INTEGER},
+      </if>
+      <if test="record.deptName != null">
+        dept_name = #{record.deptName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.deptDescribe != null">
+        dept_describe = #{record.deptDescribe,jdbcType=VARCHAR},
+      </if>
+      <if test="record.deptInductiontime != null">
+        dept_inductiontime = #{record.deptInductiontime,jdbcType=DATE},
+      </if>
+      <if test="record.deptStatus != null">
+        dept_status = #{record.deptStatus,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update p_dept
+    set dept_id = #{record.deptId,jdbcType=INTEGER},
+      dept_name = #{record.deptName,jdbcType=VARCHAR},
+      dept_describe = #{record.deptDescribe,jdbcType=VARCHAR},
+      dept_inductiontime = #{record.deptInductiontime,jdbcType=DATE},
+      dept_status = #{record.deptStatus,jdbcType=INTEGER}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.kaituo.pms.bean.Dept">
+    update p_dept
+    <set>
+      <if test="deptName != null">
+        dept_name = #{deptName,jdbcType=VARCHAR},
+      </if>
+      <if test="deptDescribe != null">
+        dept_describe = #{deptDescribe,jdbcType=VARCHAR},
+      </if>
+      <if test="deptInductiontime != null">
+        dept_inductiontime = #{deptInductiontime,jdbcType=DATE},
+      </if>
+      <if test="deptStatus != null">
+        dept_status = #{deptStatus,jdbcType=INTEGER},
+      </if>
+    </set>
+    where dept_id = #{deptId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.kaituo.pms.bean.Dept">
     update p_dept
     set dept_name = #{deptName,jdbcType=VARCHAR},
       dept_describe = #{deptDescribe,jdbcType=VARCHAR},

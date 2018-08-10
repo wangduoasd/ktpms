@@ -13,8 +13,20 @@
   </resultMap>
   <resultMap id="MyResultMap" type="com.kaituo.pms.bean.Exchange" >
     <constructor >
-      <idArg column="exchange_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="exchange_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
       <arg column="user_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="exchange_count" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="exchange_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+      <arg column="exchange_status" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="prize_image" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="prize_name" jdbcType="VARCHAR" javaType="java.lang.String" />
+    </constructor>
+  </resultMap>
+  <resultMap id="MyResultMap2" type="com.kaituo.pms.bean.Exchange" >
+    <constructor >
+      <arg column="exchange_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="user_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="user_name" jdbcType="VARCHAR" javaType="java.lang.String" />
       <arg column="exchange_count" jdbcType="INTEGER" javaType="java.lang.Integer" />
       <arg column="exchange_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
       <arg column="exchange_status" jdbcType="INTEGER" javaType="java.lang.Integer" />
@@ -240,15 +252,24 @@
   </update>
   <!--findExchangeRecord-->
   <select id="findExchangeRecord" resultMap="MyResultMap" parameterType="java.lang.Integer" >
-    select * from v_exchangerecord where user_id=#{userId} and exchange_status=1
+    select * from v_exchangerecord where user_id=#{userId}
   </select>
   <!--模糊查询-->
-  <select id="selectBykeyWord" parameterType="java.lang.String" resultMap="MyResultMap">
+  <select id="selectBykeyWord"  resultMap="MyResultMap">
         SELECT
         *
         FROM
         v_exchangerecord
         WHERE
-        prize_name LIKE concat(concat('%',#{keyWord}),'%')
+        prize_name LIKE concat(concat('%',#{keyWord}),'%') and user_id=#{userId}
+    </select>
+
+  <select id="getExchangeLists"  resultMap="MyResultMap">
+        SELECT
+        *
+        FROM
+        v_exchangerecord
+        WHERE
+        prize_name LIKE concat(concat('%',#{keyWord}),'%') and user_id=#{userId}
     </select>
 </mapper>
