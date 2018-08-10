@@ -1,5 +1,6 @@
 package com.kaituo.pms.utils;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -46,18 +47,19 @@ public class OutJSON {
       OutJSON outJSON = new OutJSON();
       outJSON.code = codeAndMessageEnum.getCode();
       outJSON.message = codeAndMessageEnum.getMessage();
-      outJSON.data.put("code:",codeAndMessageEnum.getCode());
-      outJSON.data.put("message:",codeAndMessageEnum.getMessage());
-      outJSON.data.put("data:",data);
+      Map<String , Object> map = new HashMap<>(1);
+      map.put("data:",data);
+      outJSON.data = map;
       return  outJSON;
-  }
+    }
+
     public  static OutJSON getInstance(CodeAndMessageEnum codeAndMessageEnum){
         OutJSON outJSON = new OutJSON();
         outJSON.code = codeAndMessageEnum.getCode();
         outJSON.message = codeAndMessageEnum.getMessage();
-        outJSON.data.put("code:",codeAndMessageEnum.getCode());
-        outJSON.data.put("message:",codeAndMessageEnum.getMessage());
-        outJSON.data.put("data:","");
+        Map<String , Object> map = new HashMap<>(1);
+        map.put("data:","");
+        outJSON.data = map;
         return  outJSON;
     }
 }

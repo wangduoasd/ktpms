@@ -46,6 +46,19 @@ public class Util {
         return date;
     }
 
+    /**
+     * @Description: 将时间转为指定格式的字符串
+     * @Param: [date]
+     * @return: java.lang.String
+     * @Author: 苏泽华
+     * @Date: 2018/8/9
+     */
+    public static String dateUtil(Date date){
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        String dateString = formatter.format(date);
+        return dateString;
+    }
+
     /** 
     * @Description: 图片上传
     * @Param:  

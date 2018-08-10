@@ -45,5 +45,32 @@ public interface UserMapper {
      */
     List<User> selectUsersByView();
 
+    /**
+     * 从用户视图中获取除超级管理员外全部数据的条数
+     * @Param:
+     * @return:
+     * @Author: 苏泽华
+     * @Date: 2018/8/8
+     */
+    long countUsersByView();
+
+    /** 
+    * @Description: 按检索条件查询积分排行
+    * @Param:  
+    * @return:  
+    * @Author: 苏泽华
+    * @Date: 2018/8/9 
+    */ 
+    List<User>selectUsersByViewAndCondition(String condition);
+
+    /**
+     * @Description: 按检索条件查询积分排行的数据条数
+     * @Param:
+     * @return:
+     * @Author: 苏泽华
+     * @Date: 2018/8/9
+     */
+    long countUsersByViewAndCondition(String condition);
+
     User findPersonalDetail(@Param("userId") int id);
 }

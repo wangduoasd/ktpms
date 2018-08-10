@@ -96,7 +96,7 @@ public class ExchangeController {
             return OutJSON.getInstance(CodeAndMessageEnum.USER_FIND_RANKING_BY_PAGE_ERROR);
         }
     }
-//综服中心
+    //综服中心
     @ResponseBody
     @GetMapping(value = "exchangeLists/{pn}")
     public OutJSON getExchangeLists(@PathVariable(value = "pn") int pageNumber, @RequestParam(value = "pageNumber", defaultValue = "5") int pageSize) {

@@ -263,6 +263,19 @@
 <!--自定义个人信息-->
   <select id="findPersonalDetail" parameterType="java.lang.Integer" resultMap="MyResultMap">
     select * from v_userinfo where user_id=#{userId}
-
+  <!--积分排行榜的条数-->
   </select>
+    <select id="countUsersByView" resultType="java.lang.Long">
+      select count(*) from v_userinfo where user_status != ${5}
+    </select>
+    <!--按检索条件查询积分排行-->
+    <select id="selectUsersByViewAndCondition" parameterType="java.lang.String" resultMap="MyResultMap">
+        select * from v_userinfo where user_status != ${5} and user_name like concat(concat('%',#{condition}),'%')
+                                       or dept_name like concat(concat('%',#{condition}),'%')
+    </select>
+    <!--按检索条件查询积分排行的数据条数-->
+    <select id="countUsersByViewAndCondition" resultType="java.lang.Long">
+        select count(*) from v_userinfo where user_status != ${5} and user_name like concat(concat('%',#{condition}),'%')
+                                       or dept_name like concat(concat('%',#{condition}),'%')
+    </select>
 </mapper>
