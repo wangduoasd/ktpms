@@ -8,6 +8,15 @@ public class Exchange {
     private Integer prizeId;
 
     private Integer userId;
+    private String userName;
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 
     private Integer exchangeCount;
 
@@ -40,6 +49,17 @@ public class Exchange {
         this.exchangeTime = exchangeTime;
         this.exchangeStatus = exchangeStatus;
     }
+    public Exchange( Integer exchangeId, Integer userId,String userName, Integer exchangeCount, Date exchangeTime, Integer exchangeStatus, String prizeImage, String prizeName) {
+        this.userId = userId;
+        this.exchangeId = exchangeId;
+        this.userName=userName;
+        this.exchangeCount = exchangeCount;
+        this.exchangeTime = exchangeTime;
+        this.exchangeStatus = exchangeStatus;
+        this.prizeImage = prizeImage;
+        this.prizeName = prizeName;
+    }
+    //对应 兑换记录视图
     public Exchange( Integer exchangeId, Integer userId, Integer exchangeCount, Date exchangeTime, Integer exchangeStatus, String prizeImage, String prizeName) {
         this.userId = userId;
         this.exchangeId = exchangeId;

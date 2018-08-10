@@ -27,13 +27,13 @@ public class UserController {
     @Autowired
     UserService userService;
 
-    /** 
+    /**
     * @Description: 积分排行榜分页
-    * @Param:  
-    * @return:  
+    * @Param:
+    * @return:
     * @Author: 苏泽华
-    * @Date: 2018/8/9 
-    */ 
+    * @Date: 2018/8/9
+    */
     @GetMapping(value = {"userIntegrals/{pageNumber}/{pageSize}" , "userIntegrals/{pageNumber}"})
     public OutJSON findRankingByPage(@PathVariable(value = "pageNumber")
                                              int pageNumber,
@@ -70,6 +70,30 @@ public class UserController {
             //发生异常
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
         }
+    }
+
+    /**
+     * @Description: 个人中心我的信息
+     * @Param: id
+     * @return:
+     * @Author: 侯鹏
+     * @Date: 2018/8/8
+     */
+    @GetMapping(value = "users/{id}")
+    public OutJSON findPersonalDetail(@PathVariable("id") int id) {
+
+        //个人信息获取成功
+        try {
+            User personalDetail = userService.findPersonalDetail(id);
+            if (null != personalDetail)
+                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS , personalDetail);
+
+        } catch (Exception e) {
+            log.error("" + e.getMessage());
+
+        }
+        //个人信息获取失败
+        return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
     }
 
     /**
@@ -164,22 +188,22 @@ public class UserController {
             }
         }
 
-        
+
     }
 
-    /** 
-    * @Description: 积分排行榜搜索
-    * @Param:  
-    * @return:  
-    * @Author: 苏泽华
-    * @Date: 2018/8/9 
-    */
+    /**
+     * @Description: 积分排行榜搜索
+     * @Param:
+     * @return:
+     * @Author: 苏泽华
+     * @Date: 2018/8/9
+     */
     @GetMapping(value = {"userIntegrals/{pageNumber}/{pageSize}/{condition}" , "userIntegrals/{pageNumber}/{condition}"})
     public OutJSON findRankingByPageAndCondition(@PathVariable(value = "pageNumber")
-                                             int pageNumber,
-                                     @PathVariable(required = false)
-                                             Integer pageSize,
-                                     @PathVariable(value = "condition") String condition) {
+                                                         int pageNumber,
+                                                 @PathVariable(required = false)
+                                                         Integer pageSize,
+                                                 @PathVariable(value = "condition") String condition) {
         try {
             // 如果没有传每页显示数量设置为8条
             if (null==pageSize){
@@ -212,4 +236,5 @@ public class UserController {
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
         }
     }
+
 }

@@ -34,5 +34,6 @@ public interface ExchangeMapper {
     int updateByPrimaryKey(Exchange record);
 
     List<Exchange> findExchangeRecord(@Param("userId") int userId);
-    List<Exchange> selectBykeyWord(@Param("keyWord") String keyWord);
+    List<Exchange> selectBykeyWord(@Param("keyWord") String keyWord,@Param("userId")int userId);
+    List<Exchange> getExchangeLists();
 }
