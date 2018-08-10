@@ -1,7 +1,6 @@
 package com.kaituo.pms.serviceImpl;
 
 import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import com.kaituo.pms.bean.Task;
 import com.kaituo.pms.bean.TaskExample;
 import com.kaituo.pms.dao.TaskMapper;
@@ -9,6 +8,7 @@ import com.kaituo.pms.service.TaskService;
 import com.kaituo.pms.utils.CodeAndMessageEnum;
 import com.kaituo.pms.utils.OutJSON;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
@@ -21,7 +21,7 @@ import java.util.Map;
  * @author: 由苏泽华创建
  * @create: 2018-08-09 21:45
  **/
-
+@Service
 public class TaskServiceImpl implements TaskService {
 
     @Autowired
