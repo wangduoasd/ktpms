@@ -18,6 +18,7 @@ public interface UserService {
     List<User> listUserRankingByPage();
 
     /**
+     * 通过员工id获取对应的一个员工数据
      * @Description: 个人中心我的信息
      * @Param:  id
      * @return:
@@ -53,4 +54,14 @@ public interface UserService {
      * @Date: 2018/8/9
      */
     long countUsersByViewAndCondition(String condition);
+
+    /**
+     * 通过员工id获取对应的一个员工数据
+     * @Description: 个人中心我的信息
+     * @param userid 员工id
+     * @return:
+     * @Author: 苏泽华
+     * @Date:2018/8/9
+     */
+    User getUserFromTable(int userid);
 }
