@@ -1,5 +1,8 @@
 package com.kaituo.pms.bean;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.util.Date;
 
 public class Task {
@@ -31,7 +34,11 @@ public class Task {
 
     private String userName;
 
-    public Task(Integer taskId, String taskName, Integer taskDifficulty, Integer taskPrice, Integer taskAward, Integer taskNumber, Integer taskTime, Date taskStarttime, Date taskEndtime, String taskImage, String taskDescribe, Integer taskStatus, Integer userId, String userName) {
+    @DateTimeFormat(pattern = "yyy-MM-dd")
+    @JsonFormat(pattern = "yyy-mm-dd")
+    private Date taskGettime;
+
+    public Task(Integer taskId, String taskName, Integer taskDifficulty, Integer taskPrice, Integer taskAward, Integer taskNumber, Integer taskTime, Date taskStarttime, Date taskEndtime, String taskImage, String taskDescribe, Integer taskStatus, Integer userId, String userName, Date taskGettime) {
         this.taskId = taskId;
         this.taskName = taskName;
         this.taskDifficulty = taskDifficulty;
@@ -46,6 +53,7 @@ public class Task {
         this.taskStatus = taskStatus;
         this.userId = userId;
         this.userName = userName;
+        this.taskGettime = taskGettime;
     }
 
     public Task() {
@@ -162,5 +170,13 @@ public class Task {
 
     public void setUserName(String userName) {
         this.userName = userName == null ? null : userName.trim();
+    }
+
+    public Date getTaskGettime() {
+        return taskGettime;
+    }
+
+    public void setTaskGettime(Date taskGettime) {
+        this.taskGettime = taskGettime;
     }
 }

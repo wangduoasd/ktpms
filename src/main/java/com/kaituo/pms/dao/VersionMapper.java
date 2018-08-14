@@ -3,7 +3,7 @@ package com.kaituo.pms.dao;
 import com.kaituo.pms.bean.Version;
 import com.kaituo.pms.bean.VersionExample;
 import java.util.List;
-
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;

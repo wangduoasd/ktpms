@@ -1,24 +1,13 @@
 package com.kaituo.pms.serviceImpl;
 
-
-import com.kaituo.pms.bean.UserExample;
 import com.kaituo.pms.dao.UserMapper;
 import com.kaituo.pms.service.UserService;
-
-import com.kaituo.pms.vo.LeaderboardVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
-
 import com.kaituo.pms.bean.User;
-import com.kaituo.pms.dao.UserMapper;
-import com.kaituo.pms.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Map;
 /**
  * @program: ktpms
  * @description: UserService的实现
@@ -38,7 +27,7 @@ public class UserServiceImpl implements UserService {
     * @Date: 2018/8/8
     */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public List<User> listUserRankingByPage() {
         List<User> userList = userMapper.selectUsersByView();
         return userList;
@@ -51,7 +40,7 @@ public class UserServiceImpl implements UserService {
 * @Date:  2018/8/10
 */ 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public User findPersonalDetail(int userid) {
         return userMapper.findPersonalDetail(userid);
 
@@ -66,7 +55,7 @@ public class UserServiceImpl implements UserService {
      * @Date 2018/8/8
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public long countUsersByView() {
         return userMapper.countUsersByView();
     }
@@ -79,7 +68,7 @@ public class UserServiceImpl implements UserService {
      * @Date: 2018/8/9
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public List<User> selectUsersByViewAndCondition(String condition) {
         List<User> userList = userMapper.selectUsersByViewAndCondition(condition);
         return userList;
@@ -93,8 +82,22 @@ public class UserServiceImpl implements UserService {
      * @Date: 2018/8/9
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public long countUsersByViewAndCondition(String condition) {
         return userMapper.countUsersByViewAndCondition(condition);
+    }
+
+    /**
+     * 通过员工id获取对应的一个员工数据
+     * @Description: 个人中心我的信息
+     * @param userid 员工id
+     * @return:
+     * @Author: 苏泽华
+     * @Date:2018/8/9
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public User getUserFromTable(int userid) {
+        return userMapper.selectByPrimaryKey(userid);
     }
 }

@@ -17,6 +17,7 @@
       <arg column="task_status" jdbcType="INTEGER" javaType="java.lang.Integer" />
       <arg column="user_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
       <arg column="user_name" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="task_gettime" jdbcType="DATE" javaType="java.util.Date" />
     </constructor>
   </resultMap>
   <sql id="Example_Where_Clause" >
@@ -79,7 +80,8 @@
   </sql>
   <sql id="Base_Column_List" >
     task_id, task_name, task_difficulty, task_price, task_award, task_number, task_time, 
-    task_starttime, task_endtime, task_image, task_describe, task_status, user_id, user_name
+    task_starttime, task_endtime, task_image, task_describe, task_status, user_id, user_name, 
+    task_gettime
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.kaituo.pms.bean.TaskExample" >
     select
@@ -116,12 +118,14 @@
       task_price, task_award, task_number, 
       task_time, task_starttime, task_endtime, 
       task_image, task_describe, task_status, 
-      user_id, user_name)
+      user_id, user_name, task_gettime
+      )
     values (#{taskId,jdbcType=INTEGER}, #{taskName,jdbcType=VARCHAR}, #{taskDifficulty,jdbcType=INTEGER}, 
       #{taskPrice,jdbcType=INTEGER}, #{taskAward,jdbcType=INTEGER}, #{taskNumber,jdbcType=INTEGER}, 
       #{taskTime,jdbcType=INTEGER}, #{taskStarttime,jdbcType=DATE}, #{taskEndtime,jdbcType=DATE}, 
       #{taskImage,jdbcType=VARCHAR}, #{taskDescribe,jdbcType=VARCHAR}, #{taskStatus,jdbcType=INTEGER}, 
-      #{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR})
+      #{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{taskGettime,jdbcType=DATE}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.kaituo.pms.bean.Task" >
     insert into p_task
@@ -168,6 +172,9 @@
       <if test="userName != null" >
         user_name,
       </if>
+      <if test="taskGettime != null" >
+        task_gettime,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="taskId != null" >
@@ -211,6 +218,9 @@
       </if>
       <if test="userName != null" >
         #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="taskGettime != null" >
+        #{taskGettime,jdbcType=DATE},
       </if>
     </trim>
   </insert>
@@ -265,6 +275,9 @@
       <if test="record.userName != null" >
         user_name = #{record.userName,jdbcType=VARCHAR},
       </if>
+      <if test="record.taskGettime != null" >
+        task_gettime = #{record.taskGettime,jdbcType=DATE},
+      </if>
     </set>
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -285,7 +298,8 @@
       task_describe = #{record.taskDescribe,jdbcType=VARCHAR},
       task_status = #{record.taskStatus,jdbcType=INTEGER},
       user_id = #{record.userId,jdbcType=INTEGER},
-      user_name = #{record.userName,jdbcType=VARCHAR}
+      user_name = #{record.userName,jdbcType=VARCHAR},
+      task_gettime = #{record.taskGettime,jdbcType=DATE}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -332,6 +346,9 @@
       <if test="userName != null" >
         user_name = #{userName,jdbcType=VARCHAR},
       </if>
+      <if test="taskGettime != null" >
+        task_gettime = #{taskGettime,jdbcType=DATE},
+      </if>
     </set>
     where task_id = #{taskId,jdbcType=INTEGER}
   </update>
@@ -349,7 +366,8 @@
       task_describe = #{taskDescribe,jdbcType=VARCHAR},
       task_status = #{taskStatus,jdbcType=INTEGER},
       user_id = #{userId,jdbcType=INTEGER},
-      user_name = #{userName,jdbcType=VARCHAR}
+      user_name = #{userName,jdbcType=VARCHAR},
+      task_gettime = #{taskGettime,jdbcType=DATE}
     where task_id = #{taskId,jdbcType=INTEGER}
   </update>
 </mapper>
