@@ -4,7 +4,12 @@ import com.kaituo.pms.bean.Version;
 import com.kaituo.pms.bean.VersionExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
-
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
+import sun.text.normalizer.VersionInfo;
+@Repository
+@Mapper
 public interface VersionMapper {
     int countByExample(VersionExample example);
 
@@ -27,4 +32,12 @@ public interface VersionMapper {
     int updateByPrimaryKeySelective(Version record);
 
     int updateByPrimaryKey(Version record);
+    /**
+    * @Description:个人中心，版本细信息
+    * @Param:
+    * @return:
+    * @Author: 侯鹏
+    * @Date:  2018/8/10
+    */
+    Version selectAllVersionInfor();
 }

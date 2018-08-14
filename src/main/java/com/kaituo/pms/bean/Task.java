@@ -1,5 +1,8 @@
 package com.kaituo.pms.bean;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.util.Date;
 
 public class Task {
@@ -31,6 +34,8 @@ public class Task {
 
     private String userName;
 
+    @DateTimeFormat(pattern = "yyy-MM-dd")
+    @JsonFormat(pattern = "yyy-mm-dd")
     private Date taskGettime;
 
     private Integer taskCountnumber;

@@ -38,7 +38,7 @@ public class ExchangeController {
      */
     @ResponseBody
     @GetMapping(value = "exchangeRecords/{userId}/pn={pn}")
-    public OutJSON getExchangeList(@PathVariable(value = "pn") int pageNumber, @RequestParam(value = "pageNumber", defaultValue = "5") int pageSize, @PathVariable("userId") int userId) {
+    public OutJSON getExchangeList(@PathVariable(value = "pn") int pageNumber, @RequestParam(value = "pageSize", defaultValue = "5") int pageSize, @PathVariable("userId") int userId) {
         try {
             PageHelper.startPage(pageNumber, pageSize);
             //根据userId查询视图中该用户所有状态 状态1（显示为：未发送）  状态2（显示为：确定领取），状态3（显示为：已经领取）  的兑换列表

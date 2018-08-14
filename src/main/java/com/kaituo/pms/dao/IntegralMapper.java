@@ -10,8 +10,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 @Mapper
-public interface
-IntegralMapper {
+public interface IntegralMapper {
     int countByExample(IntegralExample example);
 
     int deleteByExample(IntegralExample example);
@@ -33,4 +32,6 @@ IntegralMapper {
     int updateByPrimaryKeySelective(Integral record);
 
     int updateByPrimaryKey(Integral record);
+
+    List<Integral>  selectALLIntegral();
 }
