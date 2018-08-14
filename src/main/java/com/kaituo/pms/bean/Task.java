@@ -33,7 +33,9 @@ public class Task {
 
     private Date taskGettime;
 
-    public Task(Integer taskId, String taskName, Integer taskDifficulty, Integer taskPrice, Integer taskAward, Integer taskNumber, Integer taskTime, Date taskStarttime, Date taskEndtime, String taskImage, String taskDescribe, Integer taskStatus, Integer userId, String userName, Date taskGettime) {
+    private Integer taskCountnumber;
+
+    public Task(Integer taskId, String taskName, Integer taskDifficulty, Integer taskPrice, Integer taskAward, Integer taskNumber, Integer taskTime, Date taskStarttime, Date taskEndtime, String taskImage, String taskDescribe, Integer taskStatus, Integer userId, String userName, Date taskGettime, Integer taskCountnumber) {
         this.taskId = taskId;
         this.taskName = taskName;
         this.taskDifficulty = taskDifficulty;
@@ -49,6 +51,7 @@ public class Task {
         this.userId = userId;
         this.userName = userName;
         this.taskGettime = taskGettime;
+        this.taskCountnumber = taskCountnumber;
     }
 
     public Task() {
@@ -173,5 +176,13 @@ public class Task {
 
     public void setTaskGettime(Date taskGettime) {
         this.taskGettime = taskGettime;
+    }
+
+    public Integer getTaskCountnumber() {
+        return taskCountnumber;
+    }
+
+    public void setTaskCountnumber(Integer taskCountnumber) {
+        this.taskCountnumber = taskCountnumber;
     }
 }

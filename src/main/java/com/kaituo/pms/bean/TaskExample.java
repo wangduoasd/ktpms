@@ -1071,6 +1071,66 @@ public class TaskExample {
             addCriterionForJDBCDate("task_gettime not between", value1, value2, "taskGettime");
             return (Criteria) this;
         }
+
+        public Criteria andTaskCountnumberIsNull() {
+            addCriterion("task_countnumber is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTaskCountnumberIsNotNull() {
+            addCriterion("task_countnumber is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTaskCountnumberEqualTo(Integer value) {
+            addCriterion("task_countnumber =", value, "taskCountnumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andTaskCountnumberNotEqualTo(Integer value) {
+            addCriterion("task_countnumber <>", value, "taskCountnumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andTaskCountnumberGreaterThan(Integer value) {
+            addCriterion("task_countnumber >", value, "taskCountnumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andTaskCountnumberGreaterThanOrEqualTo(Integer value) {
+            addCriterion("task_countnumber >=", value, "taskCountnumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andTaskCountnumberLessThan(Integer value) {
+            addCriterion("task_countnumber <", value, "taskCountnumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andTaskCountnumberLessThanOrEqualTo(Integer value) {
+            addCriterion("task_countnumber <=", value, "taskCountnumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andTaskCountnumberIn(List<Integer> values) {
+            addCriterion("task_countnumber in", values, "taskCountnumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andTaskCountnumberNotIn(List<Integer> values) {
+            addCriterion("task_countnumber not in", values, "taskCountnumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andTaskCountnumberBetween(Integer value1, Integer value2) {
+            addCriterion("task_countnumber between", value1, value2, "taskCountnumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andTaskCountnumberNotBetween(Integer value1, Integer value2) {
+            addCriterion("task_countnumber not between", value1, value2, "taskCountnumber");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {
