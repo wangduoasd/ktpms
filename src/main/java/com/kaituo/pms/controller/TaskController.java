@@ -46,10 +46,24 @@ public class TaskController {
                             "tasks/status/{callPage}/{pageNamber}/{pageSize}" ,
                             "tasks/status/{callPage}/{pageNamber}/{userId}" ,
                             "tasks/status/{callPage}/{pageNamber}"})
-    public OutJSON findCollectionStatus(@PathVariable("callPage") String callPage ,
-                                         @PathVariable(value = "userId" , required = false) int userId ,
+    public OutJSON findCollectionStatus(HttpServletRequest request , @PathVariable("callPage") String callPage ,
+                                         @PathVariable(value = "userId" , required = false) Integer userId ,
                                         @PathVariable(value = "pageNamber") int pageNamber ,
-                                       @PathVariable(value = "pageNamber" , required = false) int pageSize) {
+                                       @PathVariable(value = "pageSize" , required = false) int pageSize) {
+        // 没有传员工id的情况(待领取除外)
+        if(null == userId && !"unaccalimed".equals(callPage)){
+            // 从session中获得当前员工id
+            HttpSession session = request.getSession();
+            User user = (User) session.getAttribute("user");
+
+            // 如果没有取到则返回没有得到员工信息
+            if (null == user){
+                return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR,"未得到员工信息");
+            }else {
+                userId = user.getUserId();
+            }
+        }
+
         try {
             switch (callPage){
                 // 未领取页面调用
@@ -57,7 +71,7 @@ public class TaskController {
                     //已发布但未被领取的任务为1
                     int status = 1;
                     // 处理过期数据
-                    taskService.expiredVerification(status);
+                    taskService.expiredVerification();
                     //查询所有已发布但未被领取的任务的信息
                     //分页
                     return taskService.getStatesTaskByPage(pageNamber , pageSize , status);
@@ -70,13 +84,11 @@ public class TaskController {
                     return taskService.getUndoneByPage(pageNamber , pageSize , userId);
                 // 已完成页面调用
                 case "completed":
-                    //已发布但未被领取的任务为1
-
                     //查询所有已发布但未被领取的任务的信息
                     //分页
-                    return taskService.getStatesTaskByPage(pageNamber , pageSize , 6);
+                    return taskService.getStatesTaskByPage(pageNamber , pageSize , 6 , userId);
                 default:
-                    return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
+                    return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR,"调用页面错误");
         }
         } catch (Exception e) {
             e.printStackTrace();

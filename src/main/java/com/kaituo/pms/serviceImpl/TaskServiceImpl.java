@@ -43,14 +43,18 @@ public class TaskServiceImpl implements TaskService {
     @Autowired
     IntegralMapper integralMapper;
 
+    /**
+     * 验证是否过期，过期则修改数据库中任务状态
+     * @Author: 苏泽华
+     * @Date: 2018/8/13
+     */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void expiredVerification(int status) {
+    public void expiredVerification() {
         try {
             // 查询所有相关任务
             TaskExample example = new TaskExample();
             TaskExample.Criteria criteria = example.createCriteria();
-            criteria.andTaskStatusEqualTo(status);
             List<com.kaituo.pms.bean.Task> taskList = taskMapper.selectByExample(example);
             if (null != taskList && taskList.size() > 0) {
                 // 循环对比是否过期
@@ -72,6 +76,11 @@ public class TaskServiceImpl implements TaskService {
         }
     }
 
+    /**
+     * 验证是否超时，超时则修改数据库中任务状态
+     * @Author: 苏泽华
+     * @Date: 2018/8/13
+     */
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void timeOutDetection() {
@@ -119,6 +128,31 @@ public class TaskServiceImpl implements TaskService {
         return taskMapper.selectByExample(example);
     }
 
+    /**
+     * 查询指定状态的任务信息
+     * @param status :任务状态
+     *@Author: 苏泽华
+     *@Date: 2018/8/9
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public List<com.kaituo.pms.bean.Task> listTaskByStatus(int status , int userId) {
+
+        TaskExample example = new TaskExample();
+        TaskExample.Criteria criteria = example.createCriteria();
+        criteria.andTaskStatusEqualTo(status);
+        criteria.andUserIdEqualTo(userId);
+        return taskMapper.selectByExample(example);
+    }
+
+    /**
+     * 获取未完成页面所需的数据
+     * @Param:
+     * @param userId 员工id
+     * @return: java.util.List<com.kaituo.pms.bean.Task>
+     * @Author: 苏泽华
+     * @Date: 2018/8/13
+     */
     @Override
     public List<Task> listUnfinishedTask(int userId) {
         TaskExample example = new TaskExample();
@@ -172,6 +206,33 @@ public class TaskServiceImpl implements TaskService {
             // 分页
             PageHelper.startPage(pageNamber, pageSize);
             List<com.kaituo.pms.bean.Task> list = listTaskByStatus(status);
+
+            Map<String , Object> pageMap = new HashMap<>(2);
+
+            pageMap.put("total:" , total);
+            pageMap.put("taskList" , list);
+
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS , pageMap);
+        }else {
+            return OutJSON.getInstance(CodeAndMessageEnum.GET_STATES_TASK_BY_PAGE_NULL);
+        }
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public OutJSON getStatesTaskByPage(Integer pageNamber, Integer pageSize, int status , int userId) {
+        // 如果每页条数为空则将每页条数设为4
+        if (null==pageSize){
+            pageSize = 4;
+        }
+
+        // 条数
+        int total = (int)countTaskByStatus(status);
+        // 有数据就封装map返回上层
+        if (0<total){
+            // 分页
+            PageHelper.startPage(pageNamber, pageSize);
+            List<com.kaituo.pms.bean.Task> list = listTaskByStatus(status , userId);
 
             Map<String , Object> pageMap = new HashMap<>(2);
 
