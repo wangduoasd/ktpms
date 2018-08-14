@@ -77,6 +77,7 @@ public class IntergralServiceImpl implements IntegralService {
                     integralMap.add(map);
                 }
 
+                //
             }
         }
         return integralMap;
