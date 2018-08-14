@@ -73,6 +73,7 @@ public class UserController {
     }
 
     /**
+     * 通过ID查询员工个人信息
      * @Description: 个人中心我的信息
      * @Param: id
      * @return:
@@ -89,6 +90,7 @@ public class UserController {
                 return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS , personalDetail);
 
         } catch (Exception e) {
+            e.printStackTrace();
             log.error("" + e.getMessage());
 
         }
@@ -236,5 +238,6 @@ public class UserController {
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
         }
     }
+
 
 }

@@ -43,7 +43,13 @@ public class UserServiceImpl implements UserService {
         List<User> userList = userMapper.selectUsersByView();
         return userList;
     }
-
+/** 
+* @Description: 个人中心我的信息
+* @Param:  
+* @return:  
+* @Author: 侯鹏
+* @Date:  2018/8/10
+*/ 
     @Override
     @Transactional
     public User findPersonalDetail(int userid) {

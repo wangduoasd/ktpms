@@ -258,4 +258,7 @@
       integral_endnum = #{integralEndnum,jdbcType=INTEGER}
     where integral_id = #{integralId,jdbcType=INTEGER}
   </update>
+  <select id="selectALLIntegral" resultMap="BaseResultMap">
+    select * from p_integral
+  </select>
 </mapper>

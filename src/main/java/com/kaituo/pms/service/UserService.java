@@ -18,6 +18,7 @@ public interface UserService {
     List<User> listUserRankingByPage();
 
     /**
+     * 通过ID查询个人信息
      * @Description: 个人中心我的信息
      * @Param:  id
      * @return:

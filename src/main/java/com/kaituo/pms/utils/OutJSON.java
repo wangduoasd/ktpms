@@ -17,7 +17,7 @@ public class OutJSON {
 
     private String message;
 
-    private Map<String,Object> data;
+    private Object data;
 
     public  String getCode() {
         return code;
@@ -35,11 +35,11 @@ public class OutJSON {
         this.message = message;
     }
 
-    public Map<String, Object> getData() {
+    public Object getData() {
         return data;
     }
 
-    public void setData(Map<String, Object> data) {
+    public void setData(Object data) {
         this.data = data;
     }
 
@@ -47,9 +47,10 @@ public class OutJSON {
       OutJSON outJSON = new OutJSON();
       outJSON.code = codeAndMessageEnum.getCode();
       outJSON.message = codeAndMessageEnum.getMessage();
-      Map<String , Object> map = new HashMap<>(1);
-      map.put("data:",data);
-      outJSON.data = map;
+      outJSON.data = data;
+//      Map<String , Object> map = new HashMap<>(1);
+//      map.put("data:",data);
+//      outJSON.data = map;
       return  outJSON;
     }
 
