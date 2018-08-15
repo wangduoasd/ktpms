@@ -1,5 +1,6 @@
 package com.kaituo.pms.utils;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -15,7 +16,7 @@ import java.util.Map;
  * @author: su
  * @create: 2018-07-27 11:00
  **/
-
+@Slf4j
 public class Util {
 
     /**
@@ -72,24 +73,24 @@ public class Util {
          * 文件上传
          *
          * */
-            Map<String,Object> outPut =new HashMap<>();
-            outPut.put("message","上传失败！");
-            outPut.put("code","0");
-            outPut.put("data","");
+            Map<String,Object> outPut =new HashMap<>(2);
+            outPut.put("code",Constant.IMG_UPLOSD_REEOR);
+            outPut.put("url","");
 
 
             if(file.isEmpty()){
-                outPut.put("message","文件为空！");
+                outPut.put("code",Constant.IMG_UPLOSD_EMPTY);
                 return outPut;
             }
 
-            String name = methodName;
+            String name = methodName + ".jpg";
             long date = System.currentTimeMillis();
             String fileName = date+name;
             int size = (int) file.getSize();
-            System.out.println(fileName + "-->" + size);
 
-            String path = "E:/fileUploadTest" ;
+            log.info(fileName + "-->" + size);
+
+            String path = "/fileUploadTest" ;
             File dest = new File(path + "/" + fileName);
             //判断文件父目录是否存在
             if(!dest.getParentFile().exists()){
@@ -101,10 +102,8 @@ public class Util {
 
                 //保存文件
                 file.transferTo(dest);
-                outPut.put("message","上传成功！");
-                outPut.put("code","0");
-                outPut.put("data","E:/fileUploadTest/"+fileName);
-//                System.out.println("1");
+                outPut.put("code",Constant.IMG_UPLOSD_SUCCESS);
+                outPut.put("url","/fileUploadTest/"+fileName);
                 return outPut;
             } catch (Exception e) {
                 return outPut;

@@ -7,12 +7,16 @@ import com.kaituo.pms.service.UserService;
 import com.kaituo.pms.utils.CodeAndMessageEnum;
 import com.kaituo.pms.utils.Constant;
 import com.kaituo.pms.utils.OutJSON;
+import com.kaituo.pms.utils.Util;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.websocket.server.PathParam;
+import java.util.Map;
 
 /**
  * @program: ktpms
@@ -178,5 +182,28 @@ public class TaskController {
             return taskService.submitReview(task);
         }
         return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
+    }
+
+    @PostMapping("tasks/status")
+    public OutJSON publishTask(MultipartFile file,Task task){
+        Util util = new Util();
+        Map<String, Object> map = util.imgUpload(file , task.getTaskName());
+        int key = (int)map.get("code");
+        switch (key){
+            case Constant.IMG_UPLOSD_REEOR :
+                return OutJSON.getInstance(CodeAndMessageEnum.PUBLISHING_TASK_IMAGE_HAS_BEEN_SUCCESSFULLY_UPLOADED);
+            case Constant.IMG_UPLOSD_EMPTY :
+                return OutJSON.getInstance(CodeAndMessageEnum.PUBLISHING_TASK_IMAGE_IS_EMPTY);
+            case Constant.IMG_UPLOSD_SUCCESS :
+                String url = (String) map.get("url");
+                task.setTaskImage(url);
+                if (taskService.publishTask(task)){
+                    return OutJSON.getInstance(CodeAndMessageEnum.THE_TASK_WAS_SUCCESSFULLY_POSTDE);
+                }else{
+                    return OutJSON.getInstance(CodeAndMessageEnum.TASK_POSTING_FAILED);
+                }
+                default:
+                    return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);
+        }
     }
 }

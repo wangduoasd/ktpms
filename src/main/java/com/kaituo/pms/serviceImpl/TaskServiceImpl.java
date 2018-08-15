@@ -367,6 +367,8 @@ public class TaskServiceImpl implements TaskService {
             task.setUserId(user.getUserId());
             // 领取该任务的用户的名字
             task.setUserName(user.getUserName());
+            // 第一次任务
+            task.setTaskNumber(1);
             // 任务领取时间
             task.setTaskGettime(new Date());
 
@@ -383,6 +385,13 @@ public class TaskServiceImpl implements TaskService {
         return OutJSON.getInstance(CodeAndMessageEnum.RECIEVE_THE_TASK_STATUS_SUCCESS);
     }
 
+    /**
+     * 提交审核
+     * @param task
+     * @return: com.kaituo.pms.utils.OutJSON
+     * @Author: 苏泽华
+     * @Date: 2018/8/14
+     */
     @Override
     @Transactional(rollbackFor = Exception.class)
     public OutJSON submitReview(Task task) {
@@ -397,6 +406,19 @@ public class TaskServiceImpl implements TaskService {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             log.error(e.getMessage(),e);
             return OutJSON.getInstance(CodeAndMessageEnum.SUBMIT_TASK_ERROR);
+        }
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean publishTask(Task task) {
+        try {
+            taskMapper.insert(task);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error(e.getMessage() , e);
+            return false;
         }
     }
 }
