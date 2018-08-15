@@ -1,5 +1,5 @@
 package com.kaituo.pms.utils;
-/** 
+/**
 * @Description: 枚举返回值定义类
 * @Author: su
 * @Date: 2018/8/8
@@ -25,7 +25,11 @@ public enum CodeAndMessageEnum {
     // 待领取任务领取任务按钮—成功
     RECIEVE_THE_TASK_STATUS_SUCCESS("4" , "领取成功"),
     // 待领取任务领取任务按钮—成功
-    RECIEVE_THE_TASK_STATUS_TIME_OUT("5" , "过期了，不要领了");
+    RECIEVE_THE_TASK_STATUS_TIME_OUT("5" , "过期了，不要领了"),
+    // 未完成任务-提交任务
+    SUBMIT_TASK_ERROR("1" , "任务提交失败"),
+    // 已完成页面消息
+    COMPLETED_TASK("1" , "任务完成，奖励到账");
 
     private String code;
 

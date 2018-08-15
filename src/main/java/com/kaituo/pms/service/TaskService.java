@@ -86,6 +86,7 @@ public interface TaskService {
     OutJSON getStatesTaskByPage(Integer pageNamber , Integer pageSize , int status , int userId);
 
     /**
+     * 获取未完成页面数据并封装好
      * @Description:
      * @Param:
      * @param pageNamber
@@ -118,4 +119,13 @@ public interface TaskService {
      */
 
     OutJSON recieveTheTask(Task task , User user);
+
+    /**
+     * 提交审核
+     * @param task
+     * @return: com.kaituo.pms.utils.OutJSON
+     * @Author: 苏泽华
+     * @Date: 2018/8/14
+     */
+    OutJSON submitReview(Task task);
 }
