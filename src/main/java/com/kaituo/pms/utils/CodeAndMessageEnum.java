@@ -26,7 +26,21 @@ public enum CodeAndMessageEnum {
     RECIEVE_THE_TASK_STATUS_SUCCESS("4" , "领取成功"),
     // 待领取任务领取任务按钮—成功
     RECIEVE_THE_TASK_STATUS_TIME_OUT("5" , "过期了，不要领了"),
+    // 未完成任务-提交任务
+    SUBMIT_TASK_ERROR("1" , "任务提交失败"),
+    // 已完成页面消息
+    COMPLETED_TASK("1" , "任务完成，奖励到账"),
 
+    // 图片上传失败
+    PUBLISHING_TASK_IMAGE_UPLOAD_FAILED("0" , "图片上传失败"),
+    // 没有获得图片
+    PUBLISHING_TASK_IMAGE_IS_EMPTY("1" , "图片为空"),
+    // 图片上传失败
+    PUBLISHING_TASK_IMAGE_HAS_BEEN_SUCCESSFULLY_UPLOADED("0" , "图片上传失败"),
+    // 任务发布成功
+    THE_TASK_WAS_SUCCESSFULLY_POSTDE("1" , "任务已发布"),
+    // 任务发布失败
+    TASK_POSTING_FAILED("0" , "任务发布失败"),
 
     //购买失败，积分不足
     FIND_PRIZE_INTEGRAL_LACKOF("1","积分不足"),
@@ -37,6 +51,7 @@ public enum CodeAndMessageEnum {
     //用户名或商品为空
     FIND_USER_PRIZE_NULL("4","用户名或密码为空");
     //积分不足
+
 
 
 

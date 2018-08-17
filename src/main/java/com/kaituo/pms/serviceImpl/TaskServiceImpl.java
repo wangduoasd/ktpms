@@ -13,9 +13,11 @@ import com.kaituo.pms.dao.UserMapper;
 
 import com.kaituo.pms.service.TaskService;
 import com.kaituo.pms.utils.CodeAndMessageEnum;
+import com.kaituo.pms.utils.Constant;
 import com.kaituo.pms.utils.OutJSON;
 
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,6 +35,7 @@ import java.util.Map;
  * @author: 由苏泽华创建
  * @create: 2018-08-09 21:45
  **/
+@Slf4j
 @Service
 public class TaskServiceImpl implements TaskService {
 
@@ -43,26 +46,37 @@ public class TaskServiceImpl implements TaskService {
     @Autowired
     IntegralMapper integralMapper;
 
+    /**
+     * 验证是否过期，过期则修改数据库中任务状态
+     * @Author: 苏泽华
+     * @Date: 2018/8/13
+     */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void expiredVerification(int status) {
+    public void expiredVerification() {
         try {
             // 查询所有相关任务
             TaskExample example = new TaskExample();
             TaskExample.Criteria criteria = example.createCriteria();
-            criteria.andTaskStatusEqualTo(status);
             List<com.kaituo.pms.bean.Task> taskList = taskMapper.selectByExample(example);
             if (null != taskList && taskList.size() > 0) {
                 // 循环对比是否过期
                 for(com.kaituo.pms.bean.Task task : taskList){
 
-                    // 如果任务过期则修改任务状态
-                    if (task.getTaskEndtime().getTime() < System.currentTimeMillis()){
-                        task.setTaskStatus(5);
-                        TaskExample newExample = new TaskExample();
-                        TaskExample.Criteria newEriteria = newExample.createCriteria();
-                        newEriteria.andTaskIdEqualTo(task.getTaskId());
-                        taskMapper.updateByExample(task , newExample);
+                    // 排除2为任务已经被领取,3为提前取消,4为提交审核，5为任务完成失败,7为任务完成了
+                    if (task.getTaskStatus() != Constant.THE_TASK_HAS_BEEN_RECEIVED &&
+                            task.getTaskStatus() != Constant.TASK_CANCELDE_IN_ADVANCE &&
+                            task.getTaskStatus() != Constant.TASK_SUBMISSION_REVIEW &&
+                            task.getTaskStatus() != Constant.TASK_COMPLETION_FAILED &&
+                            task.getTaskStatus() != Constant.MISSION_COMPLETED) {
+                        // 如果任务过期则修改任务状态
+                        if (task.getTaskEndtime().getTime() < System.currentTimeMillis()){
+                            task.setTaskStatus(Constant.NO_ONE_ACCEPTS_THE_TASK);
+                            TaskExample newExample = new TaskExample();
+                            TaskExample.Criteria newEriteria = newExample.createCriteria();
+                            newEriteria.andTaskIdEqualTo(task.getTaskId());
+                            taskMapper.updateByExample(task , newExample);
+                        }
                     }
                 }
             }
@@ -72,6 +86,11 @@ public class TaskServiceImpl implements TaskService {
         }
     }
 
+    /**
+     * 验证是否超时，超时则修改数据库中任务状态
+     * @Author: 苏泽华
+     * @Date: 2018/8/13
+     */
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void timeOutDetection() {
@@ -84,14 +103,17 @@ public class TaskServiceImpl implements TaskService {
                 // 循环对比是否超时
                 for(com.kaituo.pms.bean.Task task : taskList){
 
-                    // 如果任务超时则修改任务状态
-                    if (task.getTaskGettime().getTime() < System.currentTimeMillis()){
+                    if (null != task.getTaskGettime()) {
+                        long timeLimit = task.getTaskGettime().getTime()+task.getTaskTime() * 60 * 60 * 1000;
+                        // 如果任务超时则修改任务状态
+                        if (timeLimit< System.currentTimeMillis()){
 
-                        task.setTaskStatus(4);
-                        TaskExample newExample = new TaskExample();
-                        TaskExample.Criteria newEriteria = newExample.createCriteria();
-                        newEriteria.andTaskIdEqualTo(task.getTaskId());
-                        taskMapper.updateByExample(task , newExample);
+                            task.setTaskStatus(Constant.TASK_COMPLETION_FAILED);
+                            TaskExample newExample = new TaskExample();
+                            TaskExample.Criteria newEriteria = newExample.createCriteria();
+                            newEriteria.andTaskIdEqualTo(task.getTaskId());
+                            taskMapper.updateByExample(task , newExample);
+                        }
                     }
                 }
             }
@@ -119,12 +141,37 @@ public class TaskServiceImpl implements TaskService {
         return taskMapper.selectByExample(example);
     }
 
+    /**
+     * 查询指定状态的任务信息
+     * @param status :任务状态
+     *@Author: 苏泽华
+     *@Date: 2018/8/9
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public List<com.kaituo.pms.bean.Task> listTaskByStatus(int status , int userId) {
+
+        TaskExample example = new TaskExample();
+        TaskExample.Criteria criteria = example.createCriteria();
+        criteria.andTaskStatusEqualTo(status);
+        criteria.andUserIdEqualTo(userId);
+        return taskMapper.selectByExample(example);
+    }
+
+    /**
+     * 获取未完成页面所需的数据
+     * @Param:
+     * @param userId 员工id
+     * @return: java.util.List<com.kaituo.pms.bean.Task>
+     * @Author: 苏泽华
+     * @Date: 2018/8/13
+     */
     @Override
     public List<Task> listUnfinishedTask(int userId) {
         TaskExample example = new TaskExample();
         TaskExample.Criteria criteria = example.createCriteria();
-        criteria.andTaskStatusNotEqualTo(1);
-        criteria.andTaskStatusNotEqualTo(6);
+        criteria.andTaskStatusNotEqualTo(Constant.THE_TASK_WAS_SUCCESSFULLY_POSTED);
+        criteria.andTaskStatusNotEqualTo(Constant.MISSION_COMPLETED);
         criteria.andUserIdEqualTo(userId);
         return taskMapper.selectByExample(example);
     }
@@ -186,6 +233,43 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
+    public OutJSON getStatesTaskByPage(Integer pageNamber, Integer pageSize, int status , int userId) {
+        // 如果每页条数为空则将每页条数设为4
+        if (null==pageSize){
+            pageSize = 4;
+        }
+
+        // 条数
+        int total = (int)countTaskByStatus(status);
+        // 有数据就封装map返回上层
+        if (0<total){
+            // 分页
+            PageHelper.startPage(pageNamber, pageSize);
+            List<com.kaituo.pms.bean.Task> list = listTaskByStatus(status , userId);
+
+            Map<String , Object> pageMap = new HashMap<>(2);
+
+            pageMap.put("total:" , total);
+            pageMap.put("taskList" , list);
+
+            return OutJSON.getInstance(CodeAndMessageEnum.COMPLETED_TASK , pageMap);
+        }else {
+            return OutJSON.getInstance(CodeAndMessageEnum.GET_STATES_TASK_BY_PAGE_NULL);
+        }
+    }
+
+    /**
+     * 获取未完成页面数据并封装好
+     * @Description:
+     * @Param:
+     * @param pageNamber
+     * @param pageSize
+     * @return: com.kaituo.pms.utils.OutJSON
+     * @Author: 苏泽华
+     * @Date: 2018/8/13
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
     public OutJSON getUndoneByPage(Integer pageNamber, Integer pageSize , int userId) {
         // 如果每页条数为空则将每页条数设为4
         if (null==pageSize){
@@ -193,10 +277,11 @@ public class TaskServiceImpl implements TaskService {
         }
 
         // 条数
+        // 任务的状态,默认为1,1为任务发布成功,2为任务已经被领取,3为提前取消,，4为提交审核，5为任务完成失败,6为任务没人领取,7为任务完成了!56都为任务失效
         TaskExample example = new TaskExample();
         TaskExample.Criteria criteria = example.createCriteria();
-        criteria.andTaskStatusNotEqualTo(1);
-        criteria.andTaskStatusNotEqualTo(6);
+        criteria.andTaskStatusNotEqualTo(Constant.THE_TASK_WAS_SUCCESSFULLY_POSTED);
+        criteria.andTaskStatusNotEqualTo(Constant.MISSION_COMPLETED);
         criteria.andUserIdEqualTo(userId);
         int total = taskMapper.countByExample(example);
         // 有数据就封装map返回上层
@@ -277,11 +362,13 @@ public class TaskServiceImpl implements TaskService {
 
             // 任务变更
             // 修改任务状态为已领取
-            task.setTaskStatus(2);
+            task.setTaskStatus(Constant.THE_TASK_HAS_BEEN_RECEIVED);
             // 用户的ID
             task.setUserId(user.getUserId());
             // 领取该任务的用户的名字
             task.setUserName(user.getUserName());
+            // 第一次任务
+            task.setTaskNumber(1);
             // 任务领取时间
             task.setTaskGettime(new Date());
 
@@ -292,7 +379,46 @@ public class TaskServiceImpl implements TaskService {
         } catch (Exception e) {
             e.printStackTrace();
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            log.error(e.getMessage(),e);
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
         }
         return OutJSON.getInstance(CodeAndMessageEnum.RECIEVE_THE_TASK_STATUS_SUCCESS);
+    }
+
+    /**
+     * 提交审核
+     * @param task
+     * @return: com.kaituo.pms.utils.OutJSON
+     * @Author: 苏泽华
+     * @Date: 2018/8/14
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public OutJSON submitReview(Task task) {
+        try {
+            TaskExample taskExample = new TaskExample();
+            TaskExample.Criteria Taskcriteria = taskExample.createCriteria();
+            Taskcriteria.andTaskIdEqualTo(task.getTaskId());
+            taskMapper.updateByExample(task , taskExample);
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);
+        } catch (Exception e) {
+            e.printStackTrace();
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            log.error(e.getMessage(),e);
+            return OutJSON.getInstance(CodeAndMessageEnum.SUBMIT_TASK_ERROR);
+        }
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean publishTask(Task task) {
+        try {
+            taskMapper.insert(task);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error(e.getMessage() , e);
+            return false;
+        }
     }
 }
