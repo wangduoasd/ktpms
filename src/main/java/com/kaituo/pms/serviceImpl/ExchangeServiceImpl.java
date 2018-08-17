@@ -50,4 +50,24 @@ public class ExchangeServiceImpl implements ExchangeService {
         return exchangeMapper.getExchangeLists();
     }
 
+    @Override
+    public List<Exchange> selectBykeyWord(String keyWord) {
+        return exchangeMapper.selectBykeyWord2(keyWord);
+    }
+    /**
+     　  * @Description: 添加一条兑换记录
+     　　* @param prizeId 商品ID,userId 用户ID，num 兑换数量
+     　　* @return Exchange
+     　　* @throws
+     　　* @author 张金行
+     　　* @date 2018/8/17 0017 16:50
+     　　*/
+    @Override
+    public int addexchangeRecord(int prizeId, int userId, int num) {
+        Exchange exchange = new Exchange();
+        exchange.setPrizeId(prizeId);
+        exchange.setUserId(userId);
+        exchange.setExchangeCount(num);
+      return   exchangeMapper.insertSelective(exchange);
+    }
 }
