@@ -16,7 +16,7 @@ import java.util.Map;
 
 @Slf4j
 @RestController
-@RequestMapping
+@CrossOrigin
 public class IntegralController {
     @Autowired
     IntegralService integralService;

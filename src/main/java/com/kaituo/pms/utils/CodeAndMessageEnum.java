@@ -1,5 +1,5 @@
 package com.kaituo.pms.utils;
-/** 
+/**
 * @Description: 枚举返回值定义类
 * @Author: su
 * @Date: 2018/8/8
@@ -25,7 +25,22 @@ public enum CodeAndMessageEnum {
     // 待领取任务领取任务按钮—成功
     RECIEVE_THE_TASK_STATUS_SUCCESS("4" , "领取成功"),
     // 待领取任务领取任务按钮—成功
-    RECIEVE_THE_TASK_STATUS_TIME_OUT("5" , "过期了，不要领了");
+    RECIEVE_THE_TASK_STATUS_TIME_OUT("5" , "过期了，不要领了"),
+    // 未完成任务-提交任务
+    SUBMIT_TASK_ERROR("1" , "任务提交失败"),
+    // 已完成页面消息
+    COMPLETED_TASK("1" , "任务完成，奖励到账"),
+
+    // 图片上传失败
+    PUBLISHING_TASK_IMAGE_UPLOAD_FAILED("0" , "图片上传失败"),
+    // 没有获得图片
+    PUBLISHING_TASK_IMAGE_IS_EMPTY("1" , "图片为空"),
+    // 图片上传失败
+    PUBLISHING_TASK_IMAGE_HAS_BEEN_SUCCESSFULLY_UPLOADED("0" , "图片上传失败"),
+    // 任务发布成功
+    THE_TASK_WAS_SUCCESSFULLY_POSTDE("1" , "任务已发布"),
+    // 任务发布失败
+    TASK_POSTING_FAILED("0" , "任务发布失败");
 
     private String code;
 
