@@ -25,7 +25,20 @@ public enum CodeAndMessageEnum {
     // 待领取任务领取任务按钮—成功
     RECIEVE_THE_TASK_STATUS_SUCCESS("4" , "领取成功"),
     // 待领取任务领取任务按钮—成功
-    RECIEVE_THE_TASK_STATUS_TIME_OUT("5" , "过期了，不要领了");
+    RECIEVE_THE_TASK_STATUS_TIME_OUT("5" , "过期了，不要领了"),
+
+
+    //购买失败，积分不足
+    FIND_PRIZE_INTEGRAL_LACKOF("1","积分不足"),
+    //购买失败，超过上限
+    FIND_PRIZE_CAP("2","超过上限"),
+    //购买成功
+    FIND_PRIZE_SUCCESS("3","兑换成功"),
+    //用户名或商品为空
+    FIND_USER_PRIZE_NULL("4","用户名或密码为空");
+    //积分不足
+
+
 
     private String code;
 

@@ -11,5 +11,4 @@ public interface ExchangeService {
     int updateExchange(int userId,int status);
     List<Exchange> selectBykeyWord(String keyWord,int userId);
    List<Exchange> getExchangeLists();
-
 }

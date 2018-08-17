@@ -32,4 +32,9 @@ public interface PrizeMapper {
     int updateByPrimaryKeySelective(Prize record);
 
     int updateByPrimaryKey(Prize record);
+
+    List<Prize> selectByName(String prizeName);
+    List<Prize> findAllPrize(Integer userId);
+
+
 }
