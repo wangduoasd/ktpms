@@ -4,11 +4,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 /**
  * @program: pms
@@ -18,6 +20,19 @@ import java.util.Map;
  **/
 @Slf4j
 public class Util {
+
+    /**
+     * System.getProperty()获取系统的执行属性，file.separator 文件分隔符，os.name系统名
+     */
+    private static String seperator = System.getProperty("file.separator");
+    /**
+     * 时间戳
+     */
+    private static final long date = System.currentTimeMillis();
+    /**
+     * 随机数
+     */
+    private static final Random r = new Random();
 
     /**
      * 将时间转换为时间戳
@@ -68,45 +83,133 @@ public class Util {
     * @Date: 2018/8/3 
     */
 
-    public Map<String , Object> imgUpload(MultipartFile file, String methodName){
+    public static Map<String , Object> imgUpload(MultipartFile file , String targetAddr){
         /**
          * 文件上传
          *
          * */
-            Map<String,Object> outPut =new HashMap<>(2);
-            outPut.put("code",Constant.IMG_UPLOSD_REEOR);
-            outPut.put("url","");
+         Map<String,Object> outPut =new HashMap<>(2);
+         outPut.put("code",Constant.IMG_UPLOSD_REEOR);
+         outPut.put("url","");
 
 
-            if(file.isEmpty()){
-                outPut.put("code",Constant.IMG_UPLOSD_EMPTY);
-                return outPut;
-            }
-
-            String name = methodName + ".jpg";
-            long date = System.currentTimeMillis();
-            String fileName = date+name;
-            int size = (int) file.getSize();
-
-            log.info(fileName + "-->" + size);
-
-            String path = "/fileUploadTest" ;
-            File dest = new File(path + "/" + fileName);
-            //判断文件父目录是否存在
-            if(!dest.getParentFile().exists()){
-                dest.getParentFile().mkdir();
-            }
+         if(file.isEmpty()){
+             outPut.put("code",Constant.IMG_UPLOSD_EMPTY);
+             return outPut;
+         }
 
 
-            try {
+         String fileName = getRandomFileName()+getFileExtension(file);
+         int size = (int) file.getSize();
 
-                //保存文件
-                file.transferTo(dest);
-                outPut.put("code",Constant.IMG_UPLOSD_SUCCESS);
-                outPut.put("url","/fileUploadTest/"+fileName);
-                return outPut;
-            } catch (Exception e) {
-                return outPut;
-            }
+         log.info(fileName + "-->" + size);
+
+        String relativeAddr = targetAddr + fileName;
+        // 创建目录
+        makeDirPath(targetAddr);
+
+        File dest = new File(getImgBasePath() + relativeAddr);
+
+        try {
+
+            //保存文件
+            file.transferTo(dest);
+            outPut.put("code",Constant.IMG_UPLOSD_SUCCESS);
+            outPut.put("url",targetAddr+fileName);
+            return outPut;
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("com.kaituo.pms.utils.Util.imgUpload ==>"+e.getMessage() , e);
+            return outPut;
+        }
+    }
+
+    /**
+     * 生成随机文件名 ， 当前时间戳+5位随机数
+     * @Param:
+     * @param
+     * @return: java.lang.String
+     * @Author: 苏泽华
+     * @Date: 2018/8/17
+     */
+    private static String getRandomFileName(){
+        // 获取随机5位数
+        int rannum = r.nextInt(89999) + 10000;
+        return date+""+rannum;
+    }
+
+    /**
+     * 获取文件输入流的扩展名
+     * @Param:
+     * @param file
+     * @return: java.lang.String
+     * @Author: 苏泽华
+     * @Date: 2018/8/17
+     */
+    private static String getFileExtension(MultipartFile file){
+        String fileExtension = file.getOriginalFilename();
+        return fileExtension.substring(fileExtension.lastIndexOf("."));
+    }
+
+    /**
+     * 创建目标路径所涉及到的目录
+     * @Param:
+     * @param targetAddr 路径
+     * @return: void
+     * @Author: 苏泽华
+     * @Date: 2018/8/17
+     */
+    public static void  makeDirPath(String targetAddr){
+        String realFileParentPath = getImgBasePath()+targetAddr;
+        File dirPath = new File(realFileParentPath);
+        // 判断路径是否存在
+        if (!dirPath.exists()){
+            dirPath.mkdirs();
+        }
+    }
+
+    /**
+     * 文件存放位置
+     * @Param:
+     * @param
+     * @return: java.lang.String
+     * @Author: 苏泽华
+     * @Date: 2018/8/17
+     */
+    public static String getImgBasePath(){
+        // 获取操作系统
+        String os = System.getProperty("os.name");
+        // 声明路径
+        String basePath = "";
+
+        if(os.toLowerCase().startsWith("win")){
+            basePath = "E:/fileUpload";
+        } else {
+            basePath = "/pms/imgUpload";
+        }
+        basePath = basePath.replace("/" , seperator);
+        return basePath;
+    }
+    /**
+     * 相对路径
+     * @Param:
+     * @param
+     * @return: java.lang.String
+     * @Author: 苏泽华
+     * @Date: 2018/8/17
+     */
+    public static String getImgRelativePath(){
+        // 获取操作系统
+        String os = System.getProperty("os.name");
+        // 声明路径
+        String relativePath = "";
+
+        if(os.toLowerCase().startsWith("win")){
+            relativePath = "/image/";
+        } else {
+            relativePath = "/img/";
+        }
+        relativePath = relativePath.replace("/" , seperator);
+        return relativePath;
     }
 }

@@ -34,8 +34,8 @@ public class Task {
 
     private String userName;
 
-    @DateTimeFormat(pattern = "yyy-MM-dd")
-    @JsonFormat(pattern = "yyy-mm-dd")
+    @DateTimeFormat(pattern = "yyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyy-mm-dd HH:mm:ss")
     private Date taskGettime;
 
     private Integer taskCountnumber;

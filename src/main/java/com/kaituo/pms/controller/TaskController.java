@@ -12,10 +12,17 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.websocket.server.PathParam;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -26,6 +33,7 @@ import java.util.Map;
  **/
 @Slf4j
 @RestController
+@CrossOrigin
 public class TaskController {
 
     @Autowired
@@ -184,10 +192,80 @@ public class TaskController {
         return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
     }
 
+
+//上传的方法
+
+//    @PostMapping("tasks/status")
+//    public String handleFileUpload(@RequestParam("file") MultipartFile file,
+//
+//                                    RedirectAttributes redirectAttributes,  Task task) {
+//
+//        if (!file.isEmpty()) {
+//
+//            try {
+//
+//                Files.copy(file.getInputStream(), Paths.get(ROOT, file.getOriginalFilename()));
+//
+//                redirectAttributes.addFlashAttribute("message",
+//
+//                        "You successfully uploaded " + file.getOriginalFilename() + "!");
+//
+//            } catch (IOException |RuntimeException e) {
+//
+//                redirectAttributes.addFlashAttribute("message", "Failued to upload " + file.getOriginalFilename() + " => " + e.getMessage());
+//
+//            }
+//
+//        } else {
+//
+//            redirectAttributes.addFlashAttribute("message", "Failed to upload " + file.getOriginalFilename() + " because it was empty");
+//
+//        }
+//
+//
+//
+//        return "redirect:/";
+//
+//    }
+
+
+
+//}
+
+
+//    @PostMapping("tasks/status")
+//    public OutJSON publishTask(MultipartFile file,String starttime , String endtime , Task task){
+//        Util util = new Util();
+//        Map<String, Object> map = util.imgUpload(file , task.getTaskName());
+//        int key = (int)map.get("code");
+//        switch (key){
+//            case Constant.IMG_UPLOSD_REEOR :
+//                return OutJSON.getInstance(CodeAndMessageEnum.PUBLISHING_TASK_IMAGE_HAS_BEEN_SUCCESSFULLY_UPLOADED);
+//            case Constant.IMG_UPLOSD_EMPTY :
+//                return OutJSON.getInstance(CodeAndMessageEnum.PUBLISHING_TASK_IMAGE_IS_EMPTY);
+//            case Constant.IMG_UPLOSD_SUCCESS :
+//                String url = (String) map.get("url");
+//
+//                Date startDate = Util.stampToDate(starttime);
+//                Date endDate = Util.stampToDate(endtime);
+//                task.setTaskStarttime(startDate);
+//                task.setTaskEndtime(endDate);
+//                task.setTaskImage(url);
+//                task.setTaskStatus(Constant.THE_TASK_WAS_SUCCESSFULLY_POSTED);
+//                task.setTaskNumber(0);
+//                if (taskService.publishTask(task)){
+//                    return OutJSON.getInstance(CodeAndMessageEnum.THE_TASK_WAS_SUCCESSFULLY_POSTDE);
+//                }else{
+//                    return OutJSON.getInstance(CodeAndMessageEnum.TASK_POSTING_FAILED);
+//                }
+//                default:
+//                    return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR , "未知原因错误");
+//        }
+//    }
+
     @PostMapping("tasks/status")
-    public OutJSON publishTask(MultipartFile file,Task task){
-        Util util = new Util();
-        Map<String, Object> map = util.imgUpload(file , task.getTaskName());
+    public OutJSON publishTask(MultipartFile file,String starttime , String endtime , Task task){
+        Map<String, Object> map = Util.imgUpload(file , Util.getImgRelativePath());
         int key = (int)map.get("code");
         switch (key){
             case Constant.IMG_UPLOSD_REEOR :
@@ -196,14 +274,21 @@ public class TaskController {
                 return OutJSON.getInstance(CodeAndMessageEnum.PUBLISHING_TASK_IMAGE_IS_EMPTY);
             case Constant.IMG_UPLOSD_SUCCESS :
                 String url = (String) map.get("url");
+
+                Date startDate = Util.stampToDate(starttime);
+                Date endDate = Util.stampToDate(endtime);
+                task.setTaskStarttime(startDate);
+                task.setTaskEndtime(endDate);
                 task.setTaskImage(url);
+                task.setTaskStatus(Constant.THE_TASK_WAS_SUCCESSFULLY_POSTED);
+                task.setTaskNumber(0);
                 if (taskService.publishTask(task)){
                     return OutJSON.getInstance(CodeAndMessageEnum.THE_TASK_WAS_SUCCESSFULLY_POSTDE);
                 }else{
                     return OutJSON.getInstance(CodeAndMessageEnum.TASK_POSTING_FAILED);
                 }
-                default:
-                    return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);
+            default:
+                return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR , "未知原因错误");
         }
     }
 }

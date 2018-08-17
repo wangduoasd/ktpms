@@ -22,6 +22,7 @@ import java.util.*;
 
 @Slf4j
 @RestController
+@CrossOrigin
 public class UserController {
 
     @Autowired

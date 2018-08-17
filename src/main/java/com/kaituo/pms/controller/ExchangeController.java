@@ -21,7 +21,8 @@ import java.util.List;
  * @Description: 兑换商品的状态,默认为1.为1是用户已经兑换,2是风控委已经发送奖品.3是用户已经确认领取完奖品了
  * @date 2018/8/8 000810:56
  */
-@Controller
+@RestController
+@CrossOrigin
 @Slf4j
 public class ExchangeController {
     @Autowired
