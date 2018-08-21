@@ -40,15 +40,63 @@ public class PrizeServiceImpl implements PrizeService {
     public List<Prize> selectByName(String prizeName) {
         List<Prize> pNamelist = prizeMapper.selectByName(prizeName);
         return pNamelist;
+
     }
 
 
     @Override
+    @Transactional
     public List<Prize> findAllPrizePrize(int userId) {
         List<Prize> prizes = prizeMapper.findAllPrize(userId);
         return prizes;
     }
-   /*  @Override
+
+    @Override
+    @Transactional
+    public int exhangePrize(int userId, int number, int prizeId) {
+
+        int i = exchangeService.addexchangeRecord(prizeId,userId,number);
+
+
+        return  i;
+    }
+
+    @Override
+    public Prize selectByPrimaryKey(int prizeId) {
+        return prizeMapper.selectByPrimaryKey(prizeId);
+    }
+
+    @Override
+    public int updateByPrimaryKey(int userId, int number, int prizeId) {
+        Prize prize = prizeMapper.selectByPrimaryKey(prizeId);
+        //prize.setPrizeId(prizeId);
+        System.out.print(prize);
+        int count = (prize.getPrizeAmount()-number);
+
+        prize.setPrizeAmount(count);
+        return prizeMapper.updateByPrimaryKey(prize);
+    }
+
+    @Override
+    public List<Prize> listAllPrize() {
+        return prizeMapper.listAllPrize();
+    }
+
+    @Override
+    public int deleteById(int prizeID) {
+      return  prizeMapper.deleteByPrimaryKey(prizeID);
+    }
+
+    @Override
+    public List<Prize> selectServiceByName(String prizeName) {
+        PrizeExample prizeExample = new PrizeExample();
+        PrizeExample.Criteria criteria = prizeExample.createCriteria();
+        criteria.andPrizeNameLike(prizeName);
+        return prizeMapper.selectByExample(prizeExample);
+    }
+
+
+    /*  @Override
     public void  exchangePrize(int prizeID, int userID, int number, int eid) {
        int exSumNum = 0;
         Prize prize = prizeMapper.selectByPrimaryKey(prizeID);
@@ -103,5 +151,6 @@ public class PrizeServiceImpl implements PrizeService {
         }
         return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
     }*/
+
 
 }

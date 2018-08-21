@@ -21,8 +21,8 @@ public class IntegralController {
     @Autowired
     IntegralService integralService;
     /**
-     * 查询版本信息
-     * @Description: 个人中心版本信息
+     * 积分明细
+     * @Description: 积分明细
      * @Param:
      * @return:
      * @Author: 侯鹏

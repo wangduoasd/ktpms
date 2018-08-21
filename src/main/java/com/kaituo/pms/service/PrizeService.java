@@ -17,5 +17,15 @@ public interface PrizeService {
 
    List<Prize> findAllPrizePrize(int  userId);
 
+   Prize selectByPrimaryKey(int prizeId);
 
+   int exhangePrize(int userId,int number,int prizeId);
+
+   int  updateByPrimaryKey(int userId,int number,int prizeId);
+   //综服中心商品显示
+   List<Prize> listAllPrize();
+   //综服中心删除商品
+   int deleteById(int prizeID);
+   //综服中心查询搜索
+   List<Prize> selectServiceByName(String prizeName);
 }

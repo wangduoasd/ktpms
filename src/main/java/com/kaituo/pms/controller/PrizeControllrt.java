@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.websocket.server.PathParam;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,6 +28,8 @@ import java.util.Map;
 public class PrizeControllrt {
     @Autowired
     PrizeService prizeService;
+    @Autowired
+    UserService userService;
 
     /**
      * 根据商品名查询已经上架商品
@@ -37,12 +40,15 @@ public class PrizeControllrt {
      * @Author: 侯鹏
      * @Date: 2018/8/14
      */
-    @GetMapping( value = "prize/prizeName")
-    public OutJSON findByName(String prizeName){
+    @GetMapping( value = "prize/{prizeName}/{pn}/{pageSize}")
+    public OutJSON findByName(@PathVariable("prizeName") String prizeName,@RequestParam(value = "pageNumber",defaultValue = "1") int pageNumber,@RequestParam(value = "pageSize", defaultValue = "4") int pageSize){
         try {
+            prizeName = "%" + prizeName +"%";
+            PageHelper.startPage(pageNumber, pageSize);
             List<Prize> prizeList = prizeService.selectByName(prizeName);
+            PageInfo objectPageInfo = new PageInfo<>(prizeList,4);
             if(prizeList!=null&&prizeList.size()>0){
-                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,prizeList);
+                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,objectPageInfo);
             }
 
         } catch (Exception e) {
@@ -119,25 +125,152 @@ public class PrizeControllrt {
         return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
     }*/
    /**
-    *
+    *分页显示已经上架商品
    * @Description:
    * @Param:
    * @return:
    * @Author: 侯鹏
    * @Date:  2018/8/17
    */
-   @GetMapping(value="Prizess/userId={userId}")
+   @GetMapping(value="prizes/{userId}/pageNumber/pageSize")
    public OutJSON findAllPrizePrize(@PathVariable("userId") int userId,@RequestParam(value = "pageNumber",defaultValue = "1") int pageNumber,@RequestParam(value = "pageSize", defaultValue = "4") int pageSize){
        try {
            PageHelper.startPage(pageNumber, pageSize);
            List<Prize> prizess = prizeService.findAllPrizePrize(userId);
            PageInfo objectPageInfo = new PageInfo<>(prizess,4);
-           System.out.print(prizess+"55555555555555555");
-           return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,prizess);
+           System.out.print(prizess+"666666");
+           return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,objectPageInfo);
        } catch (Exception e) {
            log.error(e.getMessage());
            return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
        }
    }
 
+   /* @GetMapping(value="prizes/{userId}")
+    public OutJSON findAllPrizePrize1(@PathVariable("userId") int userId){
+        try {
+
+            List<Prize> prizess = prizeService.findAllPrizePrize(userId);
+
+            System.out.print(prizess+"666666");
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,prizess);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
+        }
+    }*/
+   /**
+    * 商品兑换
+   * @Description:
+   * @Param:
+   * @return:
+   * @Author: 侯鹏
+   * @Date:  2018/8/20
+   */
+   @PutMapping(value="prize/{userId}/{number}/{prizeId}")
+   public OutJSON exchangePrize(@PathVariable("userId")  int userId,@PathVariable("number") int number,@PathVariable("prizeId") int prizeId){
+       Prize prize = prizeService.selectByPrimaryKey(prizeId);
+       //prize.setPrizeId(prizeId);
+       System.out.print(prize);
+       int count = (prize.getPrizeAmount()-number);
+
+       prize.setPrizeAmount(count);
+       prizeService.updateByPrimaryKey(userId,number,prizeId);
+       System.out.print(count+"qqqqqqqqqqq");
+       User user = userService.findPersonalDetail(userId);
+       int i = prizeService.exhangePrize(userId, number, prizeId);
+       int totalPrice = number * prize.getPrizePrice();
+       if (null == user || null == prize) {
+           //用户名或商品为空
+           return OutJSON.getInstance(CodeAndMessageEnum.GET_STATES_TASK_BY_PAGE_NULL);
+       } else if (number >prize.getPrizeQuota()) {
+           //购买失败，超过上限
+           return OutJSON.getInstance(CodeAndMessageEnum.FIND_PRIZE_CAP);
+       } else if (totalPrice > user.getUserIntegral()) {
+           //购买失败，积分不足
+           return OutJSON.getInstance(CodeAndMessageEnum.FIND_PRIZE_INTEGRAL_LACKOF);
+       } else {
+           //购买成功
+         return OutJSON.getInstance(CodeAndMessageEnum.FIND_PRIZE_SUCCESS,i);
+   }
+   }
+   /**
+    * 综服中心的商品列表
+   * @Description:分页显示
+   * @Param:
+   * @return:
+   * @Author: 侯鹏
+   * @Date:2018/8/16
+   */
+   @GetMapping("prize/{pageNumber}/{pageSize}")
+   public OutJSON listAllPrize(@PathVariable("pageNumber") int pageNumber,@PathVariable("pageSize") int pageSize ){
+       try {
+           PageHelper.startPage(pageNumber,pageSize);
+           List<Prize> prizes = prizeService.listAllPrize();
+           PageInfo<Object> objectPageInfo = new PageInfo(prizes,5);
+           if(prizes!=null&&prizes.size()>0){
+               return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,objectPageInfo);
+           }
+
+       } catch (Exception e) {
+           e.printStackTrace();
+           log.error(e.getMessage());
+       }
+       return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
+   }
+   /**
+    * 综服中心删除商品
+   * @Description:
+   * @Param:
+   * @return:
+   * @Author: 侯鹏
+   * @Date:2018/8/21
+   */
+   @DeleteMapping("/prize/{prizeId}")
+    public OutJSON deleteById(@PathVariable("prizeId") int prizeId) {
+       int i = prizeService.deleteById(prizeId);
+       try {
+           if (i > 0) {
+               return OutJSON.getInstance(CodeAndMessageEnum.DELELETE_SUCCESS, i);
+           }
+
+       } catch (Exception e) {
+           log.error(e.getMessage());
+       }
+       return OutJSON.getInstance(CodeAndMessageEnum.DELETE_ERROR);
+   }
+   /**
+    * 综服中心搜索商品
+   * @Description:
+   * @Param:
+   * @return:
+   * @Author: 侯鹏
+   * @Date: 2018/8/21
+   */
+   @GetMapping("/prize/{prizeName}")
+   public OutJSON selectServiceByName(@PathVariable("prizeName") String prizeName){
+       List<Prize> prizeList = prizeService.selectServiceByName(prizeName);
+       if(null!=prizeList&&prizeList.size()>0){
+           return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, prizeList);
+       }
+       return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
+   }
+
+    /**
+     * 综服中心搜索商品
+     * @Description:
+     * @Param:
+     * @return:
+     * @Author: 侯鹏
+     * @Date: 2018/8/21
+     */
+    @GetMapping("/prize/prizeName")
+    public OutJSON selectServiceByName2(@PathParam("prizeName") String prizeName){
+        prizeName = "%" + prizeName +"%";
+        List<Prize> prizeList = prizeService.selectServiceByName(prizeName);
+        if(null!=prizeList&&prizeList.size()>0){
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, prizeList);
+        }
+        return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
+    }
 }

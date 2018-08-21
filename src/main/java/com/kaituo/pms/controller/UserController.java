@@ -81,7 +81,7 @@ public class UserController {
      * @Author: 侯鹏
      * @Date: 2018/8/8
      */
-    @GetMapping(value = "users/{id}")
+    @GetMapping(value = "user/{id}")
     public OutJSON findPersonalDetail(@PathVariable("id") int id) {
 
         //个人信息获取成功

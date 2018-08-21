@@ -90,7 +90,7 @@ public class Util {
          * */
          Map<String,Object> outPut =new HashMap<>(2);
          outPut.put("code",Constant.IMG_UPLOSD_REEOR);
-         outPut.put("url","");
+        outPut.put("url","");
 
 
          if(file.isEmpty()){

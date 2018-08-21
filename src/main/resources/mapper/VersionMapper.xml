@@ -230,6 +230,7 @@
   </update>
   <!--自定义查询版本信息-->
   <select  id="selectAllVersionInfor" resultMap="BaseResultMap">
-    select * from p_version where user_id=#{userId}
+    select * from p_version
+
   </select>
 </mapper>

@@ -277,14 +277,16 @@
   </update>
   <!-- 自定义根据商品名称-->
   <select id="selectByName"   resultMap="BaseResultMap" parameterType="java.lang.String">
-   select * from p_prize where prize_status = 1 and  prize_name like concat(concat('%',#{prizeName}),'%')
+   select * from p_prize where prize_status = 2 and  prize_name like concat(concat('%',#{prizeName}),'%')
   </select>
 
   <select id="findAllPrize"  resultMap="BaseResultMap" parameterType="java.lang.Integer">
 SELECT  p.prize_id,prize_name,prize_image,prize_amount,prize_price,p.prize_quota-IFNULL (e.num,0) AS prize_quota,prize_condition,prize_status,prize_buy
 FROM p_prize p LEFT JOIN (SELECT prize_id, SUM(exchange_count) AS num FROM p_exchange  WHERE  user_id=#{userId} GROUP BY prize_id) e ON p.`prize_id`=e.prize_id WHERE prize_status = 2
-
-
+  </select>
+  <!--自定义综服中心所有商品-->
+  <select id="listAllPrize"   resultMap="BaseResultMap">
+    select * from p_prize
   </select>
 
 </mapper>

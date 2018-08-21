@@ -35,6 +35,7 @@ public interface PrizeMapper {
 
     List<Prize> selectByName(String prizeName);
     List<Prize> findAllPrize(Integer userId);
+    List<Prize>  listAllPrize();
 
 
 }

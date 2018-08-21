@@ -49,8 +49,12 @@ public enum CodeAndMessageEnum {
     //购买成功
     FIND_PRIZE_SUCCESS("3","兑换成功"),
     //用户名或商品为空
-    FIND_USER_PRIZE_NULL("4","用户名或密码为空");
-    //积分不足
+    FIND_USER_PRIZE_NULL("4","用户名或密码为空"),
+    //删除成功
+    DELELETE_SUCCESS("1","删除成功"),
+    //删除失败
+    DELETE_ERROR("2","删除失败");
+
 
 
 
