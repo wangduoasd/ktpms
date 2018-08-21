@@ -21,6 +21,11 @@ public class Dept {
         this.deptStatus = deptStatus;
     }
 
+    public Dept(Integer deptId, String deptName) {
+        this.deptId = deptId;
+        this.deptName = deptName;
+    }
+
     public Dept() {
         super();
     }

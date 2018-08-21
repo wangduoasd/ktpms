@@ -1,17 +1,12 @@
 package com.kaituo.pms.bean;
 
+import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
-public class User {
+public class User implements Serializable {
+    private static final long serialVersionUID = -1672970955045193907L;
     private int num;
-
-    public int getNum() {
-        return num;
-    }
-
-    public void setNum(int num) {
-        this.num = num;
-    }
 
     private Integer userId;
 
@@ -24,6 +19,12 @@ private String userName;
     private Integer userDeptPosition;
     private  String deptName;
     private  String positionName;
+    private String[] roles;
+
+
+    private Integer userStatus;
+
+    private Date userInductiontime;
 
     public String getDeptName() {
         return deptName;
@@ -41,10 +42,6 @@ private String userName;
         this.positionName = positionName;
     }
 
-    private Integer userStatus;
-
-    private Date userInductiontime;
-
     public User(Integer userId, String userName, String userPassword, Integer userIntegral, Integer userDeptPosition, Integer userStatus, Date userInductiontime) {
         this.userId = userId;
         this.userName = userName;
@@ -59,6 +56,17 @@ private String userName;
         this.num=num;
         this.userId = userId;
         this.userName = userName;
+        this.userIntegral = userIntegral;
+        this.deptName = deptName;
+        this.positionName = positionName;
+        this.userStatus = userStatus;
+        this.userInductiontime = userInductiontime;
+    }
+//添加员工
+    public User(Integer userId, String userName, String userPassword, Integer userIntegral, String deptName, String positionName, Integer userStatus, Date userInductiontime) {
+        this.userId = userId;
+        this.userName = userName;
+        this.userPassword = userPassword;
         this.userIntegral = userIntegral;
         this.deptName = deptName;
         this.positionName = positionName;
@@ -120,6 +128,23 @@ private String userName;
 
     public Date getUserInductiontime() {
         return userInductiontime;
+    }
+
+
+    public int getNum() {
+        return num;
+    }
+
+    public void setNum(int num) {
+        this.num = num;
+    }
+
+    public String[] getRoles() {
+        return roles;
+    }
+
+    public void setRoles(String[] roles) {
+        this.roles = roles;
     }
 
     public void setUserInductiontime(Date userInductiontime) {

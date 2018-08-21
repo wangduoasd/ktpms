@@ -57,7 +57,9 @@ public class ExchangeServiceImpl implements ExchangeService {
 
     @Override
     public List<Exchange> selectBykeyWord(String keyWord) {
+        System.out.println(exchangeMapper.selectBykeyWord2(keyWord));
         return exchangeMapper.selectBykeyWord2(keyWord);
+
     }
     /**
      　  * @Description: 添加一条兑换记录
