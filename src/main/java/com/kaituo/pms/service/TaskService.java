@@ -139,5 +139,106 @@ public interface TaskService {
      * @Author: 苏泽华
      * @Date: 2018/8/15
      */
-    boolean publishTask(Task task) ;
+    int publishTask(Task task) ;
+
+
+    /**
+     * 获取风控中心——任务管理——已发布任务的数据
+     * @Param:
+     * @param
+     * @return: com.kaituo.pms.utils.OutJSON
+     * @Author: 苏泽华
+     * @Date: 2018/8/20
+     */
+    OutJSON listPublishedTask(int pageNamber , Integer pageSize) ;
+
+    /**
+     * 获取风控中心——任务管理——待审核任务的数据
+     * @Param:
+     * @param
+     * @return: com.kaituo.pms.utils.OutJSON
+     * @Author: 苏泽华
+     * @Date: 2018/8/20
+     */
+    OutJSON listPendingTask(int pageNamber , Integer pageSize);
+
+    /**
+     * 风控中心——任务管理——失效任务
+     * @Param:
+     * @param
+     * @return: com.kaituo.pms.utils.OutJSON
+     * @Author: 苏泽华
+     * @Date: 2018/8/20
+     */
+    OutJSON lisInvalidTask(int pageNamber , Integer pageSize);
+
+    /**
+     * 获取风控中心——任务管理——已发布任务的数据的总数
+     * @Param:
+     * @param
+     * @return: com.kaituo.pms.utils.OutJSON
+     * @Author: 苏泽华
+     * @Date: 2018/8/20
+     */
+    int publishedTaskCount();
+
+    /**
+     * 风控中心——任务管理——失效任务的总数
+     * @Param:
+     * @param
+     * @return: com.kaituo.pms.utils.OutJSON
+     * @Author: 苏泽华
+     * @Date: 2018/8/20
+     */
+    int invalidTaskCount();
+
+    /**
+     * 风控中心——任务管理——提前取消任务按钮
+     * @Param:
+     * @param taskId 任务id
+     * @return: int
+     * @Author: 苏泽华
+     * @Date: 2018/8/20
+     */
+    int cancelInAdvance(int taskId);
+
+    /**
+     * 审核通过
+     * @Param:
+     * @param taskId
+     * @return: boolean
+     * @Author: 苏泽华
+     * @Date: 2018/8/21
+     */
+    boolean auditPassed(int taskId) ;
+
+    /**
+     * 审核驳回
+     * @Param:
+     * @param taskId
+     * @return: boolean
+     * @Author: 苏泽华
+     * @Date: 2018/8/21
+     */
+    boolean auditRejection(int taskId);
+
+    /**
+     * 完成任务
+     * @Param:
+     * @param taskId
+     * @return: boolean
+     * @Author: 苏泽华
+     * @Date: 2018/8/21
+     */
+    boolean missionAccomplished(int taskId);
+
+    /**
+     * 重新发布
+     * @Param:
+     * @param task
+     * @return: boolean
+     * @Author: 苏泽华
+     * @Date: 2018/8/21
+     */
+    boolean republish(Task task);
 }

@@ -30,6 +30,8 @@ public enum CodeAndMessageEnum {
     SUBMIT_TASK_ERROR("1" , "任务提交失败"),
     // 已完成页面消息
     COMPLETED_TASK("1" , "任务完成，奖励到账"),
+    // 已发布页面消息
+    PUBLISHED_TASK_COMPLETED("1" , "已完成"),
 
     // 图片上传失败
     PUBLISHING_TASK_IMAGE_UPLOAD_FAILED("0" , "图片上传失败"),
@@ -40,7 +42,17 @@ public enum CodeAndMessageEnum {
     // 任务发布成功
     THE_TASK_WAS_SUCCESSFULLY_POSTDE("1" , "任务已发布"),
     // 任务发布失败
-    TASK_POSTING_FAILED("0" , "任务发布失败");
+    TASK_POSTING_FAILED("0" , "任务发布失败"),
+    // 任务提前取消
+    TASK_CANCELED_IN_ADVANCE("1" , "任务提前取消"),
+    // 任务审核通过
+    AUDIT_PASSED_SUCCESS("1","审核通过"),
+    // 任务审核通过失败
+    AUDIT_PASSED_ERROR("0","审核通过失败"),
+    // 任务驳回成功
+    AUDIT_REJECTION_SUCCESS("1","已驳回"),
+    // 任务驳回失败
+    AUDIT_REJECTION_ERROR("1","驳回失败");
 
     private String code;
 
