@@ -534,6 +534,76 @@ public class ExchangeExample {
             addCriterion("prize_name not between", value1, value2, "prizeName");
             return (Criteria) this;
         }
+
+        public Criteria andPrizeImageIsNull() {
+            addCriterion("prize_image is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPrizeImageIsNotNull() {
+            addCriterion("prize_image is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPrizeImageEqualTo(String value) {
+            addCriterion("prize_image =", value, "prizeImage");
+            return (Criteria) this;
+        }
+
+        public Criteria andPrizeImageNotEqualTo(String value) {
+            addCriterion("prize_image <>", value, "prizeImage");
+            return (Criteria) this;
+        }
+
+        public Criteria andPrizeImageGreaterThan(String value) {
+            addCriterion("prize_image >", value, "prizeImage");
+            return (Criteria) this;
+        }
+
+        public Criteria andPrizeImageGreaterThanOrEqualTo(String value) {
+            addCriterion("prize_image >=", value, "prizeImage");
+            return (Criteria) this;
+        }
+
+        public Criteria andPrizeImageLessThan(String value) {
+            addCriterion("prize_image <", value, "prizeImage");
+            return (Criteria) this;
+        }
+
+        public Criteria andPrizeImageLessThanOrEqualTo(String value) {
+            addCriterion("prize_image <=", value, "prizeImage");
+            return (Criteria) this;
+        }
+
+        public Criteria andPrizeImageLike(String value) {
+            addCriterion("prize_image like", value, "prizeImage");
+            return (Criteria) this;
+        }
+
+        public Criteria andPrizeImageNotLike(String value) {
+            addCriterion("prize_image not like", value, "prizeImage");
+            return (Criteria) this;
+        }
+
+        public Criteria andPrizeImageIn(List<String> values) {
+            addCriterion("prize_image in", values, "prizeImage");
+            return (Criteria) this;
+        }
+
+        public Criteria andPrizeImageNotIn(List<String> values) {
+            addCriterion("prize_image not in", values, "prizeImage");
+            return (Criteria) this;
+        }
+
+        public Criteria andPrizeImageBetween(String value1, String value2) {
+            addCriterion("prize_image between", value1, value2, "prizeImage");
+            return (Criteria) this;
+        }
+
+        public Criteria andPrizeImageNotBetween(String value1, String value2) {
+            addCriterion("prize_image not between", value1, value2, "prizeImage");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

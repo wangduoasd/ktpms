@@ -10,6 +10,7 @@
       <arg column="exchange_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
       <arg column="exchange_status" jdbcType="INTEGER" javaType="java.lang.Integer" />
       <arg column="prize_name" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="prize_image" jdbcType="VARCHAR" javaType="java.lang.String" />
     </constructor>
   </resultMap>
   <sql id="Example_Where_Clause" >
@@ -71,7 +72,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    exchange_id, prize_id, user_id, exchange_count, exchange_time, exchange_status, prize_name
+    exchange_id, prize_id, user_id, exchange_count, exchange_time, exchange_status, prize_name, 
+    prize_image
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.kaituo.pms.bean.ExchangeExample" >
     select
@@ -106,10 +108,10 @@
   <insert id="insert" parameterType="com.kaituo.pms.bean.Exchange" >
     insert into p_exchange (exchange_id, prize_id, user_id, 
       exchange_count, exchange_time, exchange_status, 
-      prize_name)
+      prize_name, prize_image)
     values (#{exchangeId,jdbcType=INTEGER}, #{prizeId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, 
       #{exchangeCount,jdbcType=INTEGER}, #{exchangeTime,jdbcType=TIMESTAMP}, #{exchangeStatus,jdbcType=INTEGER}, 
-      #{prizeName,jdbcType=VARCHAR})
+      #{prizeName,jdbcType=VARCHAR}, #{prizeImage,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.kaituo.pms.bean.Exchange" >
     insert into p_exchange
@@ -135,6 +137,9 @@
       <if test="prizeName != null" >
         prize_name,
       </if>
+      <if test="prizeImage != null" >
+        prize_image,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="exchangeId != null" >
@@ -157,6 +162,9 @@
       </if>
       <if test="prizeName != null" >
         #{prizeName,jdbcType=VARCHAR},
+      </if>
+      <if test="prizeImage != null" >
+        #{prizeImage,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -190,6 +198,9 @@
       <if test="record.prizeName != null" >
         prize_name = #{record.prizeName,jdbcType=VARCHAR},
       </if>
+      <if test="record.prizeImage != null" >
+        prize_image = #{record.prizeImage,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -203,7 +214,8 @@
       exchange_count = #{record.exchangeCount,jdbcType=INTEGER},
       exchange_time = #{record.exchangeTime,jdbcType=TIMESTAMP},
       exchange_status = #{record.exchangeStatus,jdbcType=INTEGER},
-      prize_name = #{record.prizeName,jdbcType=VARCHAR}
+      prize_name = #{record.prizeName,jdbcType=VARCHAR},
+      prize_image = #{record.prizeImage,jdbcType=VARCHAR}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -229,6 +241,9 @@
       <if test="prizeName != null" >
         prize_name = #{prizeName,jdbcType=VARCHAR},
       </if>
+      <if test="prizeImage != null" >
+        prize_image = #{prizeImage,jdbcType=VARCHAR},
+      </if>
     </set>
     where exchange_id = #{exchangeId,jdbcType=INTEGER}
   </update>
@@ -239,7 +254,8 @@
       exchange_count = #{exchangeCount,jdbcType=INTEGER},
       exchange_time = #{exchangeTime,jdbcType=TIMESTAMP},
       exchange_status = #{exchangeStatus,jdbcType=INTEGER},
-      prize_name = #{prizeName,jdbcType=VARCHAR}
+      prize_name = #{prizeName,jdbcType=VARCHAR},
+      prize_image = #{prizeImage,jdbcType=VARCHAR}
     where exchange_id = #{exchangeId,jdbcType=INTEGER}
   </update>
 </mapper>

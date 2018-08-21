@@ -17,7 +17,9 @@ public class Exchange {
 
     private String prizeName;
 
-    public Exchange(Integer exchangeId, Integer prizeId, Integer userId, Integer exchangeCount, Date exchangeTime, Integer exchangeStatus, String prizeName) {
+    private String prizeImage;
+
+    public Exchange(Integer exchangeId, Integer prizeId, Integer userId, Integer exchangeCount, Date exchangeTime, Integer exchangeStatus, String prizeName, String prizeImage) {
         this.exchangeId = exchangeId;
         this.prizeId = prizeId;
         this.userId = userId;
@@ -25,6 +27,7 @@ public class Exchange {
         this.exchangeTime = exchangeTime;
         this.exchangeStatus = exchangeStatus;
         this.prizeName = prizeName;
+        this.prizeImage = prizeImage;
     }
 
     public Exchange() {
@@ -85,5 +88,13 @@ public class Exchange {
 
     public void setPrizeName(String prizeName) {
         this.prizeName = prizeName == null ? null : prizeName.trim();
+    }
+
+    public String getPrizeImage() {
+        return prizeImage;
+    }
+
+    public void setPrizeImage(String prizeImage) {
+        this.prizeImage = prizeImage == null ? null : prizeImage.trim();
     }
 }
