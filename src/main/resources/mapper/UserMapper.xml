@@ -278,4 +278,17 @@
         select count(*) from v_userinfo where user_status != ${5} and user_name like concat(concat('%',#{condition}),'%')
                                        or dept_name like concat(concat('%',#{condition}),'%')
     </select>
+  <!--综服中心_员工设置_分页查询-->
+  <select id="findAllUser" resultMap="MyResultMap">
+        select * from v_userinfo
+    </select>
+
+  <!--综服中心_员工设置_模糊查询-->
+  <select id="findByKeyWord" resultMap="MyResultMap">
+        select * from v_userinfo where user_name like concat(concat('%',#{keyWord}),'%') or dept_name like concat(concat('%',#{keyWord}),'%')
+    </select>
+  <insert id="addUser" parameterType="com.kaituo.pms.bean.User" >
+    insert into v_userinfo(user_name,dept_name,position_name,user_id,user_inductiontime,user_integral,user_status,user_password) values(#{userName},#{deptName},#{positionName},#{userId},#{userInductiontime},#{userIntegral},#{userStatus},#{userPassword})
+
+  </insert>
 </mapper>

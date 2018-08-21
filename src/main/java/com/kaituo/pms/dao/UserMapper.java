@@ -6,14 +6,15 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.kaituo.pms.vo.LeaderboardVO;
-import org.apache.ibatis.annotations.Mapper;
+
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
 @Mapper
 public interface UserMapper {
+
+
     int countByExample(UserExample example);
 
     int deleteByExample(UserExample example);
@@ -73,4 +74,19 @@ public interface UserMapper {
     long countUsersByViewAndCondition(String condition);
 
     User findPersonalDetail(@Param("userId") int id);
+
+    List<User> findAllUser();
+     /**
+        　  * @Description: 通过工号查找用户并取得该用户的权限
+        　　* @param userId  工号
+        　　* @return
+        　　* @throws
+        　　* @author 张金行
+        　　* @date 2018/8/17 0017 17:47
+        　　*/
+     List<User> findByKeyWord(@Param("keyWord")String keyWord);
+
+    int addUser(User user);
+
+    String[] getDeptName();
 }

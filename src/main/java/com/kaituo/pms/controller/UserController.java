@@ -24,10 +24,8 @@ import java.util.*;
 @RestController
 @CrossOrigin
 public class UserController {
-
     @Autowired
     UserService userService;
-
     /**
     * @Description: 积分排行榜分页
     * @Param:
@@ -81,7 +79,7 @@ public class UserController {
      * @Author: 侯鹏
      * @Date: 2018/8/8
      */
-    @GetMapping(value = "users/{id}")
+    @GetMapping(value = "user/{id}")
     public OutJSON findPersonalDetail(@PathVariable("id") int id) {
 
         //个人信息获取成功
@@ -240,5 +238,54 @@ public class UserController {
         }
     }
 
-
+    /**
+     * @Description: 综服中心-员工设置-分页查询所有员工
+     * @param
+     * @return
+     * @throws
+     * @author 张金行
+     * @date 2018/8/17 0017 17:35
+     */
+    @ResponseBody
+    @GetMapping(value = "users/{pn}")
+    public OutJSON findAllUser(@PathVariable(value = "pn") int pageNumber,
+                                      @RequestParam(value = "pageSize", defaultValue = "5") int pageSize) {
+        try {
+            PageHelper.startPage(pageNumber, pageSize);
+            List<User> list = userService.findAllUser();
+            if(list==null)
+                return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
+            PageInfo pageInfo = new PageInfo(list, 5);
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, pageInfo);
+        } catch (Exception e) {
+            log.error( e.getMessage());
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
+        }
+    }
+    @ResponseBody
+    @GetMapping(value = "users/s/{keyword}/{pn}")
+    public OutJSON findByKeyWord(@PathVariable(value = "keyword") String keyword,
+                               @PathVariable(value = "pn") int pageNumber,
+                               @RequestParam(value = "pageSize", defaultValue = "5") int pageSize) {
+        try {
+            PageHelper.startPage(pageNumber, pageSize);
+            List<User> list = userService.findByKeyWord(keyword);
+            PageInfo pageInfo = new PageInfo(list, 5);
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, pageInfo);
+        } catch (Exception e) {
+            log.error( e.getMessage());
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
+        }
+    }
+    @ResponseBody
+    @PostMapping(value = "user")
+    public OutJSON addUser(User user) {
+        try {
+            int i=userService.addUser(user);
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);
+        } catch (Exception e) {
+            log.error( e.getMessage());
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
+        }
+    }
 }

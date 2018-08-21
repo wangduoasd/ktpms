@@ -38,12 +38,15 @@ public class ExchangeController {
      *
      */
     @ResponseBody
-    @GetMapping(value = "exchangeRecords/{userId}/pn={pn}")
-    public OutJSON getExchangeList(@PathVariable(value = "pn") int pageNumber, @RequestParam(value = "pageSize", defaultValue = "5") int pageSize, @PathVariable("userId") int userId) {
+    @GetMapping(value = "exchangeRecords/{userId}/{pageNumber}")
+    public OutJSON getExchangeRecords(@PathVariable("userId") int userId,
+                                       @PathVariable(value = "pageNumber") int pageNumber,
+                                       @RequestParam(value = "pageSize", defaultValue = "5") int pageSize
+                                  ) {
         try {
             PageHelper.startPage(pageNumber, pageSize);
             //根据userId查询视图中该用户所有状态 状态1（显示为：未发送）  状态2（显示为：确定领取），状态3（显示为：已经领取）  的兑换列表
-            List<Exchange> list = exchangeService.findExchangeRecord(userId);
+            List<Exchange> list = exchangeService.findExchangeRecord(userId);;
             PageInfo pageInfo = new PageInfo(list, 5);
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, pageInfo);
         } catch (Exception e) {
@@ -53,7 +56,7 @@ public class ExchangeController {
     }
 
     /**
-     * 　  * @Description:
+     * 　  * @Description: 兑换中心_兑换记录_确定领取
      * 　　* @param exchangeId
      * 　　* @return com.kaituo.pms.util.Msg
      * 　　* @throws
@@ -75,8 +78,8 @@ public class ExchangeController {
     }
 
     /**
-     * 　  * @Description:
-     * 　　* @param [pageSize] pn,keyWord
+     * 　  * @Description:  兑换中心_兑换记录_兑换记录搜索（根据商品名）
+     * 　　* @param [pageSize] pn,keyWord,userId
      * 　　* @return com.kaituo.pms.util.Msg
      * 　　* @throws
      * 　　* @author 张金行
@@ -98,6 +101,14 @@ public class ExchangeController {
         }
     }
     //综服中心
+    /**
+     　  * @Description:  综服中心_商品兑换列表_分页查询
+     　　* @param [pageSize]  pn
+     　　* @return com.kaituo.pms.utils.OutJSON
+     　　* @throws
+     　　* @author 张金行
+     　　* @date 2018/8/10 0010 10:59
+     　　*/
     @ResponseBody
     @GetMapping(value = "exchangeLists/{pn}")
     public OutJSON getExchangeLists(@PathVariable(value = "pn") int pageNumber, @RequestParam(value = "pageNumber", defaultValue = "5") int pageSize) {
@@ -112,6 +123,14 @@ public class ExchangeController {
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
         }
     }
+    /**
+     　  * @Description:   综服中心_商品兑换列表_确定兑换
+     　　* @param exchangeId
+     　　* @return com.kaituo.pms.utils.OutJSON
+     　　* @throws
+     　　* @author 张金行
+     　　* @date 2018/8/10 0010 11:00
+     　　*/
     @ResponseBody
     @PutMapping(value = "exchangeLists/{exchangeId}")
     public OutJSON updateExchangeList(@PathVariable("exchangeId") int exchangeId) {
@@ -124,4 +143,37 @@ public class ExchangeController {
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
         }
     }
+    /**
+     　  * @Description:  综服中心_商品兑换列表_搜索（根据用户名和商品名）
+     　　* @param keyWord, pageNumber
+     　　* @return com.kaituo.pms.utils.OutJSON
+     　　* @throws
+     　　* @author 张金行
+     　　* @date 2018/8/10 0010 11:00
+     　　*/
+    @ResponseBody
+    @GetMapping(value = "exchangelists/s/{keyWord}/{pn}")
+    public OutJSON findExchangelists( @RequestParam(value = "pageSize", defaultValue = "5") int pageSize, @PathVariable("keyWord") String keyWord,@PathVariable(value = "pn") int pageNumber) {
+        try {
+            PageHelper.startPage(pageNumber, pageSize);
+            //根据商品名keyWord搜索视图中该用户所有状态 状态1（显示为：未发送）  状态2（显示为：确定领取），状态3（显示为：已经领取）  的兑换列表
+            List<Exchange> list = exchangeService.selectBykeyWord(keyWord);
+            if(list==null)
+                return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
+            PageInfo pageInfo = new PageInfo(list, 5);
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, pageInfo);
+        } catch (Exception e) {
+            log.error( e.getMessage());
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
+        }
+    }
+    /**
+     　  * @Description:  综服中心_商品兑换列表_搜索（根据用户名和商品名）
+     　　* @param keyWord, pageNumber
+     　　* @return com.kaituo.pms.utils.OutJSON
+     　　* @throws
+     　　* @author 张金行
+     　　* @date 2018/8/10 0010 11:00
+     　　*/
+
 }
