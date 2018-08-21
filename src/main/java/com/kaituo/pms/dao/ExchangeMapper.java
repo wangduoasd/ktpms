@@ -3,13 +3,8 @@ package com.kaituo.pms.dao;
 import com.kaituo.pms.bean.Exchange;
 import com.kaituo.pms.bean.ExchangeExample;
 import java.util.List;
-
-import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.stereotype.Repository;
 
-@Repository
-@Mapper
 public interface ExchangeMapper {
     int countByExample(ExchangeExample example);
 
@@ -32,12 +27,4 @@ public interface ExchangeMapper {
     int updateByPrimaryKeySelective(Exchange record);
 
     int updateByPrimaryKey(Exchange record);
-
-    List<Exchange> findExchangeRecord(@Param("userId") int userId);
-    List<Exchange> selectBykeyWord(@Param("keyWord") String keyWord,@Param("userId")int userId);
-
-
-    List<Exchange> getExchangeLists();
-    List<Exchange> selectBykeyWord2(@Param("keyWord") String keyWord);
-
 }

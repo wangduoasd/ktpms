@@ -4,7 +4,6 @@ package com.kaituo.pms.service;
 import com.kaituo.pms.bean.User;
 
 import java.util.List;
-import java.util.Map;
 
 public interface UserService {
 
@@ -64,4 +63,17 @@ public interface UserService {
      * @Date:2018/8/9
      */
     User getUserFromTable(int userid);
+    /**
+     * @Description: 综服中心-员工设置-分页查询所有员工
+     * @param
+     * @return
+     * @throws
+     * @author 张金行
+     * @date 2018/8/17 0017 17:35
+     */
+    List<User>findAllUser();
+
+    List<User> findByKeyWord(String keyWord);
+
+    int addUser(User user);
 }

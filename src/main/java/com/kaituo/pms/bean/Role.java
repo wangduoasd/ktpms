@@ -16,6 +16,10 @@ public class Role {
         this.roleStatus = roleStatus;
     }
 
+    public Role(String roleName) {
+        this.roleName = roleName;
+    }
+
     public Role() {
         super();
     }
