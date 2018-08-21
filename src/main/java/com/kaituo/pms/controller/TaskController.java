@@ -192,96 +192,48 @@ public class TaskController {
         return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
     }
 
-
-//上传的方法
-
-//    @PostMapping("tasks/status")
-//    public String handleFileUpload(@RequestParam("file") MultipartFile file,
-//
-//                                    RedirectAttributes redirectAttributes,  Task task) {
-//
-//        if (!file.isEmpty()) {
-//
-//            try {
-//
-//                Files.copy(file.getInputStream(), Paths.get(ROOT, file.getOriginalFilename()));
-//
-//                redirectAttributes.addFlashAttribute("message",
-//
-//                        "You successfully uploaded " + file.getOriginalFilename() + "!");
-//
-//            } catch (IOException |RuntimeException e) {
-//
-//                redirectAttributes.addFlashAttribute("message", "Failued to upload " + file.getOriginalFilename() + " => " + e.getMessage());
-//
-//            }
-//
-//        } else {
-//
-//            redirectAttributes.addFlashAttribute("message", "Failed to upload " + file.getOriginalFilename() + " because it was empty");
-//
-//        }
-//
-//
-//
-//        return "redirect:/";
-//
-//    }
-
-
-
-//}
-
-
-//    @PostMapping("tasks/status")
-//    public OutJSON publishTask(MultipartFile file,String starttime , String endtime , Task task){
-//        Util util = new Util();
-//        Map<String, Object> map = util.imgUpload(file , task.getTaskName());
-//        int key = (int)map.get("code");
-//        switch (key){
-//            case Constant.IMG_UPLOSD_REEOR :
-//                return OutJSON.getInstance(CodeAndMessageEnum.PUBLISHING_TASK_IMAGE_HAS_BEEN_SUCCESSFULLY_UPLOADED);
-//            case Constant.IMG_UPLOSD_EMPTY :
-//                return OutJSON.getInstance(CodeAndMessageEnum.PUBLISHING_TASK_IMAGE_IS_EMPTY);
-//            case Constant.IMG_UPLOSD_SUCCESS :
-//                String url = (String) map.get("url");
-//
-//                Date startDate = Util.stampToDate(starttime);
-//                Date endDate = Util.stampToDate(endtime);
-//                task.setTaskStarttime(startDate);
-//                task.setTaskEndtime(endDate);
-//                task.setTaskImage(url);
-//                task.setTaskStatus(Constant.THE_TASK_WAS_SUCCESSFULLY_POSTED);
-//                task.setTaskNumber(0);
-//                if (taskService.publishTask(task)){
-//                    return OutJSON.getInstance(CodeAndMessageEnum.THE_TASK_WAS_SUCCESSFULLY_POSTDE);
-//                }else{
-//                    return OutJSON.getInstance(CodeAndMessageEnum.TASK_POSTING_FAILED);
-//                }
-//                default:
-//                    return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR , "未知原因错误");
-//        }
-//    }
-
+    /**
+     * @Description:
+     * @Param:
+     * @param file
+     * @param starttime
+     * @param endtime
+     * @param task
+     * @return: com.kaituo.pms.utils.OutJSON
+     * @Author: 苏泽华
+     * @Date: 2018/8/20
+     */
     @PostMapping("tasks/status")
     public OutJSON publishTask(MultipartFile file,String starttime , String endtime , Task task){
+        // 图片上传并获取上传的状态
         Map<String, Object> map = Util.imgUpload(file , Util.getImgRelativePath());
+
+        // 上传的状态码
         int key = (int)map.get("code");
         switch (key){
-            case Constant.IMG_UPLOSD_REEOR :
-                return OutJSON.getInstance(CodeAndMessageEnum.PUBLISHING_TASK_IMAGE_HAS_BEEN_SUCCESSFULLY_UPLOADED);
-            case Constant.IMG_UPLOSD_EMPTY :
-                return OutJSON.getInstance(CodeAndMessageEnum.PUBLISHING_TASK_IMAGE_IS_EMPTY);
-            case Constant.IMG_UPLOSD_SUCCESS :
-                String url = (String) map.get("url");
 
+            // 如果是零
+            case Constant.IMG_UPLOSD_REEOR :
+                // 返回图片上传失败
+                return OutJSON.getInstance(CodeAndMessageEnum.PUBLISHING_TASK_IMAGE_HAS_BEEN_SUCCESSFULLY_UPLOADED);
+            // 如果是2
+            case Constant.IMG_UPLOSD_EMPTY :
+                // 返回图片为空
+                return OutJSON.getInstance(CodeAndMessageEnum.PUBLISHING_TASK_IMAGE_IS_EMPTY);
+            // 如果是1则为上传成功
+            case Constant.IMG_UPLOSD_SUCCESS :
+                // 获取相对路径
+                String url = (String) map.get("url");
+                // 时间处理
                 Date startDate = Util.stampToDate(starttime);
                 Date endDate = Util.stampToDate(endtime);
+                // 数据处理
                 task.setTaskStarttime(startDate);
                 task.setTaskEndtime(endDate);
                 task.setTaskImage(url);
                 task.setTaskStatus(Constant.THE_TASK_WAS_SUCCESSFULLY_POSTED);
                 task.setTaskNumber(0);
+                // 数据库添加数据，如果失败则返回任务发布失败，成功则返回任务已发布
                 if (taskService.publishTask(task)){
                     return OutJSON.getInstance(CodeAndMessageEnum.THE_TASK_WAS_SUCCESSFULLY_POSTDE);
                 }else{
