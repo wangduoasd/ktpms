@@ -409,6 +409,15 @@ public class TaskServiceImpl implements TaskService {
         }
     }
 
+    /**
+     * 发布任务
+     * @Description:
+     * @Param:
+     * @param task
+     * @return: boolean
+     * @Author: 苏泽华
+     * @Date: 2018/8/15
+     */
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean publishTask(Task task) {
