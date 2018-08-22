@@ -1,5 +1,5 @@
 package com.kaituo.pms.utils;
-/** 
+/**
 * @Description: 枚举返回值定义类
 * @Author: su
 * @Date: 2018/8/8
@@ -41,6 +41,16 @@ public enum CodeAndMessageEnum {
     THE_TASK_WAS_SUCCESSFULLY_POSTDE("1" , "任务已发布"),
     // 任务发布失败
     TASK_POSTING_FAILED("0" , "任务发布失败"),
+    // 任务提前取消
+    TASK_CANCELED_IN_ADVANCE("1" , "任务提前取消"),
+    // 任务审核通过
+    AUDIT_PASSED_SUCCESS("1","审核通过"),
+    // 任务审核通过失败
+    AUDIT_PASSED_ERROR("0","审核通过失败"),
+    // 任务驳回成功
+    AUDIT_REJECTION_SUCCESS("1","已驳回"),
+    // 任务驳回失败
+    AUDIT_REJECTION_ERROR("1","驳回失败"),
 
     //购买失败，积分不足
     FIND_PRIZE_INTEGRAL_LACKOF("1","积分不足"),

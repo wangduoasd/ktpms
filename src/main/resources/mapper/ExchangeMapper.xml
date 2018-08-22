@@ -1,37 +1,37 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.kaituo.pms.dao.ExchangeMapper" >
-  <resultMap id="BaseResultMap" type="com.kaituo.pms.bean.Exchange" >
-    <constructor >
-      <idArg column="exchange_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="prize_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="user_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="exchange_count" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="exchange_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
-      <arg column="exchange_status" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="prize_name" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="prize_image" jdbcType="VARCHAR" javaType="java.lang.String" />
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kaituo.pms.dao.ExchangeMapper">
+  <resultMap id="BaseResultMap" type="com.kaituo.pms.bean.Exchange">
+    <constructor>
+      <idArg column="exchange_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="prize_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="user_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="exchange_count" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="exchange_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="exchange_status" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="prize_name" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="prize_image" javaType="java.lang.String" jdbcType="VARCHAR" />
     </constructor>
   </resultMap>
-  <sql id="Example_Where_Clause" >
-    <where >
-      <foreach collection="oredCriteria" item="criteria" separator="or" >
-        <if test="criteria.valid" >
-          <trim prefix="(" suffix=")" prefixOverrides="and" >
-            <foreach collection="criteria.criteria" item="criterion" >
-              <choose >
-                <when test="criterion.noValue" >
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
                   and ${criterion.condition}
                 </when>
-                <when test="criterion.singleValue" >
+                <when test="criterion.singleValue">
                   and ${criterion.condition} #{criterion.value}
                 </when>
-                <when test="criterion.betweenValue" >
+                <when test="criterion.betweenValue">
                   and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
                 </when>
-                <when test="criterion.listValue" >
+                <when test="criterion.listValue">
                   and ${criterion.condition}
-                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
                     #{listItem}
                   </foreach>
                 </when>
@@ -42,25 +42,25 @@
       </foreach>
     </where>
   </sql>
-  <sql id="Update_By_Example_Where_Clause" >
-    <where >
-      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
-        <if test="criteria.valid" >
-          <trim prefix="(" suffix=")" prefixOverrides="and" >
-            <foreach collection="criteria.criteria" item="criterion" >
-              <choose >
-                <when test="criterion.noValue" >
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
                   and ${criterion.condition}
                 </when>
-                <when test="criterion.singleValue" >
+                <when test="criterion.singleValue">
                   and ${criterion.condition} #{criterion.value}
                 </when>
-                <when test="criterion.betweenValue" >
+                <when test="criterion.betweenValue">
                   and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
                 </when>
-                <when test="criterion.listValue" >
+                <when test="criterion.listValue">
                   and ${criterion.condition}
-                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
                     #{listItem}
                   </foreach>
                 </when>
@@ -71,41 +71,41 @@
       </foreach>
     </where>
   </sql>
-  <sql id="Base_Column_List" >
+  <sql id="Base_Column_List">
     exchange_id, prize_id, user_id, exchange_count, exchange_time, exchange_status, prize_name, 
     prize_image
   </sql>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.kaituo.pms.bean.ExchangeExample" >
+  <select id="selectByExample" parameterType="com.kaituo.pms.bean.ExchangeExample" resultMap="BaseResultMap">
     select
-    <if test="distinct" >
+    <if test="distinct">
       distinct
     </if>
     <include refid="Base_Column_List" />
     from p_exchange
-    <if test="_parameter != null" >
+    <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
-    <if test="orderByClause != null" >
+    <if test="orderByClause != null">
       order by ${orderByClause}
     </if>
   </select>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from p_exchange
     where exchange_id = #{exchangeId,jdbcType=INTEGER}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from p_exchange
     where exchange_id = #{exchangeId,jdbcType=INTEGER}
   </delete>
-  <delete id="deleteByExample" parameterType="com.kaituo.pms.bean.ExchangeExample" >
+  <delete id="deleteByExample" parameterType="com.kaituo.pms.bean.ExchangeExample">
     delete from p_exchange
-    <if test="_parameter != null" >
+    <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.kaituo.pms.bean.Exchange" >
+  <insert id="insert" parameterType="com.kaituo.pms.bean.Exchange">
     insert into p_exchange (exchange_id, prize_id, user_id, 
       exchange_count, exchange_time, exchange_status, 
       prize_name, prize_image)
@@ -113,100 +113,100 @@
       #{exchangeCount,jdbcType=INTEGER}, #{exchangeTime,jdbcType=TIMESTAMP}, #{exchangeStatus,jdbcType=INTEGER}, 
       #{prizeName,jdbcType=VARCHAR}, #{prizeImage,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.kaituo.pms.bean.Exchange" >
+  <insert id="insertSelective" parameterType="com.kaituo.pms.bean.Exchange">
     insert into p_exchange
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="exchangeId != null" >
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="exchangeId != null">
         exchange_id,
       </if>
-      <if test="prizeId != null" >
+      <if test="prizeId != null">
         prize_id,
       </if>
-      <if test="userId != null" >
+      <if test="userId != null">
         user_id,
       </if>
-      <if test="exchangeCount != null" >
+      <if test="exchangeCount != null">
         exchange_count,
       </if>
-      <if test="exchangeTime != null" >
+      <if test="exchangeTime != null">
         exchange_time,
       </if>
-      <if test="exchangeStatus != null" >
+      <if test="exchangeStatus != null">
         exchange_status,
       </if>
-      <if test="prizeName != null" >
+      <if test="prizeName != null">
         prize_name,
       </if>
-      <if test="prizeImage != null" >
+      <if test="prizeImage != null">
         prize_image,
       </if>
     </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="exchangeId != null" >
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="exchangeId != null">
         #{exchangeId,jdbcType=INTEGER},
       </if>
-      <if test="prizeId != null" >
+      <if test="prizeId != null">
         #{prizeId,jdbcType=INTEGER},
       </if>
-      <if test="userId != null" >
+      <if test="userId != null">
         #{userId,jdbcType=INTEGER},
       </if>
-      <if test="exchangeCount != null" >
+      <if test="exchangeCount != null">
         #{exchangeCount,jdbcType=INTEGER},
       </if>
-      <if test="exchangeTime != null" >
+      <if test="exchangeTime != null">
         #{exchangeTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="exchangeStatus != null" >
+      <if test="exchangeStatus != null">
         #{exchangeStatus,jdbcType=INTEGER},
       </if>
-      <if test="prizeName != null" >
+      <if test="prizeName != null">
         #{prizeName,jdbcType=VARCHAR},
       </if>
-      <if test="prizeImage != null" >
+      <if test="prizeImage != null">
         #{prizeImage,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.kaituo.pms.bean.ExchangeExample" resultType="java.lang.Integer" >
+  <select id="countByExample" parameterType="com.kaituo.pms.bean.ExchangeExample" resultType="java.lang.Integer">
     select count(*) from p_exchange
-    <if test="_parameter != null" >
+    <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </select>
-  <update id="updateByExampleSelective" parameterType="map" >
+  <update id="updateByExampleSelective" parameterType="map">
     update p_exchange
-    <set >
-      <if test="record.exchangeId != null" >
+    <set>
+      <if test="record.exchangeId != null">
         exchange_id = #{record.exchangeId,jdbcType=INTEGER},
       </if>
-      <if test="record.prizeId != null" >
+      <if test="record.prizeId != null">
         prize_id = #{record.prizeId,jdbcType=INTEGER},
       </if>
-      <if test="record.userId != null" >
+      <if test="record.userId != null">
         user_id = #{record.userId,jdbcType=INTEGER},
       </if>
-      <if test="record.exchangeCount != null" >
+      <if test="record.exchangeCount != null">
         exchange_count = #{record.exchangeCount,jdbcType=INTEGER},
       </if>
-      <if test="record.exchangeTime != null" >
+      <if test="record.exchangeTime != null">
         exchange_time = #{record.exchangeTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="record.exchangeStatus != null" >
+      <if test="record.exchangeStatus != null">
         exchange_status = #{record.exchangeStatus,jdbcType=INTEGER},
       </if>
-      <if test="record.prizeName != null" >
+      <if test="record.prizeName != null">
         prize_name = #{record.prizeName,jdbcType=VARCHAR},
       </if>
-      <if test="record.prizeImage != null" >
+      <if test="record.prizeImage != null">
         prize_image = #{record.prizeImage,jdbcType=VARCHAR},
       </if>
     </set>
-    <if test="_parameter != null" >
+    <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByExample" parameterType="map" >
+  <update id="updateByExample" parameterType="map">
     update p_exchange
     set exchange_id = #{record.exchangeId,jdbcType=INTEGER},
       prize_id = #{record.prizeId,jdbcType=INTEGER},
@@ -216,38 +216,38 @@
       exchange_status = #{record.exchangeStatus,jdbcType=INTEGER},
       prize_name = #{record.prizeName,jdbcType=VARCHAR},
       prize_image = #{record.prizeImage,jdbcType=VARCHAR}
-    <if test="_parameter != null" >
+    <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.kaituo.pms.bean.Exchange" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.kaituo.pms.bean.Exchange">
     update p_exchange
-    <set >
-      <if test="prizeId != null" >
+    <set>
+      <if test="prizeId != null">
         prize_id = #{prizeId,jdbcType=INTEGER},
       </if>
-      <if test="userId != null" >
+      <if test="userId != null">
         user_id = #{userId,jdbcType=INTEGER},
       </if>
-      <if test="exchangeCount != null" >
+      <if test="exchangeCount != null">
         exchange_count = #{exchangeCount,jdbcType=INTEGER},
       </if>
-      <if test="exchangeTime != null" >
+      <if test="exchangeTime != null">
         exchange_time = #{exchangeTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="exchangeStatus != null" >
+      <if test="exchangeStatus != null">
         exchange_status = #{exchangeStatus,jdbcType=INTEGER},
       </if>
-      <if test="prizeName != null" >
+      <if test="prizeName != null">
         prize_name = #{prizeName,jdbcType=VARCHAR},
       </if>
-      <if test="prizeImage != null" >
+      <if test="prizeImage != null">
         prize_image = #{prizeImage,jdbcType=VARCHAR},
       </if>
     </set>
     where exchange_id = #{exchangeId,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.kaituo.pms.bean.Exchange" >
+  <update id="updateByPrimaryKey" parameterType="com.kaituo.pms.bean.Exchange">
     update p_exchange
     set prize_id = #{prizeId,jdbcType=INTEGER},
       user_id = #{userId,jdbcType=INTEGER},
@@ -258,4 +258,46 @@
       prize_image = #{prizeImage,jdbcType=VARCHAR}
     where exchange_id = #{exchangeId,jdbcType=INTEGER}
   </update>
+  <resultMap id="MyResultMap" type="com.kaituo.pms.bean.Exchange">
+    <constructor>
+      <idArg column="exchange_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="prize_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="user_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="user_name" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="exchange_count" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="exchange_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="exchange_status" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="prize_name" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="prize_image" javaType="java.lang.String" jdbcType="VARCHAR" />
+    </constructor>
+  </resultMap>
+  <!--findExchangeRecord-->
+  <select id="findExchangeRecord" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select * from p_exchange where user_id=#{userId}
+  </select>
+  <!--模糊查询-->
+  <select id="selectBykeyWord" resultMap="BaseResultMap">
+        SELECT
+        *
+        FROM
+        p_exchange
+        WHERE
+        prize_name LIKE concat(concat('%',#{keyWord}),'%') and user_id=#{userId}
+    </select>
+
+  <select id="getExchangeLists" resultMap="MyResultMap">
+        SELECT
+        *
+        FROM
+        v_exchangelist
+    </select>
+  <select id="selectBykeyWord2" parameterType="java.lang.String" resultMap="MyResultMap">
+        SELECT
+        *
+        FROM
+        v_exchangelist
+        WHERE
+        prize_name LIKE concat(concat('%',#{keyWord}),'%') or  user_name LIKE concat(concat('%',#{keyWord}),'%')
+    </select>
+
 </mapper>

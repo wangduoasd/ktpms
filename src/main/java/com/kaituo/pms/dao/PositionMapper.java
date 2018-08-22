@@ -3,13 +3,8 @@ package com.kaituo.pms.dao;
 import com.kaituo.pms.bean.Position;
 import com.kaituo.pms.bean.PositionExample;
 import java.util.List;
-
-import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.stereotype.Repository;
 
-@Repository
-@Mapper
 public interface PositionMapper {
     int countByExample(PositionExample example);
 
@@ -32,5 +27,4 @@ public interface PositionMapper {
     int updateByPrimaryKeySelective(Position record);
 
     int updateByPrimaryKey(Position record);
-    String[] getAllPositionName();
 }

@@ -180,12 +180,4 @@
       position_status = #{positionStatus,jdbcType=BIT}
     where position_id = #{positionId,jdbcType=INTEGER}
   </update>
-  <resultMap id="MyResultMap" type="java.lang.String">
-
-    <result column="position_name" javaType="java.lang.String" jdbcType="VARCHAR"></result>
-
-  </resultMap>
-  <select id="getAllPositionName" resultMap="MyResultMap">
-        select position_name from p_position where position_status=1
-    </select>
 </mapper>

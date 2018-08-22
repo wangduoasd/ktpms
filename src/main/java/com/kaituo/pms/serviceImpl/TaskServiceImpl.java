@@ -195,9 +195,9 @@ public class TaskServiceImpl implements TaskService {
     }
 
     /**
-     * 将获得的任务数据封装成map
+     * 将获得的任务数据封装成map（待领取）
      * @Description:  将获得的任务数据封装成map
-     * @param pageNamber 目标页数
+     * @param pageNumber 目标页数
      * @param pageSize 每页条数
      * @param status 任务状态值
      * @return:
@@ -206,7 +206,7 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public OutJSON getStatesTaskByPage(Integer pageNamber, Integer pageSize, int status) {
+    public OutJSON getStatesTaskByPage(Integer pageNumber, Integer pageSize, int status) {
         // 如果每页条数为空则将每页条数设为4
         if (null==pageSize){
             pageSize = 4;
@@ -217,7 +217,7 @@ public class TaskServiceImpl implements TaskService {
         // 有数据就封装map返回上层
         if (0<total){
             // 分页
-            PageHelper.startPage(pageNamber, pageSize);
+            PageHelper.startPage(pageNumber, pageSize);
             List<com.kaituo.pms.bean.Task> list = listTaskByStatus(status);
 
             Map<String , Object> pageMap = new HashMap<>(2);
@@ -231,9 +231,19 @@ public class TaskServiceImpl implements TaskService {
         }
     }
 
+    /**
+     * 将获得的任务数据封装成map(已完成)
+     * @Description:  将获得的任务数据封装成map
+     * @param pageNumber 目标页数
+     * @param pageSize 每页条数
+     * @param status 任务状态值
+     * @return:
+     * @Author: 苏泽华
+     * @Date: 2018/8/9
+     */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public OutJSON getStatesTaskByPage(Integer pageNamber, Integer pageSize, int status , int userId) {
+    public OutJSON getStatesTaskByPage(Integer pageNumber, Integer pageSize, int status , int userId) {
         // 如果每页条数为空则将每页条数设为4
         if (null==pageSize){
             pageSize = 4;
@@ -244,7 +254,7 @@ public class TaskServiceImpl implements TaskService {
         // 有数据就封装map返回上层
         if (0<total){
             // 分页
-            PageHelper.startPage(pageNamber, pageSize);
+            PageHelper.startPage(pageNumber, pageSize);
             List<com.kaituo.pms.bean.Task> list = listTaskByStatus(status , userId);
 
             Map<String , Object> pageMap = new HashMap<>(2);
@@ -262,7 +272,7 @@ public class TaskServiceImpl implements TaskService {
      * 获取未完成页面数据并封装好
      * @Description:
      * @Param:
-     * @param pageNamber
+     * @param pageNumber
      * @param pageSize
      * @return: com.kaituo.pms.utils.OutJSON
      * @Author: 苏泽华
@@ -270,7 +280,7 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public OutJSON getUndoneByPage(Integer pageNamber, Integer pageSize , int userId) {
+    public OutJSON getUndoneByPage(Integer pageNumber, Integer pageSize , int userId) {
         // 如果每页条数为空则将每页条数设为4
         if (null==pageSize){
             pageSize = 4;
@@ -287,7 +297,7 @@ public class TaskServiceImpl implements TaskService {
         // 有数据就封装map返回上层
         if (0<total){
             // 分页
-            PageHelper.startPage(pageNamber, pageSize);
+            PageHelper.startPage(pageNumber, pageSize);
             List<Task> list = listUnfinishedTask(userId);
 
             Map<String , Object> pageMap = new HashMap<>(2);
@@ -373,8 +383,8 @@ public class TaskServiceImpl implements TaskService {
             task.setTaskGettime(new Date());
 
             TaskExample taskExample = new TaskExample();
-            TaskExample.Criteria Taskcriteria = taskExample.createCriteria();
-            Taskcriteria.andTaskIdEqualTo(task.getTaskId());
+            TaskExample.Criteria taskCriteria = taskExample.createCriteria();
+            taskCriteria.andTaskIdEqualTo(task.getTaskId());
             taskMapper.updateByExample(task , taskExample);
         } catch (Exception e) {
             e.printStackTrace();
@@ -397,8 +407,8 @@ public class TaskServiceImpl implements TaskService {
     public OutJSON submitReview(Task task) {
         try {
             TaskExample taskExample = new TaskExample();
-            TaskExample.Criteria Taskcriteria = taskExample.createCriteria();
-            Taskcriteria.andTaskIdEqualTo(task.getTaskId());
+            TaskExample.Criteria taskCriteria = taskExample.createCriteria();
+            taskCriteria.andTaskIdEqualTo(task.getTaskId());
             taskMapper.updateByExample(task , taskExample);
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);
         } catch (Exception e) {
@@ -420,14 +430,306 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean publishTask(Task task) {
+    public int publishTask(Task task) {
         try {
-            taskMapper.insert(task);
-            return true;
+            return taskMapper.insert(task);
         } catch (Exception e) {
-            e.printStackTrace();
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             log.error(e.getMessage() , e);
-            return false;
+            e.printStackTrace();
+            return 0;
         }
+    }
+
+    /**
+     * 获取风控中心——任务管理——已发布任务的数据
+     * @Param:
+     * @param
+     * @return: com.kaituo.pms.utils.OutJSON
+     * @Author: 苏泽华
+     * @Date: 2018/8/20
+     */
+    @Override
+    public OutJSON listPublishedTask(int pageNumber , Integer pageSize) {
+        // 如果每页条数为空则将每页条数设为4
+        if (null==pageSize){
+            pageSize = 4;
+        }
+        // 总行数
+        int total = publishedTaskCount();
+        // 有数据就封装map返回上层
+        if (0<total){
+        // 分页
+        PageHelper.startPage(pageNumber, pageSize);
+        List<Task> publishedTaskList = taskMapper.listPublishedTask();
+        Map<String , Object> pageMap = new HashMap<>(2);
+
+        pageMap.put("total:" , total);
+        pageMap.put("taskList" , publishedTaskList);
+
+        return OutJSON.getInstance(CodeAndMessageEnum.PUBLISHED_TASK_COMPLETED , pageMap);
+        }else {
+            return OutJSON.getInstance(CodeAndMessageEnum.GET_STATES_TASK_BY_PAGE_NULL);
+        }
+    }
+
+    /**
+     * 获取风控中心——任务管理——待审核任务的数据
+     * @Param:
+     * @param
+     * @return: com.kaituo.pms.utils.OutJSON
+     * @Author: 苏泽华
+     * @Date: 2018/8/20
+     */
+    @Override
+    public OutJSON listPendingTask(int pageNamber , Integer pageSize) {
+        // 如果每页条数为空则将每页条数设为4
+        if (null==pageSize){
+            pageSize = 4;
+        }
+        TaskExample taskExample = new TaskExample();
+        TaskExample.Criteria criteria = taskExample.createCriteria();
+        criteria.andTaskStatusEqualTo(Constant.TASK_SUBMISSION_REVIEW);
+        // 总行数
+        int total = taskMapper.countByExample(taskExample);
+        // 有数据就封装map返回上层
+        if (0<total){
+            // 分页
+            PageHelper.startPage(pageNamber, pageSize);
+            List<Task> list = taskMapper.selectByExample(taskExample);
+            Map<String , Object> pageMap = new HashMap<>(2);
+
+            pageMap.put("total:" , total);
+            pageMap.put("taskList" , list);
+
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS , pageMap);
+        }else {
+            return OutJSON.getInstance(CodeAndMessageEnum.GET_STATES_TASK_BY_PAGE_NULL);
+        }
+    }
+
+    /**
+     * 风控中心——任务管理——失效任务
+     * @Param:
+     * @param
+     * @return: com.kaituo.pms.utils.OutJSON
+     * @Author: 苏泽华
+     * @Date: 2018/8/20
+     */
+    @Override
+    public OutJSON lisInvalidTask(int pageNamber , Integer pageSize) {
+        // 如果每页条数为空则将每页条数设为4
+        if (null==pageSize){
+            pageSize = 4;
+        }
+        // 总行数
+        int total = invalidTaskCount();
+        // 有数据就封装map返回上层
+        if (0<total){
+            // 分页
+            PageHelper.startPage(pageNamber, pageSize);
+            List<Task> invalidTaskList = taskMapper.listInvalidTask();
+            Map<String , Object> pageMap = new HashMap<>(2);
+
+            pageMap.put("total:" , total);
+            pageMap.put("taskList" , invalidTaskList);
+
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS , pageMap);
+        }else {
+            return OutJSON.getInstance(CodeAndMessageEnum.GET_STATES_TASK_BY_PAGE_NULL);
+        }
+    }
+
+    /**
+     * 获取风控中心——任务管理——已发布任务的数据的总数
+     * @Param:
+     * @param
+     * @return: com.kaituo.pms.utils.OutJSON
+     * @Author: 苏泽华
+     * @Date: 2018/8/20
+     */
+    @Override
+    public int publishedTaskCount() {
+        return taskMapper.publishedTaskCount();
+    }
+
+
+    /**
+     * 风控中心——任务管理——失效任务的总数
+     * @Param:
+     * @param
+     * @return: com.kaituo.pms.utils.OutJSON
+     * @Author: 苏泽华
+     * @Date: 2018/8/20
+     */
+    @Override
+    public int invalidTaskCount() {
+        return taskMapper.invalidTaskCount();
+    }
+
+    /**
+     * 风控中心——任务管理——提前取消任务按钮
+     * @Param:
+     * @param taskId 任务id
+     * @return: int
+     * @Author: 苏泽华
+     * @Date: 2018/8/20
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public int cancelInAdvance(int taskId) {
+        TaskExample taskExample = new TaskExample();
+        TaskExample.Criteria criteria = taskExample.createCriteria();
+        criteria.andTaskIdEqualTo(taskId);
+        Task task = new Task();
+        task.setTaskStatus(Constant.TASK_CANCELDE_IN_ADVANCE);
+        return taskMapper.updateByExampleSelective(task , taskExample);
+    }
+
+    /**
+     * 审核通过
+     * @Param:
+     * @param taskId
+     * @return: boolean
+     * @Author: 苏泽华
+     * @Date: 2018/8/21
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean auditPassed(int taskId) {
+        Task task = taskMapper.selectByPrimaryKey(taskId);
+        User user = userMapper.selectByPrimaryKey(task.getUserId());
+
+        // 判断是否是多次任务
+            if(1<task.getTaskCountnumber()){
+                // 多次任务
+
+                // 判断是否已经全部完成
+                if(task.getTaskNumber().equals(task.getTaskCountnumber())){
+                    // 已经全部完成
+                    return missionAccomplished(taskId);
+                }else{
+                    // 没有全部完成
+
+                    // 任务变更
+                    // 修改任务状态为已完成
+                    task.setTaskStatus(Constant.THE_TASK_HAS_BEEN_RECEIVED);
+                    task.setTaskNumber(task.getTaskNumber()+1);
+                    TaskExample taskExample = new TaskExample();
+                    TaskExample.Criteria taskCriteria = taskExample.createCriteria();
+                    taskCriteria.andTaskIdEqualTo(task.getTaskId());
+                    taskMapper.updateByExample(task , taskExample);
+                    taskMapper.updateByExampleSelective(task , taskExample);
+                    // 返回 真，表示成功完成
+                    return true;
+                }
+
+            }else {
+                // 单次任务
+
+                return missionAccomplished(taskId);
+            }
+
+    }
+
+    /**
+     * 审核驳回
+     * @Param:
+     * @param taskId
+     * @return: boolean
+     * @Author: 苏泽华
+     * @Date: 2018/8/21
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean auditRejection(int taskId) {
+            TaskExample taskExample = new TaskExample();
+            TaskExample.Criteria criteria = taskExample.createCriteria();
+            criteria.andTaskIdEqualTo(taskId);
+            Task task = new Task();
+            task.setTaskStatus(Constant.THE_TASK_HAS_BEEN_RECEIVED);
+            taskMapper.updateByExampleSelective(task , taskExample);
+            return true;
+    }
+
+    /**
+     * 完成任务
+     * @Param:
+     * @param taskId
+     * @return: boolean
+     * @Author: 苏泽华
+     * @Date: 2018/8/21
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean missionAccomplished(int taskId) {
+            Task task = taskMapper.selectByPrimaryKey(taskId);
+            User user = userMapper.selectByPrimaryKey(task.getUserId());
+
+            // 修改员工积分操作
+            // 员工当前积分
+            int oldUserIntegral = user.getUserIntegral();
+            // 任务奖励
+            int taskAward = task.getTaskAward();
+            // 变更员工实例中的积分
+            user.setUserIntegral(oldUserIntegral + taskAward);
+            // 修改员工积分
+            UserExample userExample = new UserExample();
+            UserExample.Criteria criteria = userExample.createCriteria();
+            criteria.andUserIdEqualTo(user.getUserId());
+            userMapper.updateByExample(user,userExample);
+
+            // 添加积分记录操作
+            Integral integral = new Integral();
+            // 积分的对应用户
+            integral.setUserId(user.getUserId());
+            // 变动前的积分值
+            integral.setIntegralStartnum(oldUserIntegral);
+            // 积分的变动原因
+            integral.setIntegralChangestr("完成任务");
+            // 积分的变动时间
+            integral.setIntegralTime(new Date());
+            // 积分的变动值
+            integral.setIntegralChangeint(taskAward);
+            // 变动后的积分值
+            integral.setIntegralEndnum(oldUserIntegral + taskAward);
+            // 数据库添加记录
+            integralMapper.insert(integral);
+
+            // 任务变更
+            // 修改任务状态为已完成
+            task.setTaskStatus(Constant.MISSION_COMPLETED);
+            TaskExample taskExample = new TaskExample();
+            TaskExample.Criteria taskCriteria = taskExample.createCriteria();
+            taskCriteria.andTaskIdEqualTo(task.getTaskId());
+            taskMapper.updateByExample(task , taskExample);
+            taskMapper.updateByExampleSelective(task , taskExample);
+
+            // 返回 真，表示成功完成
+            return true;
+    }
+
+    @Override
+    public boolean republish(Task task) {
+        // 如果任务在已失效页面
+        if (task.getTaskStatus() == Constant.TASK_CANCELDE_IN_ADVANCE ||
+                task.getTaskStatus() == Constant.TASK_COMPLETION_FAILED ||
+                task.getTaskStatus() == Constant.NO_ONE_ACCEPTS_THE_TASK ||
+                task.getTaskStatus() == Constant.MISSION_COMPLETED){
+            // 修改任务字段
+            // 重置任务次数
+            task.setTaskNumber(1);
+            // 清空原员工信息
+            task.setUserId(null);
+            task.setUserName(null);
+            // 清空时间
+            task.setTaskGettime(null);
+
+            TaskExample taskExample = new TaskExample();
+            TaskExample.Criteria taskCriteria = taskExample.createCriteria();
+            taskCriteria.andTaskIdEqualTo(task.getTaskId());
+            taskMapper.updateByExample(task , taskExample);
+        }
+        return false;
     }
 }

@@ -31,13 +31,13 @@ public interface ExchangeMapper {
 
     int updateByPrimaryKeySelective(Exchange record);
 
-    int updateByPrimaryKey(int record);
+    int updateByPrimaryKey(Exchange record);
 
     List<Exchange> findExchangeRecord(@Param("userId") int userId);
     List<Exchange> selectBykeyWord(@Param("keyWord") String keyWord,@Param("userId")int userId);
 
-
     List<Exchange> getExchangeLists();
     List<Exchange> selectBykeyWord2(@Param("keyWord") String keyWord);
-
+    String toUserName(@Param("userId") int userId);
+    String getPrizeImage(@Param("prizeId") int prizeId);
 }

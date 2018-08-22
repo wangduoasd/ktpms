@@ -1,5 +1,8 @@
 package com.kaituo.pms.bean;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.util.Date;
 
 public class Exchange {
@@ -8,9 +11,11 @@ public class Exchange {
     private Integer prizeId;
 
     private Integer userId;
+    private String userName;
 
     private Integer exchangeCount;
-
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date exchangeTime;
 
     private Integer exchangeStatus;
@@ -23,6 +28,18 @@ public class Exchange {
         this.exchangeId = exchangeId;
         this.prizeId = prizeId;
         this.userId = userId;
+        this.exchangeCount = exchangeCount;
+        this.exchangeTime = exchangeTime;
+        this.exchangeStatus = exchangeStatus;
+        this.prizeName = prizeName;
+        this.prizeImage = prizeImage;
+    }
+
+    public Exchange(Integer exchangeId, Integer prizeId, Integer userId, String userName, Integer exchangeCount, Date exchangeTime, Integer exchangeStatus, String prizeName, String prizeImage) {
+        this.exchangeId = exchangeId;
+        this.prizeId = prizeId;
+        this.userId = userId;
+        this.userName = userName;
         this.exchangeCount = exchangeCount;
         this.exchangeTime = exchangeTime;
         this.exchangeStatus = exchangeStatus;
@@ -96,5 +113,13 @@ public class Exchange {
 
     public void setPrizeImage(String prizeImage) {
         this.prizeImage = prizeImage == null ? null : prizeImage.trim();
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 }
