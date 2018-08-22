@@ -32,4 +32,44 @@ public interface TaskMapper {
     int updateByPrimaryKeySelective(Task record);
 
     int updateByPrimaryKey(Task record);
+
+    /**
+     * 风控委——查询已发布任务
+     * @Param:
+     * @param
+     * @return: java.util.List<com.kaituo.pms.bean.Task>
+     * @Author: 苏泽华
+     * @Date: 2018/8/20
+     */
+    List<Task> listPublishedTask() ;
+
+    /**
+     * 风控委——查询已发布任务总数
+     * @Param:
+     * @param
+     * @return: java.util.List<com.kaituo.pms.bean.Task>
+     * @Author: 苏泽华
+     * @Date: 2018/8/20
+     */
+    int publishedTaskCount();
+
+    /**
+     * 风控委——查询已失效任务
+     * @Param:
+     * @param
+     * @return: java.util.List<com.kaituo.pms.bean.Task>
+     * @Author: 苏泽华
+     * @Date: 2018/8/20
+     */
+    List<Task> listInvalidTask();
+
+    /**
+     * 风控委——查询已发布任务总数
+     * @Param:
+     * @param
+     * @return: java.util.List<com.kaituo.pms.bean.Task>
+     * @Author: 苏泽华
+     * @Date: 2018/8/20
+     */
+    int invalidTaskCount();
 }
