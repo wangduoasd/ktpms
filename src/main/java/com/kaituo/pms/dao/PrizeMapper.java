@@ -32,4 +32,7 @@ public interface PrizeMapper {
     int updateByPrimaryKeySelective(Prize record);
 
     int updateByPrimaryKey(Prize record);
+    List<Prize> findAllPrize(@Param("userId")int userId);
+    List<Prize> listAllPrize();
+    List<Prize> selectByName(@Param("prizeName")String prizeName);
 }

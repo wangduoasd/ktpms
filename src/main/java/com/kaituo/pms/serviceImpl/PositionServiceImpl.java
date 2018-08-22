@@ -17,8 +17,5 @@ import org.springframework.stereotype.Service;
 public class PositionServiceImpl implements PositionService {
     @Autowired
     PositionMapper positionMapper;
-    @Override
-    public String[] getAllPositionName() {
-        return positionMapper.getAllPositionName();
-    }
+
 }

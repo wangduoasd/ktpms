@@ -165,7 +165,7 @@ public class UserServiceImpl implements UserService/*,UserDetailsService*/ {
     @Override
     public int addUser(User user) {
         List<Dept> allDeptName = deptService.getAllDeptName();
-        String[] allPositionName = positionService.getAllPositionName();
+/*        String[] allPositionName = positionService.getAllPositionName();*/
 
         return userMapper.addUser(user);
     }

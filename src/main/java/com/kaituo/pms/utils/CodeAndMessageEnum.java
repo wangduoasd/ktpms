@@ -40,7 +40,19 @@ public enum CodeAndMessageEnum {
     // 任务发布成功
     THE_TASK_WAS_SUCCESSFULLY_POSTDE("1" , "任务已发布"),
     // 任务发布失败
-    TASK_POSTING_FAILED("0" , "任务发布失败");
+    TASK_POSTING_FAILED("0" , "任务发布失败"),
+    //购买失败，积分不足
+    FIND_PRIZE_INTEGRAL_LACKOF("1","积分不足"),
+    //购买失败，超过上限
+    FIND_PRIZE_CAP("2","超过上限"),
+    //购买成功
+    FIND_PRIZE_SUCCESS("3","兑换成功"),
+    //用户名或商品为空
+    FIND_USER_PRIZE_NULL("4","用户名或密码为空"),
+    //删除成功
+    DELELETE_SUCCESS("1","删除成功"),
+    //删除失败
+    DELETE_ERROR("2","删除失败");
 
     private String code;
 
