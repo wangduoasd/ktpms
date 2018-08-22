@@ -65,7 +65,12 @@ public enum CodeAndMessageEnum {
     //删除成功
     DELELETE_SUCCESS("1","删除成功"),
     //删除失败
-    DELETE_ERROR("2","删除失败");
+    DELETE_ERROR("2","删除失败"),
+
+    //修改商品成功
+    MODIFICATION_SUCCESS("1" , "修改商品成功"),
+    //修改商品失败
+    MODIFICATION_ERROR("1" , "修改商品失败");
 
 
 
