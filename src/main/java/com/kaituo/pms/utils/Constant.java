@@ -59,7 +59,12 @@ public class Constant {
     /**
      * 图片上传失败
      */
-    public static final int IMG_UPLOSD_REEOR = 0;
+    public static final int IMG_UPLOSD_ERROR = 0;
+
+    /**
+     * 图片删除失败
+     */
+    public static final int IMG_DELECT_ERROR = 0;
 
     /**
      * 图片上传成功
@@ -67,7 +72,44 @@ public class Constant {
     public static final int IMG_UPLOSD_SUCCESS = 1;
 
     /**
+     * 图片删除成功
+     */
+    public static final int IMG_DELECT_SUCCESS = 1;
+
+    /**
      *图片上传为空
      */
     public static final int IMG_UPLOSD_EMPTY = 2;
+
+    /**
+     *图片删除为空
+     */
+    public static final int IMG_DELECT_EMPTY = 2;
+
+    /**
+     * 风控中心  任务管理  已发布任务
+     */
+    public static final String RISK_CONTROL_CENTER_TASK_MANAGEMENT_RELEASED_TASK = "released";
+
+    /**
+     * 风控中心  任务管理  待审核任务
+     */
+    public static final String RISK_CONTROL_CENTER_TASK_MANAGEMENT_PENDING_TASK = "pendingReview";
+
+    /**
+     * 风控中心  任务管理  失效任务
+     */
+    public static final String RISK_CONTROL_CENTER_TASK_MANAGEMENT_INVALID_TASK = "invalid";
+
+    /**
+     * 审核状态 通过
+     */
+    public static final int AUDIT_PASSED = 0;
+
+    /**
+     * 审核状态 驳回
+     */
+    public static final int AUDIT_REJECTION = 1;
+
+
 }

@@ -37,10 +37,23 @@ public enum CodeAndMessageEnum {
     PUBLISHING_TASK_IMAGE_IS_EMPTY("1" , "图片为空"),
     // 图片上传失败
     PUBLISHING_TASK_IMAGE_HAS_BEEN_SUCCESSFULLY_UPLOADED("0" , "图片上传失败"),
+    // 已发布页面消息
+    PUBLISHED_TASK_COMPLETED("1" , "已完成"),
     // 任务发布成功
     THE_TASK_WAS_SUCCESSFULLY_POSTDE("1" , "任务已发布"),
     // 任务发布失败
     TASK_POSTING_FAILED("0" , "任务发布失败"),
+    // 任务提前取消
+    TASK_CANCELED_IN_ADVANCE("1" , "任务提前取消"),
+    // 任务审核通过
+    AUDIT_PASSED_SUCCESS("1","审核通过"),
+    // 任务审核通过失败
+    AUDIT_PASSED_ERROR("0","审核通过失败"),
+    // 任务驳回成功
+    AUDIT_REJECTION_SUCCESS("1","已驳回"),
+    // 任务驳回失败
+    AUDIT_REJECTION_ERROR("1","驳回失败"),
+
     //购买失败，积分不足
     FIND_PRIZE_INTEGRAL_LACKOF("1","积分不足"),
     //购买失败，超过上限
@@ -52,7 +65,16 @@ public enum CodeAndMessageEnum {
     //删除成功
     DELELETE_SUCCESS("1","删除成功"),
     //删除失败
-    DELETE_ERROR("2","删除失败");
+    DELETE_ERROR("2","删除失败"),
+
+    //修改商品成功
+    MODIFICATION_SUCCESS("1" , "修改商品成功"),
+    //修改商品失败
+    MODIFICATION_ERROR("1" , "修改商品失败");
+
+
+
+
 
     private String code;
 

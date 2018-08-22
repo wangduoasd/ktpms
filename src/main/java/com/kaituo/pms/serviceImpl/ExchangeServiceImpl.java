@@ -2,12 +2,16 @@ package com.kaituo.pms.serviceImpl;
 
 import com.kaituo.pms.bean.Exchange;
 import com.kaituo.pms.bean.ExchangeExample;
+import com.kaituo.pms.bean.Task;
 import com.kaituo.pms.dao.ExchangeMapper;
 import com.kaituo.pms.service.ExchangeService;
+import com.kaituo.pms.service.TaskService;
+import com.kaituo.pms.utils.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -22,7 +26,8 @@ import java.util.List;
 public class ExchangeServiceImpl implements ExchangeService {
     @Autowired
     ExchangeMapper exchangeMapper;
-
+@Autowired
+    TaskService taskService;
     @Override
     @Transactional
     public List<Exchange> findExchangeRecord(int userId) {
@@ -65,7 +70,9 @@ public class ExchangeServiceImpl implements ExchangeService {
      　　* @date 2018/8/17 0017 16:50
      　　*/
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public int addexchangeRecord(int prizeId, int userId, int num) {
+
         Exchange exchange = new Exchange();
         exchange.setPrizeId(prizeId);
         exchange.setUserId(userId);

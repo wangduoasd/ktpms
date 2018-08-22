@@ -237,7 +237,8 @@
       <include refid="Example_Where_Clause" />
     </if>
   </select>
-  <update id="updateByExampleSelective" parameterType="map" >
+
+    <update id="updateByExampleSelective" parameterType="map" >
     update p_task
     <set >
       <if test="record.taskId != null" >
@@ -385,4 +386,20 @@
       task_countnumber = #{taskCountnumber,jdbcType=INTEGER}
     where task_id = #{taskId,jdbcType=INTEGER}
   </update>
+  <!--风控委查询已发布任务-->
+  <select id="listPublishedTask" resultMap="BaseResultMap">
+    select * from p_task t where t.task_status = 1 or t.task_status = 2 or t.task_status = 4
+  </select>
+    <!--风控委查询已发布任务总数-->
+    <select id="publishedTaskCount" resultType="java.lang.Integer">
+        select count(*) from p_task t where t.task_status = 1 or t.task_status = 2 or t.task_status = 4
+    </select>
+    <!--风控委查询已失效任务-->
+    <select id="listInvalidTask" resultMap="BaseResultMap">
+        select * from p_task t where t.task_status = 3 or t.task_status = 5 or t.task_status = 6 or t.task_status = 7
+    </select>
+    <!--风控委查询已失效任务总数-->
+    <select id="invalidTaskCount" resultType="java.lang.Integer">
+        select count(*) from p_task t where t.task_status = 3 or t.task_status = 5 or t.task_status = 6 or t.task_status = 7
+    </select>
 </mapper>
