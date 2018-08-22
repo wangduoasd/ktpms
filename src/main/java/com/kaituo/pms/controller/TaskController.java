@@ -55,7 +55,7 @@ public class TaskController {
      */
     @GetMapping(value = {"tasks/status/{callPage}/{pageNamber}/{pageSize}" ,
                             "tasks/status/{callPage}/{pageNamber}"})
-    public OutJSON findCollectionStatus(HttpServletRequest request , @PathVariable("callPage") String callPage ,
+    public OutJSON findCollectionStatus(@PathVariable("callPage") String callPage ,
                                         @SessionAttribute("userId") Integer userId,
                                         @PathVariable(value = "pageNamber") int pageNamber ,
                                        @PathVariable(value = "pageSize" , required = false) int pageSize) {
@@ -301,7 +301,7 @@ public class TaskController {
         switch (key){
 
             // 如果是零
-            case Constant.IMG_UPLOSD_REEOR :
+            case Constant.IMG_UPLOSD_ERROR :
                 // 返回图片上传失败
                 return OutJSON.getInstance(CodeAndMessageEnum.PUBLISHING_TASK_IMAGE_HAS_BEEN_SUCCESSFULLY_UPLOADED);
             // 如果是2
@@ -446,25 +446,37 @@ public class TaskController {
         // 图片上传并获取上传的状态
         Map<String, Object> map = Util.imgUpload(file , Util.getImgRelativePath());
 
+        // 时间处理
+        Date startDate = Util.stampToDate(starttime);
+        Date endDate = Util.stampToDate(endtime);
+
         // 上传的状态码
         int key = (int)map.get("code");
         switch (key){
 
             // 如果是零
-            case Constant.IMG_UPLOSD_REEOR :
+            case Constant.IMG_UPLOSD_ERROR :
                 // 返回图片上传失败
                 return OutJSON.getInstance(CodeAndMessageEnum.PUBLISHING_TASK_IMAGE_HAS_BEEN_SUCCESSFULLY_UPLOADED);
-            // 如果是2
+            // 如果是2 图片为空
             case Constant.IMG_UPLOSD_EMPTY :
-                // 返回图片为空
-                return OutJSON.getInstance(CodeAndMessageEnum.PUBLISHING_TASK_IMAGE_IS_EMPTY);
+                Task oldTask = taskService.getTask(task.getTaskId());
+                // 数据处理
+                task.setTaskStarttime(startDate);
+                task.setTaskEndtime(endDate);
+                task.setTaskImage(oldTask.getTaskImage());
+                task.setTaskStatus(Constant.THE_TASK_WAS_SUCCESSFULLY_POSTED);
+                task.setTaskNumber(0);
+                // 数据库添加数据，如果失败则返回任务发布失败，成功则返回任务已发布
+                if (taskService.republish(task)){
+                    return OutJSON.getInstance(CodeAndMessageEnum.THE_TASK_WAS_SUCCESSFULLY_POSTDE);
+                }else{
+                    return OutJSON.getInstance(CodeAndMessageEnum.TASK_POSTING_FAILED);
+                }
             // 如果是1则为上传成功
             case Constant.IMG_UPLOSD_SUCCESS :
                 // 获取相对路径
                 String url = (String) map.get("url");
-                // 时间处理
-                Date startDate = Util.stampToDate(starttime);
-                Date endDate = Util.stampToDate(endtime);
                 // 数据处理
                 task.setTaskStarttime(startDate);
                 task.setTaskEndtime(endDate);

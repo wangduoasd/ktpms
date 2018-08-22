@@ -75,22 +75,45 @@ public class Util {
         return dateString;
     }
 
-    /** 
+    /**
+     * @Description:
+     * @Param:
+     * @param fileName
+     * @return: java.util.Map<java.lang.String,java.lang.Object>
+     * @Author: 苏泽华
+     * @Date: 2018/8/22
+     */
+    public static int imgDelect(String fileName){
+       int out = Constant.IMG_DELECT_ERROR;
+        File file = new File(getImgRelativePath() + fileName);
+
+        // 如果文件路径所对应的文件存在，并且是一个文件，则直接删除
+        if(file.exists() && file.isFile()){
+            if(file.delete()){
+                out = Constant.IMG_DELECT_SUCCESS;
+            }
+            return out;
+        }else {
+            out = Constant.IMG_DELECT_EMPTY;
+            return out;
+        }
+    }
+
+    /**
     * @Description: 图片上传
     * @Param:  
     * @return:  
     * @Author: su
     * @Date: 2018/8/3 
     */
-
     public static Map<String , Object> imgUpload(MultipartFile file , String targetAddr){
         /**
          * 文件上传
          *
          * */
          Map<String,Object> outPut =new HashMap<>(2);
-         outPut.put("code",Constant.IMG_UPLOSD_REEOR);
-        outPut.put("url","");
+         outPut.put("code",Constant.IMG_UPLOSD_ERROR);
+         outPut.put("url","");
 
 
          if(file.isEmpty()){

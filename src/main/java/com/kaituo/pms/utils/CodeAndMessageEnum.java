@@ -37,6 +37,8 @@ public enum CodeAndMessageEnum {
     PUBLISHING_TASK_IMAGE_IS_EMPTY("1" , "图片为空"),
     // 图片上传失败
     PUBLISHING_TASK_IMAGE_HAS_BEEN_SUCCESSFULLY_UPLOADED("0" , "图片上传失败"),
+    // 已发布页面消息
+    PUBLISHED_TASK_COMPLETED("1" , "已完成"),
     // 任务发布成功
     THE_TASK_WAS_SUCCESSFULLY_POSTDE("1" , "任务已发布"),
     // 任务发布失败
