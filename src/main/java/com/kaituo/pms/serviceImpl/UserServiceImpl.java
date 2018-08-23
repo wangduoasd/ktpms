@@ -135,9 +135,7 @@ public class UserServiceImpl implements UserService/*,UserDetailsService */{
 /*   @Override
     @Transactional(rollbackFor = Exception.class)
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-       System.out.println("a");
         int userId=Integer.parseInt(s);
-       System.out.println("b");
         User user = userMapper.selectByPrimaryKey(userId);
         if(user == null){
             throw new UsernameNotFoundException("用户名不存在");

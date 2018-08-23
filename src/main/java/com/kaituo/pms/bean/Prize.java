@@ -106,4 +106,19 @@ public class Prize {
     public void setPrizeBuy(Integer prizeBuy) {
         this.prizeBuy = prizeBuy;
     }
+
+    @Override
+    public String toString() {
+        return "Prize{" +
+                "prizeId=" + prizeId +
+                ", prizeName='" + prizeName + '\'' +
+                ", prizeImage='" + prizeImage + '\'' +
+                ", prizeAmount=" + prizeAmount +
+                ", prizePrice=" + prizePrice +
+                ", prizeQuota=" + prizeQuota +
+                ", prizeCondition=" + prizeCondition +
+                ", prizeStatus=" + prizeStatus +
+                ", prizeBuy=" + prizeBuy +
+                '}';
+    }
 }

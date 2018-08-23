@@ -709,6 +709,14 @@ public class TaskServiceImpl implements TaskService {
             return true;
     }
 
+    /**
+     * 重新发布
+     * @Param:
+     * @param task
+     * @return: boolean
+     * @Author: 苏泽华
+     * @Date: 2018/8/21
+     */
     @Override
     public boolean republish(Task task) {
         // 如果任务在已失效页面
