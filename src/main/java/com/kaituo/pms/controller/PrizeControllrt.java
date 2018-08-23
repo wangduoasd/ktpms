@@ -334,7 +334,7 @@ public class PrizeControllrt {
             return OutJSON.getInstance(CodeAndMessageEnum.MODIFICATION_ERROR);
         }
     }
-}
+
     /**
     * @Description: 商品校检
     * @Param:
