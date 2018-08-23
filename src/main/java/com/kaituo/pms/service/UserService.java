@@ -76,4 +76,13 @@ public interface UserService {
     List<User> findByKeyWord(String keyWord);
 
     int addUser(User user);
+
+    int upUser(User user);
+
+    List<User> findUserRole();
+
+
+    List<User> findRoleUser();
+
+    int upRoleUser(int userId);
 }

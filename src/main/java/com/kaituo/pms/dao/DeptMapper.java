@@ -2,6 +2,9 @@ package com.kaituo.pms.dao;
 
 import com.kaituo.pms.bean.Dept;
 import com.kaituo.pms.bean.DeptExample;
+
+import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
@@ -15,7 +18,7 @@ public interface DeptMapper {
 
     int deleteByExample(DeptExample example);
 
-    int deleteByPrimaryKey(Integer deptId);
+    int deleteByPrimaryKey(Integer deptId) ;
 
     int insert(Dept record);
 

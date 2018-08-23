@@ -1,6 +1,6 @@
 package com.kaituo.pms.serviceImpl;
 
-import com.kaituo.pms.bean.Dept;
+import com.kaituo.pms.bean.UserExample;
 import com.kaituo.pms.dao.UserMapper;
 import com.kaituo.pms.service.DeptService;
 import com.kaituo.pms.service.PositionService;
@@ -8,6 +8,11 @@ import com.kaituo.pms.service.UserRoleService;
 import com.kaituo.pms.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 /*import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;*//*
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -26,7 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @create: 2018-08-08 14:35
  **/
 @Service
-public class UserServiceImpl implements UserService/*,UserDetailsService*/ {
+public class UserServiceImpl implements UserService/*,UserDetailsService */{
     @Autowired
     UserMapper userMapper;
 /*    @Autowired
@@ -127,10 +132,12 @@ public class UserServiceImpl implements UserService/*,UserDetailsService*/ {
      　　* @author 张金行
      　　* @date 2018/8/20 0020 17:22
      　　*/
-/*    @Override
+/*   @Override
     @Transactional(rollbackFor = Exception.class)
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
+       System.out.println("a");
         int userId=Integer.parseInt(s);
+       System.out.println("b");
         User user = userMapper.selectByPrimaryKey(userId);
         if(user == null){
             throw new UsernameNotFoundException("用户名不存在");
@@ -164,10 +171,40 @@ public class UserServiceImpl implements UserService/*,UserDetailsService*/ {
 
     @Override
     public int addUser(User user) {
-        List<Dept> allDeptName = deptService.getAllDeptName();
-        String[] allPositionName = positionService.getAllPositionName();
 
-        return userMapper.addUser(user);
+        return userMapper.insert(user);
     }
 
+    @Override
+    public int upUser(User user) {
+        return userMapper.updateByPrimaryKey(user);
+    }
+
+    @Override
+    public List<User> findUserRole() {
+        List<User> userRole = userMapper.findUserRole();
+       for (int i=0;i<=userRole.size()-1;i++){
+           if(userRoleService.findAllRole(userRole.get(i).getUserId())!=null){
+               userRole.remove(i);
+               i-=1;
+           }
+       }
+       return  userRole;
+    }
+
+    @Override
+    public List<User> findRoleUser() {
+        List<User> roleUser = userMapper.findRoleUser();
+
+        for (User user:roleUser){
+
+            user.setRoles(userRoleService.findAllRole(user.getUserId()));
+        }
+        return  roleUser;
+    }
+
+    @Override
+    public int upRoleUser(int userId) {
+        return 0;
+    }
 }

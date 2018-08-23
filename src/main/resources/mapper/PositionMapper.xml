@@ -1,32 +1,33 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.kaituo.pms.dao.PositionMapper" >
-  <resultMap id="BaseResultMap" type="com.kaituo.pms.bean.Position" >
-    <constructor >
-      <idArg column="position_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="position_name" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="position_status" jdbcType="BIT" javaType="java.lang.Boolean" />
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kaituo.pms.dao.PositionMapper">
+  <resultMap id="BaseResultMap" type="com.kaituo.pms.bean.Position">
+    <constructor>
+      <idArg column="dept_position_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="position_name" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="position_status" javaType="java.lang.Boolean" jdbcType="BIT" />
+      <arg column="dept_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
     </constructor>
   </resultMap>
-  <sql id="Example_Where_Clause" >
-    <where >
-      <foreach collection="oredCriteria" item="criteria" separator="or" >
-        <if test="criteria.valid" >
-          <trim prefix="(" suffix=")" prefixOverrides="and" >
-            <foreach collection="criteria.criteria" item="criterion" >
-              <choose >
-                <when test="criterion.noValue" >
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
                   and ${criterion.condition}
                 </when>
-                <when test="criterion.singleValue" >
+                <when test="criterion.singleValue">
                   and ${criterion.condition} #{criterion.value}
                 </when>
-                <when test="criterion.betweenValue" >
+                <when test="criterion.betweenValue">
                   and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
                 </when>
-                <when test="criterion.listValue" >
+                <when test="criterion.listValue">
                   and ${criterion.condition}
-                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
                     #{listItem}
                   </foreach>
                 </when>
@@ -37,25 +38,25 @@
       </foreach>
     </where>
   </sql>
-  <sql id="Update_By_Example_Where_Clause" >
-    <where >
-      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
-        <if test="criteria.valid" >
-          <trim prefix="(" suffix=")" prefixOverrides="and" >
-            <foreach collection="criteria.criteria" item="criterion" >
-              <choose >
-                <when test="criterion.noValue" >
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
                   and ${criterion.condition}
                 </when>
-                <when test="criterion.singleValue" >
+                <when test="criterion.singleValue">
                   and ${criterion.condition} #{criterion.value}
                 </when>
-                <when test="criterion.betweenValue" >
+                <when test="criterion.betweenValue">
                   and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
                 </when>
-                <when test="criterion.listValue" >
+                <when test="criterion.listValue">
                   and ${criterion.condition}
-                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
                     #{listItem}
                   </foreach>
                 </when>
@@ -66,118 +67,133 @@
       </foreach>
     </where>
   </sql>
-  <sql id="Base_Column_List" >
-    position_id, position_name, position_status
+  <sql id="Base_Column_List">
+    dept_position_id, position_name, position_status, dept_id
   </sql>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.kaituo.pms.bean.PositionExample" >
+  <select id="selectByExample" parameterType="com.kaituo.pms.bean.PositionExample" resultMap="BaseResultMap">
     select
-    <if test="distinct" >
+    <if test="distinct">
       distinct
     </if>
     <include refid="Base_Column_List" />
     from p_position
-    <if test="_parameter != null" >
+    <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
-    <if test="orderByClause != null" >
+    <if test="orderByClause != null">
       order by ${orderByClause}
     </if>
   </select>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from p_position
-    where position_id = #{positionId,jdbcType=INTEGER}
+    where dept_position_id = #{deptPositionId,jdbcType=INTEGER}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from p_position
-    where position_id = #{positionId,jdbcType=INTEGER}
+    where dept_position_id = #{deptPositionId,jdbcType=INTEGER}
   </delete>
-  <delete id="deleteByExample" parameterType="com.kaituo.pms.bean.PositionExample" >
+  <delete id="deleteByExample" parameterType="com.kaituo.pms.bean.PositionExample">
     delete from p_position
-    <if test="_parameter != null" >
+    <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.kaituo.pms.bean.Position" >
-    insert into p_position (position_id, position_name, position_status
-      )
-    values (#{positionId,jdbcType=INTEGER}, #{positionName,jdbcType=VARCHAR}, #{positionStatus,jdbcType=BIT}
-      )
+  <insert id="insert" parameterType="com.kaituo.pms.bean.Position">
+    insert into p_position (dept_position_id, position_name, position_status, 
+      dept_id)
+    values (#{deptPositionId,jdbcType=INTEGER}, #{positionName,jdbcType=VARCHAR}, #{positionStatus,jdbcType=BIT}, 
+      #{deptId,jdbcType=INTEGER})
   </insert>
-  <insert id="insertSelective" parameterType="com.kaituo.pms.bean.Position" >
+  <insert id="insertSelective" parameterType="com.kaituo.pms.bean.Position">
     insert into p_position
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="positionId != null" >
-        position_id,
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="deptPositionId != null">
+        dept_position_id,
       </if>
-      <if test="positionName != null" >
+      <if test="positionName != null">
         position_name,
       </if>
-      <if test="positionStatus != null" >
+      <if test="positionStatus != null">
         position_status,
       </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="positionId != null" >
-        #{positionId,jdbcType=INTEGER},
+      <if test="deptId != null">
+        dept_id,
       </if>
-      <if test="positionName != null" >
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="deptPositionId != null">
+        #{deptPositionId,jdbcType=INTEGER},
+      </if>
+      <if test="positionName != null">
         #{positionName,jdbcType=VARCHAR},
       </if>
-      <if test="positionStatus != null" >
+      <if test="positionStatus != null">
         #{positionStatus,jdbcType=BIT},
+      </if>
+      <if test="deptId != null">
+        #{deptId,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.kaituo.pms.bean.PositionExample" resultType="java.lang.Integer" >
+  <select id="countByExample" parameterType="com.kaituo.pms.bean.PositionExample" resultType="java.lang.Integer">
     select count(*) from p_position
-    <if test="_parameter != null" >
+    <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </select>
-  <update id="updateByExampleSelective" parameterType="map" >
+  <update id="updateByExampleSelective" parameterType="map">
     update p_position
-    <set >
-      <if test="record.positionId != null" >
-        position_id = #{record.positionId,jdbcType=INTEGER},
+    <set>
+      <if test="record.deptPositionId != null">
+        dept_position_id = #{record.deptPositionId,jdbcType=INTEGER},
       </if>
-      <if test="record.positionName != null" >
+      <if test="record.positionName != null">
         position_name = #{record.positionName,jdbcType=VARCHAR},
       </if>
-      <if test="record.positionStatus != null" >
+      <if test="record.positionStatus != null">
         position_status = #{record.positionStatus,jdbcType=BIT},
       </if>
+      <if test="record.deptId != null">
+        dept_id = #{record.deptId,jdbcType=INTEGER},
+      </if>
     </set>
-    <if test="_parameter != null" >
+    <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByExample" parameterType="map" >
+  <update id="updateByExample" parameterType="map">
     update p_position
-    set position_id = #{record.positionId,jdbcType=INTEGER},
+    set dept_position_id = #{record.deptPositionId,jdbcType=INTEGER},
       position_name = #{record.positionName,jdbcType=VARCHAR},
-      position_status = #{record.positionStatus,jdbcType=BIT}
-    <if test="_parameter != null" >
+      position_status = #{record.positionStatus,jdbcType=BIT},
+      dept_id = #{record.deptId,jdbcType=INTEGER}
+    <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.kaituo.pms.bean.Position" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.kaituo.pms.bean.Position">
     update p_position
-    <set >
-      <if test="positionName != null" >
+    <set>
+      <if test="positionName != null">
         position_name = #{positionName,jdbcType=VARCHAR},
       </if>
-      <if test="positionStatus != null" >
+      <if test="positionStatus != null">
         position_status = #{positionStatus,jdbcType=BIT},
       </if>
+      <if test="deptId != null">
+        dept_id = #{deptId,jdbcType=INTEGER},
+      </if>
     </set>
-    where position_id = #{positionId,jdbcType=INTEGER}
+    where dept_position_id = #{deptPositionId,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.kaituo.pms.bean.Position" >
+  <update id="updateByPrimaryKey" parameterType="com.kaituo.pms.bean.Position">
     update p_position
     set position_name = #{positionName,jdbcType=VARCHAR},
-      position_status = #{positionStatus,jdbcType=BIT}
-    where position_id = #{positionId,jdbcType=INTEGER}
+      position_status = #{positionStatus,jdbcType=BIT},
+      dept_id = #{deptId,jdbcType=INTEGER}
+    where dept_position_id = #{deptPositionId,jdbcType=INTEGER}
   </update>
+
 </mapper>

@@ -52,8 +52,13 @@ public enum CodeAndMessageEnum {
     // 任务驳回成功
     AUDIT_REJECTION_SUCCESS("1","已驳回"),
     // 任务驳回失败
-    AUDIT_REJECTION_ERROR("1","驳回失败");
+    AUDIT_REJECTION_ERROR("1","驳回失败"),
 
+
+    //ZJH
+    //部门
+    // 任务驳回失败
+    DEPT_DEL_ERROR("0","部门尚有员工，请将员工删除后再操作");
     private String code;
 
     private String message;
