@@ -72,6 +72,7 @@ public enum CodeAndMessageEnum {
     //添加商品成功
     ADJUNCTION_SUCCESS("1" , "添加商品成功"),
     //修改商品成功
+    // 修改商品成功
     MODIFICATION_SUCCESS("1" , "修改商品成功"),
     //修改商品失败
     MODIFICATION_ERROR("1" , "修改商品失败"),
@@ -86,8 +87,9 @@ public enum CodeAndMessageEnum {
 
     GOODS_SOLDOUT_SUCCESS("1","商品下架成功"),
 
-    GOODS_SOLDOUT_ERROR("0","商品下架失败");
-
+    GOODS_SOLDOUT_ERROR("0","商品下架失败"),
+    // 没有修改任何商品
+    MODIFICATION_EMPTY("2" , "修改商品失败");
 
 
 

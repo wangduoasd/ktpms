@@ -76,7 +76,7 @@ public class Util {
     }
 
     /**
-     * @Description:
+     * 删除文件
      * @Param:
      * @param fileName
      * @return: java.util.Map<java.lang.String,java.lang.Object>
@@ -100,12 +100,14 @@ public class Util {
     }
 
     /**
-    * @Description: 图片上传
-    * @Param:  
-    * @return:  
-    * @Author: su
-    * @Date: 2018/8/3 
-    */
+     * 图片上传
+     * @Param:
+     * @param file 文件
+     * @param targetAddr 相对路径 =》 Util.getImgRelativePath()
+     * @return: java.util.Map<java.lang.String,java.lang.Object>
+     * @Author: 苏泽华
+     * @Date: 2018/8/22
+     */
     public static Map<String , Object> imgUpload(MultipartFile file , String targetAddr){
         /**
          * 文件上传

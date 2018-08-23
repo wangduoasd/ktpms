@@ -12,10 +12,12 @@ import com.kaituo.pms.service.ExchangeService;
 import com.kaituo.pms.service.PrizeService;
 import com.kaituo.pms.service.UserService;
 import com.kaituo.pms.utils.CodeAndMessageEnum;
+import com.kaituo.pms.utils.Constant;
 import com.kaituo.pms.utils.OutJSON;
 import com.kaituo.pms.utils.Util;
 import com.kaituo.pms.utils.Constant;
 import com.sun.corba.se.spi.orbutil.threadpool.WorkQueue;
+import com.kaituo.pms.utils.Util;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.object.MappingSqlQueryWithParameters;
@@ -39,22 +41,21 @@ public class PrizeControllrt {
     /**
      * 根据商品名查询已经上架商品
      * 点击按钮进行搜索查询
-     *
      * @Description:
      * @Param:
      * @return:
      * @Author: 侯鹏
      * @Date: 2018/8/14
      */
-    @GetMapping(value = "prize/{prizeName}/{pn}/{pageSize}")
-    public OutJSON findByName(@PathVariable("prizeName") String prizeName, @RequestParam(value = "pageNumber", defaultValue = "1") int pageNumber, @RequestParam(value = "pageSize", defaultValue = "4") int pageSize) {
+    @GetMapping( value = "prize/{prizeName}/{pn}/{pageSize}")
+    public OutJSON findByName(@PathVariable("prizeName") String prizeName,@RequestParam(value = "pageNumber",defaultValue = "1") int pageNumber,@RequestParam(value = "pageSize", defaultValue = "4") int pageSize){
         try {
-            prizeName = "%" + prizeName + "%";
+            prizeName = "%" + prizeName +"%";
             PageHelper.startPage(pageNumber, pageSize);
             List<Prize> prizeList = prizeService.selectByName(prizeName);
-            PageInfo objectPageInfo = new PageInfo<>(prizeList, 4);
-            if (prizeList != null && prizeList.size() > 0) {
-                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, objectPageInfo);
+            PageInfo objectPageInfo = new PageInfo<>(prizeList,4);
+            if(prizeList!=null&&prizeList.size()>0){
+                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,objectPageInfo);
             }
 
         } catch (Exception e) {
@@ -62,18 +63,18 @@ public class PrizeControllrt {
             log.error(e.getMessage());
         }
 
-        return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
     }
 
 
     /**
      * 积分兑换商品
-     * @Description:
-     * @Param:
-     * @return:
-     * @Author: 侯鹏
-     * @Date: 2018/8/15
-     */
+    * @Description:
+    * @Param:
+    * @return:
+    * @Author: 侯鹏
+    * @Date:  2018/8/15
+    */
    /* @PostMapping(value="/exchangePrize")
     public OutJSON changePrize(@RequestParam("prizeID")int prizeID,@RequestParam("userID") int userID, @RequestParam("number")int number) {
         int exSumNum = 0;
@@ -130,29 +131,27 @@ public class PrizeControllrt {
         }
         return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
     }*/
-
-    /**
-     * 分页显示已经上架商品
-     *
-     * @Description:兑换中心，兑换列表
-     * @Param:
-     * @return:
-     * @Author: 侯鹏
-     * @Date: 2018/8/17
-     */
-    @GetMapping(value = "prizes/{userId}")
-    public OutJSON findAllPrizePrize(@PathVariable("userId") int userId, @RequestParam(value = "pageNumber", defaultValue = "1") int pageNumber, @RequestParam(value = "pageSize", defaultValue = "4") int pageSize) {
-        try {
-            PageHelper.startPage(pageNumber, pageSize);
-            List<Prize> prizess = prizeService.findAllPrizePrize(userId);
-            PageInfo objectPageInfo = new PageInfo<>(prizess, 4);
-            System.out.print(prizess + "666666");
-            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, objectPageInfo);
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
-        }
-    }
+   /**
+    *分页显示已经上架商品
+   * @Description:
+   * @Param:
+   * @return:
+   * @Author: 侯鹏
+   * @Date:  2018/8/17
+   */
+   @GetMapping(value="prizes/{userId}/pageNumber/pageSize")
+   public OutJSON findAllPrizePrize(@PathVariable("userId") int userId,@RequestParam(value = "pageNumber",defaultValue = "1") int pageNumber,@RequestParam(value = "pageSize", defaultValue = "4") int pageSize){
+       try {
+           PageHelper.startPage(pageNumber, pageSize);
+           List<Prize> prizess = prizeService.findAllPrizePrize(userId);
+           PageInfo objectPageInfo = new PageInfo<>(prizess,4);
+           System.out.print(prizess+"666666");
+           return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,objectPageInfo);
+       } catch (Exception e) {
+           log.error(e.getMessage());
+           return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
+       }
+   }
 
    /* @GetMapping(value="prizes/{userId}")
     public OutJSON findAllPrizePrize1(@PathVariable("userId") int userId){
@@ -167,139 +166,110 @@ public class PrizeControllrt {
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
         }
     }*/
+   /**
+    * 商品兑换
+   * @Description:
+   * @Param:
+   * @return:
+   * @Author: 侯鹏
+   * @Date:  2018/8/20
+   */
+   @PutMapping(value="prize/{userId}/{number}/{prizeId}")
+   public OutJSON exchangePrize(@PathVariable("userId")  int userId,@PathVariable("number") int number,@PathVariable("prizeId") int prizeId){
+       Prize prize = prizeService.selectByPrimaryKey(prizeId);
+       //prize.setPrizeId(prizeId);
+       System.out.print(prize);
+       int count = (prize.getPrizeAmount()-number);
 
-    /**
-     * 商品兑换
-     *
-     * @Description:
-     * @Param:
-     * @return:
-     * @Author: 侯鹏
-     * @Date: 2018/8/20
-     */
-    @PutMapping(value = "prize/{userId}/{number}/{prizeId}")
-    public OutJSON exchangePrize(@PathVariable("userId") int userId, @PathVariable("number") int number, @PathVariable("prizeId") int prizeId) {
-        Prize prize = prizeService.selectByPrimaryKey(prizeId);
-        //prize.setPrizeId(prizeId);
-        System.out.print(prize);
-        int count = (prize.getPrizeAmount() - number);
-        prize.setPrizeAmount(count);
-        prizeService.updateByPrimaryKey(userId, number, prizeId);
-        System.out.print(count + "qqqqqqqqqqq");
-        User user = userService.findPersonalDetail(userId);
-        int i = prizeService.exhangePrize(userId, number, prizeId);
-        int totalPrice = number * prize.getPrizePrice();
-        if (null == user||null == prize) {
-            //用户名或商品为空
-            return OutJSON.getInstance(CodeAndMessageEnum.GET_STATES_TASK_BY_PAGE_NULL);
-        } else if (number > prize.getPrizeQuota()) {
-            //购买失败，超过上限
-            return OutJSON.getInstance(CodeAndMessageEnum.FIND_PRIZE_CAP);
-        } else if (totalPrice > user.getUserIntegral()) {
-            //购买失败，积分不足
-            return OutJSON.getInstance(CodeAndMessageEnum.FIND_PRIZE_INTEGRAL_LACKOF);
-        } else {
-            //购买成功
-            return OutJSON.getInstance(CodeAndMessageEnum.FIND_PRIZE_SUCCESS, i);
-        }
-    }
+       prize.setPrizeAmount(count);
+       prizeService.updateByPrimaryKey(userId,number,prizeId);
+       System.out.print(count+"qqqqqqqqqqq");
+       User user = userService.findPersonalDetail(userId);
+       int i = prizeService.exhangePrize(userId, number, prizeId);
+       int totalPrice = number * prize.getPrizePrice();
+       if (null == user || null == prize) {
+           //用户名或商品为空
+           return OutJSON.getInstance(CodeAndMessageEnum.GET_STATES_TASK_BY_PAGE_NULL);
+       } else if (number >prize.getPrizeQuota()) {
+           //购买失败，超过上限
+           return OutJSON.getInstance(CodeAndMessageEnum.FIND_PRIZE_CAP);
+       } else if (totalPrice > user.getUserIntegral()) {
+           //购买失败，积分不足
+           return OutJSON.getInstance(CodeAndMessageEnum.FIND_PRIZE_INTEGRAL_LACKOF);
+       } else {
+           //购买成功
+         return OutJSON.getInstance(CodeAndMessageEnum.FIND_PRIZE_SUCCESS,i);
+   }
+   }
+   /**
+    * 综服中心的商品列表
+   * @Description:分页显示
+   * @Param:
+   * @return:
+   * @Author: 侯鹏
+   * @Date:2018/8/16
+   */
+   @GetMapping("prize/{pageNumber}/{pageSize}")
+   public OutJSON listAllPrize(@PathVariable("pageNumber") int pageNumber,@PathVariable("pageSize") int pageSize ){
+       try {
+           PageHelper.startPage(pageNumber,pageSize);
+           List<Prize> prizes = prizeService.listAllPrize();
+           PageInfo<Object> objectPageInfo = new PageInfo(prizes,5);
+           if(prizes!=null&&prizes.size()>0){
+               return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,objectPageInfo);
+           }
 
-    /**
-     * 综服中心的商品列表
-     *
-     * @Description:分页显示
-     * @Param:
-     * @return:
-     * @Author: 侯鹏
-     * @Date:2018/8/16
-     */
-    @GetMapping("prize/{pageNumber}/{pageSize}")
-    public OutJSON listAllPrize(@PathVariable("pageNumber") int pageNumber, @PathVariable("pageSize") int pageSize) {
-        try {
-            PageHelper.startPage(pageNumber, pageSize);
-            List<Prize> prizes = prizeService.listAllPrize();
-            PageInfo<Object> objectPageInfo = new PageInfo(prizes, 5);
-            if (prizes != null && prizes.size() > 0) {
-                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, objectPageInfo);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            log.error(e.getMessage());
-        }
-        return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
-    }
-
-    /**
-     * 综服中心删除商品
-     *
-     * @Description:
-     * @Param:
-     * @return:
-     * @Author: 侯鹏
-     * @Date:2018/8/21
-     */
-    @DeleteMapping("/prize/{prizeId}")
+       } catch (Exception e) {
+           e.printStackTrace();
+           log.error(e.getMessage());
+       }
+       return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
+   }
+   /**
+    * 综服中心删除商品
+   * @Description:
+   * @Param:
+   * @return:
+   * @Author: 侯鹏
+   * @Date:2018/8/21
+   */
+   @DeleteMapping("/prize/{prizeId}")
     public OutJSON deleteById(@PathVariable("prizeId") int prizeId) {
-        Prize prize = prizeService.selectByPrimaryKey(prizeId);
-        int deleteFalg = 0;
-        try {
-            if (null != prize.getPrizeImage()) {
-                deleteFalg = Util.imgDelect(prize.getPrizeImage());
-            }else {
-                return OutJSON.getInstance(CodeAndMessageEnum.DELETE_ERROR);
-            }
-            switch (deleteFalg){
-                case Constant.IMG_DELECT_ERROR:
-                    return OutJSON.getInstance(CodeAndMessageEnum.DELETE_ERROR);
-                case Constant.IMG_DELECT_SUCCESS:
-                    int i = prizeService.deleteById(prizeId);
-                    if (i > 0) {
-                        return OutJSON.getInstance(CodeAndMessageEnum.DELELETE_SUCCESS, i);
-                    }else {
-                        return OutJSON.getInstance(CodeAndMessageEnum.DELETE_ERROR);
-                    }
-                case Constant.IMG_UPLOSD_EMPTY:
-                    return OutJSON.getInstance(CodeAndMessageEnum.DELETE_ERROR);
-                default:
-                    return OutJSON.getInstance(CodeAndMessageEnum.DELETE_ERROR);
-            }
-        } catch (Exception e) {
-            log.error( e.getMessage());
-            e.printStackTrace();
-            return OutJSON.getInstance(CodeAndMessageEnum.DELETE_ERROR);
-        }
-    }
+       int i = prizeService.deleteById(prizeId);
+       try {
+           if (i > 0) {
+               return OutJSON.getInstance(CodeAndMessageEnum.DELELETE_SUCCESS, i);
+           }
+
+       } catch (Exception e) {
+           log.error(e.getMessage());
+       }
+       return OutJSON.getInstance(CodeAndMessageEnum.DELETE_ERROR);
+   }
+   /**
+    * 综服中心搜索商品
+   * @Description:
+   * @Param:
+   * @return:
+   * @Author: 侯鹏
+   * @Date: 2018/8/21
+   */
+   @GetMapping("/prize/{prizeName}")
+   public OutJSON selectServiceByName(@PathVariable("prizeName") String prizeName){
+       List<Prize> prizeList = prizeService.selectServiceByName(prizeName);
+       if(null!=prizeList&&prizeList.size()>0){
+           return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, prizeList);
+       }
+       return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
+   }
 
     /**
      * 综服中心搜索商品
-     *
      * @Description:
      * @Param:
      * @return:
      * @Author: 侯鹏
      * @Date: 2018/8/21
-     */
-    @GetMapping("/prizess/s/{prizeName}/{pageNumber}/{pageSize}")
-    public OutJSON selectServiceByName2(@PathVariable("pageNumber") int pageNumber, @PathVariable("prizeName") String prizeName, @PathVariable("pageSize") int pageSize) {
-        prizeName = "%" + prizeName + "%";
-        PageHelper.startPage(pageNumber, pageSize);
-        List<Prize> prizeList = prizeService.selectServiceByName(prizeName);
-        PageInfo<Object> objectPageInfo = new PageInfo(prizeList, 5);
-        if (null != prizeList && prizeList.size() > 0) {
-            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, prizeList);
-        }
-        return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
-    }
-
-    /**
-     * 添加商品
-     *
-     * @Description:
-     * @Param:
-     * @return:
-     * @Author: 侯鹏
-     * @Date: 2018/8/22
      */
     @PostMapping("prize/adjunction")
     public OutJSON addPrize(@RequestParam("file") MultipartFile file , Prize prize) {
@@ -328,6 +298,43 @@ public class PrizeControllrt {
         }
 
     }
+
+    @PutMapping("prize/modification")
+    public OutJSON modifyPrize(MultipartFile file, Prize prize) {
+        Map<String, Object> map = Util.imgUpload(file, Util.getImgRelativePath());
+        // 上传的状态码
+        int key = (int) map.get("code");
+        try {
+            switch (key) {
+
+                // 如果是零
+                case Constant.IMG_UPLOSD_ERROR:
+                    // 返回图片上传失败
+                    return OutJSON.getInstance(CodeAndMessageEnum.PUBLISHING_TASK_IMAGE_HAS_BEEN_SUCCESSFULLY_UPLOADED);
+                // 如果是1则为上传成功
+                case Constant.IMG_UPLOSD_SUCCESS:
+                    // 获取相对路径
+                    String url = (String) map.get("url");
+                    prize.setPrizeImage(url);
+                    if (0 >= prizeService.modifyPrize(prize)){
+                        return OutJSON.getInstance(CodeAndMessageEnum.MODIFICATION_EMPTY);
+                    }
+                    return OutJSON.getInstance(CodeAndMessageEnum.MODIFICATION_SUCCESS);
+                // 如果是2则为图片为空
+                case Constant.IMG_UPLOSD_EMPTY:
+                    prize.setPrizeImage(null);
+                    prizeService.modifyPrize(prize);
+                    return OutJSON.getInstance(CodeAndMessageEnum.MODIFICATION_SUCCESS);
+                default:
+                    return OutJSON.getInstance(CodeAndMessageEnum.MODIFICATION_ERROR);
+            }
+        } catch (Exception e) {
+            log.error("modifyPrize ==>" + e.getMessage() , e);
+            e.printStackTrace();
+            return OutJSON.getInstance(CodeAndMessageEnum.MODIFICATION_ERROR);
+        }
+    }
+}
     /**
     * @Description: 商品校检
     * @Param:

@@ -135,6 +135,19 @@ public class PrizeServiceImpl implements PrizeService {
         return i;
     }
 
+    /**
+     * 商品修改
+     * @Param:
+     * @param prize
+     * @return: com.kaituo.pms.bean.Prize
+     * @Author: 苏泽华
+     * @Date: 2018/8/22
+     */
+    @Override
+    public int modifyPrize(Prize prize) {
+        return prizeMapper.updateByPrimaryKeySelective(prize);
+    }
+
 
     /*  @Override
     public void  exchangePrize(int prizeID, int userID, int number, int eid) {

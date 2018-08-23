@@ -36,4 +36,14 @@ public interface PrizeService {
    int goodsshelves(int prizeId);
 
    int goodsoldout(int prizeId);
+
+    /**
+     * 商品修改
+     * @Param:
+     * @param prize
+     * @return: com.kaituo.pms.bean.Prize
+     * @Author: 苏泽华
+     * @Date: 2018/8/22
+     */
+    int modifyPrize(Prize prize);
 }
