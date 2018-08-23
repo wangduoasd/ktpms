@@ -67,10 +67,27 @@ public enum CodeAndMessageEnum {
     //删除失败
     DELETE_ERROR("2","删除失败"),
 
+    // 添加商品失败
+    ADJUNCTION_ERROR("0" , "添加商品失败"),
+    //添加商品成功
+    ADJUNCTION_SUCCESS("1" , "添加商品成功"),
     //修改商品成功
     MODIFICATION_SUCCESS("1" , "修改商品成功"),
     //修改商品失败
-    MODIFICATION_ERROR("1" , "修改商品失败");
+    MODIFICATION_ERROR("1" , "修改商品失败"),
+    //商品校检该商品已经存在
+    PRIZENAME_EXIST("1","商品名存在"),
+    //商品校检可以添加
+    PRIZENAME_CANADD("2","商品可以添加"),
+    //上架成功
+    GOODS_SHELVES("1","商品上架成功"),
+    // 上架失败
+    GOODS_ERROR("0","商品上架失败"),
+
+    GOODS_SOLDOUT_SUCCESS("1","商品下架成功"),
+
+    GOODS_SOLDOUT_ERROR("0","商品下架失败");
+
 
 
 

@@ -72,11 +72,12 @@ public class ExchangeServiceImpl implements ExchangeService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public int addexchangeRecord(int prizeId, int userId, int num) {
-
         Exchange exchange = new Exchange();
         exchange.setPrizeId(prizeId);
+        exchange.setPrizeImage(exchangeMapper.getPrizeImage(prizeId));
         exchange.setUserId(userId);
         exchange.setExchangeCount(num);
+        exchange.setUserName(exchangeMapper.toUserName(userId));
       return   exchangeMapper.insertSelective(exchange);
     }
 }

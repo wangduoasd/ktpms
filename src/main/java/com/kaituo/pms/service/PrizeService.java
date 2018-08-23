@@ -28,5 +28,12 @@ public interface PrizeService {
    int deleteById(int prizeID);
    //综服中心查询搜索
    List<Prize> selectServiceByName(String prizeName);
+   //综服中心添加商品
+   int addPrize(Prize prize);
+   //商品唯一校验
+   boolean prizeIsEmpty(String prizeName);
+   //商品发布上架
+   int goodsshelves(int prizeId);
 
+   int goodsoldout(int prizeId);
 }

@@ -98,6 +98,42 @@ public class PrizeServiceImpl implements PrizeService {
         criteria.andPrizeNameLike(prizeName);
         return prizeMapper.selectByExample(prizeExample);
     }
+//添加商品
+    @Override
+    public int addPrize(Prize prize) {
+        prize.setPrizeStatus(1);
+        return prizeMapper.insertSelective(prize);
+    }
+//商品名唯一校验
+    @Override
+    public boolean prizeIsEmpty(String prizeName) {
+        PrizeExample prizeExample = new PrizeExample();
+        PrizeExample.Criteria criteria = prizeExample.createCriteria();
+        criteria.andPrizeNameEqualTo(prizeName);
+        List<Prize> prize=prizeMapper.selectByExample(prizeExample);
+        if (null==prize||prize.size()==0 ){
+            return true;
+        }
+        return false;
+    }
+//商品上架
+    @Override
+    public int goodsshelves(int prizeId) {
+        Prize prize1 = prizeMapper.selectByPrimaryKey(prizeId);
+
+        prize1.setPrizeStatus(2);
+        int i = prizeMapper.updateByPrimaryKeySelective(prize1);
+        return i;
+    }
+
+    @Override
+    public int goodsoldout(int prizeId) {
+        Prize prize1 = prizeMapper.selectByPrimaryKey(prizeId);
+
+        prize1.setPrizeStatus(3);
+        int i = prizeMapper.updateByPrimaryKeySelective(prize1);
+        return i;
+    }
 
 
     /*  @Override

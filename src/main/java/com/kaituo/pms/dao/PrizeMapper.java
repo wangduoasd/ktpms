@@ -37,5 +37,4 @@ public interface PrizeMapper {
     List<Prize> findAllPrize(Integer userId);
     List<Prize>  listAllPrize();
 
-
 }

@@ -125,7 +125,7 @@ public class Util {
          String fileName = getRandomFileName()+getFileExtension(file);
          int size = (int) file.getSize();
 
-         log.info(fileName + "-->" + size);
+         log.info(fileName + size);
 
         String relativeAddr = targetAddr + fileName;
         // 创建目录
