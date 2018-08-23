@@ -157,28 +157,33 @@ public class UserServiceImpl implements UserService/*,UserDetailsService */{
     }*/
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public List<User> findAllUser() {
         return userMapper.findAllUser();
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public List<User> findByKeyWord(String keyWord) {
         return userMapper.findByKeyWord(keyWord);
 
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public int addUser(User user) {
 
         return userMapper.insert(user);
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public int upUser(User user) {
         return userMapper.updateByPrimaryKey(user);
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public List<User> findUserRole() {
         List<User> userRole = userMapper.findUserRole();
        for (int i=0;i<=userRole.size()-1;i++){
@@ -191,6 +196,7 @@ public class UserServiceImpl implements UserService/*,UserDetailsService */{
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public List<User> findRoleUser() {
         List<User> roleUser = userMapper.findRoleUser();
 
@@ -200,9 +206,11 @@ public class UserServiceImpl implements UserService/*,UserDetailsService */{
         }
         return  roleUser;
     }
-
     @Override
-    public int upRoleUser(int userId) {
-        return 0;
+    @Transactional(rollbackFor = Exception.class)
+    public User findUserById(int userId) {
+
+        return  userMapper.selectByPrimaryKey(userId);
     }
+
 }

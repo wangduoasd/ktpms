@@ -11,8 +11,10 @@ import com.kaituo.pms.utils.OutJSON;
 import com.mysql.cj.xdevapi.JsonArray;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import sun.reflect.generics.scope.Scope;
 
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
@@ -34,11 +36,21 @@ public class DeptController {
     @Autowired
     DeptService deptService;
     @ResponseBody
-    @GetMapping(value = "depts/{pn}")
+    /**
+     　  * @Description: 风控中心_部门设置  部门列表
+     　　* @param [dept, positionArray]
+     　　* @return com.kaituo.pms.utils.OutJSON
+     　　* @throws
+     　　* @author 张金行
+     　　* @date 2018/8/23 0023 15:54
+     　　*/
+    @GetMapping(value ="depts/{pn}")
+    @Cacheable(cacheNames = "dept")
     public OutJSON findAllDept(@PathVariable(value = "pn") int pageNumber,
-                                      @RequestParam(value = "pageSize", defaultValue = "8") int pageSize
+                               @RequestParam(value = "pageSize",defaultValue ="8") Integer pageSize
     ) {
         try {
+
             PageHelper.startPage(pageNumber, pageSize);
             List<Dept> list = deptService.findAllDept();
             PageInfo pageInfo = new PageInfo(list, 5);
@@ -48,6 +60,14 @@ public class DeptController {
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
         }
     }
+    /**
+     　  * @Description: 风控中心_部门设置  新建部门
+     　　* @param [dept, positionArray]
+     　　* @return com.kaituo.pms.utils.OutJSON
+     　　* @throws
+     　　* @author 张金行
+     　　* @date 2018/8/23 0023 15:54
+     　　*/
     @ResponseBody
     @PostMapping (value = "dept")
     public OutJSON addDept(Dept dept,@RequestParam("positionArray") String[] positionArray) {
@@ -70,9 +90,18 @@ public class DeptController {
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
         }
     }
-    @PutMapping("dept/{deptId}")
+    /**
+     　  * @Description: 风控中心_部门设置  修改部门
+     　　* @param [dept, positionArray]
+     　　* @return com.kaituo.pms.utils.OutJSON
+     　　* @throws
+     　　* @author 张金行
+     　　* @date 2018/8/23 0023 15:54
+     　　*/
+    @PutMapping("dept")
     @ResponseBody
     public OutJSON upDept(Dept dept,@RequestParam("positionArray") String[] positionArray) {
+
         try {
             deptService.upDept(dept,positionArray);
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);

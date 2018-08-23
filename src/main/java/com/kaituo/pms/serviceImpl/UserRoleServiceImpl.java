@@ -47,6 +47,7 @@ public class UserRoleServiceImpl implements UserRoleService {
         }
     }
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public int addRoles(String[] roleArray,int userId){
         UserRole userRole = new UserRole();
         for (String s:roleArray
@@ -60,6 +61,7 @@ public class UserRoleServiceImpl implements UserRoleService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public int delUserRole(int userId) {
         UserRoleExample userRoleExample = new UserRoleExample();
         userRoleExample.createCriteria().andUserIdEqualTo(userId);
@@ -67,6 +69,7 @@ public class UserRoleServiceImpl implements UserRoleService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public int upUserRoles(String[] roleArray, Integer userId) {
         delUserRole(userId);
         addRoles( roleArray,userId);

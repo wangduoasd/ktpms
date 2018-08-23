@@ -26,6 +26,7 @@ import java.util.Map;
 * @Date:  2018/8/14
 */
 @Service
+@Transactional
 public class PrizeServiceImpl implements PrizeService {
     @Autowired
     PrizeMapper prizeMapper;
@@ -36,7 +37,6 @@ public class PrizeServiceImpl implements PrizeService {
     @Autowired
     ExchangeMapper exchangeMapper;
     @Override
-    @Transactional
     public List<Prize> selectByName(String prizeName) {
         List<Prize> pNamelist = prizeMapper.selectByName(prizeName);
         return pNamelist;
@@ -45,13 +45,11 @@ public class PrizeServiceImpl implements PrizeService {
 
 
     @Override
-    @Transactional
     public List<Prize> findAllPrizePrize(int userId) {
         List<Prize> prizes = prizeMapper.findAllPrize(userId);
         return prizes;
     }
     @Override
-    @Transactional
     public int exhangePrize(int userId, int number, int prizeId) {
 
         int i = exchangeService.addexchangeRecord(prizeId,userId,number);
@@ -61,13 +59,11 @@ public class PrizeServiceImpl implements PrizeService {
     }
 
     @Override
-    @Transactional
     public Prize selectByPrimaryKey(int prizeId) {
         return prizeMapper.selectByPrimaryKey(prizeId);
     }
 
     @Override
-    @Transactional
     public int updateByPrimaryKey(int userId, int number, int prizeId) {
         Prize prize = prizeMapper.selectByPrimaryKey(prizeId);
         //prize.setPrizeId(prizeId);
@@ -79,19 +75,16 @@ public class PrizeServiceImpl implements PrizeService {
     }
 
     @Override
-    @Transactional
     public List<Prize> listAllPrize() {
         return prizeMapper.listAllPrize();
     }
 
     @Override
-    @Transactional
     public int deleteById(int prizeID) {
       return  prizeMapper.deleteByPrimaryKey(prizeID);
     }
 
     @Override
-    @Transactional
     public List<Prize> selectServiceByName(String prizeName) {
         PrizeExample prizeExample = new PrizeExample();
         PrizeExample.Criteria criteria = prizeExample.createCriteria();

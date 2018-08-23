@@ -2,10 +2,13 @@ package com.kaituo.pms.serviceImpl;
 
 import com.kaituo.pms.bean.Exchange;
 import com.kaituo.pms.bean.ExchangeExample;
+import com.kaituo.pms.bean.Prize;
 import com.kaituo.pms.bean.Task;
 import com.kaituo.pms.dao.ExchangeMapper;
 import com.kaituo.pms.service.ExchangeService;
+import com.kaituo.pms.service.PrizeService;
 import com.kaituo.pms.service.TaskService;
+import com.kaituo.pms.service.UserService;
 import com.kaituo.pms.utils.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,8 +29,10 @@ import java.util.List;
 public class ExchangeServiceImpl implements ExchangeService {
     @Autowired
     ExchangeMapper exchangeMapper;
-@Autowired
-    TaskService taskService;
+    @Autowired
+    PrizeService prizeService;
+    @Autowired
+    UserService userService;
     @Override
     @Transactional
     public List<Exchange> findExchangeRecord(int userId) {
@@ -56,6 +61,7 @@ public class ExchangeServiceImpl implements ExchangeService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public List<Exchange> selectBykeyWord(String keyWord) {
         System.out.println(exchangeMapper.selectBykeyWord2(keyWord));
         return exchangeMapper.selectBykeyWord2(keyWord);
@@ -72,12 +78,14 @@ public class ExchangeServiceImpl implements ExchangeService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public int addexchangeRecord(int prizeId, int userId, int num) {
+        Prize prize = prizeService.selectByPrimaryKey(prizeId);
         Exchange exchange = new Exchange();
         exchange.setPrizeId(prizeId);
-        exchange.setPrizeImage(exchangeMapper.getPrizeImage(prizeId));
+        exchange.setPrizeName(prize.getPrizeName());
+        exchange.setPrizeImage(prize.getPrizeImage());
         exchange.setUserId(userId);
         exchange.setExchangeCount(num);
-        exchange.setUserName(exchangeMapper.toUserName(userId));
+        exchange.setUserName(userService.findUserById(userId).getUserName());
       return   exchangeMapper.insertSelective(exchange);
     }
 }

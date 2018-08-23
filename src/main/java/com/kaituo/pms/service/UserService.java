@@ -84,5 +84,5 @@ public interface UserService {
 
     List<User> findRoleUser();
 
-    int upRoleUser(int userId);
+    User findUserById(int userId);
 }
