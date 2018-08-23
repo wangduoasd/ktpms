@@ -1,14 +1,10 @@
 package com.kaituo.pms.controller;
-
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.kaituo.pms.bean.Exchange;
-import com.kaituo.pms.bean.ExchangeExample;
+
 import com.kaituo.pms.bean.Prize;
 import com.kaituo.pms.bean.User;
-import com.kaituo.pms.dao.ExchangeMapper;
-import com.kaituo.pms.dao.PrizeMapper;
-import com.kaituo.pms.service.ExchangeService;
+
 import com.kaituo.pms.service.PrizeService;
 import com.kaituo.pms.service.UserService;
 import com.kaituo.pms.utils.CodeAndMessageEnum;
@@ -179,11 +175,11 @@ public class PrizeControllrt {
        Prize prize = prizeService.selectByPrimaryKey(prizeId);
        //prize.setPrizeId(prizeId);
        System.out.print(prize);
-       int count = (prize.getPrizeAmount()-number);
+       /*int count = (prize.getPrizeAmount()-number);
 
-       prize.setPrizeAmount(count);
+       prize.setPrizeAmount(count);*/
        prizeService.updateByPrimaryKey(userId,number,prizeId);
-       System.out.print(count+"qqqqqqqqqqq");
+       //System.out.print(count+"qqqqqqqqqqq");
        User user = userService.findPersonalDetail(userId);
        int i = prizeService.exhangePrize(userId, number, prizeId);
        int totalPrice = number * prize.getPrizePrice();
@@ -234,17 +230,35 @@ public class PrizeControllrt {
    * @Date:2018/8/21
    */
    @DeleteMapping("/prize/{prizeId}")
-    public OutJSON deleteById(@PathVariable("prizeId") int prizeId) {
-       int i = prizeService.deleteById(prizeId);
+   public OutJSON deleteById(@PathVariable("prizeId") int prizeId) {
+       Prize prize = prizeService.selectByPrimaryKey(prizeId);
+       int deleteFalg = 0;
        try {
-           if (i > 0) {
-               return OutJSON.getInstance(CodeAndMessageEnum.DELELETE_SUCCESS, i);
+           if (null != prize.getPrizeImage()) {
+               deleteFalg = Util.imgDelect(prize.getPrizeImage());
+           }else {
+               return OutJSON.getInstance(CodeAndMessageEnum.DELETE_ERROR);
            }
-
+           switch (deleteFalg){
+               case Constant.IMG_DELECT_ERROR:
+                   return OutJSON.getInstance(CodeAndMessageEnum.DELETE_ERROR);
+               case Constant.IMG_DELECT_SUCCESS:
+                   int i = prizeService.deleteById(prizeId);
+                   if (i > 0) {
+                       return OutJSON.getInstance(CodeAndMessageEnum.DELELETE_SUCCESS, i);
+                   }else {
+                       return OutJSON.getInstance(CodeAndMessageEnum.DELETE_ERROR);
+                   }
+               case Constant.IMG_UPLOSD_EMPTY:
+                   return OutJSON.getInstance(CodeAndMessageEnum.DELETE_ERROR);
+               default:
+                   return OutJSON.getInstance(CodeAndMessageEnum.DELETE_ERROR);
+           }
        } catch (Exception e) {
-           log.error(e.getMessage());
+           log.error( e.getMessage());
+           e.printStackTrace();
+           return OutJSON.getInstance(CodeAndMessageEnum.DELETE_ERROR);
        }
-       return OutJSON.getInstance(CodeAndMessageEnum.DELETE_ERROR);
    }
    /**
     * 综服中心搜索商品
@@ -256,6 +270,7 @@ public class PrizeControllrt {
    */
    @GetMapping("/prize/{prizeName}")
    public OutJSON selectServiceByName(@PathVariable("prizeName") String prizeName){
+       prizeName="%"+prizeName+"%";
        List<Prize> prizeList = prizeService.selectServiceByName(prizeName);
        if(null!=prizeList&&prizeList.size()>0){
            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, prizeList);
@@ -264,7 +279,7 @@ public class PrizeControllrt {
    }
 
     /**
-     * 综服中心搜索商品
+     * 综服中心添加商品
      * @Description:
      * @Param:
      * @return:
@@ -334,7 +349,7 @@ public class PrizeControllrt {
             return OutJSON.getInstance(CodeAndMessageEnum.MODIFICATION_ERROR);
         }
     }
-}
+
     /**
     * @Description: 商品校检
     * @Param:
