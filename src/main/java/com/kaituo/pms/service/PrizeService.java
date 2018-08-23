@@ -28,4 +28,14 @@ public interface PrizeService {
    int deleteById(int prizeID);
    //综服中心查询搜索
    List<Prize> selectServiceByName(String prizeName);
+
+    /**
+     * 商品修改
+     * @Param:
+     * @param prize
+     * @return: com.kaituo.pms.bean.Prize
+     * @Author: 苏泽华
+     * @Date: 2018/8/22
+     */
+    int modifyPrize(Prize prize);
 }

@@ -12,16 +12,16 @@ import com.kaituo.pms.service.ExchangeService;
 import com.kaituo.pms.service.PrizeService;
 import com.kaituo.pms.service.UserService;
 import com.kaituo.pms.utils.CodeAndMessageEnum;
+import com.kaituo.pms.utils.Constant;
 import com.kaituo.pms.utils.OutJSON;
+import com.kaituo.pms.utils.Util;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.websocket.server.PathParam;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @RestController
@@ -272,5 +272,41 @@ public class PrizeControllrt {
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, prizeList);
         }
         return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
+    }
+
+    @PutMapping("prize/modification")
+    public OutJSON modifyPrize(MultipartFile file, Prize prize) {
+        Map<String, Object> map = Util.imgUpload(file, Util.getImgRelativePath());
+        // 上传的状态码
+        int key = (int) map.get("code");
+        try {
+            switch (key) {
+
+                // 如果是零
+                case Constant.IMG_UPLOSD_ERROR:
+                    // 返回图片上传失败
+                    return OutJSON.getInstance(CodeAndMessageEnum.PUBLISHING_TASK_IMAGE_HAS_BEEN_SUCCESSFULLY_UPLOADED);
+                // 如果是1则为上传成功
+                case Constant.IMG_UPLOSD_SUCCESS:
+                    // 获取相对路径
+                    String url = (String) map.get("url");
+                    prize.setPrizeImage(url);
+                    if (0 >= prizeService.modifyPrize(prize)){
+                        return OutJSON.getInstance(CodeAndMessageEnum.MODIFICATION_EMPTY);
+                    }
+                    return OutJSON.getInstance(CodeAndMessageEnum.MODIFICATION_SUCCESS);
+                // 如果是2则为图片为空
+                case Constant.IMG_UPLOSD_EMPTY:
+                    prize.setPrizeImage(null);
+                    prizeService.modifyPrize(prize);
+                    return OutJSON.getInstance(CodeAndMessageEnum.MODIFICATION_SUCCESS);
+                default:
+                    return OutJSON.getInstance(CodeAndMessageEnum.MODIFICATION_ERROR);
+            }
+        } catch (Exception e) {
+            log.error("modifyPrize ==>" + e.getMessage() , e);
+            e.printStackTrace();
+            return OutJSON.getInstance(CodeAndMessageEnum.MODIFICATION_ERROR);
+        }
     }
 }

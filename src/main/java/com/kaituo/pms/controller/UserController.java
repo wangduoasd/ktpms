@@ -33,7 +33,7 @@ public class UserController {
     * @Author: 苏泽华
     * @Date: 2018/8/9
     */
-    @GetMapping(value = {"userIntegrals/{pageNumber}/{pageSize}" , "userIntegrals/{pageNumber}"})
+    @GetMapping(value = {"userIntegrals/page/{pageNumber}/{pageSize}" , "userIntegrals/{pageNumber}"})
     public OutJSON findRankingByPage(@PathVariable(value = "pageNumber")
                                              int pageNumber,
                                      @PathVariable(required = false)
