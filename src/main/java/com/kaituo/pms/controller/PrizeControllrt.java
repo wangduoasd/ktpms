@@ -11,7 +11,6 @@ import com.kaituo.pms.utils.Constant;
 import com.kaituo.pms.utils.OutJSON;
 import com.kaituo.pms.utils.Util;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.logging.log4j.core.config.plugins.validation.constraints.Required;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -229,6 +228,15 @@ public class PrizeControllrt {
 
     }
 
+    /**
+     * 修改商品
+     * @Param:
+     * @param file
+     * @param prize
+     * @return: com.kaituo.pms.utils.OutJSON
+     * @Author: 苏泽华
+     * @Date: 2018/8/24
+     */
     @PutMapping("prize")
     public OutJSON modifyPrize(MultipartFile file, Prize prize) {
         Map<String, Object> map = Util.imgUpload(file, Util.getImgRelativePath());

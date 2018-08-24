@@ -97,9 +97,18 @@ public enum CodeAndMessageEnum {
 
 
     //ZJH
+    //100 用户错误  200 系统错误
+    ALL_OPERATION_ERROR("200","操作失败，请稍后重试"),
+    //兑换记录
+    EXCHANGE_STATUS_ERROR("101","兑换失败，请刷新页面重试"),
+    USER_ADD_ERROR("102","添加失败，工号已被使用，请更换工号"),
+    USER_UP_ERROR("106","修改失败，工号已被使用，请更换工号"),
+    //职位
+    POSITION_FIND_ERROR("103","该部门尚未设置职位"),
     //部门
-    // 任务驳回失败
-    DEPT_DEL_ERROR("0","部门尚有员工，请将员工删除后再操作");
+    DEPT_ADD_ERROR("104","部门名已被使用，请更换部门名"),
+    DEPT_DEL_ERROR("105","部门尚有员工，请将员工删除后再操作");
+
     private String code;
 
     private String message;

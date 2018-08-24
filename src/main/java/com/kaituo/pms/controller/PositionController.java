@@ -40,7 +40,9 @@ public class PositionController {
     public OutJSON findAllDept(@PathVariable(value = "deptId") int deptId) {
 
         try {
-            List<Position> list = positionService.getPositionNameBydeptId(deptId);;
+            List<Position> list = positionService.getPositionNameBydeptId(deptId);
+            if(list==null)
+                return OutJSON.getInstance(CodeAndMessageEnum.POSITION_FIND_ERROR);
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, list);
         } catch (Exception e) {
             log.error( e.getMessage());

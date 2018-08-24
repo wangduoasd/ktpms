@@ -20,6 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;*/
 import org.springframework.stereotype.Service;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import com.kaituo.pms.bean.User;
 import org.springframework.transaction.annotation.Transactional;
@@ -172,13 +173,24 @@ public class UserServiceImpl implements UserService/*,UserDetailsService */{
     @Override
     @Transactional(rollbackFor = Exception.class)
     public int addUser(User user) {
-
+        UserExample userExample = new UserExample();
+        ArrayList<Integer> list = new ArrayList<>();
+        list.add(user.getUserId());
+        userExample.createCriteria().andUserIdNotIn(list);
+        List<User> users = userMapper.selectByExample(userExample);
+        for(User u:users){
+           if( u.getUserId()==user.getUserId())
+               return 2;
+        }
         return userMapper.insert(user);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public int upUser(User user) {
+        User userById = findUserById(user.getUserId());
+        if(userById!=null)
+            return 2;
         return userMapper.updateByPrimaryKey(user);
     }
 

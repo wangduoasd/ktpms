@@ -34,33 +34,45 @@ public class DeptServiceImpl implements DeptService {
     public List<Dept> findAllDept() {
         DeptExample deptExample = new DeptExample();
         return deptMapper.selectByExample(deptExample);
-
     }
     @Override
     public int addDept(Dept dept,String[] positionArray) {
+        List<Dept> depts=findDeptByName(dept.getDeptName());
+        if(depts.size()!=0){
+            return 2;
+        }
         deptMapper.insertSelective(dept);
-        int deptId = findDeptIdByName(dept.getDeptName());
-        positionService.addPositons(positionArray,deptId);
-        return 1;
+        int deptId =findDeptByName(dept.getDeptName()).get(0).getDeptId();
+        return positionService.addPositons(positionArray,deptId);
+
     }
     @Override
-    public int findDeptIdByName(String deptName)  {
+    public List<Dept> findDeptByName(String deptName){
       DeptExample deptExample = new DeptExample();
         deptExample.createCriteria().andDeptNameEqualTo(deptName);
         List<Dept> depts = deptMapper.selectByExample(deptExample);
-        return depts.get(0).getDeptId();
-
+        return depts;
     }
 
     @Override
     public int delDept(int deptId)  {
-       return deptMapper.deleteByPrimaryKey(deptId);
+        int i = deptMapper.checkDept(deptId);
+        if(i==0){
+            return deptMapper.deleteByPrimaryKey(deptId);
+        }
+        return i+1;
     }
 
     @Override
     public int upDept(Dept dept, String[] positionArray) {
+        List<Dept> depts=findDeptByName(dept.getDeptName());
+        if(depts.size()!=0){
+            return 2;
+        }
         deptMapper.updateByPrimaryKeySelective(dept);
-        positionService.addPositons(positionArray,dept.getDeptId());
-        return 1;
+       return positionService.addPositons(positionArray,dept.getDeptId());
+
     }
+
+
 }

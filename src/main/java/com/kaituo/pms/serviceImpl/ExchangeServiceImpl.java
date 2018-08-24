@@ -1,20 +1,15 @@
 package com.kaituo.pms.serviceImpl;
 
 import com.kaituo.pms.bean.Exchange;
-import com.kaituo.pms.bean.ExchangeExample;
 import com.kaituo.pms.bean.Prize;
-import com.kaituo.pms.bean.Task;
 import com.kaituo.pms.dao.ExchangeMapper;
 import com.kaituo.pms.service.ExchangeService;
 import com.kaituo.pms.service.PrizeService;
-import com.kaituo.pms.service.TaskService;
 import com.kaituo.pms.service.UserService;
-import com.kaituo.pms.utils.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -41,11 +36,13 @@ public class ExchangeServiceImpl implements ExchangeService {
 
     @Override
     @Transactional
-    public int updateExchange(int exchangeId,int status) {
-        Exchange exchange = new Exchange();
-        exchange.setExchangeId(exchangeId);
-        exchange.setExchangeStatus(status);
-        return exchangeMapper.updateByPrimaryKeySelective(exchange);
+    public  int updateExchange(int exchangeId, int iniStatus,int endStasus){
+        Exchange exchange = exchangeMapper.selectByPrimaryKey(exchangeId);
+      if(exchange.getExchangeStatus()==iniStatus) {
+          exchange.setExchangeStatus(endStasus);
+          return exchangeMapper.updateByPrimaryKeySelective(exchange);
+      }
+      return 2;
     }
 
     @Override

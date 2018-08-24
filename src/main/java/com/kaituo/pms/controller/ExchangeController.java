@@ -69,8 +69,13 @@ public class ExchangeController {
     public OutJSON updateExchange(@PathVariable("exchangeId") int exchangeId) {
         try {
             //根据userId将视图中该用户状态从  状态2（显示为：确定领取）改变到 状态3（显示为：已经领取）
-            exchangeService.updateExchange(exchangeId,3);
-            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);
+            int i = exchangeService.updateExchange(exchangeId, 2,3);
+            if(i==1)
+                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);
+            if(i==2){
+                return OutJSON.getInstance(CodeAndMessageEnum.EXCHANGE_STATUS_ERROR);
+            }
+            return  OutJSON.getInstance(CodeAndMessageEnum.ALL_OPERATION_ERROR);
         } catch (Exception e) {
             log.error(e.getMessage());
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
@@ -135,9 +140,13 @@ public class ExchangeController {
     @PutMapping(value = "exchangeLists/{exchangeId}")
     public OutJSON updateExchangeList(@PathVariable("exchangeId") int exchangeId) {
         try {
-            //根据商品名keyWord搜索视图中所有用户   状态2（显示为：确定兑换），状态3（显示为：已兑换）  的兑换列表
-            exchangeService.updateExchange(exchangeId,2);
-            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);
+            int i = exchangeService.updateExchange(exchangeId, 1,2);
+            if(i==1)
+                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);
+            if(i==2){
+                return OutJSON.getInstance(CodeAndMessageEnum.EXCHANGE_STATUS_ERROR);
+            }
+            return  OutJSON.getInstance(CodeAndMessageEnum.ALL_OPERATION_ERROR);
         } catch (Exception e) {
             log.error(e.getMessage());
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);

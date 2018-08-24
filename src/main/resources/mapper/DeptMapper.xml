@@ -221,4 +221,7 @@
         select dept_id,dept_name from p_dept
     </select>
 
+  <select id="checkDept" resultType="java.lang.Integer">
+         SELECT COUNT(0) FROM v_userinfo WHERE dept_name=( SELECT d.`dept_name` FROM p_dept d WHERE dept_id=#{deptId})
+    </select>
 </mapper>

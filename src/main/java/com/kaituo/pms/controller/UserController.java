@@ -20,6 +20,12 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.*;
 
+/**
+ * @program: ktpms
+ * @description: 有关任务的controller
+ * @author: 苏泽华,张金行，侯鹏
+ * @create: 2018-08-09 23:00
+ **/
 @Slf4j
 @RestController
 @CrossOrigin
@@ -33,16 +39,11 @@ public class UserController {
     * @Author: 苏泽华
     * @Date: 2018/8/9
     */
-    @GetMapping(value = {"userIntegrals/page/{pageNumber}/{pageSize}" , "userIntegrals/{pageNumber}"})
-    public OutJSON findRankingByPage(@PathVariable(value = "pageNumber")
-                                             int pageNumber,
-                                     @PathVariable(required = false)
-                                             Integer pageSize) {
+    @GetMapping("userIntegrals/{pageNumber}")
+    public OutJSON findRankingByPage(@PathVariable(value = "pageNumber") int pageNumber) {
         try {
-            // 如果没有传每页显示数量设置为8条
-            if (null==pageSize){
-                pageSize = 8;
-            }
+            // 每页显示数量设置为8条
+            int pageSize = 8;
             // 查询总条数
             int total = (int) userService.countUsersByView();
 
@@ -204,7 +205,7 @@ public class UserController {
                                                          int pageNumber,
                                                  @PathVariable(required = false)
                                                          Integer pageSize,
-                                                 @PathVariable(value = "condition") String condition) {
+                                                 @PathVariable(value = "condition" , required = false) String condition) {
         try {
             // 如果没有传每页显示数量设置为8条
             if (null==pageSize){
@@ -298,7 +299,12 @@ public class UserController {
     public OutJSON addUser(User user) {
         try {
             int i=userService.addUser(user);
-            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);
+            if(i==1)
+                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);
+            if(i==2){
+                return OutJSON.getInstance(CodeAndMessageEnum.USER_ADD_ERROR);
+            }
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_OPERATION_ERROR);
         } catch (Exception e) {
             log.error( e.getMessage());
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
@@ -315,10 +321,14 @@ public class UserController {
     @ResponseBody
     @PutMapping(value = "user")
     public OutJSON upUser(User user) {
-
         try {
             int i=userService.upUser(user);
-            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);
+            if(i==1)
+                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);
+            if(i==2){
+                return OutJSON.getInstance(CodeAndMessageEnum.USER_UP_ERROR);
+            }
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_OPERATION_ERROR);
         } catch (Exception e) {
             log.error( e.getMessage());
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
@@ -337,8 +347,6 @@ public class UserController {
 
         try {
             List<User> userRole = userService.findUserRole();
-            if (null != userRole)
-                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS , userRole);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -364,8 +372,6 @@ public class UserController {
         try {
             PageHelper.startPage(pageNumber, pageSize);
             List<User> list = userService.findRoleUser();
-            if(list==null)
-                return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
             PageInfo pageInfo = new PageInfo(list, 5);
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, pageInfo);
         } catch (Exception e) {

@@ -47,18 +47,15 @@ public class TaskController {
      * 分页查寻任务
      * @param callPage 调用的页面
      * @param userId 员工id
-     * @param pageNamber 目标页面
-     * @param pageSize 每页条数
+     * @param pageNumber 目标页面
      * @return: com.kaituo.pms.utils.OutJSON
      * @Author: 苏泽华
      * @Date: 2018/8/13
      */
-    @GetMapping(value = {"tasks/status/{callPage}/{pageNamber}/{pageSize}" ,
-                            "tasks/status/{callPage}/{pageNamber}"})
+    @GetMapping("task/status/list/{callPage}/{pageNumber}")
     public OutJSON findCollectionStatus(@PathVariable("callPage") String callPage ,
                                         @SessionAttribute("userId") Integer userId,
-                                        @PathVariable(value = "pageNamber") int pageNamber ,
-                                       @PathVariable(value = "pageSize" , required = false) int pageSize) {
+                                        @PathVariable(value = "pageNumber") int pageNumber) {
         if (null == userId){
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
         }
@@ -73,19 +70,19 @@ public class TaskController {
                     taskService.expiredVerification();
                     //查询所有已发布但未被领取的任务的信息
                     //分页
-                    return taskService.getStatesTaskByPage(pageNamber , pageSize , status);
+                    return taskService.getStatesTaskByPage(pageNumber , null , status);
                 // 未完成页面调用
                 case Constant.MISSION_CENTER_TASK_LIST_UNDONE:
                     // 处理超时数据
                     taskService.timeOutDetection();
                     //查询所有已发布但未被领取的任务的信息
                     //分页
-                    return taskService.getUndoneByPage(pageNamber , pageSize , userId);
+                    return taskService.getUndoneByPage(pageNumber , null , userId);
                 // 已完成页面调用
                 case Constant.MISSION_CENTER_TASK_LIST_COMPLETED:
                     //查询所有当前id的已完成数据
                     //分页
-                    return taskService.getStatesTaskByPage(pageNamber , pageSize , Constant.MISSION_COMPLETED , userId);
+                    return taskService.getStatesTaskByPage(pageNumber , null , Constant.MISSION_COMPLETED , userId);
                 default:
                     return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR,"调用页面错误");
         }
@@ -106,8 +103,7 @@ public class TaskController {
      * @Author: 苏泽华
      * @Date: 2018/8/13
      */
-    @GetMapping(value = {"tasks/status/{callPage}/{pageNamber}/{pageSize}/{userId}" ,
-            "tasks/status/c/{callPage}/p/{pageNamber}/u/{userId}"})
+    @GetMapping("tasks/status/list/{callPage}/{pageNamber}/{userId}")
     public OutJSON findCollectionStatus(@PathVariable("callPage") String callPage ,
                                         @PathVariable("userId") int userId,
                                         @PathVariable(value = "pageNamber") int pageNamber ,
