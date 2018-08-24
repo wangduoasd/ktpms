@@ -36,6 +36,7 @@ public class OutJSON {
 
     public  static OutJSON getInstance(CodeAndMessageEnum codeAndMessageEnum){
         OutJSON outJSON = OutJSONHolder.instance;
+        outJSON.data=null;
         outJSON.code = codeAndMessageEnum.getCode();
         outJSON.message = codeAndMessageEnum.getMessage();
         return  outJSON;

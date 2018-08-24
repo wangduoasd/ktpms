@@ -38,10 +38,9 @@ public class PositionController {
     @ResponseBody
     @GetMapping(value = "positions/{deptId}")
     public OutJSON findAllDept(@PathVariable(value = "deptId") int deptId) {
-
         try {
             List<Position> list = positionService.getPositionNameBydeptId(deptId);
-            if(list==null)
+            if(list.size()==0||list==null)
                 return OutJSON.getInstance(CodeAndMessageEnum.POSITION_FIND_ERROR);
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, list);
         } catch (Exception e) {

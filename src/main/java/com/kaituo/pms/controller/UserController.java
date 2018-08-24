@@ -320,9 +320,9 @@ public class UserController {
      　　*/
     @ResponseBody
     @PutMapping(value = "user")
-    public OutJSON upUser(User user) {
+    public OutJSON upUser(User user,@RequestParam("oldUserId") int oldUserId) {
         try {
-            int i=userService.upUser(user);
+            int i=userService.upUser(user,oldUserId);
             if(i==1)
                 return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);
             if(i==2){
@@ -344,17 +344,17 @@ public class UserController {
      　　*/
     @GetMapping(value = "role/users")
     public OutJSON findUserRole() {
-
         try {
             List<User> userRole = userService.findUserRole();
-
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,userRole);
         } catch (Exception e) {
-            e.printStackTrace();
             log.error("" + e.getMessage());
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
+
 
         }
         //个人信息获取失败
-        return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
+
     }
     /**
      　  * @Description: 部门设置_权限用户列表

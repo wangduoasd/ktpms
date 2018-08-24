@@ -72,7 +72,7 @@ public class UserRoleServiceImpl implements UserRoleService {
     @Transactional(rollbackFor = Exception.class)
     public int upUserRoles(String[] roleArray, Integer userId) {
         delUserRole(userId);
-        addRoles( roleArray,userId);
-        return 0;
+        return addRoles( roleArray,userId);
+
     }
 }

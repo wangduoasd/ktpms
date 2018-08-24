@@ -187,12 +187,18 @@ public class UserServiceImpl implements UserService/*,UserDetailsService */{
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public int upUser(User user) {
+    public int upUser(User user,int oldUserId) {
+        if(user.getUserId()==oldUserId){return userMapper.updateByPrimaryKey(user);}
         User userById = findUserById(user.getUserId());
         if(userById!=null)
             return 2;
-        return userMapper.updateByPrimaryKey(user);
+            UserExample example = new UserExample();
+            UserExample.Criteria criteria = example.createCriteria();
+            criteria.andUserIdEqualTo(oldUserId);
+            return userMapper.updateByExample(user, example);
+
     }
+
 
     @Override
     @Transactional(rollbackFor = Exception.class)

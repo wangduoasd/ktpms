@@ -35,7 +35,25 @@ import java.util.List;
 public class DeptController {
     @Autowired
     DeptService deptService;
-
+    /**
+     　  * @Description: 风控中心_部门设置  部门列表
+     　　* @param [dept, positionArray]
+     　　* @return com.kaituo.pms.utils.OutJSON
+     　　* @throws
+     　　* @author 张金行
+     　　* @date 2018/8/23 0023 15:54
+     　　*/
+    @GetMapping(value ="depts")
+    @ResponseBody
+    public OutJSON getAllDeptName() {
+        try {
+            List<Dept> list = deptService.getAllDeptName();
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, list);
+        } catch (Exception e) {
+            log.error( e.getMessage());
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
+        }
+    }
     /**
      　  * @Description: 风控中心_部门设置  部门列表
      　　* @param [dept, positionArray]

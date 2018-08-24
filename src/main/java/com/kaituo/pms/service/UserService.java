@@ -77,7 +77,7 @@ public interface UserService {
 
     int addUser(User user);
 
-    int upUser(User user);
+    int upUser(User user,int userId);
 
     List<User> findUserRole();
 
@@ -85,4 +85,7 @@ public interface UserService {
     List<User> findRoleUser();
 
     User findUserById(int userId);
+
+    //userID唯一校验
+
 }

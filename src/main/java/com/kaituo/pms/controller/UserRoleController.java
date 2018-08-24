@@ -83,7 +83,7 @@ public class UserRoleController {
     public OutJSON addUserRole(@PathVariable("userId") int userId) {
         try {
             int i=userRoleService.delUserRole(userId);
-            if(i==1)
+            if(i>=1)
                 return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_OPERATION_ERROR);
         } catch (Exception e) {
