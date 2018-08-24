@@ -186,7 +186,7 @@ public class PrizeControllrt {
        if (null == user || null == prize) {
            //用户名或商品为空
            return OutJSON.getInstance(CodeAndMessageEnum.GET_STATES_TASK_BY_PAGE_NULL);
-       } else if (number >prize.getPrizeQuota()) {
+       } else if (number >prize.getPrizeQuota()||prize.getPrizeAmount()<0) {
            //购买失败，超过上限
            return OutJSON.getInstance(CodeAndMessageEnum.FIND_PRIZE_CAP);
        } else if (totalPrice > user.getUserIntegral()) {
