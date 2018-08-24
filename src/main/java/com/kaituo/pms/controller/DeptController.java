@@ -35,7 +35,7 @@ import java.util.List;
 public class DeptController {
     @Autowired
     DeptService deptService;
-    @ResponseBody
+
     /**
      　  * @Description: 风控中心_部门设置  部门列表
      　　* @param [dept, positionArray]
@@ -45,7 +45,7 @@ public class DeptController {
      　　* @date 2018/8/23 0023 15:54
      　　*/
     @GetMapping(value ="depts/{pn}")
-    @Cacheable(cacheNames = "dept")
+    @ResponseBody
     public OutJSON findAllDept(@PathVariable(value = "pn") int pageNumber,
                                @RequestParam(value = "pageSize",defaultValue ="8") Integer pageSize
     ) {
@@ -110,12 +110,13 @@ public class DeptController {
     @PutMapping("dept")
     @ResponseBody
     public OutJSON upDept(Dept dept,@RequestParam("positionArray") String[] positionArray) {
-
         try {
             int i = deptService.upDept(dept, positionArray);
             if(i==1){
                 return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);}
-                return OutJSON.getInstance(CodeAndMessageEnum.ALL_OPERATION_ERROR);
+            if(i==2)
+                return OutJSON.getInstance(CodeAndMessageEnum.DEPT_ADD_ERROR);
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_OPERATION_ERROR);
 
         } catch (Exception e) {
             log.error( e.getMessage());

@@ -16,7 +16,7 @@ public interface DeptService {
    //添加部门
     int addDept(Dept dept,String[] positionArray);
 
-    Dept findDeptByName(String deptName);
+    List<Dept> findDeptByName(String deptName);
 
     //删除部门，删除之前先检查
     int delDept(int deptId) ;
