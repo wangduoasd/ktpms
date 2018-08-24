@@ -30,7 +30,6 @@ public class PmsApplicationTests {
                 System.out.println("The 4thread can only run once!");
             }
         }, 4000, TimeUnit.MILLISECONDS);
-
         exec.schedule(new Runnable() {
             public void run() {
                 System.out.println("The 3thread can only run once!");
@@ -46,7 +45,7 @@ public class PmsApplicationTests {
                 System.out.println("The 25thread can only run once!");
             }
         }, 25000, TimeUnit.MILLISECONDS);
-        try {
+/*        try {
             // 向学生传达“问题解答完毕后请举手示意！”
             exec.shutdown();
 
@@ -60,7 +59,7 @@ public class PmsApplicationTests {
             // awaitTermination方法被中断的时候也中止线程池中全部的线程的执行。
             System.out.println("awaitTermination interrupted: " + e);
             exec.shutdownNow();
-        }
+        }*/
         exec.shutdown();
     }
 }

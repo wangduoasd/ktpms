@@ -262,6 +262,14 @@ public class UserController {
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
         }
     }
+    /**
+     　  * @Description: 综服中心_员工设置_员工搜索  通过部门名或者员工名
+     　　* @param [user]
+     　　* @return com.kaituo.pms.utils.OutJSON
+     　　* @throws
+     　　* @author 张金行
+     　　* @date 2018/8/23 0023 13:42
+     　　*/
     @ResponseBody
     @GetMapping(value = "users/s/{keyword}/{pn}")
     public OutJSON findByKeyWord(@PathVariable(value = "keyword") String keyword,
@@ -277,6 +285,14 @@ public class UserController {
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
         }
     }
+    /**
+     　  * @Description: 综服中心_员工设置_新增员工
+     　　* @param [user]
+     　　* @return com.kaituo.pms.utils.OutJSON
+     　　* @throws
+     　　* @author 张金行
+     　　* @date 2018/8/23 0023 13:42
+     　　*/
     @ResponseBody
     @PostMapping(value = "user")
     public OutJSON addUser(User user) {
@@ -288,4 +304,74 @@ public class UserController {
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
         }
     }
+    /**
+     　  * @Description: 综服中心_员工设置_修改员工
+     　　* @param [user]
+     　　* @return com.kaituo.pms.utils.OutJSON
+     　　* @throws
+     　　* @author 张金行
+     　　* @date 2018/8/23 0023 13:40
+     　　*/
+    @ResponseBody
+    @PutMapping(value = "user")
+    public OutJSON upUser(User user) {
+
+        try {
+            int i=userService.upUser(user);
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);
+        } catch (Exception e) {
+            log.error( e.getMessage());
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
+        }
+    }
+    /**
+     　  * @Description: 权限设置_添加员工_下拉列表 获取没有权限的用户
+     　　* @param []
+     　　* @return com.kaituo.pms.utils.OutJSON
+     　　* @throws
+     　　* @author 张金行
+     　　* @date 2018/8/23 0023 13:37
+     　　*/
+    @GetMapping(value = "role/users")
+    public OutJSON findUserRole() {
+
+        try {
+            List<User> userRole = userService.findUserRole();
+            if (null != userRole)
+                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS , userRole);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("" + e.getMessage());
+
+        }
+        //个人信息获取失败
+        return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
+    }
+    /**
+     　  * @Description: 部门设置_权限用户列表
+     　　* @param [pageNumber, pageSize]
+     　　* @return com.kaituo.pms.utils.OutJSON
+     　　* @throws
+     　　* @author 张金行
+     　　* @date 2018/8/23 0023 13:39
+     　　*/
+    @ResponseBody
+    @GetMapping(value = "role/users/{pn}")
+    public OutJSON findRoleUser(@PathVariable(value = "pn") int pageNumber,
+                                @RequestParam(value = "pageSize", defaultValue = "5") int pageSize) {
+
+        try {
+            PageHelper.startPage(pageNumber, pageSize);
+            List<User> list = userService.findRoleUser();
+            if(list==null)
+                return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
+            PageInfo pageInfo = new PageInfo(list, 5);
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, pageInfo);
+        } catch (Exception e) {
+            log.error( e.getMessage());
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
+        }
+    }
+
 }

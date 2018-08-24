@@ -167,6 +167,7 @@ public class TaskServiceImpl implements TaskService {
      * @Date: 2018/8/13
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public List<Task> listUnfinishedTask(int userId) {
         TaskExample example = new TaskExample();
         TaskExample.Criteria criteria = example.createCriteria();
@@ -450,6 +451,7 @@ public class TaskServiceImpl implements TaskService {
      * @Date: 2018/8/20
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public OutJSON listPublishedTask(int pageNumber , Integer pageSize) {
         // 如果每页条数为空则将每页条数设为4
         if (null==pageSize){
@@ -549,6 +551,7 @@ public class TaskServiceImpl implements TaskService {
      * @Date: 2018/8/20
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public int publishedTaskCount() {
         return taskMapper.publishedTaskCount();
     }
@@ -563,6 +566,7 @@ public class TaskServiceImpl implements TaskService {
      * @Date: 2018/8/20
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public int invalidTaskCount() {
         return taskMapper.invalidTaskCount();
     }
@@ -718,6 +722,7 @@ public class TaskServiceImpl implements TaskService {
      * @Date: 2018/8/21
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public boolean republish(Task task) {
         // 如果任务在已失效页面
         if (task.getTaskStatus() == Constant.TASK_CANCELDE_IN_ADVANCE ||

@@ -15,7 +15,7 @@ public interface PositionMapper {
 
     int deleteByExample(PositionExample example);
 
-    int deleteByPrimaryKey(Integer positionId);
+    int deleteByPrimaryKey(Integer deptPositionId);
 
     int insert(Position record);
 
@@ -23,7 +23,7 @@ public interface PositionMapper {
 
     List<Position> selectByExample(PositionExample example);
 
-    Position selectByPrimaryKey(Integer positionId);
+    Position selectByPrimaryKey(Integer deptPositionId);
 
     int updateByExampleSelective(@Param("record") Position record, @Param("example") PositionExample example);
 

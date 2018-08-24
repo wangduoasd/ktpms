@@ -167,13 +167,5 @@ public class ExchangeController {
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
         }
     }
-    /**
-     　  * @Description:  综服中心_商品兑换列表_搜索（根据用户名和商品名）
-     　　* @param keyWord, pageNumber
-     　　* @return com.kaituo.pms.utils.OutJSON
-     　　* @throws
-     　　* @author 张金行
-     　　* @date 2018/8/10 0010 11:00
-     　　*/
 
 }

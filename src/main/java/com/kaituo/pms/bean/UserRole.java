@@ -29,4 +29,5 @@ public class UserRole {
     public void setRoleId(Integer roleId) {
         this.roleId = roleId;
     }
+
 }

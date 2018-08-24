@@ -1,5 +1,6 @@
 package com.kaituo.pms.controller;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.kaituo.pms.bean.Dept;
@@ -7,11 +8,17 @@ import com.kaituo.pms.bean.Exchange;
 import com.kaituo.pms.service.DeptService;
 import com.kaituo.pms.utils.CodeAndMessageEnum;
 import com.kaituo.pms.utils.OutJSON;
+import com.mysql.cj.xdevapi.JsonArray;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import sun.reflect.generics.scope.Scope;
 
+import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
+import java.sql.SQLNonTransientException;
 import java.util.List;
 
 /**
@@ -24,20 +31,80 @@ import java.util.List;
  */
 @Slf4j
 @Controller
+@CrossOrigin
 public class DeptController {
     @Autowired
     DeptService deptService;
     @ResponseBody
-    @GetMapping(value = "depts/{pn}")
+    /**
+     　  * @Description: 风控中心_部门设置  部门列表
+     　　* @param [dept, positionArray]
+     　　* @return com.kaituo.pms.utils.OutJSON
+     　　* @throws
+     　　* @author 张金行
+     　　* @date 2018/8/23 0023 15:54
+     　　*/
+    @GetMapping(value ="depts/{pn}")
+    @Cacheable(cacheNames = "dept")
     public OutJSON findAllDept(@PathVariable(value = "pn") int pageNumber,
-                                      @RequestParam(value = "pageSize", defaultValue = "8") int pageSize
+                               @RequestParam(value = "pageSize",defaultValue ="8") Integer pageSize
     ) {
         try {
+
             PageHelper.startPage(pageNumber, pageSize);
-            //根据userId查询视图中该用户所有状态 状态1（显示为：未发送）  状态2（显示为：确定领取），状态3（显示为：已经领取）  的兑换列表
-            List<Dept> list = deptService.findAllDept();;
+            List<Dept> list = deptService.findAllDept();
             PageInfo pageInfo = new PageInfo(list, 5);
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, pageInfo);
+        } catch (Exception e) {
+            log.error( e.getMessage());
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
+        }
+    }
+    /**
+     　  * @Description: 风控中心_部门设置  新建部门
+     　　* @param [dept, positionArray]
+     　　* @return com.kaituo.pms.utils.OutJSON
+     　　* @throws
+     　　* @author 张金行
+     　　* @date 2018/8/23 0023 15:54
+     　　*/
+    @ResponseBody
+    @PostMapping (value = "dept")
+    public OutJSON addDept(Dept dept,@RequestParam("positionArray") String[] positionArray) {
+        try {
+             deptService.addDept(dept,positionArray);
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);
+        } catch (Exception e) {
+            log.error( e.getMessage());
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
+        }
+    }
+    @DeleteMapping("dept/{deptId}")
+    @ResponseBody
+    public OutJSON delDept(@PathVariable("deptId")int deptId) {
+        try {
+            deptService.delDept(deptId);
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);
+        }catch (Exception e){
+
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
+        }
+    }
+    /**
+     　  * @Description: 风控中心_部门设置  修改部门
+     　　* @param [dept, positionArray]
+     　　* @return com.kaituo.pms.utils.OutJSON
+     　　* @throws
+     　　* @author 张金行
+     　　* @date 2018/8/23 0023 15:54
+     　　*/
+    @PutMapping("dept")
+    @ResponseBody
+    public OutJSON upDept(Dept dept,@RequestParam("positionArray") String[] positionArray) {
+
+        try {
+            deptService.upDept(dept,positionArray);
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);
         } catch (Exception e) {
             log.error( e.getMessage());
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
