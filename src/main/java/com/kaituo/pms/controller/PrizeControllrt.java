@@ -11,6 +11,7 @@ import com.kaituo.pms.utils.Constant;
 import com.kaituo.pms.utils.OutJSON;
 import com.kaituo.pms.utils.Util;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.logging.log4j.core.config.plugins.validation.constraints.Required;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -32,12 +33,10 @@ public class PrizeControllrt {
      * @Author: 侯鹏
      * @Date: 2018/8/14
      */
-    @GetMapping( value ={"prizes/s/{prizeName}/{pageNumber}",
-            "prizes/s/{prizeName}/{pageNumber}/{pageSize}"
-    })
+    @GetMapping( value ="prizes/s/{prizeName}/{pageNumber}")
     public OutJSON findByName(@PathVariable("prizeName") String prizeName,
                               @PathVariable(value = "pageNumber") int pageNumber,
-                              @PathVariable(value = "pageSize") int pageSize){
+                              @RequestParam (value = "pageSize",defaultValue = "4") int pageSize){
         try {
             PageHelper.startPage(pageNumber, pageSize);
             List<Prize> prizeList = prizeService.selectByName(prizeName);
@@ -59,12 +58,10 @@ public class PrizeControllrt {
    * @Author: 侯鹏
    * @Date:  2018/8/17
    */
-   @GetMapping(value={"prizes/{userId}/{pageNumber}/{pageSize}",
-           "prizes/{userId}/{pageNumber}"
-   })
+   @GetMapping(value="prizes/{userId}/{pageNumber}")
    public OutJSON findAllPrizePrize(@PathVariable("userId") int userId,
                                     @PathVariable(value = "pageNumber") int pageNumber,
-                                    @PathVariable(value = "pageSize") int pageSize){
+                                    @RequestParam (value = "pageSize",defaultValue = "4") int pageSize){
        try {
            PageHelper.startPage(pageNumber, pageSize);
            List<Prize> prizess = prizeService.findAllPrizePrize(userId);
@@ -97,7 +94,7 @@ public class PrizeControllrt {
        if (null == user || null == prize) {
            //用户名或商品为空
            return OutJSON.getInstance(CodeAndMessageEnum.GET_STATES_TASK_BY_PAGE_NULL);
-       } else if (number >prize.getPrizeQuota()) {
+       } else if (number >prize.getPrizeQuota()||prize.getPrizeAmount()<0) {
            //购买失败，超过上限
            return OutJSON.getInstance(CodeAndMessageEnum.FIND_PRIZE_CAP);
        } else if (totalPrice > user.getUserIntegral()) {
@@ -120,8 +117,8 @@ public class PrizeControllrt {
    * @Author: 侯鹏
    * @Date:2018/8/16
    */
-   @GetMapping("prizes/{pageNumber}/{pageSize}")
-   public OutJSON listAllPrize(@PathVariable("pageNumber") int pageNumber,@PathVariable("pageSize") int pageSize ){
+   @GetMapping("prizes/{pageNumber}")
+   public OutJSON listAllPrize(@PathVariable("pageNumber") int pageNumber, @RequestParam (value = "pageSize",defaultValue = "4") int pageSize ){
        try {
            PageHelper.startPage(pageNumber,pageSize);
            List<Prize> prizes = prizeService.listAllPrize();
