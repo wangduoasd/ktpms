@@ -299,6 +299,15 @@ public class PrizeControllrt {
 
     }
 
+    /**
+     * 修改商品
+     * @Param:
+     * @param file
+     * @param prize
+     * @return: com.kaituo.pms.utils.OutJSON
+     * @Author: 苏泽华
+     * @Date: 2018/8/24
+     */
     @PutMapping("prize/modification")
     public OutJSON modifyPrize(MultipartFile file, Prize prize) {
         Map<String, Object> map = Util.imgUpload(file, Util.getImgRelativePath());

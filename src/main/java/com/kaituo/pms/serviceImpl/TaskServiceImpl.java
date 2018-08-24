@@ -719,11 +719,6 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     public boolean republish(Task task) {
-        // 如果任务在已失效页面
-        if (task.getTaskStatus() == Constant.TASK_CANCELDE_IN_ADVANCE ||
-                task.getTaskStatus() == Constant.TASK_COMPLETION_FAILED ||
-                task.getTaskStatus() == Constant.NO_ONE_ACCEPTS_THE_TASK ||
-                task.getTaskStatus() == Constant.MISSION_COMPLETED){
             // 修改任务字段
             // 重置任务次数
             task.setTaskNumber(1);
@@ -737,7 +732,6 @@ public class TaskServiceImpl implements TaskService {
             TaskExample.Criteria taskCriteria = taskExample.createCriteria();
             taskCriteria.andTaskIdEqualTo(task.getTaskId());
             taskMapper.updateByExample(task , taskExample);
-        }
-        return false;
+            return true;
     }
 }
