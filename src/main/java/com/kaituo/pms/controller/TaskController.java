@@ -437,17 +437,6 @@ public class TaskController {
 
     }
 
-    /**
-     * 重新发布任务
-     * @Param:
-     * @param file
-     * @param starttime
-     * @param endtime
-     * @param task
-     * @return: com.kaituo.pms.utils.OutJSON
-     * @Author: 苏泽华
-     * @Date: 2018/8/24
-     */
     @PutMapping("task/again")
     public OutJSON republish(MultipartFile file,String starttime , String endtime , Task task){
         // 图片上传并获取上传的状态
