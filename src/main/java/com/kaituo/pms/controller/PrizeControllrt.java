@@ -38,15 +38,19 @@ public class PrizeControllrt {
                               @PathVariable(value = "pageNumber") int pageNumber,
                               @RequestParam (value = "pageSize",defaultValue = "4") int pageSize){
         try {
+            prizeName = "%" + prizeName +"%";
             PageHelper.startPage(pageNumber, pageSize);
             List<Prize> prizeList = prizeService.selectByName(prizeName);
             PageInfo pageInfo = new PageInfo<>(prizeList,5);
             if(prizeList!=null&&prizeList.size()>0){
                 return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,pageInfo);
             }
+
         } catch (Exception e) {
+            e.printStackTrace();
             log.error(e.getMessage());
         }
+
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
     }
 
@@ -141,17 +145,35 @@ public class PrizeControllrt {
    * @Date:2018/8/21
    */
    @DeleteMapping("/prize/{prizeId}")
-    public OutJSON deleteById(@PathVariable("prizeId") int prizeId) {
-       int i = prizeService.deleteById(prizeId);
+   public OutJSON deleteById(@PathVariable("prizeId") int prizeId) {
+       Prize prize = prizeService.selectByPrimaryKey(prizeId);
+       int deleteFalg = 0;
        try {
-           if (i > 0) {
-               return OutJSON.getInstance(CodeAndMessageEnum.DELELETE_SUCCESS, i);
+           if (null != prize.getPrizeImage()) {
+               deleteFalg = Util.imgDelect(prize.getPrizeImage());
+           }else {
+               return OutJSON.getInstance(CodeAndMessageEnum.DELETE_ERROR);
            }
-
+           switch (deleteFalg){
+               case Constant.IMG_DELECT_ERROR:
+                   return OutJSON.getInstance(CodeAndMessageEnum.DELETE_ERROR);
+               case Constant.IMG_DELECT_SUCCESS:
+                   int i = prizeService.deleteById(prizeId);
+                   if (i > 0) {
+                       return OutJSON.getInstance(CodeAndMessageEnum.DELELETE_SUCCESS, i);
+                   }else {
+                       return OutJSON.getInstance(CodeAndMessageEnum.DELETE_ERROR);
+                   }
+               case Constant.IMG_UPLOSD_EMPTY:
+                   return OutJSON.getInstance(CodeAndMessageEnum.DELETE_ERROR);
+               default:
+                   return OutJSON.getInstance(CodeAndMessageEnum.DELETE_ERROR);
+           }
        } catch (Exception e) {
-           log.error(e.getMessage());
+           log.error( e.getMessage());
+           e.printStackTrace();
+           return OutJSON.getInstance(CodeAndMessageEnum.DELETE_ERROR);
        }
-       return OutJSON.getInstance(CodeAndMessageEnum.DELETE_ERROR);
    }
    /**
     *
@@ -163,6 +185,7 @@ public class PrizeControllrt {
    */
    @GetMapping("/prize/s/{prizeName}")
    public OutJSON selectServiceByName(@PathVariable("prizeName") String prizeName){
+       prizeName="%"+prizeName+"%";
        List<Prize> prizeList = prizeService.selectServiceByName(prizeName);
        if(null!=prizeList&&prizeList.size()>0){
            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, prizeList);
@@ -276,6 +299,7 @@ public class PrizeControllrt {
             if(goodsshelves>0){
                 return OutJSON.getInstance(CodeAndMessageEnum.GOODS_SHELVES,goodsshelves);
             }
+
         } catch (Exception e) {
             e.printStackTrace();
             log.error(e.getMessage(),e);
