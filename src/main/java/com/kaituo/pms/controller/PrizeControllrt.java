@@ -201,7 +201,7 @@ public class PrizeControllrt {
      * @Author: 侯鹏
      * @Date: 2018/8/21
      */
-    @PostMapping("prize/adjunction")
+    @PostMapping("prize")
     public OutJSON addPrize(@RequestParam("file") MultipartFile file , Prize prize) {
         try {
             Map<String, Object> map = Util.imgUpload(file, Util.getImgRelativePath());

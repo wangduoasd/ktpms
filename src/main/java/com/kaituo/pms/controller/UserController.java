@@ -249,7 +249,7 @@ public class UserController {
     @ResponseBody
     @GetMapping(value = "users/{pn}")
     public OutJSON findAllUser(@PathVariable(value = "pn") int pageNumber,
-                                      @RequestParam(value = "pageSize", defaultValue = "5") int pageSize) {
+                                      @RequestParam(value = "pageSize", defaultValue = "8") int pageSize) {
         try {
             PageHelper.startPage(pageNumber, pageSize);
             List<User> list = userService.findAllUser();
@@ -274,7 +274,7 @@ public class UserController {
     @GetMapping(value = "users/s/{keyword}/{pn}")
     public OutJSON findByKeyWord(@PathVariable(value = "keyword") String keyword,
                                @PathVariable(value = "pn") int pageNumber,
-                               @RequestParam(value = "pageSize", defaultValue = "5") int pageSize) {
+                               @RequestParam(value = "pageSize", defaultValue = "8") int pageSize) {
         try {
             PageHelper.startPage(pageNumber, pageSize);
             List<User> list = userService.findByKeyWord(keyword);
@@ -359,7 +359,7 @@ public class UserController {
     @ResponseBody
     @GetMapping(value = "role/users/{pn}")
     public OutJSON findRoleUser(@PathVariable(value = "pn") int pageNumber,
-                                @RequestParam(value = "pageSize", defaultValue = "5") int pageSize) {
+                                @RequestParam(value = "pageSize", defaultValue = "8") int pageSize) {
 
         try {
             PageHelper.startPage(pageNumber, pageSize);
