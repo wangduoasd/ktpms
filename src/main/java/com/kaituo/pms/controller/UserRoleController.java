@@ -41,7 +41,9 @@ public class UserRoleController {
     public OutJSON addUserRole(User user, @RequestParam String[] roleArray) {
         try {
             int i=userRoleService.addRoles(roleArray,user.getUserId());
-            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);
+            if(i==1)
+                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_OPERATION_ERROR);
         } catch (Exception e) {
             log.error( e.getMessage());
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
@@ -60,7 +62,9 @@ public class UserRoleController {
     public OutJSON upUserRole(User user, @RequestParam String[] roleArray) {
         try {
             int i=userRoleService.upUserRoles(roleArray,user.getUserId());
-            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);
+            if(i==1)
+                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_OPERATION_ERROR);
         } catch (Exception e) {
             log.error( e.getMessage());
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
@@ -79,7 +83,9 @@ public class UserRoleController {
     public OutJSON addUserRole(@PathVariable("userId") int userId) {
         try {
             int i=userRoleService.delUserRole(userId);
-            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);
+            if(i==1)
+                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_OPERATION_ERROR);
         } catch (Exception e) {
             log.error( e.getMessage());
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);

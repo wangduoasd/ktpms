@@ -299,10 +299,12 @@ public class UserController {
     public OutJSON addUser(User user) {
         try {
             int i=userService.addUser(user);
+            if(i==1)
+                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);
             if(i==2){
                 return OutJSON.getInstance(CodeAndMessageEnum.USER_ADD_ERROR);
             }
-            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_OPERATION_ERROR);
         } catch (Exception e) {
             log.error( e.getMessage());
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
@@ -319,10 +321,14 @@ public class UserController {
     @ResponseBody
     @PutMapping(value = "user")
     public OutJSON upUser(User user) {
-
         try {
             int i=userService.upUser(user);
-            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);
+            if(i==1)
+                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);
+            if(i==2){
+                return OutJSON.getInstance(CodeAndMessageEnum.USER_UP_ERROR);
+            }
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_OPERATION_ERROR);
         } catch (Exception e) {
             log.error( e.getMessage());
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
@@ -341,8 +347,6 @@ public class UserController {
 
         try {
             List<User> userRole = userService.findUserRole();
-            if (null != userRole)
-                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS , userRole);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -368,8 +372,6 @@ public class UserController {
         try {
             PageHelper.startPage(pageNumber, pageSize);
             List<User> list = userService.findRoleUser();
-            if(list==null)
-                return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
             PageInfo pageInfo = new PageInfo(list, 5);
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, pageInfo);
         } catch (Exception e) {

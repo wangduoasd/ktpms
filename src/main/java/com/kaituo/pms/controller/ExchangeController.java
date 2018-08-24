@@ -70,10 +70,12 @@ public class ExchangeController {
         try {
             //根据userId将视图中该用户状态从  状态2（显示为：确定领取）改变到 状态3（显示为：已经领取）
             int i = exchangeService.updateExchange(exchangeId, 2,3);
+            if(i==1)
+                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);
             if(i==2){
                 return OutJSON.getInstance(CodeAndMessageEnum.EXCHANGE_STATUS_ERROR);
             }
-            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);
+            return  OutJSON.getInstance(CodeAndMessageEnum.ALL_OPERATION_ERROR);
         } catch (Exception e) {
             log.error(e.getMessage());
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
@@ -139,10 +141,12 @@ public class ExchangeController {
     public OutJSON updateExchangeList(@PathVariable("exchangeId") int exchangeId) {
         try {
             int i = exchangeService.updateExchange(exchangeId, 1,2);
+            if(i==1)
+                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);
             if(i==2){
                 return OutJSON.getInstance(CodeAndMessageEnum.EXCHANGE_STATUS_ERROR);
             }
-            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);
+            return  OutJSON.getInstance(CodeAndMessageEnum.ALL_OPERATION_ERROR);
         } catch (Exception e) {
             log.error(e.getMessage());
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);

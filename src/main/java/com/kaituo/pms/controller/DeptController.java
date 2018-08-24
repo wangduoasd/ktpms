@@ -50,7 +50,6 @@ public class DeptController {
                                @RequestParam(value = "pageSize",defaultValue ="8") Integer pageSize
     ) {
         try {
-
             PageHelper.startPage(pageNumber, pageSize);
             List<Dept> list = deptService.findAllDept();
             PageInfo pageInfo = new PageInfo(list, 5);
@@ -72,8 +71,14 @@ public class DeptController {
     @PostMapping (value = "dept")
     public OutJSON addDept(Dept dept,@RequestParam("positionArray") String[] positionArray) {
         try {
-             deptService.addDept(dept,positionArray);
-            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);
+
+            int i= deptService.addDept(dept,positionArray);
+            if(i==1){
+                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);}
+            if(i==2)
+                return OutJSON.getInstance(CodeAndMessageEnum.DEPT_ADD_ERROR);
+                return OutJSON.getInstance(CodeAndMessageEnum.ALL_OPERATION_ERROR);
+
         } catch (Exception e) {
             log.error( e.getMessage());
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
@@ -86,6 +91,8 @@ public class DeptController {
             int i = deptService.delDept(deptId);
             if(i==1){
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);}
+            if(i==0)
+                return OutJSON.getInstance(CodeAndMessageEnum.ALL_OPERATION_ERROR);
             String message="此部门还有"+(i-1)+"名员工，不能删除";
             return OutJSON.getInstance(CodeAndMessageEnum.DELETE_ERROR,message);
         }catch (Exception e){
@@ -105,8 +112,11 @@ public class DeptController {
     public OutJSON upDept(Dept dept,@RequestParam("positionArray") String[] positionArray) {
 
         try {
-            deptService.upDept(dept,positionArray);
-            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);
+            int i = deptService.upDept(dept, positionArray);
+            if(i==1){
+                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);}
+                return OutJSON.getInstance(CodeAndMessageEnum.ALL_OPERATION_ERROR);
+
         } catch (Exception e) {
             log.error( e.getMessage());
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
