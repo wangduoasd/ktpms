@@ -9,6 +9,7 @@ import com.kaituo.pms.dao.UserMapper;
 import com.kaituo.pms.service.IntegralService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 /**
  * 查询个人积分明细
 * @Description:个人中心，积分明细
@@ -23,18 +24,12 @@ import java.util.List;
 import java.util.Map;
 
 @Service
+@Transactional
 public class IntergralServiceImpl implements IntegralService {
     @Autowired
     IntegralMapper integralMapper;
     @Autowired
     UserMapper userMapper;
-
-//    @Override
-////    public List<Integral> listIntegeral(int uid) {
-////        List<Integral> listIntergral  = integralMapper.selectALLIntegral();
-////        return listIntergral;
-////    }
-
 
     @Override
     public long integeralTotal(int uid) {
@@ -46,10 +41,6 @@ public class IntergralServiceImpl implements IntegralService {
 
     @Override
     public List<Map<String, Object>> listIntegeral(int uid) {
-       /* IntegralExample integralExample = new IntegralExample();
-        IntegralExample.Criteria integralCriteria = integralExample.createCriteria();
-        integralCriteria.andUserIdEqualTo(uid);*/
-
         IntegralExample integralExample = new IntegralExample();
         IntegralExample.Criteria criteria = integralExample.createCriteria();
         criteria.andUserIdEqualTo(uid);
@@ -76,8 +67,6 @@ public class IntergralServiceImpl implements IntegralService {
                     map.put("integralEndnum" , integral.getIntegralEndnum());
                     integralMap.add(map);
                 }
-
-                //
             }
         }
         return integralMap;

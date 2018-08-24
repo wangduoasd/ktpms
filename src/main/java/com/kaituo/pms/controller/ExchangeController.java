@@ -41,7 +41,7 @@ public class ExchangeController {
     @GetMapping(value = "exchangeRecords/{userId}/{pageNumber}")
     public OutJSON getExchangeRecords(@PathVariable("userId") int userId,
                                        @PathVariable(value = "pageNumber") int pageNumber,
-                                       @RequestParam(value = "pageSize", defaultValue = "5") int pageSize
+                                       @RequestParam(value = "pageSize", defaultValue = "4") int pageSize
                                   ) {
         try {
             PageHelper.startPage(pageNumber, pageSize);
@@ -88,7 +88,7 @@ public class ExchangeController {
      */
     @ResponseBody
     @GetMapping(value = "exchangeRecords/{userId}/s/{keyWord}/{pn}")
-    public OutJSON findExchange( @RequestParam(value = "pageNumber", defaultValue = "5") int pageSize,  @PathVariable("userId") int userId,@PathVariable("keyWord") String keyWord,@PathVariable(value = "pn") int pageNumber) {
+    public OutJSON findExchange( @RequestParam(value = "pageSize", defaultValue = "4") int pageSize,  @PathVariable("userId") int userId,@PathVariable("keyWord") String keyWord,@PathVariable(value = "pn") int pageNumber) {
         try {
             PageHelper.startPage(pageNumber, pageSize);
             //根据商品名keyWord搜索视图中该用户所有状态 状态1（显示为：未发送）  状态2（显示为：确定领取），状态3（显示为：已经领取）  的兑换列表
@@ -111,7 +111,7 @@ public class ExchangeController {
      　　*/
     @ResponseBody
     @GetMapping(value = "exchangeLists/{pn}")
-    public OutJSON getExchangeLists(@PathVariable(value = "pn") int pageNumber, @RequestParam(value = "pageNumber", defaultValue = "5") int pageSize) {
+    public OutJSON getExchangeLists(@PathVariable(value = "pn") int pageNumber, @RequestParam(value = "pageSize", defaultValue = "4") int pageSize) {
         try {
             PageHelper.startPage(pageNumber, pageSize);
             //查询视图中所有用户   状态2（显示为：确定兑换），状态3（显示为：已兑换）  的兑换列表
@@ -153,7 +153,7 @@ public class ExchangeController {
      　　*/
     @ResponseBody
     @GetMapping(value = "exchangelists/s/{keyWord}/{pn}")
-    public OutJSON findExchangelists( @RequestParam(value = "pageSize", defaultValue = "5") int pageSize, @PathVariable("keyWord") String keyWord,@PathVariable(value = "pn") int pageNumber) {
+    public OutJSON findExchangelists( @RequestParam(value = "pageSize", defaultValue = "4") int pageSize, @PathVariable("keyWord") String keyWord,@PathVariable(value = "pn") int pageNumber) {
         try {
             PageHelper.startPage(pageNumber, pageSize);
             //根据商品名keyWord搜索视图中该用户所有状态 状态1（显示为：未发送）  状态2（显示为：确定领取），状态3（显示为：已经领取）  的兑换列表
@@ -167,13 +167,5 @@ public class ExchangeController {
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
         }
     }
-    /**
-     　  * @Description:  综服中心_商品兑换列表_搜索（根据用户名和商品名）
-     　　* @param keyWord, pageNumber
-     　　* @return com.kaituo.pms.utils.OutJSON
-     　　* @throws
-     　　* @author 张金行
-     　　* @date 2018/8/10 0010 11:00
-     　　*/
 
 }

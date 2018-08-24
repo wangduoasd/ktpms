@@ -30,14 +30,49 @@ public class UserRoleServiceImpl implements UserRoleService {
     public String[] findAllRole(int userId) {
         UserRoleExample userRoleExample = new UserRoleExample();
         userRoleExample.createCriteria().andUserIdEqualTo(userId);
+        System.out.println(userId);
         List<UserRole> userRoles = userRoleMapper.selectByExample(userRoleExample);
-        String[] roleNames=new String[7];
-        int i=0;
-        for(UserRole userRole:userRoles){
-            roleNames[i]=""+userRole.getRoleId();
-            System.out.println("RoleId="+userRole.getRoleId());
-            i++;
+        System.out.println(userRoles);
+        if (userRoles.isEmpty() ) {
+            return null;
+        } else {
+            String[] roleNames = new String[7];
+            int i = 0;
+            for (UserRole userRole : userRoles) {
+                roleNames[i] = "" + userRole.getRoleId();
+                System.out.println("RoleId=" + userRole.getRoleId());
+                i++;
+            }
+            return roleNames;
         }
-        return  roleNames;
+    }
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public int addRoles(String[] roleArray,int userId){
+        UserRole userRole = new UserRole();
+        for (String s:roleArray
+             ) {
+            userRole.setUserId(userId);
+            userRole.setRoleId(Integer.parseInt(s));
+            userRoleMapper.insertSelective(userRole);
+
+        }
+        return 1;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public int delUserRole(int userId) {
+        UserRoleExample userRoleExample = new UserRoleExample();
+        userRoleExample.createCriteria().andUserIdEqualTo(userId);
+        return userRoleMapper.deleteByExample(userRoleExample);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public int upUserRoles(String[] roleArray, Integer userId) {
+        delUserRole(userId);
+        addRoles( roleArray,userId);
+        return 0;
     }
 }

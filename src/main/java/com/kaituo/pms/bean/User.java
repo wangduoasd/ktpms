@@ -22,6 +22,7 @@ private String userName;
     private String[] roles;
 
 
+
     private Integer userStatus;
 
     private Date userInductiontime;
@@ -51,7 +52,6 @@ private String userName;
         this.userStatus = userStatus;
         this.userInductiontime = userInductiontime;
     }
-
     public User(Integer num,Integer userId, String userName, Integer userIntegral, String deptName, String positionName, Integer userStatus, Date userInductiontime) {
         this.num=num;
         this.userId = userId;
@@ -71,6 +71,20 @@ private String userName;
         this.deptName = deptName;
         this.positionName = positionName;
         this.userStatus = userStatus;
+        this.userInductiontime = userInductiontime;
+    }
+/*权限管理下拉列表*/
+
+    public User(Integer userId, String userName) {
+        this.userId = userId;
+        this.userName = userName;
+    }
+//权限用户列表
+    public User(Integer userId, String userName, String deptName, String positionName, Date userInductiontime) {
+        this.userId = userId;
+        this.userName = userName;
+        this.deptName = deptName;
+        this.positionName = positionName;
         this.userInductiontime = userInductiontime;
     }
 

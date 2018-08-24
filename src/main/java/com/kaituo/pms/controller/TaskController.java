@@ -341,7 +341,7 @@ public class TaskController {
             "tasks/management/{callPage}/{pageNamber}"})
     public OutJSON getManagementPagination(@PathVariable("callPage") String callPage ,
                                         @PathVariable(value = "pageNamber") int pageNamber ,
-                                        @PathVariable(value = "pageSize" , required = false) Integer pageSize) {
+                                        @PathVariable(value = "pageSize" , required = false) int pageSize) {
         try {
 
             // 处理过期数据

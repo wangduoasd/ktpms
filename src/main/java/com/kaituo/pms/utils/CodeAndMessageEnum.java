@@ -30,6 +30,8 @@ public enum CodeAndMessageEnum {
     SUBMIT_TASK_ERROR("1" , "任务提交失败"),
     // 已完成页面消息
     COMPLETED_TASK("1" , "任务完成，奖励到账"),
+    // 已发布页面消息
+    PUBLISHED_TASK_COMPLETED("1" , "已完成"),
 
     // 图片上传失败
     PUBLISHING_TASK_IMAGE_UPLOAD_FAILED("0" , "图片上传失败"),
@@ -37,8 +39,6 @@ public enum CodeAndMessageEnum {
     PUBLISHING_TASK_IMAGE_IS_EMPTY("1" , "图片为空"),
     // 图片上传失败
     PUBLISHING_TASK_IMAGE_HAS_BEEN_SUCCESSFULLY_UPLOADED("0" , "图片上传失败"),
-    // 已发布页面消息
-    PUBLISHED_TASK_COMPLETED("1" , "已完成"),
     // 任务发布成功
     THE_TASK_WAS_SUCCESSFULLY_POSTDE("1" , "任务已发布"),
     // 任务发布失败
@@ -89,12 +89,17 @@ public enum CodeAndMessageEnum {
 
     GOODS_SOLDOUT_ERROR("0","商品下架失败"),
     // 没有修改任何商品
-    MODIFICATION_EMPTY("2" , "修改商品失败");
+    MODIFICATION_EMPTY("2" , "修改商品失败"),
 
 
 
 
 
+
+    //ZJH
+    //部门
+    // 任务驳回失败
+    DEPT_DEL_ERROR("0","部门尚有员工，请将员工删除后再操作");
     private String code;
 
     private String message;

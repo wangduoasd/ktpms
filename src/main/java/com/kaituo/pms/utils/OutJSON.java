@@ -19,6 +19,27 @@ public class OutJSON {
 
     private Object data;
 
+    public void setData(Object data) {
+        this.data = data;
+    }
+    private static class OutJSONHolder{
+        private  static final  OutJSON instance=new OutJSON();
+    }
+    private OutJSON(){ };
+    public  static OutJSON getInstance(CodeAndMessageEnum codeAndMessageEnum, Object data){
+        OutJSON outJSON = OutJSONHolder.instance;
+      outJSON.code = codeAndMessageEnum.getCode();
+      outJSON.message = codeAndMessageEnum.getMessage();
+      outJSON.data = data;
+      return  outJSON;
+    }
+
+    public  static OutJSON getInstance(CodeAndMessageEnum codeAndMessageEnum){
+        OutJSON outJSON = OutJSONHolder.instance;
+        outJSON.code = codeAndMessageEnum.getCode();
+        outJSON.message = codeAndMessageEnum.getMessage();
+        return  outJSON;
+    }
     public  String getCode() {
         return code;
     }
@@ -37,30 +58,5 @@ public class OutJSON {
 
     public Object getData() {
         return data;
-    }
-
-    public void setData(Object data) {
-        this.data = data;
-    }
-
-    public  static OutJSON getInstance(CodeAndMessageEnum codeAndMessageEnum, Object data){
-      OutJSON outJSON = new OutJSON();
-      outJSON.code = codeAndMessageEnum.getCode();
-      outJSON.message = codeAndMessageEnum.getMessage();
-      outJSON.data = data;
-//      Map<String , Object> map = new HashMap<>(1);
-//      map.put("data:",data);
-//      outJSON.data = map;
-      return  outJSON;
-    }
-
-    public  static OutJSON getInstance(CodeAndMessageEnum codeAndMessageEnum){
-        OutJSON outJSON = new OutJSON();
-        outJSON.code = codeAndMessageEnum.getCode();
-        outJSON.message = codeAndMessageEnum.getMessage();
-      /*  Map<String , Object> map = new HashMap<>(1);
-        map.put("data:","");
-        outJSON.data = map;*/
-        return  outJSON;
     }
 }
