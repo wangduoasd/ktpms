@@ -83,10 +83,12 @@ public class DeptController {
     @ResponseBody
     public OutJSON delDept(@PathVariable("deptId")int deptId) {
         try {
-            deptService.delDept(deptId);
-            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);
+            int i = deptService.delDept(deptId);
+            if(i==1){
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);}
+            String message="此部门还有"+(i-1)+"名员工，不能删除";
+            return OutJSON.getInstance(CodeAndMessageEnum.DELETE_ERROR,message);
         }catch (Exception e){
-
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
         }
     }

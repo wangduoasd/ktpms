@@ -54,7 +54,11 @@ public class DeptServiceImpl implements DeptService {
 
     @Override
     public int delDept(int deptId)  {
-       return deptMapper.deleteByPrimaryKey(deptId);
+        int i = deptMapper.checkDept(deptId);
+        if(i==0){
+            return deptMapper.deleteByPrimaryKey(deptId);
+        }
+        return i+1;
     }
 
     @Override
@@ -63,4 +67,6 @@ public class DeptServiceImpl implements DeptService {
         positionService.addPositons(positionArray,dept.getDeptId());
         return 1;
     }
+
+
 }

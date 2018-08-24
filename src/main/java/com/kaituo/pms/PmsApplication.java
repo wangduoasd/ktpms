@@ -12,7 +12,7 @@ import java.util.Properties;
 @MapperScan(basePackages = "com.kaituo.pms.dao")
 @SpringBootApplication
 /*@EnableWebSecurity*/
-@EnableCaching
+/*@EnableCaching*/
 public class PmsApplication {
 
     public static void main(String[] args) {

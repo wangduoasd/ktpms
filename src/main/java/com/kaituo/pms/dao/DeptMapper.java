@@ -36,4 +36,6 @@ public interface DeptMapper {
 
     int updateByPrimaryKey(Dept record);
     List<Dept> getAllDeptName();
+    //检查部门是否还有员工，返回员工数
+    int checkDept(int deptId);
 }

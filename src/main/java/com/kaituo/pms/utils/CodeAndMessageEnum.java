@@ -97,6 +97,9 @@ public enum CodeAndMessageEnum {
 
 
     //ZJH
+    //兑换记录
+    EXCHANGE_STATUS_ERROR("0","兑换错误，请刷新页面重试"),
+    USER_ADD_ERROR("0","添加失败，工号已被使用，请更换工号"),
     //部门
     // 任务驳回失败
     DEPT_DEL_ERROR("0","部门尚有员工，请将员工删除后再操作");

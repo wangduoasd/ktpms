@@ -298,6 +298,9 @@ public class UserController {
     public OutJSON addUser(User user) {
         try {
             int i=userService.addUser(user);
+            if(i==2){
+                return OutJSON.getInstance(CodeAndMessageEnum.USER_ADD_ERROR);
+            }
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);
         } catch (Exception e) {
             log.error( e.getMessage());

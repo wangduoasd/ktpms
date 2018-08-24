@@ -311,7 +311,7 @@
     </constructor>
   </resultMap>
   <select id="findUserRole" resultMap="UserRoleResultMap">
-        select user_id,user_name  from p_user
+        select user_id,user_name  from p_user where user_status!=4 and user_status!=5
     </select>
 
   <select id="findRoleUser" resultMap="RoleUserResultMap">

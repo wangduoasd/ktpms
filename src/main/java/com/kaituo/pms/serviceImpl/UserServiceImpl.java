@@ -172,7 +172,9 @@ public class UserServiceImpl implements UserService/*,UserDetailsService */{
     @Override
     @Transactional(rollbackFor = Exception.class)
     public int addUser(User user) {
-
+        User userById = findUserById(user.getUserId());
+        if(userById!=null)
+        return 2;
         return userMapper.insert(user);
     }
 
