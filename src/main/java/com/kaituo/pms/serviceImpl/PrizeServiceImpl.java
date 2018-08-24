@@ -109,7 +109,14 @@ public class PrizeServiceImpl implements PrizeService {
         }
         return false;
     }
-//商品上架
+/**
+ * 商品上架
+* @Description:
+* @Param:
+* @return:
+* @Author: 侯鹏
+* @Date: 8/24
+*/
     @Override
     public int goodsshelves(int prizeId) {
         Prize prize1 = prizeMapper.selectByPrimaryKey(prizeId);
@@ -118,7 +125,14 @@ public class PrizeServiceImpl implements PrizeService {
         int i = prizeMapper.updateByPrimaryKeySelective(prize1);
         return i;
     }
-
+    /**
+     * 商品下架
+     * @Description:
+     * @Param:
+     * @return:
+     * @Author: 侯鹏
+     * @Date: 8/23
+     */
     @Override
     public int goodsoldout(int prizeId) {
         Prize prize1 = prizeMapper.selectByPrimaryKey(prizeId);
