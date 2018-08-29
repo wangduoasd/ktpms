@@ -248,7 +248,7 @@ public class UserController {
      * @date 2018/8/17 0017 17:35
      */
     @ResponseBody
-    @GetMapping(value = "users/{pn}")
+    @GetMapping(value = "authority/one/users/{pn}")
     public OutJSON findAllUser(@PathVariable(value = "pn") int pageNumber,
                                       @RequestParam(value = "pageSize", defaultValue = "8") int pageSize) {
         try {
@@ -272,7 +272,7 @@ public class UserController {
      　　* @date 2018/8/23 0023 13:42
      　　*/
     @ResponseBody
-    @GetMapping(value = "users/s/{keyword}/{pn}")
+    @GetMapping(value = "authority/one/users/s/{keyword}/{pn}")
     public OutJSON findByKeyWord(@PathVariable(value = "keyword") String keyword,
                                @PathVariable(value = "pn") int pageNumber,
                                @RequestParam(value = "pageSize", defaultValue = "8") int pageSize) {
@@ -295,7 +295,7 @@ public class UserController {
      　　* @date 2018/8/23 0023 13:42
      　　*/
     @ResponseBody
-    @PostMapping(value = "user")
+    @PostMapping(value = "authority/one/user")
     public OutJSON addUser(User user) {
         try {
             int i=userService.addUser(user);
@@ -319,7 +319,7 @@ public class UserController {
      　　* @date 2018/8/23 0023 13:40
      　　*/
     @ResponseBody
-    @PutMapping(value = "user")
+    @PutMapping(value = "authority/one/user")
     public OutJSON upUser(User user,@RequestParam("oldUserId") int oldUserId) {
         try {
             int i=userService.upUser(user,oldUserId);
@@ -335,14 +335,14 @@ public class UserController {
         }
     }
     /**
-     　  * @Description: 权限设置_添加员工_下拉列表 获取没有权限的用户
+     　  * @Description: 权限管理_添加员工_下拉列表 获取没有权限的用户
      　　* @param []
      　　* @return com.kaituo.pms.utils.OutJSON
      　　* @throws
      　　* @author 张金行
      　　* @date 2018/8/23 0023 13:37
      　　*/
-    @GetMapping(value = "role/users")
+    @GetMapping(value = "authority/all/role/users")
     public OutJSON findUserRole() {
         try {
             List<User> userRole = userService.findUserRole();
@@ -357,7 +357,7 @@ public class UserController {
 
     }
     /**
-     　  * @Description: 部门设置_权限用户列表
+     　  * @Description: 权限管理_权限用户列表
      　　* @param [pageNumber, pageSize]
      　　* @return com.kaituo.pms.utils.OutJSON
      　　* @throws
@@ -365,7 +365,7 @@ public class UserController {
      　　* @date 2018/8/23 0023 13:39
      　　*/
     @ResponseBody
-    @GetMapping(value = "role/users/{pn}")
+    @GetMapping(value = "authority/all/role/users/{pn}")
     public OutJSON findRoleUser(@PathVariable(value = "pn") int pageNumber,
                                 @RequestParam(value = "pageSize", defaultValue = "8") int pageSize) {
 

@@ -37,7 +37,7 @@ public class UserRoleController {
      　　* @date 2018/8/23 0023 14:08
      　　*/
     @ResponseBody
-    @PostMapping(value = "roles")
+    @PostMapping(value = "authority/all/roles")
     public OutJSON addUserRole(User user, @RequestParam String[] roleArray) {
         try {
             int i=userRoleService.addRoles(roleArray,user.getUserId());
@@ -58,7 +58,7 @@ public class UserRoleController {
      　　* @date 2018/8/23 0023 14:27
      　　*/
     @ResponseBody
-    @PutMapping(value = "roles")
+    @PutMapping(value = "authority/all/roles")
     public OutJSON upUserRole(User user, @RequestParam String[] roleArray) {
         try {
             int i=userRoleService.upUserRoles(roleArray,user.getUserId());
@@ -79,7 +79,7 @@ public class UserRoleController {
      　　* @date 2018/8/23 0023 14:08
      　　*/
     @ResponseBody
-    @DeleteMapping(value = "role/{userId}")
+    @DeleteMapping(value = "authority/all/role/{userId}")
     public OutJSON addUserRole(@PathVariable("userId") int userId) {
         try {
             int i=userRoleService.delUserRole(userId);

@@ -115,7 +115,7 @@ public class ExchangeController {
      　　* @date 2018/8/10 0010 10:59
      　　*/
     @ResponseBody
-    @GetMapping(value = "exchangeLists/{pn}")
+    @GetMapping(value = "authority/three/exchangeLists/{pn}")
     public OutJSON getExchangeLists(@PathVariable(value = "pn") int pageNumber, @RequestParam(value = "pageSize", defaultValue = "4") int pageSize) {
         try {
             PageHelper.startPage(pageNumber, pageSize);
@@ -137,7 +137,7 @@ public class ExchangeController {
      　　* @date 2018/8/10 0010 11:00
      　　*/
     @ResponseBody
-    @PutMapping(value = "exchangeLists/{exchangeId}")
+    @PutMapping(value = "authority/three/exchangeLists/{exchangeId}")
     public OutJSON updateExchangeList(@PathVariable("exchangeId") int exchangeId) {
         try {
             int i = exchangeService.updateExchange(exchangeId, 1,2);
@@ -161,7 +161,7 @@ public class ExchangeController {
      　　* @date 2018/8/10 0010 11:00
      　　*/
     @ResponseBody
-    @GetMapping(value = "exchangelists/s/{keyWord}/{pn}")
+    @GetMapping(value = "authority/three/exchangelists/s/{keyWord}/{pn}")
     public OutJSON findExchangelists( @RequestParam(value = "pageSize", defaultValue = "4") int pageSize, @PathVariable("keyWord") String keyWord,@PathVariable(value = "pn") int pageNumber) {
         try {
             PageHelper.startPage(pageNumber, pageSize);

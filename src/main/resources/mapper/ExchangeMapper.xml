@@ -274,7 +274,7 @@
   </resultMap>
   <!--findExchangeRecord-->
   <select id="findExchangeRecord" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select * from p_exchange where user_id=#{userId}
+    select * from p_exchange where user_id=#{userId} and exchange_status!=1
   </select>
   <!--模糊查询-->
   <select id="selectBykeyWord" resultMap="BaseResultMap">

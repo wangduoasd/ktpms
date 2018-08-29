@@ -36,7 +36,7 @@ public class PositionController {
      　　* @date 2018/8/23 0023 16:02
      　　*/
     @ResponseBody
-    @GetMapping(value = "positions/{deptId}")
+    @GetMapping(value = "authority/one/positions/{deptId}")
     public OutJSON findAllDept(@PathVariable(value = "deptId") int deptId) {
         try {
             List<Position> list = positionService.getPositionNameBydeptId(deptId);

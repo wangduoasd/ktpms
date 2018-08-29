@@ -35,15 +35,15 @@ import java.util.List;
 public class DeptController {
     @Autowired
     DeptService deptService;
-    /**
-     　  * @Description: 风控中心_部门设置  部门列表
+    /*
+     　  * @Description: 综服中心-员工设置-添加员工  获取所有部门列表
      　　* @param [dept, positionArray]
      　　* @return com.kaituo.pms.utils.OutJSON
      　　* @throws
      　　* @author 张金行
      　　* @date 2018/8/23 0023 15:54
      　　*/
-    @GetMapping(value ="depts")
+    @GetMapping(value ="authority/one/depts")
     @ResponseBody
     public OutJSON getAllDeptName() {
         try {
@@ -62,7 +62,7 @@ public class DeptController {
      　　* @author 张金行
      　　* @date 2018/8/23 0023 15:54
      　　*/
-    @GetMapping(value ="depts/{pn}")
+    @GetMapping(value ="authority/four/depts/{pn}")
     @ResponseBody
     public OutJSON findAllDept(@PathVariable(value = "pn") int pageNumber,
                                @RequestParam(value = "pageSize",defaultValue ="8") Integer pageSize
@@ -86,7 +86,7 @@ public class DeptController {
      　　* @date 2018/8/23 0023 15:54
      　　*/
     @ResponseBody
-    @PostMapping (value = "dept")
+    @PostMapping (value = "authority/four/dept")
     public OutJSON addDept(Dept dept,@RequestParam("positionArray") String[] positionArray) {
         try {
 
@@ -102,7 +102,7 @@ public class DeptController {
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
         }
     }
-    @DeleteMapping("dept/{deptId}")
+    @DeleteMapping("authority/four/dept/{deptId}")
     @ResponseBody
     public OutJSON delDept(@PathVariable("deptId")int deptId) {
         try {
@@ -125,7 +125,7 @@ public class DeptController {
      　　* @author 张金行
      　　* @date 2018/8/23 0023 15:54
      　　*/
-    @PutMapping("dept")
+    @PutMapping("authority/four/dept")
     @ResponseBody
     public OutJSON upDept(Dept dept,@RequestParam("positionArray") String[] positionArray) {
         try {

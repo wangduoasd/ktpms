@@ -14,7 +14,7 @@ import java.io.File;
  **/
 
 @Configuration
-class WebAppConfig extends WebMvcConfigurerAdapter {
+public  class WebMvcConf extends WebMvcConfigurerAdapter {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
 

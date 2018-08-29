@@ -7,6 +7,7 @@ import com.kaituo.pms.utils.OutJSON;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -22,12 +23,21 @@ import java.util.List;
  */
 @Controller
 @Slf4j
+@CrossOrigin
 public class RoleController {
     @Autowired
     RoleService roleService;
+    /**
+     　  * @Description: 权限管理_添加员工_权限列表
+     　　* @param [user, roleArray]
+     　　* @return com.kaituo.pms.utils.OutJSON
+     　　* @throws
+     　　* @author 张金行
+     　　* @date 2018/8/23 0023 14:08
+     　　*/
     @ResponseBody
-    @GetMapping(value = "roles")
-    public OutJSON getExchangeRecords() {
+    @GetMapping(value = "authority/all/roles")
+    public OutJSON getAll() {
         try {
             List<Role> list = roleService.getAll();
             if(list.size()==0){
