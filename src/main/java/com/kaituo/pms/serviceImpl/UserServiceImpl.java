@@ -188,6 +188,7 @@ public class UserServiceImpl implements UserService/*,UserDetailsService */{
     @Override
     @Transactional(rollbackFor = Exception.class)
     public int upUser(User user,int oldUserId) {
+        if(user.getUserStatus()==4){user.setUserIntegral(0);}
         if(user.getUserId()==oldUserId){return userMapper.updateByPrimaryKey(user);}
         User userById = findUserById(user.getUserId());
         if(userById!=null)
@@ -217,10 +218,9 @@ public class UserServiceImpl implements UserService/*,UserDetailsService */{
     @Transactional(rollbackFor = Exception.class)
     public List<User> findRoleUser() {
         List<User> roleUser = userMapper.findRoleUser();
-
         for (User user:roleUser){
-
             user.setRoles(userRoleService.findAllRole(user.getUserId()));
+
         }
         return  roleUser;
     }

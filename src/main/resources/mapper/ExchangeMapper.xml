@@ -11,6 +11,7 @@
       <arg column="exchange_status" javaType="java.lang.Integer" jdbcType="INTEGER" />
       <arg column="prize_name" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="prize_image" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="exchange_total" javaType="java.lang.Integer" jdbcType="INTEGER" />
     </constructor>
   </resultMap>
   <sql id="Example_Where_Clause">

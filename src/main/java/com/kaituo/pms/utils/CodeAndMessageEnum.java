@@ -107,7 +107,9 @@ public enum CodeAndMessageEnum {
     POSITION_FIND_ERROR("103","该部门尚未设置职位"),
     //部门
     DEPT_ADD_ERROR("104","部门名已被使用，请更换部门名"),
-    DEPT_DEL_ERROR("105","部门尚有员工，请将员工删除后再操作");
+    DEPT_DEL_ERROR("105","部门尚有员工，请将员工删除后再操作"),
+    //权限
+    ROLE_EMPTY("106","权限列表为空，请先添加权限");
 
     private String code;
 

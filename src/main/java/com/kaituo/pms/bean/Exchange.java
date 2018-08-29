@@ -24,7 +24,17 @@ public class Exchange {
 
     private String prizeImage;
 
-    public Exchange(Integer exchangeId, Integer prizeId, Integer userId, Integer exchangeCount, Date exchangeTime, Integer exchangeStatus, String prizeName, String prizeImage) {
+    private int exchangeTotal;
+
+    public int getExchangeTotal() {
+        return exchangeTotal;
+    }
+
+    public void setExchangeTotal(int exchangeTotal) {
+        this.exchangeTotal = exchangeTotal;
+    }
+
+    public Exchange(Integer exchangeId, Integer prizeId, Integer userId, Integer exchangeCount, Date exchangeTime, Integer exchangeStatus, String prizeName, String prizeImage,Integer exchangeTotal) {
         this.exchangeId = exchangeId;
         this.prizeId = prizeId;
         this.userId = userId;
@@ -33,8 +43,9 @@ public class Exchange {
         this.exchangeStatus = exchangeStatus;
         this.prizeName = prizeName;
         this.prizeImage = prizeImage;
+        this.exchangeTotal=exchangeTotal;
     }
-
+//兑换列表
     public Exchange(Integer exchangeId, Integer prizeId, Integer userId, String userName, Integer exchangeCount, Date exchangeTime, Integer exchangeStatus, String prizeName, String prizeImage) {
         this.exchangeId = exchangeId;
         this.prizeId = prizeId;
@@ -45,6 +56,7 @@ public class Exchange {
         this.exchangeStatus = exchangeStatus;
         this.prizeName = prizeName;
         this.prizeImage = prizeImage;
+
     }
 
     public Exchange() {

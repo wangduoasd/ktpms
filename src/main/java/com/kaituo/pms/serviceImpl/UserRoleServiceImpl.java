@@ -1,16 +1,20 @@
 package com.kaituo.pms.serviceImpl;
 
 
+import com.kaituo.pms.bean.Role;
 import com.kaituo.pms.bean.UserRole;
 import com.kaituo.pms.bean.UserRoleExample;
 
+import com.kaituo.pms.dao.RoleMapper;
 import com.kaituo.pms.dao.UserRoleMapper;
 
+import com.kaituo.pms.service.RoleService;
 import com.kaituo.pms.service.UserRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,25 +29,27 @@ import java.util.List;
 public class UserRoleServiceImpl implements UserRoleService {
     @Autowired
     UserRoleMapper userRoleMapper;
+    @Autowired
+    RoleService roleService;
     @Override
+
     @Transactional(rollbackFor = Exception.class)
-    public String[] findAllRole(int userId) {
+    public List<Role> findAllRole(int userId) {
         UserRoleExample userRoleExample = new UserRoleExample();
         userRoleExample.createCriteria().andUserIdEqualTo(userId);
-        System.out.println(userId);
         List<UserRole> userRoles = userRoleMapper.selectByExample(userRoleExample);
-        System.out.println(userRoles);
         if (userRoles.isEmpty() ) {
             return null;
         } else {
-            String[] roleNames = new String[7];
-            int i = 0;
+/*            String[] roleNames = new String[7];
+            int i = 0;*/
+            List<Role> list=new ArrayList<>();
             for (UserRole userRole : userRoles) {
-                roleNames[i] = "" + userRole.getRoleId();
-                System.out.println("RoleId=" + userRole.getRoleId());
-                i++;
+                System.out.println(userRole.getRoleId());
+                list .add(roleService.getRoleById(userRole.getRoleId())) ;
+                System.out.println(roleService.getRoleById(userRole.getRoleId()).getRoleName());
             }
-            return roleNames;
+            return list;
         }
     }
     @Override

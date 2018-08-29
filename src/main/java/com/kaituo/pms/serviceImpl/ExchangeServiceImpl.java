@@ -83,6 +83,7 @@ public class ExchangeServiceImpl implements ExchangeService {
         exchange.setUserId(userId);
         exchange.setExchangeCount(num);
         exchange.setUserName(userService.findUserById(userId).getUserName());
+        exchange.setExchangeTotal(prize.getPrizePrice()*num);
       return   exchangeMapper.insertSelective(exchange);
     }
 }

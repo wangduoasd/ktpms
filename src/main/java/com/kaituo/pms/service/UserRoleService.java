@@ -14,7 +14,7 @@ public interface UserRoleService {
      　　* @author 张金行
      　　* @date 2018/8/23 0023 14:31
      　　*/
-    String[] findAllRole(int userId);
+    List<Role> findAllRole(int userId);
     /**
      　  * @Description: 添加用户权限
      　　* @param
