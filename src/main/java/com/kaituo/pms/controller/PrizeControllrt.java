@@ -19,6 +19,7 @@ import java.util.Map;
 
 @Slf4j
 @RestController
+@CrossOrigin
 public class PrizeControllrt {
     @Autowired
     PrizeService prizeService;
@@ -64,7 +65,7 @@ public class PrizeControllrt {
    @GetMapping(value="prizes/{userId}/{pageNumber}")
    public OutJSON findAllPrizePrize(@PathVariable("userId") int userId,
                                     @PathVariable(value = "pageNumber") int pageNumber,
-                                    @RequestParam (value = "pageSize",defaultValue = "4") int pageSize){
+                                    @RequestParam (value = "pageSize",defaultValue = "6") int pageSize){
        try {
            PageHelper.startPage(pageNumber, pageSize);
            List<Prize> prizess = prizeService.findAllPrizePrize(userId);
@@ -121,7 +122,7 @@ public class PrizeControllrt {
    * @Date:2018/8/16
    */
    @GetMapping("prizes/{pageNumber}")
-   public OutJSON listAllPrize(@PathVariable("pageNumber") int pageNumber, @RequestParam (value = "pageSize",defaultValue = "4") int pageSize ){
+   public OutJSON listAllPrize(@PathVariable("pageNumber") int pageNumber, @RequestParam (value = "pageSize",defaultValue = "6") int pageSize ){
        try {
            PageHelper.startPage(pageNumber,pageSize);
            List<Prize> prizes = prizeService.listAllPrize();
