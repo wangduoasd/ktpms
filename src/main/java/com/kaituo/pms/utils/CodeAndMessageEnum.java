@@ -24,8 +24,12 @@ public enum CodeAndMessageEnum {
     RECIEVE_THE_TASK_STATUS_NOT_ONE("3" , "手慢了，本宝宝被领走了QWQ"),
     // 待领取任务领取任务按钮—成功
     RECIEVE_THE_TASK_STATUS_SUCCESS("4" , "领取成功"),
-    // 待领取任务领取任务按钮—成功
+    // 待领取任务领取任务按钮—过期
     RECIEVE_THE_TASK_STATUS_TIME_OUT("5" , "过期了，不要领了"),
+    // 待领取任务领取任务按钮—积分不够
+    RECIEVE_THE_TASK_INSUFFICIENT_POINTS("6" , "积分不足，努力工作吧"),
+    // 待领取任务领取任务按钮—状态为已领取
+    RECIEVE_THE_TASK_STATUS_IS_RECEIVED("7" , "打什么主意呢？赶快完成任务吧！"),
     // 未完成任务-提交任务
     SUBMIT_TASK_ERROR("1" , "任务提交失败"),
     // 已完成页面消息

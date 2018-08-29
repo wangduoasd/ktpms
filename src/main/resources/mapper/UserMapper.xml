@@ -181,7 +181,7 @@
   </select>
   <!--积分排行榜-->
     <select id="selectUsersByView" resultMap="MyResultMap">
-      select * from v_userinfo where user_status != ${5}
+      select * from v_userinfo where user_status != ${5} and user_status != ${4}
     </select>
 
     <update id="updateByExampleSelective" parameterType="map" >
@@ -272,12 +272,12 @@
     <!--按检索条件查询积分排行-->
     <select id="selectUsersByViewAndCondition" parameterType="java.lang.String" resultMap="MyResultMap">
         select num,user_name,dept_name,position_name,user_id,user_inductiontime,user_integral,user_status,user_password
-         from v_userinfo where user_status != ${5} and user_name like concat(concat('%',#{condition}),'%')
+         from v_userinfo where user_status != ${5} and user_status != ${4} and user_name like concat(concat('%',#{condition}),'%')
                                        or dept_name like concat(concat('%',#{condition}),'%')
     </select>
     <!--按检索条件查询积分排行的数据条数-->
     <select id="countUsersByViewAndCondition" resultType="java.lang.Long">
-        select count(*) from v_userinfo where user_status != ${5} and user_name like concat(concat('%',#{condition}),'%')
+        select count(*) from v_userinfo where user_status != ${5} and user_status != ${4} and user_name like concat(concat('%',#{condition}),'%')
                                        or dept_name like concat(concat('%',#{condition}),'%')
     </select>
   <!--综服中心_员工设置_分页查询-->

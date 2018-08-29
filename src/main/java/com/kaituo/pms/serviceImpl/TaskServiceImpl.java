@@ -17,6 +17,7 @@ import com.kaituo.pms.utils.Constant;
 import com.kaituo.pms.utils.OutJSON;
 
 
+import com.kaituo.pms.utils.Util;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -223,7 +224,7 @@ public class TaskServiceImpl implements TaskService {
 
             Map<String , Object> pageMap = new HashMap<>(2);
 
-            pageMap.put("total:" , total);
+            pageMap.put("total" , total);
             pageMap.put("taskList" , list);
 
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS , pageMap);
@@ -260,7 +261,7 @@ public class TaskServiceImpl implements TaskService {
 
             Map<String , Object> pageMap = new HashMap<>(2);
 
-            pageMap.put("total:" , total);
+            pageMap.put("total" , total);
             pageMap.put("taskList" , list);
 
             return OutJSON.getInstance(CodeAndMessageEnum.COMPLETED_TASK , pageMap);
@@ -303,7 +304,7 @@ public class TaskServiceImpl implements TaskService {
 
             Map<String , Object> pageMap = new HashMap<>(2);
 
-            pageMap.put("total:" , total);
+            pageMap.put("total" , total);
             pageMap.put("taskList" , list);
 
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS , pageMap);
@@ -381,7 +382,7 @@ public class TaskServiceImpl implements TaskService {
             // 第一次任务
             task.setTaskNumber(1);
             // 任务领取时间
-            task.setTaskGettime(new Date());
+            task.setTaskGettime(new Date(System.currentTimeMillis()));
 
             TaskExample taskExample = new TaskExample();
             TaskExample.Criteria taskCriteria = taskExample.createCriteria();
