@@ -20,8 +20,12 @@ public class Task {
 
     private Integer taskTime;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date taskStarttime;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date taskEndtime;
 
     private String taskImage;
@@ -34,8 +38,8 @@ public class Task {
 
     private String userName;
 
-    @DateTimeFormat(pattern = "yyy-MM-dd HH:mm:ss")
-    @JsonFormat(pattern = "yyy-mm-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date taskGettime;
 
     private Integer taskCountnumber;

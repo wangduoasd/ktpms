@@ -303,14 +303,14 @@
       task_award = #{record.taskAward,jdbcType=INTEGER},
       task_number = #{record.taskNumber,jdbcType=INTEGER},
       task_time = #{record.taskTime,jdbcType=INTEGER},
-      task_starttime = #{record.taskStarttime,jdbcType=DATE},
-      task_endtime = #{record.taskEndtime,jdbcType=DATE},
+      task_starttime = #{record.taskStarttime,jdbcType=TIMESTAMP},
+      task_endtime = #{record.taskEndtime,jdbcType=TIMESTAMP},
       task_image = #{record.taskImage,jdbcType=VARCHAR},
       task_describe = #{record.taskDescribe,jdbcType=VARCHAR},
       task_status = #{record.taskStatus,jdbcType=INTEGER},
       user_id = #{record.userId,jdbcType=INTEGER},
       user_name = #{record.userName,jdbcType=VARCHAR},
-      task_gettime = #{record.taskGettime,jdbcType=DATE},
+      task_gettime = #{record.taskGettime,jdbcType=TIMESTAMP},
       task_countnumber = #{record.taskCountnumber,jdbcType=INTEGER}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />

@@ -98,16 +98,14 @@ public class TaskController {
      * @param callPage 调用的页面
      * @param userId 员工id
      * @param pageNamber 目标页面
-     * @param pageSize 每页条数
      * @return: com.kaituo.pms.utils.OutJSON
      * @Author: 苏泽华
      * @Date: 2018/8/13
      */
-    @GetMapping("tasks/status/list/{callPage}/{pageNamber}/{userId}")
+    @GetMapping("tasks/status/list/{callPage}/{pageNumber}/u/{userId}")
     public OutJSON findCollectionStatus(@PathVariable("callPage") String callPage ,
                                         @PathVariable("userId") int userId,
-                                        @PathVariable(value = "pageNamber") int pageNamber ,
-                                        @PathVariable(value = "pageSize" , required = false) int pageSize) {
+                                        @PathVariable(value = "pageNumber") int pageNamber ) {
 
         try {
             switch (callPage){
@@ -119,19 +117,19 @@ public class TaskController {
                     taskService.expiredVerification();
                     //查询所有已发布但未被领取的任务的信息
                     //分页
-                    return taskService.getStatesTaskByPage(pageNamber , pageSize , status);
+                    return taskService.getStatesTaskByPage(pageNamber , null , status);
                 // 未完成页面调用
                 case Constant.MISSION_CENTER_TASK_LIST_UNDONE:
                     // 处理超时数据
                     taskService.timeOutDetection();
                     //查询所有已发布但未被领取的任务的信息
                     //分页
-                    return taskService.getUndoneByPage(pageNamber , pageSize , userId);
+                    return taskService.getUndoneByPage(pageNamber , null , userId);
                 // 已完成页面调用
                 case Constant.MISSION_CENTER_TASK_LIST_COMPLETED:
                     //查询所有当前id的已完成数据
                     //分页
-                    return taskService.getStatesTaskByPage(pageNamber , pageSize , Constant.MISSION_COMPLETED , userId);
+                    return taskService.getStatesTaskByPage(pageNamber , null , Constant.MISSION_COMPLETED , userId);
                 default:
                     return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR,"调用页面错误");
             }
@@ -226,7 +224,7 @@ public class TaskController {
             if(null!=user && null!=task){
 
                 // 检查是否超过结束时间
-                if (task.getTaskEndtime().getTime() <= System.currentTimeMillis()) {
+                if (task.getTaskEndtime().getTime() > System.currentTimeMillis()) {
 
                     // 如果任务状态为1（已发布）则返回消息
                     if (Constant.THE_TASK_WAS_SUCCESSFULLY_POSTED == task.getTaskStatus()){
@@ -234,9 +232,16 @@ public class TaskController {
                         // 如果用户的积分大于等于任务消耗积分则扣除积分添加积分明细修改任务状态
                         if (user.getUserIntegral()>=task.getTaskPrice()){
 
+                            // 任务已被领取时，再次领取
+                            if(task.getTaskStatus() == Constant.THE_TASK_HAS_BEEN_RECEIVED){
+                                return OutJSON.getInstance(CodeAndMessageEnum.RECIEVE_THE_TASK_STATUS_IS_RECEIVED);
+                            }
+
                             // 数据的修改
                             return taskService.recieveTheTask(task , user);
 
+                        }else {
+                            return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
                         }
 
                     }else {
@@ -255,7 +260,7 @@ public class TaskController {
             log.error(e.getMessage());
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
         }
-        return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
+
     }
 
     /**

@@ -29,18 +29,20 @@ public class IntegralController {
      * @Date:2018/8/18
      */
     @GetMapping(value="integral/{userId}/{pageNumber}")
-    public OutJSON findIntegral(@PathVariable("userId") int id, @PathVariable("pageNumber")  int pn, @RequestParam(value = "pageSize" , defaultValue = "8") int pageSize){
+    public OutJSON findIntegral(@PathVariable("userId") int id, @PathVariable("pageNumber")  int ageNumber,
+                                @RequestParam (value = "pageSize",defaultValue = "10") int pageSize){
+        PageHelper.startPage(ageNumber,pageSize);
         try {
+
             Map<String , Object> map = new HashMap<>();
-            PageHelper.startPage(pn , pageSize);
             List<Map<String, Object>> integrals = integralService.listIntegeral(id);
           PageInfo pageInfo = new PageInfo(integrals, 5);
             if(integrals!=null&&integrals.size()>0){
                 return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,pageInfo);
 
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception e) {            e.printStackTrace();
+
             log.error(e.getMessage());
         }
         return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
