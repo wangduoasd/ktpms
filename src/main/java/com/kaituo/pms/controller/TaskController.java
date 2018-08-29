@@ -10,19 +10,8 @@ import com.kaituo.pms.utils.OutJSON;
 import com.kaituo.pms.utils.Util;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import javax.websocket.server.PathParam;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 
@@ -224,7 +213,7 @@ public class TaskController {
             if(null!=user && null!=task){
 
                 // 检查是否超过结束时间
-                if (task.getTaskEndtime().getTime() > System.currentTimeMillis()) {
+                if (task.getTaskEndtime().getTime() <= System.currentTimeMillis()) {
 
                     // 如果任务状态为1（已发布）则返回消息
                     if (Constant.THE_TASK_WAS_SUCCESSFULLY_POSTED == task.getTaskStatus()){
@@ -292,7 +281,7 @@ public class TaskController {
      * @Author: 苏泽华
      * @Date: 2018/8/20
      */
-    @PostMapping("tasks/status")
+    @PostMapping("authority/five/tasks/status")
     public OutJSON publishTask(MultipartFile file,String starttime , String endtime , Task task){
         // 图片上传并获取上传的状态
         Map<String, Object> map = Util.imgUpload(file , Util.getImgRelativePath());
@@ -342,8 +331,8 @@ public class TaskController {
      * @Author: 苏泽华
      * @Date: 2018/8/13
      */
-    @GetMapping(value = {"tasks/management/{callPage}/{pageNamber}/{pageSize}" ,
-            "tasks/management/{callPage}/{pageNamber}"})
+    @GetMapping(value = {"authority/five/tasks/management/{callPage}/{pageNamber}/{pageSize}" ,
+            "authority/five/tasks/management/{callPage}/{pageNamber}"})
     public OutJSON getManagementPagination(@PathVariable("callPage") String callPage ,
                                         @PathVariable(value = "pageNamber") int pageNamber ,
                                         @PathVariable(value = "pageSize" , required = false) Integer pageSize) {
@@ -389,7 +378,7 @@ public class TaskController {
      * @Author: 苏泽华
      * @Date: 2018/8/21
      */
-    @PutMapping("task/{taskId}")
+    @PutMapping("authority/five/task/{taskId}")
     public OutJSON cancelInAdvance(@PathVariable("taskId") int taskId){
         if (0<taskService.cancelInAdvance(taskId)) {
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);
@@ -408,7 +397,7 @@ public class TaskController {
      * @Author: 苏泽华
      * @Date: 2018/8/21
      */
-    @PostMapping("task/{taskId}/{auditType}")
+    @PostMapping("authority/five/task/{taskId}/{auditType}")
     public OutJSON auditTask(@PathVariable("taskId") int taskId ,
                              @PathVariable("auditType") int auditType){
         switch (auditType){
@@ -442,7 +431,7 @@ public class TaskController {
 
     }
 
-    @PutMapping("task/again")
+    @PutMapping("authority/five/task/again")
     public OutJSON republish(MultipartFile file,String starttime , String endtime , Task task){
         // 图片上传并获取上传的状态
         Map<String, Object> map = Util.imgUpload(file , Util.getImgRelativePath());
