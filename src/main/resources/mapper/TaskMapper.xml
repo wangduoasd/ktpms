@@ -123,9 +123,9 @@
       task_countnumber)
     values (#{taskId,jdbcType=INTEGER}, #{taskName,jdbcType=VARCHAR}, #{taskDifficulty,jdbcType=INTEGER}, 
       #{taskPrice,jdbcType=INTEGER}, #{taskAward,jdbcType=INTEGER}, #{taskNumber,jdbcType=INTEGER}, 
-      #{taskTime,jdbcType=INTEGER}, #{taskStarttime,jdbcType=DATE}, #{taskEndtime,jdbcType=DATE}, 
+      #{taskTime,jdbcType=INTEGER}, #{taskStarttime,jdbcType=TIMESTAMP}, #{taskEndtime,jdbcType=TIMESTAMP},
       #{taskImage,jdbcType=VARCHAR}, #{taskDescribe,jdbcType=VARCHAR}, #{taskStatus,jdbcType=INTEGER}, 
-      #{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{taskGettime,jdbcType=DATE}, 
+      #{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{taskGettime,jdbcType=TIMESTAMP},
       #{taskCountnumber,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.kaituo.pms.bean.Task" >
