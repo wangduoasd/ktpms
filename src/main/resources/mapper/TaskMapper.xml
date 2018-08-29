@@ -10,14 +10,14 @@
       <arg column="task_award" jdbcType="INTEGER" javaType="java.lang.Integer" />
       <arg column="task_number" jdbcType="INTEGER" javaType="java.lang.Integer" />
       <arg column="task_time" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="task_starttime" jdbcType="DATE" javaType="java.util.Date" />
-      <arg column="task_endtime" jdbcType="DATE" javaType="java.util.Date" />
+      <arg column="task_starttime" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+      <arg column="task_endtime" jdbcType="TIMESTAMP" javaType="java.util.Date" />
       <arg column="task_image" jdbcType="VARCHAR" javaType="java.lang.String" />
       <arg column="task_describe" jdbcType="VARCHAR" javaType="java.lang.String" />
       <arg column="task_status" jdbcType="INTEGER" javaType="java.lang.Integer" />
       <arg column="user_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
       <arg column="user_name" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="task_gettime" jdbcType="DATE" javaType="java.util.Date" />
+      <arg column="task_gettime" jdbcType="TIMESTAMP" javaType="java.util.Date" />
       <arg column="task_countnumber" jdbcType="INTEGER" javaType="java.lang.Integer" />
     </constructor>
   </resultMap>
