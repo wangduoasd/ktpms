@@ -230,7 +230,7 @@ public class TaskController {
                             return taskService.recieveTheTask(task , user);
 
                         }else {
-                            return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
+                            return OutJSON.getInstance(CodeAndMessageEnum.RECIEVE_THE_TASK_INSUFFICIENT_POINTS);
                         }
 
                     }else {
