@@ -364,7 +364,7 @@ public class TaskServiceImpl implements TaskService {
             // 积分的变动原因
             integral.setIntegralChangestr("领取任务");
             // 积分的变动时间
-            integral.setIntegralTime(new Date());
+            integral.setIntegralTime(new Date(System.currentTimeMillis()));
             // 积分的变动值
             integral.setIntegralChangeint(-taskPrice);
             // 变动后的积分值

@@ -155,7 +155,7 @@ public class TaskController {
             if(null!=user && null!=task){
 
                 // 检查是否超过结束时间
-                if (task.getTaskEndtime().getTime() <= System.currentTimeMillis()) {
+                if (task.getTaskEndtime().getTime() > System.currentTimeMillis()) {
 
                     // 如果任务状态为1（已发布）则返回消息
                     if (Constant.THE_TASK_WAS_SUCCESSFULLY_POSTED == task.getTaskStatus()){
@@ -213,7 +213,7 @@ public class TaskController {
             if(null!=user && null!=task){
 
                 // 检查是否超过结束时间
-                if (task.getTaskEndtime().getTime() <= System.currentTimeMillis()) {
+                if (task.getTaskEndtime().getTime() > System.currentTimeMillis()) {
 
                     // 如果任务状态为1（已发布）则返回消息
                     if (Constant.THE_TASK_WAS_SUCCESSFULLY_POSTED == task.getTaskStatus()){
