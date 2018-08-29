@@ -267,7 +267,7 @@
   <!--积分排行榜的条数-->
   </select>
     <select id="countUsersByView" resultType="java.lang.Long">
-      select count(*) from v_userinfo where user_status != ${5}
+      select count(*) from v_userinfo where user_status != ${5} and user_status != ${4}
     </select>
     <!--按检索条件查询积分排行-->
     <select id="selectUsersByViewAndCondition" parameterType="java.lang.String" resultMap="MyResultMap">
