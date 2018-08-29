@@ -56,10 +56,9 @@ UserServiceImpl userService;
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
 */
-/*                .antMatchers("/user/**").hasAnyRole("User")//个人首页只允许拥有MENBER,SUPER_ADMIN角色的用户访问
+/*              .antMatchers("/user/**").hasAnyRole("User")//个人首页只允许拥有MENBER,SUPER_ADMIN角色的用户访问
                 .antMatchers("/admin/**").hasAnyRole("Admin")
                 .antMatchers("/aa/**").hasAnyRole("Aa")*//*
-
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()

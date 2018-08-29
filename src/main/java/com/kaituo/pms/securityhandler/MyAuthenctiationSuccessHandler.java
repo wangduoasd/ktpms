@@ -18,10 +18,8 @@ import java.io.IOException;
 @Component("myAuthenctiationSuccessHandler")
 @Slf4j
 public class MyAuthenctiationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
-
     @Autowired
     private ObjectMapper objectMapper;
-
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException, ServletException {

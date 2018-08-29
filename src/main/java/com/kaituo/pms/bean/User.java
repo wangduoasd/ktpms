@@ -19,7 +19,7 @@ private String userName;
     private Integer userDeptPosition;
     private  String deptName;
     private  String positionName;
-    private String[] roles;
+    private List<Role> roles;
 
 
 
@@ -153,11 +153,11 @@ private String userName;
         this.num = num;
     }
 
-    public String[] getRoles() {
+    public List<Role> getRoles() {
         return roles;
     }
 
-    public void setRoles(String[] roles) {
+    public void setRoles(List<Role> roles) {
         this.roles = roles;
     }
 
