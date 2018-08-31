@@ -241,13 +241,11 @@ public class UserServiceImpl implements UserService/*,UserDetailsService */{
     }
 
     @Override
-    public int upUserIntegral(int operatorId,int userId,String changeStr,int changeInt) {
-        User user = userMapper.selectByPrimaryKey(userId);
-        Integer endNum = user.getUserIntegral()+changeInt;
+    public int upUserIntegral(int operatorId,int userId,String changeStr,int startNum,int endNum) {
         User user1 = new User();
         user1.setUserId(userId);
         user1.setUserIntegral(endNum);
         userMapper.updateByPrimaryKeySelective(user1);
-        return integralService.addIntegral(operatorId,changeStr,userId,changeInt,endNum );
+        return integralService.addIntegral(operatorId,changeStr,userId,endNum-startNum,endNum );
     }
 }

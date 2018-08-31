@@ -145,7 +145,7 @@ public class PrizeControllrt {
    * @Author: 侯鹏
    * @Date:2018/8/21
    */
-   @DeleteMapping("authority/two//prize/{prizeId}")
+   @DeleteMapping("authority/two/prize/{prizeId}")
    public OutJSON deleteById(@PathVariable("prizeId") int prizeId) {
        Prize prize = prizeService.selectByPrimaryKey(prizeId);
        int deleteFalg = 0;
