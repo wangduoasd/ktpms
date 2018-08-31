@@ -438,12 +438,13 @@ public class UserController {
     @ResponseBody
     @PutMapping(value = "authority/one/user/integral/{operatorId}/{userId}")
     public OutJSON upUserPassword(@PathVariable(value = "userId") int userId,
-                                  @RequestParam("changeInt")int changeInt,
+                                  @RequestParam("startNum")int startNum,
+                                  @RequestParam("endNum")int endNum,
                                   @RequestParam("changestr") String changestr,
                                   @PathVariable(value = "operatorId")int operatorId
                                   ) {
         try {
-            int i=userService.upUserIntegral(operatorId,userId, changestr, changeInt);
+            int i=userService.upUserIntegral(operatorId,userId, changestr, startNum, endNum);
             if(i==1)
                 return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);
             if(i==2){
