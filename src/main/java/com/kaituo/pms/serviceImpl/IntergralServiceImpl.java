@@ -1,12 +1,10 @@
 package com.kaituo.pms.serviceImpl;
 
-import com.kaituo.pms.bean.Integral;
-import com.kaituo.pms.bean.IntegralExample;
-import com.kaituo.pms.bean.User;
-import com.kaituo.pms.bean.UserExample;
+import com.kaituo.pms.bean.*;
 import com.kaituo.pms.dao.IntegralMapper;
 import com.kaituo.pms.dao.UserMapper;
 import com.kaituo.pms.service.IntegralService;
+import com.kaituo.pms.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,10 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 * @Author: 侯鹏
 * @Date: 2018/8/10
 */
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @Transactional
@@ -30,6 +25,8 @@ public class IntergralServiceImpl implements IntegralService {
     IntegralMapper integralMapper;
     @Autowired
     UserMapper userMapper;
+    @Autowired
+    UserService userService;
 
     @Override
     public long integeralTotal(int uid) {
@@ -62,7 +59,6 @@ public class IntergralServiceImpl implements IntegralService {
                 }else {
                     map.put("integralChangeInt" , integral.getIntegralChangeint());
                     map.put("integralChangeStr" , integral.getIntegralChangestr());
-                    map.put("integralOperator" , "");
                     map.put("integralTime" , integral.getIntegralTime());
                     map.put("integralEndnum" , integral.getIntegralEndnum());
                     integralMap.add(map);
@@ -71,4 +67,21 @@ public class IntergralServiceImpl implements IntegralService {
         }
         return integralMap;
     }
+
+    @Override
+    public int addPrizeIntegral(int changint,int userId,String changestr,int endnum) {
+        User user = userService.findUserById(userId);
+        Integral integral = new Integral();
+        integral.setUserId(userId);
+        integral.setIntegralStartnum(user.getUserIntegral());
+        integral.setIntegralTime(new Date());
+        integral.setIntegralChangeint(changint);
+        integral.setIntegralChangestr(changestr);
+        integral.setIntegralEndnum(endnum);
+
+
+        return integralMapper.insertSelective(integral);
+    }
+
+
 }

@@ -2,8 +2,12 @@ package com.kaituo.pms.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.kaituo.pms.bean.Exchange;
 import com.kaituo.pms.bean.Prize;
 import com.kaituo.pms.bean.User;
+import com.kaituo.pms.dao.IntegralMapper;
+import com.kaituo.pms.service.ExchangeService;
+import com.kaituo.pms.service.IntegralService;
 import com.kaituo.pms.service.PrizeService;
 import com.kaituo.pms.service.UserService;
 import com.kaituo.pms.utils.CodeAndMessageEnum;
@@ -25,6 +29,10 @@ public class PrizeControllrt {
     PrizeService prizeService;
     @Autowired
     UserService userService;
+    @Autowired
+    IntegralMapper integralMapper;
+    @Autowired
+    IntegralService  integralService;
 
     /**
      * @Description:兑换中心_商品列表 点击按钮进行搜索查询 根据商品名查询已经上架商品
@@ -85,17 +93,18 @@ public class PrizeControllrt {
    * @Author: 侯鹏
    * @Date:  2018/8/20
    */
-   @PutMapping(value="prize/{userId}/{pageNumber}/{prizeId}")
-   public OutJSON exchangePrize(@PathVariable("userId")  int userId,@PathVariable("pageNumber") int number,@PathVariable("prizeId") int prizeId){
+   @PutMapping(value="prize/{userId}/{number}/{prizeId}")
+   public OutJSON exchangePrize(@PathVariable("userId")  int userId, @PathVariable("number") int number,
+                                @PathVariable("prizeId") int prizeId){
       try {
        Prize prize = prizeService.selectByPrimaryKey(prizeId);
           User user = userService.findPersonalDetail(userId);
-       int i = prizeService.exhangePrize(userId, number, prizeId);
+
        int totalPrice = number * prize.getPrizePrice();
        if (null == user || null == prize) {
            //用户名或商品为空
            return OutJSON.getInstance(CodeAndMessageEnum.GET_STATES_TASK_BY_PAGE_NULL);
-       } else if (number >prize.getPrizeQuota()||prize.getPrizeAmount()<0||prize.getPrizeQuota()<0) {
+       } else if (number >prize.getPrizeQuota()||prize.getPrizeAmount()<0||prize.getPrizeQuota()<=0) {
            //购买失败，超过上限
            return OutJSON.getInstance(CodeAndMessageEnum.FIND_PRIZE_CAP);
        } else if (totalPrice > user.getUserIntegral()) {
@@ -105,10 +114,17 @@ public class PrizeControllrt {
            //购买成功
            int count = (prize.getPrizeAmount()-number);
            prize.setPrizeAmount(count);
+           user.setUserIntegral(user.getUserIntegral()-totalPrice);
            prizeService.updateByPrimaryKey(userId,number,prizeId);
-
+           int i = prizeService.exhangePrize(userId, number, prizeId);
+           String changestr = "兑换"+prize.getPrizeName()+"成功";
+           int changint=-number*prize.getPrizePrice();
+          int endnum=user.getUserIntegral()-changint;
+           int k = integralService.addPrizeIntegral(changint, userId, changestr, endnum);
+           userService.upUserIntegral(user);
          return OutJSON.getInstance(CodeAndMessageEnum.FIND_PRIZE_SUCCESS,i);
    }}catch (Exception e){
+          e.printStackTrace();
           log.error(e.getMessage());
           return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
       }

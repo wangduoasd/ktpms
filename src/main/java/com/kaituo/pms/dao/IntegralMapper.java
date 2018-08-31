@@ -1,5 +1,6 @@
 package com.kaituo.pms.dao;
 
+import com.kaituo.pms.bean.Exchange;
 import com.kaituo.pms.bean.Integral;
 import com.kaituo.pms.bean.IntegralExample;
 import java.util.List;
