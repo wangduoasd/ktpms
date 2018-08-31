@@ -2,10 +2,7 @@ package com.kaituo.pms.serviceImpl;
 
 import com.kaituo.pms.bean.UserExample;
 import com.kaituo.pms.dao.UserMapper;
-import com.kaituo.pms.service.DeptService;
-import com.kaituo.pms.service.PositionService;
-import com.kaituo.pms.service.UserRoleService;
-import com.kaituo.pms.service.UserService;
+import com.kaituo.pms.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 /*import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,7 +17,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;*/
 import org.springframework.stereotype.Service;
 
 
-import java.util.ArrayList;
 import java.util.List;
 import com.kaituo.pms.bean.User;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,6 +39,8 @@ public class UserServiceImpl implements UserService/*,UserDetailsService */{
     DeptService deptService;
     @Autowired
     PositionService positionService;
+    @Autowired
+    IntegralService integralService;
     /**
     * @Description:  从用户视图中获取除超级管理员外全部数据
     * @Param:
@@ -243,5 +241,16 @@ public class UserServiceImpl implements UserService/*,UserDetailsService */{
     @Override
     public User getUserById(int userId) {
         return userMapper.getUserById(userId);
+    }
+
+    @Override
+    public int upUserIntegral(int operatorId,int userId,String changeStr,int changeInt) {
+        User user = userMapper.selectByPrimaryKey(userId);
+        Integer endNum = user.getUserIntegral()+changeInt;
+        User user1 = new User();
+        user1.setUserId(userId);
+        user1.setUserIntegral(endNum);
+        userMapper.updateByPrimaryKeySelective(user1);
+        return integralService.addIntegral(operatorId,changeStr,userId,changeInt,endNum );
     }
 }

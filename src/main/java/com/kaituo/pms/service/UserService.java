@@ -88,6 +88,8 @@ public interface UserService {
 
     int upUserPassword(int userId,String oldPassWord, String newPassWord);
 
+    int upUserIntegral(int operatorId,int userId,String changeStr,int changeInt);
+
 
     //userID唯一校验
 

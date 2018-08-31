@@ -427,4 +427,32 @@ public class UserController {
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
         }
     }
+    /**
+     　  * @Description: 综服中心_员工设置_修改员工
+     　　* @param [user]
+     　　* @return com.kaituo.pms.utils.OutJSON
+     　　* @throws
+     　　* @author 张金行
+     　　* @date 2018/8/23 0023 13:40
+     　　*/
+    @ResponseBody
+    @PutMapping(value = "authority/one/user/integral/{operatorId}/{userId}")
+    public OutJSON upUserPassword(@PathVariable(value = "userId") int userId,
+                                  @RequestParam("changeInt")int changeInt,
+                                  @RequestParam("changestr") String changestr,
+                                  @PathVariable(value = "operatorId")int operatorId
+                                  ) {
+        try {
+            int i=userService.upUserIntegral(operatorId,userId, changestr, changeInt);
+            if(i==1)
+                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);
+            if(i==2){
+                return OutJSON.getInstance(CodeAndMessageEnum.USER_PASSWORD_CHECK);
+            }
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_OPERATION_ERROR);
+        } catch (Exception e) {
+            log.error( e.getMessage());
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
+        }
+    }
 }

@@ -18,10 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 * @Author: 侯鹏
 * @Date: 2018/8/10
 */
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @Transactional
@@ -70,5 +67,17 @@ public class IntergralServiceImpl implements IntegralService {
             }
         }
         return integralMap;
+    }
+
+    @Override
+    public int addIntegral(int operatorId,String changestr,int userId,int changeInt,int endNum ) {
+        Integral integral = new Integral();
+        integral.setIntegralOperator(operatorId);
+        integral.setIntegralChangeint(changeInt);
+        integral.setIntegralEndnum(endNum);
+        integral.setIntegralTime(new Date());
+        integral.setUserId(userId);
+        integral.setIntegralChangestr(changestr);
+        return integralMapper.insertSelective(integral);
     }
 }

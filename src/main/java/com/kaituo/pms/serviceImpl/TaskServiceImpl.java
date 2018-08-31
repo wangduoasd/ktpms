@@ -620,6 +620,7 @@ public class TaskServiceImpl implements TaskService {
                     // 修改任务状态为已完成
                     task.setTaskStatus(Constant.THE_TASK_HAS_BEEN_RECEIVED);
                     task.setTaskNumber(task.getTaskNumber()+1);
+                    task.setTaskGettime(new Date());
                     TaskExample taskExample = new TaskExample();
                     TaskExample.Criteria taskCriteria = taskExample.createCriteria();
                     taskCriteria.andTaskIdEqualTo(task.getTaskId());

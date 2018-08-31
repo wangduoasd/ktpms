@@ -19,4 +19,5 @@ public interface IntegralService {
     long integeralTotal(int uid);
 
     List<Map<String , Object>> listIntegeral(int uid);
+    int addIntegral(int operatorId,String changestr,int userId,int changeInt,int endNum );
 }
