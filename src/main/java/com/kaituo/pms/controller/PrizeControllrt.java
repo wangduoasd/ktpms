@@ -161,7 +161,7 @@ public class PrizeControllrt {
    * @Author: 侯鹏
    * @Date:2018/8/21
    */
-   @DeleteMapping("authority/two//prize/{prizeId}")
+   @DeleteMapping("authority/two/prize/{prizeId}")
    public OutJSON deleteById(@PathVariable("prizeId") int prizeId) {
        Prize prize = prizeService.selectByPrimaryKey(prizeId);
        int deleteFalg = 0;
@@ -200,12 +200,14 @@ public class PrizeControllrt {
    * @Author: 侯鹏
    * @Date: 2018/8/21
    */
-   @GetMapping("authority/two/prize/s/{prizeName}")
-   public OutJSON selectServiceByName(@PathVariable("prizeName") String prizeName){
+   @GetMapping("authority/two/prize/s/{prizeName}/{pageNumber}")
+   public OutJSON selectServiceByName(@PathVariable("prizeName") String prizeName,@RequestParam (value = "pageSize",defaultValue = "6") int pageSize,@PathVariable("pageNumber") int pageNumber){
        prizeName="%"+prizeName+"%";
+       PageHelper.startPage(pageNumber,pageSize);
        List<Prize> prizeList = prizeService.selectServiceByName(prizeName);
        if(null!=prizeList&&prizeList.size()>0){
-           return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, prizeList);
+           PageInfo<Prize> prizePageInfo = new PageInfo<>(prizeList);
+           return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,prizePageInfo);
        }
        return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
    }
