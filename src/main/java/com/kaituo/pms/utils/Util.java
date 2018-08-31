@@ -85,7 +85,7 @@ public class Util {
      */
     public static int imgDelect(String fileName){
        int out = Constant.IMG_DELECT_ERROR;
-        File file = new File(getImgRelativePath() + fileName);
+        File file = new File(getImgBasePath() + fileName);
 
         // 如果文件路径所对应的文件存在，并且是一个文件，则直接删除
         if(file.exists() && file.isFile()){
