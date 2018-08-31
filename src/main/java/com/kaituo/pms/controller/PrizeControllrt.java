@@ -89,16 +89,13 @@ public class PrizeControllrt {
    public OutJSON exchangePrize(@PathVariable("userId")  int userId,@PathVariable("pageNumber") int number,@PathVariable("prizeId") int prizeId){
       try {
        Prize prize = prizeService.selectByPrimaryKey(prizeId);
-       int count = (prize.getPrizeAmount()-number);
-       prize.setPrizeAmount(count);
-       prizeService.updateByPrimaryKey(userId,number,prizeId);
-       User user = userService.findPersonalDetail(userId);
+          User user = userService.findPersonalDetail(userId);
        int i = prizeService.exhangePrize(userId, number, prizeId);
        int totalPrice = number * prize.getPrizePrice();
        if (null == user || null == prize) {
            //用户名或商品为空
            return OutJSON.getInstance(CodeAndMessageEnum.GET_STATES_TASK_BY_PAGE_NULL);
-       } else if (number >prize.getPrizeQuota()||prize.getPrizeAmount()<0) {
+       } else if (number >prize.getPrizeQuota()||prize.getPrizeAmount()<0||prize.getPrizeQuota()<0) {
            //购买失败，超过上限
            return OutJSON.getInstance(CodeAndMessageEnum.FIND_PRIZE_CAP);
        } else if (totalPrice > user.getUserIntegral()) {
@@ -106,6 +103,10 @@ public class PrizeControllrt {
            return OutJSON.getInstance(CodeAndMessageEnum.FIND_PRIZE_INTEGRAL_LACKOF);
        } else {
            //购买成功
+           int count = (prize.getPrizeAmount()-number);
+           prize.setPrizeAmount(count);
+           prizeService.updateByPrimaryKey(userId,number,prizeId);
+
          return OutJSON.getInstance(CodeAndMessageEnum.FIND_PRIZE_SUCCESS,i);
    }}catch (Exception e){
           log.error(e.getMessage());
@@ -144,7 +145,7 @@ public class PrizeControllrt {
    * @Author: 侯鹏
    * @Date:2018/8/21
    */
-   @DeleteMapping("authority/two/prize/{prizeId}")
+   @DeleteMapping("authority/two//prize/{prizeId}")
    public OutJSON deleteById(@PathVariable("prizeId") int prizeId) {
        Prize prize = prizeService.selectByPrimaryKey(prizeId);
        int deleteFalg = 0;
@@ -301,7 +302,7 @@ public class PrizeControllrt {
     * @Author: 侯鹏
     * @Date: 2018/8/22
     */
-    @PostMapping("authority/two/prize/statusOne/{prizeId}")
+    @PostMapping("/prize/statusOne/{prizeId}")
     public OutJSON goodsShelves(@PathVariable("prizeId") int prizeId){
         try {
             int goodsshelves = prizeService.goodsshelves(prizeId);
