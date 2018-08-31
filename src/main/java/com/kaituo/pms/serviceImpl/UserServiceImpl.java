@@ -172,9 +172,6 @@ public class UserServiceImpl implements UserService/*,UserDetailsService */{
     @Transactional(rollbackFor = Exception.class)
     public int addUser(User user) {
         UserExample userExample = new UserExample();
-/*        ArrayList<Integer> list = new ArrayList<>();
-        list.add(user.getUserId());
-        userExample.createCriteria().andUserIdNotIn(list);*/
         List<User> users = userMapper.selectByExample(userExample);
         for(User u:users){
            if( u.getUserId().equals(user.getUserId())){

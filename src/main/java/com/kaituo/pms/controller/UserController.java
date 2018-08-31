@@ -428,7 +428,7 @@ public class UserController {
         }
     }
     /**
-     　  * @Description: 综服中心_员工设置_修改员工
+     　  * @Description: 综服中心_员工设置_修改积分
      　　* @param [user]
      　　* @return com.kaituo.pms.utils.OutJSON
      　　* @throws
