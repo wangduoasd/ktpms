@@ -264,6 +264,29 @@ public class UserController {
         }
     }
     /**
+     * @Description: 综服中心-员工设置-员工修改 通过用户ID获得用户信息
+     * @param
+     * @return
+     * @throws
+     * @author 张金行
+     * @date 2018/8/17 0017 17:35
+     */
+    @ResponseBody
+    @GetMapping(value = "authority/one/user/{userId}")
+    public OutJSON findAllUser(@PathVariable(value = "userId") int userId) {
+        try {
+
+            User user = userService.getUserById(userId);
+            if(user==null)
+                return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
+
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,user);
+        } catch (Exception e) {
+            log.error( e.getMessage());
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
+        }
+    }
+    /**
      　  * @Description: 综服中心_员工设置_员工搜索  通过部门名或者员工名
      　　* @param [user]
      　　* @return com.kaituo.pms.utils.OutJSON
@@ -380,4 +403,28 @@ public class UserController {
         }
     }
 
+    /**
+     　  * @Description: 综服中心_员工设置_修改员工
+     　　* @param [user]
+     　　* @return com.kaituo.pms.utils.OutJSON
+     　　* @throws
+     　　* @author 张金行
+     　　* @date 2018/8/23 0023 13:40
+     　　*/
+    @ResponseBody
+    @PutMapping(value = "user/{userId}/password")
+    public OutJSON upUserPassword(@PathVariable(value = "userId") int userId,@RequestParam("oldPassWord") String oldPassWord,@RequestParam("newPassWord")String newPassWord) {
+        try {
+            int i=userService.upUserPassword(userId,oldPassWord,newPassWord);
+            if(i==1)
+                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);
+            if(i==2){
+                return OutJSON.getInstance(CodeAndMessageEnum.USER_PASSWORD_CHECK);
+            }
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_OPERATION_ERROR);
+        } catch (Exception e) {
+            log.error( e.getMessage());
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
+        }
+    }
 }

@@ -134,4 +134,20 @@ public class Exchange {
     public void setUserName(String userName) {
         this.userName = userName;
     }
+
+    @Override
+    public String toString() {
+        return "Exchange{" +
+                "exchangeId=" + exchangeId +
+                ", prizeId=" + prizeId +
+                ", userId=" + userId +
+                ", userName='" + userName + '\'' +
+                ", exchangeCount=" + exchangeCount +
+                ", exchangeTime=" + exchangeTime +
+                ", exchangeStatus=" + exchangeStatus +
+                ", prizeName='" + prizeName + '\'' +
+                ", prizeImage='" + prizeImage + '\'' +
+                ", exchangeTotal=" + exchangeTotal +
+                '}';
+    }
 }

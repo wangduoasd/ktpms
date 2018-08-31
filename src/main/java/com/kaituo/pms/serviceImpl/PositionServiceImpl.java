@@ -31,7 +31,10 @@ public class PositionServiceImpl implements PositionService {
     }
     @Override
 
-    public int addPositons(String[] positionArray,int deptId) {
+    public int addPositons(List<String>  positionArray,int deptId) {
+        PositionExample positionExample = new PositionExample();
+        positionExample.createCriteria().andDeptIdEqualTo(deptId);
+        positionMapper.deleteByExample(positionExample);
         Position position = new Position();
         for (String p:positionArray ) {
             position.setPositionName(p);

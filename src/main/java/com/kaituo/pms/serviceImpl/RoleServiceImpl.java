@@ -32,4 +32,9 @@ public class RoleServiceImpl implements RoleService{
 
         return roleMapper.selectByPrimaryKey(roleId);
     }
+
+    @Override
+    public List<Role> findRoleById(int userId) {
+        return roleMapper.findRoleById(userId);
+    }
 }

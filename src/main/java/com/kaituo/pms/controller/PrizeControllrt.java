@@ -325,7 +325,7 @@ public class PrizeControllrt {
     @PostMapping("authority/two/prize/statusTwo/{prizeId}")
     public OutJSON goodsSoldout(@PathVariable("prizeId") int prizeId){
         try {
-            int goodsshelves = prizeService.goodsshelves(prizeId);
+            int goodsshelves = prizeService.goodsoldout(prizeId);
             if(goodsshelves>0){
                 return OutJSON.getInstance(CodeAndMessageEnum.GOODS_SOLDOUT_SUCCESS,goodsshelves);
             }

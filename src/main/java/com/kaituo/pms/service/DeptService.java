@@ -14,13 +14,13 @@ public interface DeptService {
 
     List<Dept> findAllDept();
    //添加部门
-    int addDept(Dept dept,String[] positionArray);
+    int addDept(Dept dept,List<String>  positionArray);
 
     List<Dept> findDeptByName(String deptName);
 
     //删除部门，删除之前先检查
     int delDept(int deptId) ;
     //修改部门
-    int upDept(Dept dept, String[] positionArray);
+    int upDept(Dept dept, List<String>  positionArray);
 
 }

@@ -38,9 +38,9 @@ public class UserRoleController {
      　　*/
     @ResponseBody
     @PostMapping(value = "authority/all/roles")
-    public OutJSON addUserRole(User user, @RequestParam String[] roleArray) {
+    public OutJSON addUserRole(User user) {
         try {
-            int i=userRoleService.addRoles(roleArray,user.getUserId());
+            int i=userRoleService.addRoles(user.getRoles(),user.getUserId());
             if(i==1)
                 return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_OPERATION_ERROR);
@@ -59,9 +59,9 @@ public class UserRoleController {
      　　*/
     @ResponseBody
     @PutMapping(value = "authority/all/roles")
-    public OutJSON upUserRole(User user, @RequestParam String[] roleArray) {
+    public OutJSON upUserRole(User user) {
         try {
-            int i=userRoleService.upUserRoles(roleArray,user.getUserId());
+            int i=userRoleService.upUserRoles(user.getRoles(),user.getUserId());
             if(i==1)
                 return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_OPERATION_ERROR);

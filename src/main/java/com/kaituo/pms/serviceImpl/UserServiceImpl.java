@@ -218,10 +218,7 @@ public class UserServiceImpl implements UserService/*,UserDetailsService */{
     @Transactional(rollbackFor = Exception.class)
     public List<User> findRoleUser() {
         List<User> roleUser = userMapper.findRoleUser();
-        for (User user:roleUser){
-            user.setRoles(userRoleService.findAllRole(user.getUserId()));
 
-        }
         return  roleUser;
     }
     @Override
@@ -231,4 +228,20 @@ public class UserServiceImpl implements UserService/*,UserDetailsService */{
         return  userMapper.selectByPrimaryKey(userId);
     }
 
+    @Override
+    public int upUserPassword(int userId,String oldPassWord, String newPassWord) {
+        if(oldPassWord!=userMapper.selectByPrimaryKey(userId).getUserPassword()){
+            return 2;
+        }
+        User user = new User();
+        user.setUserId(userId);
+        user.setUserPassword(newPassWord);
+        return userMapper.updateByPrimaryKey(user);
+
+    }
+
+    @Override
+    public User getUserById(int userId) {
+        return userMapper.getUserById(userId);
+    }
 }

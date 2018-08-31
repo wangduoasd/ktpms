@@ -15,4 +15,5 @@ import java.util.List;
 public interface RoleService {
     List<Role> getAll();
     Role getRoleById(int roleId);
+    List<Role> findRoleById(int userId);
 }
