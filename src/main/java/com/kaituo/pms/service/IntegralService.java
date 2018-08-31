@@ -19,5 +19,7 @@ public interface IntegralService {
     long integeralTotal(int uid);
 
     List<Map<String , Object>> listIntegeral(int uid);
+
+    int addPrizeIntegral(int changint,int userId,String changestr,int endnum);
     int addIntegral(int operatorId,String changestr,int userId,int changeInt,int endNum );
 }

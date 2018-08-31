@@ -81,6 +81,7 @@ public interface UserService {
 
     List<User> findUserRole();
 
+    int upUserIntegral(User user);
 
     List<User> findRoleUser();
 

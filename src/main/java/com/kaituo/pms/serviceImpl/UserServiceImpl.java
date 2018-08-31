@@ -210,6 +210,14 @@ public class UserServiceImpl implements UserService/*,UserDetailsService */{
     }
 
     @Override
+    public int upUserIntegral(User user) {
+        UserExample example = new UserExample();
+        UserExample.Criteria criteria = example.createCriteria();
+        criteria.andUserIdEqualTo(user.getUserId());
+        return userMapper.updateByExampleSelective(user , example);
+    }
+
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public List<User> findRoleUser() {
         List<User> roleUser = userMapper.findRoleUser();
