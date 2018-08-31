@@ -163,9 +163,16 @@ public class TaskController {
                         // 如果用户的积分大于等于任务消耗积分则扣除积分添加积分明细修改任务状态
                         if (user.getUserIntegral()>=task.getTaskPrice()){
 
+                            // 任务已被领取时，再次领取
+                            if(task.getTaskStatus() == Constant.THE_TASK_HAS_BEEN_RECEIVED){
+                                return OutJSON.getInstance(CodeAndMessageEnum.RECIEVE_THE_TASK_STATUS_IS_RECEIVED);
+                            }
+
                             // 数据的修改
                             return taskService.recieveTheTask(task , user);
 
+                        }else {
+                            return OutJSON.getInstance(CodeAndMessageEnum.RECIEVE_THE_TASK_INSUFFICIENT_POINTS);
                         }
 
                     }else {
@@ -184,12 +191,11 @@ public class TaskController {
             log.error(e.getMessage());
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
         }
-        return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
     }
 
     /**
      * 领取任务(零时)
-     * @Param:
+     * @Param:   2
      * @param taskId 任务id
      * @param userId 员工id
      * @return: com.kaituo.pms.utils.OutJSON
@@ -230,7 +236,7 @@ public class TaskController {
                             return taskService.recieveTheTask(task , user);
 
                         }else {
-                            return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
+                            return OutJSON.getInstance(CodeAndMessageEnum.RECIEVE_THE_TASK_INSUFFICIENT_POINTS);
                         }
 
                     }else {
