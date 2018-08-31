@@ -38,11 +38,11 @@ public class UserRoleController {
      　　*/
     @ResponseBody
     @PostMapping(value = "authority/all/roles")
-    public OutJSON addUserRole(User user, @RequestParam String[] roleArray) {
+    public OutJSON addUserRole(User user) {
         try {
-            int i=userRoleService.addRoles(roleArray,user.getUserId());
-            if(i==1)
-                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);
+            int i=userRoleService.addRoles(user.getRoles(),user.getUserId());
+            if(i==1){
+                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);}
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_OPERATION_ERROR);
         } catch (Exception e) {
             log.error( e.getMessage());
@@ -59,11 +59,11 @@ public class UserRoleController {
      　　*/
     @ResponseBody
     @PutMapping(value = "authority/all/roles")
-    public OutJSON upUserRole(User user, @RequestParam String[] roleArray) {
+    public OutJSON upUserRole(User user) {
         try {
-            int i=userRoleService.upUserRoles(roleArray,user.getUserId());
-            if(i==1)
-                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);
+            int i=userRoleService.upUserRoles(user.getRoles(),user.getUserId());
+            if(i==1){
+                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);}
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_OPERATION_ERROR);
         } catch (Exception e) {
             log.error( e.getMessage());
@@ -83,8 +83,8 @@ public class UserRoleController {
     public OutJSON addUserRole(@PathVariable("userId") int userId) {
         try {
             int i=userRoleService.delUserRole(userId);
-            if(i>=1)
-                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);
+            if(i>=1){
+                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);}
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_OPERATION_ERROR);
         } catch (Exception e) {
             log.error( e.getMessage());

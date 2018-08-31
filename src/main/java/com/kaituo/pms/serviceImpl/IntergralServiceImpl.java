@@ -84,4 +84,16 @@ public class IntergralServiceImpl implements IntegralService {
     }
 
 
+
+    @Override
+    public int addIntegral(int operatorId,String changestr,int userId,int changeInt,int endNum ) {
+        Integral integral = new Integral();
+        integral.setIntegralOperator(operatorId);
+        integral.setIntegralChangeint(changeInt);
+        integral.setIntegralEndnum(endNum);
+        integral.setIntegralTime(new Date());
+        integral.setUserId(userId);
+        integral.setIntegralChangestr(changestr);
+        return integralMapper.insertSelective(integral);
+    }
 }

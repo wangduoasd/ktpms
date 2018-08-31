@@ -195,4 +195,8 @@
       role_status = #{roleStatus,jdbcType=BIT}
     where role_id = #{roleId,jdbcType=INTEGER}
   </update>
+  <select id="findRoleById" resultMap="BaseResultMap">
+  SELECT u.role_id,role_name,role_affiliation,role_status FROM p_user_role u,p_role p WHERE u.role_id=p.`role_id` AND user_id=#{userId}
+    </select>
+
 </mapper>

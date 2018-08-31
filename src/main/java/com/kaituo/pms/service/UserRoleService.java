@@ -23,7 +23,7 @@ public interface UserRoleService {
      　　* @author 张金行
      　　* @date 2018/8/23 0023 14:31
      　　*/
-    int addRoles(String[] roleArray,int userId);
+    int addRoles(List<String>  roleArray,int userId);
      /**
         　  * @Description: 删除用户权限
         　　* @param
@@ -41,5 +41,5 @@ public interface UserRoleService {
         　　* @author 张金行
         　　* @date 2018/8/23 0023 14:31
         　　*/
-    int upUserRoles(String[] roleArray, Integer userId);
+    int upUserRoles(List<String>  roleArray, Integer userId);
 }

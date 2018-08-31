@@ -72,7 +72,7 @@ public interface UserService {
      * @date 2018/8/17 0017 17:35
      */
     List<User>findAllUser();
-
+    User getUserById(int userId);
     List<User> findByKeyWord(String keyWord);
 
     int addUser(User user);
@@ -86,6 +86,11 @@ public interface UserService {
     List<User> findRoleUser();
 
     User findUserById(int userId);
+
+    int upUserPassword(int userId,String oldPassWord, String newPassWord);
+
+    int upUserIntegral(int operatorId,int userId,String changeStr,int changeInt);
+
 
     //userID唯一校验
 

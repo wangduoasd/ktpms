@@ -1,5 +1,8 @@
 package com.kaituo.pms.bean;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -7,25 +10,26 @@ import java.util.List;
 public class User implements Serializable {
     private static final long serialVersionUID = -1672970955045193907L;
     private int num;
-
     private Integer userId;
-
-private String userName;
-
-    private String userPassword;
-
-    private Integer userIntegral;
-
-    private Integer userDeptPosition;
+    private String userName;
+    private Integer dept_id;
     private  String deptName;
+    private Integer userDeptPosition;
     private  String positionName;
-    private List<Role> roles;
-
-
-
-    private Integer userStatus;
-
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date userInductiontime;
+    private Integer userIntegral;
+    private Integer userStatus;
+    private String userPassword;
+    private List<String> roles;
+//enheng
+
+
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    private Date getRoleTime;
 
     public String getDeptName() {
         return deptName;
@@ -52,7 +56,7 @@ private String userName;
         this.userStatus = userStatus;
         this.userInductiontime = userInductiontime;
     }
-    public User(Integer num,Integer userId, String userName, Integer userIntegral, String deptName, String positionName, Integer userStatus, Date userInductiontime) {
+    public User(Integer num,Integer userId, String userName, Integer userIntegral, String deptName, String positionName, Integer userStatus, Date userInductiontime,String userPassword) {
         this.num=num;
         this.userId = userId;
         this.userName = userName;
@@ -61,6 +65,7 @@ private String userName;
         this.positionName = positionName;
         this.userStatus = userStatus;
         this.userInductiontime = userInductiontime;
+        this.userPassword=userPassword;
     }
 //添加员工
     public User(Integer userId, String userName, String userPassword, Integer userIntegral, String deptName, String positionName, Integer userStatus, Date userInductiontime) {
@@ -80,12 +85,41 @@ private String userName;
         this.userName = userName;
     }
 //权限用户列表
-    public User(Integer userId, String userName, String deptName, String positionName, Date userInductiontime) {
+    public User(Integer userId, String userName, String deptName, String positionName, Date getRoleTime) {
         this.userId = userId;
         this.userName = userName;
         this.deptName = deptName;
         this.positionName = positionName;
+        this.getRoleTime = getRoleTime;
+    }
+//员工设置
+    public User(Integer userId, String userName, Integer dept_id, String deptName, Integer userDeptPosition, String positionName, Date userInductiontime, Integer userIntegral, Integer userStatus, String userPassword) {
+        this.userId = userId;
+        this.userName = userName;
+        this.dept_id = dept_id;
+        this.deptName = deptName;
+        this.userDeptPosition = userDeptPosition;
+        this.positionName = positionName;
         this.userInductiontime = userInductiontime;
+        this.userIntegral = userIntegral;
+        this.userStatus = userStatus;
+        this.userPassword = userPassword;
+    }
+
+    public User(int num, Integer userId, String userName, String userPassword, Integer userIntegral, Integer dept_id, String deptName, Integer userDeptPosition, String positionName, List<String> roles, Integer userStatus, Date userInductiontime, Date getRoleTime) {
+        this.num = num;
+        this.userId = userId;
+        this.userName = userName;
+        this.userPassword = userPassword;
+        this.userIntegral = userIntegral;
+        this.dept_id = dept_id;
+        this.deptName = deptName;
+        this.userDeptPosition = userDeptPosition;
+        this.positionName = positionName;
+        this.roles = roles;
+        this.userStatus = userStatus;
+        this.userInductiontime = userInductiontime;
+        this.getRoleTime = getRoleTime;
     }
 
     public User() {
@@ -153,15 +187,36 @@ private String userName;
         this.num = num;
     }
 
-    public List<Role> getRoles() {
-        return roles;
-    }
 
-    public void setRoles(List<Role> roles) {
-        this.roles = roles;
-    }
 
     public void setUserInductiontime(Date userInductiontime) {
         this.userInductiontime = userInductiontime;
+    }
+
+    public Date getGetRoleTime() {
+        return getRoleTime;
+    }
+
+    public void setGetRoleTime(Date getRoleTime) {
+        this.getRoleTime = getRoleTime;
+    }
+
+
+
+
+    public Integer getDept_id() {
+        return dept_id;
+    }
+
+    public void setDept_id(Integer dept_id) {
+        this.dept_id = dept_id;
+    }
+
+    public List<String> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<String> roles) {
+        this.roles = roles;
     }
 }

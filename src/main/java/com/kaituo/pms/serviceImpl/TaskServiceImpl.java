@@ -467,7 +467,7 @@ public class TaskServiceImpl implements TaskService {
         List<Task> publishedTaskList = taskMapper.listPublishedTask();
         Map<String , Object> pageMap = new HashMap<>(2);
 
-        pageMap.put("total:" , total);
+        pageMap.put("total" , total);
         pageMap.put("taskList" , publishedTaskList);
 
         return OutJSON.getInstance(CodeAndMessageEnum.PUBLISHED_TASK_COMPLETED , pageMap);
@@ -502,7 +502,7 @@ public class TaskServiceImpl implements TaskService {
             List<Task> list = taskMapper.selectByExample(taskExample);
             Map<String , Object> pageMap = new HashMap<>(2);
 
-            pageMap.put("total:" , total);
+            pageMap.put("total" , total);
             pageMap.put("taskList" , list);
 
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS , pageMap);
@@ -534,7 +534,7 @@ public class TaskServiceImpl implements TaskService {
             List<Task> invalidTaskList = taskMapper.listInvalidTask();
             Map<String , Object> pageMap = new HashMap<>(2);
 
-            pageMap.put("total:" , total);
+            pageMap.put("total" , total);
             pageMap.put("taskList" , invalidTaskList);
 
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS , pageMap);
@@ -620,6 +620,7 @@ public class TaskServiceImpl implements TaskService {
                     // 修改任务状态为已完成
                     task.setTaskStatus(Constant.THE_TASK_HAS_BEEN_RECEIVED);
                     task.setTaskNumber(task.getTaskNumber()+1);
+                    task.setTaskGettime(new Date());
                     TaskExample taskExample = new TaskExample();
                     TaskExample.Criteria taskCriteria = taskExample.createCriteria();
                     taskCriteria.andTaskIdEqualTo(task.getTaskId());

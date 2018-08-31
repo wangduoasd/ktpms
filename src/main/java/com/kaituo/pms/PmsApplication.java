@@ -6,6 +6,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 
 import java.util.Properties;
@@ -13,6 +14,7 @@ import java.util.Properties;
 @SpringBootApplication
 /*@EnableWebSecurity*/
 /*@EnableCaching*/
+@EnableTransactionManagement
 public class PmsApplication {
 
     public static void main(String[] args) {

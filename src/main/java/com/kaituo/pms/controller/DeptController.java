@@ -19,6 +19,7 @@ import sun.reflect.generics.scope.Scope;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.SQLNonTransientException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -87,10 +88,10 @@ public class DeptController {
      　　*/
     @ResponseBody
     @PostMapping (value = "authority/four/dept")
-    public OutJSON addDept(Dept dept,@RequestParam("positionArray") String[] positionArray) {
+    public OutJSON addDept(Dept dept) {
         try {
 
-            int i= deptService.addDept(dept,positionArray);
+            int i= deptService.addDept(dept,dept.getPositionArray());
             if(i==1){
                 return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);}
             if(i==2)
@@ -127,9 +128,9 @@ public class DeptController {
      　　*/
     @PutMapping("authority/four/dept")
     @ResponseBody
-    public OutJSON upDept(Dept dept,@RequestParam("positionArray") String[] positionArray) {
+    public OutJSON upDept(Dept dept) {
         try {
-            int i = deptService.upDept(dept, positionArray);
+            int i = deptService.upDept(dept,dept.getPositionArray());
             if(i==1){
                 return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);}
             if(i==2)

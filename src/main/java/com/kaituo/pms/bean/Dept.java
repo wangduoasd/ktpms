@@ -1,6 +1,10 @@
 package com.kaituo.pms.bean;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.util.Date;
+import java.util.List;
 
 public class Dept {
     private Integer deptId;
@@ -8,10 +12,21 @@ public class Dept {
     private String deptName;
 
     private String deptDescribe;
-
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date deptInductiontime;
 
     private Integer deptStatus;
+
+    private List<String> positionArray;
+
+    public List<String> getPositionArray() {
+        return positionArray;
+    }
+
+    public void setPositionArray(List<String> positionArray) {
+        this.positionArray = positionArray;
+    }
 
     public Dept(Integer deptId, String deptName, String deptDescribe, Date deptInductiontime, Integer deptStatus) {
         this.deptId = deptId;
@@ -19,6 +34,15 @@ public class Dept {
         this.deptDescribe = deptDescribe;
         this.deptInductiontime = deptInductiontime;
         this.deptStatus = deptStatus;
+    }
+
+    public Dept(Integer deptId, String deptName, String deptDescribe, Date deptInductiontime, Integer deptStatus, List<String> positionArray) {
+        this.deptId = deptId;
+        this.deptName = deptName;
+        this.deptDescribe = deptDescribe;
+        this.deptInductiontime = deptInductiontime;
+        this.deptStatus = deptStatus;
+        this.positionArray = positionArray;
     }
 
     public Dept(Integer deptId, String deptName) {

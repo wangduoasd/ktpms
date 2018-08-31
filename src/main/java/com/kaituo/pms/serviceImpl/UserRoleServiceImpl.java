@@ -14,7 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -54,12 +56,14 @@ public class UserRoleServiceImpl implements UserRoleService {
     }
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public int addRoles(String[] roleArray,int userId){
+    public int addRoles(List<String>  roleArray,int userId){
         UserRole userRole = new UserRole();
-        for (String s:roleArray
+
+        for (String r:roleArray
              ) {
             userRole.setUserId(userId);
-            userRole.setRoleId(Integer.parseInt(s));
+            userRole.setRoleId(Integer.parseInt(r));
+            userRole.setInductionTime(new Date());
             userRoleMapper.insertSelective(userRole);
 
         }
@@ -76,7 +80,7 @@ public class UserRoleServiceImpl implements UserRoleService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public int upUserRoles(String[] roleArray, Integer userId) {
+    public int upUserRoles(List<String>  roleArray, Integer userId) {
         delUserRole(userId);
         return addRoles( roleArray,userId);
 

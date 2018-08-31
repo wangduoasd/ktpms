@@ -2,10 +2,7 @@ package com.kaituo.pms.serviceImpl;
 
 import com.kaituo.pms.bean.UserExample;
 import com.kaituo.pms.dao.UserMapper;
-import com.kaituo.pms.service.DeptService;
-import com.kaituo.pms.service.PositionService;
-import com.kaituo.pms.service.UserRoleService;
-import com.kaituo.pms.service.UserService;
+import com.kaituo.pms.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 /*import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,7 +17,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;*/
 import org.springframework.stereotype.Service;
 
 
-import java.util.ArrayList;
 import java.util.List;
 import com.kaituo.pms.bean.User;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,6 +39,8 @@ public class UserServiceImpl implements UserService/*,UserDetailsService */{
     DeptService deptService;
     @Autowired
     PositionService positionService;
+    @Autowired
+    IntegralService integralService;
     /**
     * @Description:  从用户视图中获取除超级管理员外全部数据
     * @Param:
@@ -174,13 +172,13 @@ public class UserServiceImpl implements UserService/*,UserDetailsService */{
     @Transactional(rollbackFor = Exception.class)
     public int addUser(User user) {
         UserExample userExample = new UserExample();
-        ArrayList<Integer> list = new ArrayList<>();
+/*        ArrayList<Integer> list = new ArrayList<>();
         list.add(user.getUserId());
-        userExample.createCriteria().andUserIdNotIn(list);
+        userExample.createCriteria().andUserIdNotIn(list);*/
         List<User> users = userMapper.selectByExample(userExample);
         for(User u:users){
-           if( u.getUserId()==user.getUserId())
-               return 2;
+           if( u.getUserId().equals(user.getUserId())){
+               return 2;}
         }
         return userMapper.insert(user);
     }
@@ -191,8 +189,8 @@ public class UserServiceImpl implements UserService/*,UserDetailsService */{
         if(user.getUserStatus()==4){user.setUserIntegral(0);}
         if(user.getUserId()==oldUserId){return userMapper.updateByPrimaryKey(user);}
         User userById = findUserById(user.getUserId());
-        if(userById!=null)
-            return 2;
+        if(userById!=null){
+            return 2;}
             UserExample example = new UserExample();
             UserExample.Criteria criteria = example.createCriteria();
             criteria.andUserIdEqualTo(oldUserId);
@@ -226,10 +224,7 @@ public class UserServiceImpl implements UserService/*,UserDetailsService */{
     @Transactional(rollbackFor = Exception.class)
     public List<User> findRoleUser() {
         List<User> roleUser = userMapper.findRoleUser();
-        for (User user:roleUser){
-            user.setRoles(userRoleService.findAllRole(user.getUserId()));
 
-        }
         return  roleUser;
     }
     @Override
@@ -239,4 +234,31 @@ public class UserServiceImpl implements UserService/*,UserDetailsService */{
         return  userMapper.selectByPrimaryKey(userId);
     }
 
+    @Override
+    public int upUserPassword(int userId,String oldPassWord, String newPassWord) {
+        if(oldPassWord!=userMapper.selectByPrimaryKey(userId).getUserPassword()){
+            return 2;
+        }
+        User user = new User();
+        user.setUserId(userId);
+        user.setUserPassword(newPassWord);
+        return userMapper.updateByPrimaryKey(user);
+
+    }
+
+    @Override
+    public User getUserById(int userId) {
+        return userMapper.getUserById(userId);
+    }
+
+    @Override
+    public int upUserIntegral(int operatorId,int userId,String changeStr,int changeInt) {
+        User user = userMapper.selectByPrimaryKey(userId);
+        Integer endNum = user.getUserIntegral()+changeInt;
+        User user1 = new User();
+        user1.setUserId(userId);
+        user1.setUserIntegral(endNum);
+        userMapper.updateByPrimaryKeySelective(user1);
+        return integralService.addIntegral(operatorId,changeStr,userId,changeInt,endNum );
+    }
 }

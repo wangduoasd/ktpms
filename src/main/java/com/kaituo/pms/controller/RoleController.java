@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
@@ -40,10 +41,32 @@ public class RoleController {
     public OutJSON getAll() {
         try {
             List<Role> list = roleService.getAll();
-            if(list.size()==0){
+            if(list.size()==0||list==null){
                 return OutJSON.getInstance(CodeAndMessageEnum.ROLE_EMPTY);
             }
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, list);
+        } catch (Exception e) {
+            log.error( e.getMessage());
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
+        }
+    }
+    /**
+     　  * @Description: 权限管理_添加员工_权限列表 获得相应用户的权限列表
+     　　* @param [user, roleArray]
+     　　* @return com.kaituo.pms.utils.OutJSON
+     　　* @throws
+     　　* @author 张金行
+     　　* @date 2018/8/23 0023 14:08
+     　　*/
+    @ResponseBody
+    @GetMapping(value = "authority/all/roles/{userId}")
+    public OutJSON getRolesById(@PathVariable("userId")int userId) {
+        try {
+            List<Role> list = roleService.findRoleById(userId);
+            if(list.size()==0||list==null){
+                return OutJSON.getInstance(CodeAndMessageEnum.ROLE_EMPTY);
+            }
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,list);
         } catch (Exception e) {
             log.error( e.getMessage());
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);

@@ -7,5 +7,5 @@ import java.util.List;
 public interface PositionService {
    List<Position> getPositionNameBydeptId(int deptId);
 
-   int addPositons(String[] positionArray,int deptId);
+   int addPositons(List<String>  positionArray,int deptId);
 }

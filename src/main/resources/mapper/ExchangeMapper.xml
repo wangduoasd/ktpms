@@ -74,7 +74,7 @@
   </sql>
   <sql id="Base_Column_List">
     exchange_id, prize_id, user_id, exchange_count, exchange_time, exchange_status, prize_name, 
-    prize_image
+    prize_image,exchange_total
   </sql>
   <select id="selectByExample" parameterType="com.kaituo.pms.bean.ExchangeExample" resultMap="BaseResultMap">
     select

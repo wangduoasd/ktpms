@@ -74,7 +74,16 @@ public interface UserMapper {
 
     User findPersonalDetail(@Param("userId") int id);
 
+     /**
+        　  * @Description: 员工设置_分页查询
+        　　* @param
+        　　* @return
+        　　* @throws
+        　　* @author 张金行
+        　　* @date 2018/8/31 0031 14:27
+        　　*/
     List<User> findAllUser();
+    User getUserById(int userId);
      /**
         　  * @Description: 通过工号查找用户并取得该用户的权限
         　　* @param userId  工号
@@ -92,4 +101,6 @@ public interface UserMapper {
     List<User> findUserRole();
 
     List<User> findRoleUser();
+
+
 }
