@@ -89,10 +89,7 @@ public class PrizeControllrt {
    public OutJSON exchangePrize(@PathVariable("userId")  int userId,@PathVariable("pageNumber") int number,@PathVariable("prizeId") int prizeId){
       try {
        Prize prize = prizeService.selectByPrimaryKey(prizeId);
-       int count = (prize.getPrizeAmount()-number);
-       prize.setPrizeAmount(count);
-       prizeService.updateByPrimaryKey(userId,number,prizeId);
-       User user = userService.findPersonalDetail(userId);
+          User user = userService.findPersonalDetail(userId);
        int i = prizeService.exhangePrize(userId, number, prizeId);
        int totalPrice = number * prize.getPrizePrice();
        if (null == user || null == prize) {
@@ -106,6 +103,10 @@ public class PrizeControllrt {
            return OutJSON.getInstance(CodeAndMessageEnum.FIND_PRIZE_INTEGRAL_LACKOF);
        } else {
            //购买成功
+           int count = (prize.getPrizeAmount()-number);
+           prize.setPrizeAmount(count);
+           prizeService.updateByPrimaryKey(userId,number,prizeId);
+
          return OutJSON.getInstance(CodeAndMessageEnum.FIND_PRIZE_SUCCESS,i);
    }}catch (Exception e){
           log.error(e.getMessage());

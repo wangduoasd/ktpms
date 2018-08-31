@@ -137,7 +137,7 @@ public class PrizeServiceImpl implements PrizeService {
     public int goodsoldout(int prizeId) {
         Prize prize1 = prizeMapper.selectByPrimaryKey(prizeId);
 
-        prize1.setPrizeStatus(3);
+        prize1.setPrizeStatus(1);
         int i = prizeMapper.updateByPrimaryKeySelective(prize1);
         return i;
     }
