@@ -277,8 +277,8 @@ public class UserController {
         try {
 
             User user = userService.getUserById(userId);
-            if(user==null)
-                return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
+            if(user==null){
+                return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);}
 
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,user);
         } catch (Exception e) {

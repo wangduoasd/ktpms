@@ -119,7 +119,7 @@ public class ExchangeController {
     public OutJSON getExchangeLists(@PathVariable(value = "pn") int pageNumber, @RequestParam(value = "pageSize", defaultValue = "4") int pageSize) {
         try {
             PageHelper.startPage(pageNumber, pageSize);
-            //查询视图中所有用户   状态2（显示为：确定兑换），状态3（显示为：已兑换）  的兑换列表
+            //查询视图中所有用户   状态1（显示为：确定兑换），状态2（显示为：已兑换）  的兑换列表
             List<Exchange> list = exchangeService.getExchangeLists();
             PageInfo pageInfo = new PageInfo(list, 5);
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, pageInfo);

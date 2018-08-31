@@ -41,7 +41,7 @@ public class RoleController {
     public OutJSON getAll() {
         try {
             List<Role> list = roleService.getAll();
-            if(list.size()==0){
+            if(list.size()==0||list==null){
                 return OutJSON.getInstance(CodeAndMessageEnum.ROLE_EMPTY);
             }
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, list);
@@ -51,7 +51,7 @@ public class RoleController {
         }
     }
     /**
-     　  * @Description: 权限管理_添加员工_权限列表
+     　  * @Description: 权限管理_添加员工_权限列表 获得相应用户的权限列表
      　　* @param [user, roleArray]
      　　* @return com.kaituo.pms.utils.OutJSON
      　　* @throws
@@ -60,13 +60,13 @@ public class RoleController {
      　　*/
     @ResponseBody
     @GetMapping(value = "authority/all/roles/{userId}")
-    public OutJSON getAll(@PathVariable("userId")int userId) {
+    public OutJSON getRolesById(@PathVariable("userId")int userId) {
         try {
             List<Role> list = roleService.findRoleById(userId);
             if(list.size()==0||list==null){
                 return OutJSON.getInstance(CodeAndMessageEnum.ROLE_EMPTY);
             }
-            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, list);
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,list);
         } catch (Exception e) {
             log.error( e.getMessage());
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);

@@ -174,13 +174,13 @@ public class UserServiceImpl implements UserService/*,UserDetailsService */{
     @Transactional(rollbackFor = Exception.class)
     public int addUser(User user) {
         UserExample userExample = new UserExample();
-        ArrayList<Integer> list = new ArrayList<>();
+/*        ArrayList<Integer> list = new ArrayList<>();
         list.add(user.getUserId());
-        userExample.createCriteria().andUserIdNotIn(list);
+        userExample.createCriteria().andUserIdNotIn(list);*/
         List<User> users = userMapper.selectByExample(userExample);
         for(User u:users){
-           if( u.getUserId()==user.getUserId())
-               return 2;
+           if( u.getUserId().equals(user.getUserId())){
+               return 2;}
         }
         return userMapper.insert(user);
     }
@@ -191,8 +191,8 @@ public class UserServiceImpl implements UserService/*,UserDetailsService */{
         if(user.getUserStatus()==4){user.setUserIntegral(0);}
         if(user.getUserId()==oldUserId){return userMapper.updateByPrimaryKey(user);}
         User userById = findUserById(user.getUserId());
-        if(userById!=null)
-            return 2;
+        if(userById!=null){
+            return 2;}
             UserExample example = new UserExample();
             UserExample.Criteria criteria = example.createCriteria();
             criteria.andUserIdEqualTo(oldUserId);
