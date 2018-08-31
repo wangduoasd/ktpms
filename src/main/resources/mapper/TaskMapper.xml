@@ -203,10 +203,10 @@
         #{taskTime,jdbcType=INTEGER},
       </if>
       <if test="taskStarttime != null" >
-        #{taskStarttime,jdbcType=DATE},
+        #{taskStarttime,jdbcType=TIMESTAMP},
       </if>
       <if test="taskEndtime != null" >
-        #{taskEndtime,jdbcType=DATE},
+        #{taskEndtime,jdbcType=TIMESTAMP},
       </if>
       <if test="taskImage != null" >
         #{taskImage,jdbcType=VARCHAR},
@@ -224,7 +224,7 @@
         #{userName,jdbcType=VARCHAR},
       </if>
       <if test="taskGettime != null" >
-        #{taskGettime,jdbcType=DATE},
+        #{taskGettime,jdbcType=TIMESTAMP},
       </if>
       <if test="taskCountnumber != null" >
         #{taskCountnumber,jdbcType=INTEGER},
@@ -263,10 +263,10 @@
         task_time = #{record.taskTime,jdbcType=INTEGER},
       </if>
       <if test="record.taskStarttime != null" >
-        task_starttime = #{record.taskStarttime,jdbcType=DATE},
+        task_starttime = #{record.taskStarttime,jdbcType=TIMESTAMP},
       </if>
       <if test="record.taskEndtime != null" >
-        task_endtime = #{record.taskEndtime,jdbcType=DATE},
+        task_endtime = #{record.taskEndtime,jdbcType=TIMESTAMP},
       </if>
       <if test="record.taskImage != null" >
         task_image = #{record.taskImage,jdbcType=VARCHAR},
@@ -284,7 +284,7 @@
         user_name = #{record.userName,jdbcType=VARCHAR},
       </if>
       <if test="record.taskGettime != null" >
-        task_gettime = #{record.taskGettime,jdbcType=DATE},
+        task_gettime = #{record.taskGettime,jdbcType=TIMESTAMP},
       </if>
       <if test="record.taskCountnumber != null" >
         task_countnumber = #{record.taskCountnumber,jdbcType=INTEGER},
@@ -338,10 +338,10 @@
         task_time = #{taskTime,jdbcType=INTEGER},
       </if>
       <if test="taskStarttime != null" >
-        task_starttime = #{taskStarttime,jdbcType=DATE},
+        task_starttime = #{taskStarttime,jdbcType=TIMESTAMP},
       </if>
       <if test="taskEndtime != null" >
-        task_endtime = #{taskEndtime,jdbcType=DATE},
+        task_endtime = #{taskEndtime,jdbcType=TIMESTAMP},
       </if>
       <if test="taskImage != null" >
         task_image = #{taskImage,jdbcType=VARCHAR},
@@ -359,7 +359,7 @@
         user_name = #{userName,jdbcType=VARCHAR},
       </if>
       <if test="taskGettime != null" >
-        task_gettime = #{taskGettime,jdbcType=DATE},
+        task_gettime = #{taskGettime,jdbcType=TIMESTAMP},
       </if>
       <if test="taskCountnumber != null" >
         task_countnumber = #{taskCountnumber,jdbcType=INTEGER},
@@ -375,14 +375,14 @@
       task_award = #{taskAward,jdbcType=INTEGER},
       task_number = #{taskNumber,jdbcType=INTEGER},
       task_time = #{taskTime,jdbcType=INTEGER},
-      task_starttime = #{taskStarttime,jdbcType=DATE},
-      task_endtime = #{taskEndtime,jdbcType=DATE},
+      task_starttime = #{taskStarttime,jdbcType=TIMESTAMP},
+      task_endtime = #{taskEndtime,jdbcType=TIMESTAMP},
       task_image = #{taskImage,jdbcType=VARCHAR},
       task_describe = #{taskDescribe,jdbcType=VARCHAR},
       task_status = #{taskStatus,jdbcType=INTEGER},
       user_id = #{userId,jdbcType=INTEGER},
       user_name = #{userName,jdbcType=VARCHAR},
-      task_gettime = #{taskGettime,jdbcType=DATE},
+      task_gettime = #{taskGettime,jdbcType=TIMESTAMP},
       task_countnumber = #{taskCountnumber,jdbcType=INTEGER}
     where task_id = #{taskId,jdbcType=INTEGER}
   </update>

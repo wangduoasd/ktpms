@@ -302,7 +302,7 @@ public class PrizeControllrt {
     * @Author: 侯鹏
     * @Date: 2018/8/22
     */
-    @PostMapping("/prize/statusOne/{prizeId}")
+    @PostMapping("authority/two/prize/statusOne/{prizeId}")
     public OutJSON goodsShelves(@PathVariable("prizeId") int prizeId){
         try {
             int goodsshelves = prizeService.goodsshelves(prizeId);
