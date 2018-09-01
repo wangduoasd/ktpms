@@ -23,4 +23,7 @@ public interface ExchangeService {
             　　*/
     int addexchangeRecord(int prizeId,int userId,int num);
 
+    List<Exchange>  selectByUserIdPrizeId(int prizeId,int userId);
+
+
 }

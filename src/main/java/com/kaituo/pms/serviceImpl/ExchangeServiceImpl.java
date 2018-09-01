@@ -1,6 +1,7 @@
 package com.kaituo.pms.serviceImpl;
 
 import com.kaituo.pms.bean.Exchange;
+import com.kaituo.pms.bean.ExchangeExample;
 import com.kaituo.pms.bean.Prize;
 import com.kaituo.pms.dao.ExchangeMapper;
 import com.kaituo.pms.service.ExchangeService;
@@ -86,5 +87,15 @@ public class ExchangeServiceImpl implements ExchangeService {
         exchange.setUserName(userService.findUserById(userId).getUserName());
         exchange.setExchangeTotal(prize.getPrizePrice()*num);
       return   exchangeMapper.insertSelective(exchange);
+    }
+
+    @Override
+    public List<Exchange> selectByUserIdPrizeId(int prizeId, int userId) {
+        ExchangeExample exchangeExample = new ExchangeExample();
+        ExchangeExample.Criteria criteria = exchangeExample.createCriteria();
+        criteria.andUserIdEqualTo(userId).andPrizeIdEqualTo(prizeId);
+        return exchangeMapper.selectByExample(exchangeExample);
+
+
     }
 }
