@@ -202,14 +202,21 @@ public class PrizeControllrt {
    */
    @GetMapping("authority/two/prize/s/{prizeName}/{pageNumber}")
    public OutJSON selectServiceByName(@PathVariable("prizeName") String prizeName,@RequestParam (value = "pageSize",defaultValue = "6") int pageSize,@PathVariable("pageNumber") int pageNumber){
-       prizeName="%"+prizeName+"%";
-       PageHelper.startPage(pageNumber,pageSize);
-       List<Prize> prizeList = prizeService.selectServiceByName(prizeName);
-       if(null!=prizeList&&prizeList.size()>0){
-           PageInfo<Prize> prizePageInfo = new PageInfo<>(prizeList);
-           return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,prizePageInfo);
-       }
-       return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
+     try {
+         prizeName = "%" + prizeName + "%";
+
+         PageHelper.startPage(pageNumber, pageSize);
+         List<Prize> prizeList = prizeService.selectServiceByName(prizeName);
+         if (null != prizeList && prizeList.size() > 0) {
+             PageInfo<Prize> prizePageInfo = new PageInfo<>(prizeList);
+             return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, prizePageInfo);
+         }
+         return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
+     }catch (Exception e){
+         log.error(e.getMessage());
+         return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
+     }
+
    }
 
     /**

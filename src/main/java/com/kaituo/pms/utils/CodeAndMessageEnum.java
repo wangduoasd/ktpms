@@ -43,6 +43,8 @@ public enum CodeAndMessageEnum {
     PUBLISHING_TASK_IMAGE_IS_EMPTY("1" , "图片为空"),
     // 图片上传失败
     PUBLISHING_TASK_IMAGE_HAS_BEEN_SUCCESSFULLY_UPLOADED("0" , "图片上传失败"),
+    // 未找到任务
+    TASK_NOT_FOUND("2" , "未找到任务"),
     // 任务发布成功
     THE_TASK_WAS_SUCCESSFULLY_POSTDE("1" , "任务已发布"),
     // 任务发布失败

@@ -233,13 +233,14 @@ public class UserServiceImpl implements UserService/*,UserDetailsService */{
 
     @Override
     public int upUserPassword(int userId,String oldPassWord, String newPassWord) {
-        if(oldPassWord!=userMapper.selectByPrimaryKey(userId).getUserPassword()){
+        if(!userMapper.selectByPrimaryKey(userId).getUserPassword().equals(oldPassWord)){
+
             return 2;
         }
         User user = new User();
         user.setUserId(userId);
         user.setUserPassword(newPassWord);
-        return userMapper.updateByPrimaryKey(user);
+        return userMapper.updateByPrimaryKeySelective(user);
 
     }
 

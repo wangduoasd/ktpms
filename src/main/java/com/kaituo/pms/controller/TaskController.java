@@ -308,6 +308,7 @@ public class TaskController {
             case Constant.IMG_UPLOSD_SUCCESS :
                 // 获取相对路径
                 String url = (String) map.get("url");
+                url = url.replace(Util.seperator , "/");
                 // 时间处理
                 Date startDate = Util.stampToDate(starttime);
                 Date endDate = Util.stampToDate(endtime);
@@ -437,6 +438,17 @@ public class TaskController {
 
     }
 
+    /**
+     * 重新发布
+     * @Param:
+     * @param file 图片
+     * @param starttime 开始时间
+     * @param endtime 结束时间
+     * @param task 任务对象
+     * @return: com.kaituo.pms.utils.OutJSON
+     * @Author: 苏泽华
+     * @Date: 2018/8/21
+     */
     @PutMapping("authority/five/task/again")
     public OutJSON republish(MultipartFile file,String starttime , String endtime , Task task){
         // 图片上传并获取上传的状态
@@ -473,6 +485,7 @@ public class TaskController {
             case Constant.IMG_UPLOSD_SUCCESS :
                 // 获取相对路径
                 String url = (String) map.get("url");
+                url = url.replace(Util.seperator , "/");
                 // 数据处理
                 task.setTaskStarttime(startDate);
                 task.setTaskEndtime(endDate);
@@ -487,6 +500,21 @@ public class TaskController {
                 }
             default:
                 return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR , "未知原因错误");
+        }
+    }
+
+    @GetMapping("authority/five/task/again/{taskId}")
+    public OutJSON getTask(@PathVariable("taskId") int taskId){
+        try {
+            Task task = taskService.getTask(taskId);
+            if(null == task){
+                return OutJSON.getInstance(CodeAndMessageEnum.TASK_NOT_FOUND);
+            }
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS , task);
+        } catch (Exception e) {
+            log.error("getTask=>" + e.getMessage() , e);
+            e.printStackTrace();
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
         }
     }
 }

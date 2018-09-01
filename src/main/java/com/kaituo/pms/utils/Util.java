@@ -24,7 +24,7 @@ public class Util {
     /**
      * System.getProperty()获取系统的执行属性，file.separator 文件分隔符，os.name系统名
      */
-    private static String seperator = System.getProperty("file.separator");
+    public static String seperator = System.getProperty("file.separator");
     /**
      * 时间戳
      */
