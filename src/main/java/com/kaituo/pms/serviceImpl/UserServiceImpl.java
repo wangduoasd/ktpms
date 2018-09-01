@@ -155,7 +155,7 @@ public class UserServiceImpl implements UserService,UserDetailsService {
         {
             if(null==role)
                 break;
-            authorities.add(new SimpleGrantedAuthority(""+role.getRoleId()));
+            authorities.add(new SimpleGrantedAuthority("ROLE_"+role.getRoleId()));//必须加"ROLE_"
 
         }
 

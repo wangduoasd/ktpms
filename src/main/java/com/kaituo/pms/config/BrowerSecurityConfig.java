@@ -4,6 +4,12 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
+import org.springframework.security.access.AccessDecisionVoter;
+import org.springframework.security.access.vote.RoleVoter;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
+import org.springframework.security.web.firewall.DefaultHttpFirewall;
+import org.springframework.security.web.firewall.HttpFirewall;
+import org.springframework.security.web.firewall.StrictHttpFirewall;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
@@ -31,10 +37,11 @@ import org.springframework.security.web.authentication.rememberme.PersistentToke
 import org.springframework.web.bind.annotation.CrossOrigin;
 
 import javax.sql.DataSource;
+import java.util.ArrayList;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
-@CrossOrigin(origins = "*", maxAge = 3600)
 public class BrowerSecurityConfig extends WebSecurityConfigurerAdapter {
 /*  @Autowired
     private CustomAuthenticationProvider customAuthenticationProvider;*/
@@ -42,9 +49,9 @@ public class BrowerSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
 UserServiceImpl userService;
-    @Autowired
+/*    @Autowired
     @Qualifier("dataSource")
-    DataSource dataSource;
+    DataSource dataSource;*/
 
     @Autowired
     private MyAuthenctiationFailureHandler myAuthenctiationFailureHandler;
@@ -66,9 +73,7 @@ UserServiceImpl userService;
                 .loginProcessingUrl("/user/login")//默认post
                 .failureHandler(myAuthenctiationFailureHandler)
                 .successHandler(myAuthenctiationSuccessHandler)
-/*  .defaultSuccessUrl("/user/success")
 
-.successForwardUrl("/user/success")*/
 
                 .usernameParameter("username").passwordParameter("password").permitAll()
                 .and()
@@ -115,7 +120,7 @@ auth.authenticationProvider(authenticationProvider());
      * @return the remember me services*/
 
 
-    @Bean
+/*    @Bean
     public RememberMeServices rememberMeServices() {
 
         JdbcTokenRepositoryImpl rememberMeTokenRepository = new JdbcTokenRepositoryImpl();
@@ -129,7 +134,7 @@ auth.authenticationProvider(authenticationProvider());
         // 该参数不是必须的，默认值为 "remember-me", 但如果设置必须和页面复选框的 name 一致
         rememberMeServices.setParameter("remember-me");
         return rememberMeServices;
-    }
+    }*/
 
 
 /*@Bean
@@ -162,5 +167,36 @@ public FilterRegistrationBean corsFilter() {
     bean.setOrder(Ordered.HIGHEST_PRECEDENCE);
     return bean;
 }
+/*    @Bean
+    public DynamicallyUrlInterceptor dynamicallyUrlInterceptor(){
+        DynamicallyUrlInterceptor interceptor = new DynamicallyUrlInterceptor();
+        interceptor.setSecurityMetadataSource(new MyFilterSecurityMetadataSource());
 
+        //配置RoleVoter决策
+        List<AccessDecisionVoter<? extends Object>> decisionVoters = new ArrayList<AccessDecisionVoter<? extends Object>>();
+        decisionVoters.add(new RoleVoter());
+        //设置认证决策管理器
+        interceptor.setAccessDecisionManager(new DynamicallyUrlAccessDecisionManager(decisionVoters));
+        return interceptor;
+    }*/
+
+    @Bean
+    public HttpFirewall allowUrlEncodedSlashHttpFirewall() {
+        StrictHttpFirewall firewall = new StrictHttpFirewall();
+     /*   firewall.setAllowUrlEncodedSlash();*/
+        firewall.setAllowUrlEncodedSlash(true);
+        return firewall;
+    }
+/*    @Bean
+    public HttpFirewall defaultHttpFirewall() {
+        return new DefaultHttpFirewall();
+    }*/
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+
+            super.configure(web);
+            web.httpFirewall(allowUrlEncodedSlashHttpFirewall());
+
+
+    }
 }
