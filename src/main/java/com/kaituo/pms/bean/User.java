@@ -23,6 +23,7 @@ public class User implements Serializable {
     private Integer userStatus;
     private String userPassword;
     private List<String> roles;
+    private List<Role> role;
 //enheng
 
 
@@ -106,19 +107,21 @@ public class User implements Serializable {
         this.userPassword = userPassword;
     }
 
-    public User(int num, Integer userId, String userName, String userPassword, Integer userIntegral, Integer dept_id, String deptName, Integer userDeptPosition, String positionName, List<String> roles, Integer userStatus, Date userInductiontime, Date getRoleTime) {
+
+    public User(int num, Integer userId, String userName, Integer dept_id, String deptName, Integer userDeptPosition, String positionName, Date userInductiontime, Integer userIntegral, Integer userStatus, String userPassword, List<String> roles, List<Role> role, Date getRoleTime) {
         this.num = num;
         this.userId = userId;
         this.userName = userName;
-        this.userPassword = userPassword;
-        this.userIntegral = userIntegral;
         this.dept_id = dept_id;
         this.deptName = deptName;
         this.userDeptPosition = userDeptPosition;
         this.positionName = positionName;
-        this.roles = roles;
-        this.userStatus = userStatus;
         this.userInductiontime = userInductiontime;
+        this.userIntegral = userIntegral;
+        this.userStatus = userStatus;
+        this.userPassword = userPassword;
+        this.roles = roles;
+        this.role = role;
         this.getRoleTime = getRoleTime;
     }
 
@@ -218,5 +221,13 @@ public class User implements Serializable {
 
     public void setRoles(List<String> roles) {
         this.roles = roles;
+    }
+
+    public List<Role> getRole() {
+        return role;
+    }
+
+    public void setRole(List<Role> role) {
+        this.role = role;
     }
 }

@@ -24,7 +24,7 @@ public class RoleServiceImpl implements RoleService{
     @Override
     public List<Role> getAll() {
         RoleExample roleExample = new RoleExample();
-
+       roleExample.createCriteria().andRoleIdNotEqualTo(6);
         return roleMapper.selectByExample(roleExample);
     }
     @Override

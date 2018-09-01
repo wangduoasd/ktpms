@@ -402,7 +402,6 @@ public class UserController {
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
         }
     }
-
     /**
      　  * @Description: 综服中心_员工设置_修改员工
      　　* @param [user]

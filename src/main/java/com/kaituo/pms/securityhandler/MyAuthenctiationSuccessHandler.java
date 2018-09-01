@@ -1,7 +1,8 @@
-/*
 package com.kaituo.pms.securityhandler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kaituo.pms.utils.CodeAndMessageEnum;
+import com.kaituo.pms.utils.OutJSON;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,10 +24,9 @@ public class MyAuthenctiationSuccessHandler extends SimpleUrlAuthenticationSucce
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException, ServletException {
-        logger.info("登录成功");
        request.getSession().setAttribute("userId",request.getParameter("username"));
        response.setContentType("application/json;charset=UTF-8");
-       response.getWriter().write(objectMapper.writeValueAsString(authentication));
+       response.getWriter().write(objectMapper.writeValueAsString(OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,authentication)));
+
     }
 }
-*/
