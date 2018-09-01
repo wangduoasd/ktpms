@@ -55,6 +55,28 @@ public class DeptController {
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
         }
     }
+    /*
+     * @Description: 综服中心-员工设置-添加员工  通过部门ID获取部门
+     * @param [dept, positionArray]
+     * @return com.kaituo.pms.utils.OutJSON
+     * @throws
+     * @author 张金行
+     * @date 2018/8/23 0023 15:54
+     */
+    @GetMapping(value ="authority/four/dept/{deptId}")
+    @ResponseBody
+    public OutJSON getDeptById(@PathVariable("deptId")int deptId){
+        try {
+            Dept dept = deptService.getDeptById(deptId);
+            if(dept==null){
+                return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
+            }
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, dept);
+        } catch (Exception e) {
+            log.error( e.getMessage());
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
+        }
+    }
     /**
      　  * @Description: 风控中心_部门设置  部门列表
      　　* @param [dept, positionArray]

@@ -5,13 +5,10 @@ import com.kaituo.pms.bean.DeptExample;
 import com.kaituo.pms.dao.DeptMapper;
 import com.kaituo.pms.service.DeptService;
 import com.kaituo.pms.service.PositionService;
-import com.sun.org.apache.bcel.internal.generic.RETURN;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
 @Service
@@ -79,5 +76,8 @@ public class DeptServiceImpl implements DeptService {
 
     }
 
-
+    @Override
+    public Dept getDeptById(int deptId) {
+        return deptMapper.selectByPrimaryKey(deptId);
+    }
 }
