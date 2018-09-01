@@ -155,6 +155,11 @@ public class PrizeServiceImpl implements PrizeService {
         return prizeMapper.updateByPrimaryKeySelective(prize);
     }
 
+    @Override
+    public Prize getPrize(int prizeId) {
+        return prizeMapper.selectByPrimaryKey(prizeId);
+    }
+
 
     /*  @Override
     public void  exchangePrize(int prizeID, int userID, int number, int eid) {

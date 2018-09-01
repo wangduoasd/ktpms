@@ -75,7 +75,8 @@ public enum CodeAndMessageEnum {
     ADJUNCTION_ERROR("0" , "添加商品失败"),
     //添加商品成功
     ADJUNCTION_SUCCESS("1" , "添加商品成功"),
-    //修改商品成功
+    //没有查询到商品
+    NO_GOODS_WERE_FOUND("2" , "没有查询到商品"),
     // 修改商品成功
     MODIFICATION_SUCCESS("1" , "修改商品成功"),
     //修改商品失败

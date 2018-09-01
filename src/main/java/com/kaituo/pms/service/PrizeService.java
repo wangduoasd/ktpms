@@ -46,4 +46,14 @@ public interface PrizeService {
      * @Date: 2018/8/22
      */
     int modifyPrize(Prize prize);
+
+   /**
+    * 商品修改
+    * @Param:
+    * @param prize
+    * @return: com.kaituo.pms.bean.Prize
+    * @Author: 苏泽华
+    * @Date: 2018/8/31
+    */
+   Prize getPrize(int prizeId);
 }

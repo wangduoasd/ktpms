@@ -356,4 +356,25 @@ public class PrizeControllrt {
         return OutJSON.getInstance(CodeAndMessageEnum.GOODS_SOLDOUT_ERROR);
     }
 
+    /**
+     * @Description: 综服中心_商品发布_通过商品id查询商品
+     * @Param:
+     * @return:
+     * @Author: suzehua
+     * @Date: 2018/8/31
+     */
+    @GetMapping("authority/two/prize/s/{prizeID}")
+    public OutJSON gatPrize(@PathVariable("prizeId") int prizeId){
+        try {
+            Prize prize = prizeService.getPrize(prizeId);
+            if (null == prize){
+                return OutJSON.getInstance(CodeAndMessageEnum.NO_GOODS_WERE_FOUND);
+            }
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS , prize );
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("gatPrize=>" + e.getMessage() , e);
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR );
+        }
+    }
 }
