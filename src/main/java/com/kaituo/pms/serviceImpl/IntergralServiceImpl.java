@@ -96,4 +96,6 @@ public class IntergralServiceImpl implements IntegralService {
         integral.setIntegralChangestr(changestr);
         return integralMapper.insertSelective(integral);
     }
+
+
 }

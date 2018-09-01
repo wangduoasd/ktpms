@@ -1,6 +1,7 @@
 package com.kaituo.pms.service;
 
 import com.kaituo.pms.bean.Integral;
+import com.kaituo.pms.bean.Prize;
 
 import java.util.List;
 import java.util.Map;
@@ -22,4 +23,5 @@ public interface IntegralService {
 
     int addPrizeIntegral(int changint,int userId,String changestr,int endnum);
     int addIntegral(int operatorId,String changestr,int userId,int changeInt,int endNum );
+
 }

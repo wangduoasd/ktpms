@@ -33,6 +33,8 @@ public class PrizeControllrt {
     IntegralMapper integralMapper;
     @Autowired
     IntegralService  integralService;
+    @Autowired
+    ExchangeService exchangeService;
 
     /**
      * @Description:兑换中心_商品列表 点击按钮进行搜索查询 根据商品名查询已经上架商品
@@ -96,15 +98,23 @@ public class PrizeControllrt {
    @PutMapping(value="prize/{userId}/{number}/{prizeId}")
    public OutJSON exchangePrize(@PathVariable("userId")  int userId, @PathVariable("number") int number,
                                 @PathVariable("prizeId") int prizeId){
+       int newCount = 0;
       try {
        Prize prize = prizeService.selectByPrimaryKey(prizeId);
           User user = userService.findPersonalDetail(userId);
+          List<Exchange> exchanges = exchangeService.selectByUserIdPrizeId(prizeId, userId);
+          if (null != exchanges && exchanges.size() > 0) {
+              for(Exchange exchange:  exchanges){
+                  newCount= exchange.getExchangeCount() + number;
+              }
+          }
 
-       int totalPrice = number * prize.getPrizePrice();
+
+          int totalPrice = number * prize.getPrizePrice();
        if (null == user || null == prize) {
            //用户名或商品为空
            return OutJSON.getInstance(CodeAndMessageEnum.GET_STATES_TASK_BY_PAGE_NULL);
-       } else if (number >prize.getPrizeQuota()||prize.getPrizeAmount()<0||prize.getPrizeQuota()<=0) {
+       } else if (number >prize.getPrizeQuota()||prize.getPrizeAmount()<0||prize.getPrizeQuota()<=0||newCount>prize.getPrizeQuota()) {
            //购买失败，超过上限
            return OutJSON.getInstance(CodeAndMessageEnum.FIND_PRIZE_CAP);
        } else if (totalPrice > user.getUserIntegral()) {
