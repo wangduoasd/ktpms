@@ -412,7 +412,7 @@ public class UserController {
      　　* @date 2018/8/23 0023 13:40
      　　*/
     @ResponseBody
-    @PutMapping(value = "user/{userId}/password")
+    @PutMapping(value = "user/password/{userId}")
     public OutJSON upUserPassword(@PathVariable(value = "userId") int userId,@RequestParam("oldPassWord") String oldPassWord,@RequestParam("newPassWord")String newPassWord) {
         try {
             int i=userService.upUserPassword(userId,oldPassWord,newPassWord);

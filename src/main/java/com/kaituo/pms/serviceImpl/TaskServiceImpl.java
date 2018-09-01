@@ -137,8 +137,8 @@ public class TaskServiceImpl implements TaskService {
 
         TaskExample example = new TaskExample();
         TaskExample.Criteria criteria = example.createCriteria();
+        example.setOrderByClause("task_starttime DESC");
         criteria.andTaskStatusEqualTo(status);
-
         return taskMapper.selectByExample(example);
     }
 
@@ -154,6 +154,7 @@ public class TaskServiceImpl implements TaskService {
 
         TaskExample example = new TaskExample();
         TaskExample.Criteria criteria = example.createCriteria();
+        example.setOrderByClause("task_starttime DESC");
         criteria.andTaskStatusEqualTo(status);
         criteria.andUserIdEqualTo(userId);
         return taskMapper.selectByExample(example);
@@ -172,6 +173,7 @@ public class TaskServiceImpl implements TaskService {
     public List<Task> listUnfinishedTask(int userId) {
         TaskExample example = new TaskExample();
         TaskExample.Criteria criteria = example.createCriteria();
+        example.setOrderByClause("task_gettime DESC");
         criteria.andTaskStatusNotEqualTo(Constant.THE_TASK_WAS_SUCCESSFULLY_POSTED);
         criteria.andTaskStatusNotEqualTo(Constant.MISSION_COMPLETED);
         criteria.andUserIdEqualTo(userId);
@@ -191,6 +193,7 @@ public class TaskServiceImpl implements TaskService {
     public long countTaskByStatus(int status) {
         TaskExample example = new TaskExample();
         TaskExample.Criteria criteria = example.createCriteria();
+        example.setOrderByClause("task_starttime DESC");
         criteria.andTaskStatusEqualTo(status);
 
         return taskMapper.countByExample(example);
@@ -292,6 +295,7 @@ public class TaskServiceImpl implements TaskService {
         // 任务的状态,默认为1,1为任务发布成功,2为任务已经被领取,3为提前取消,，4为提交审核，5为任务完成失败,6为任务没人领取,7为任务完成了!56都为任务失效
         TaskExample example = new TaskExample();
         TaskExample.Criteria criteria = example.createCriteria();
+        example.setOrderByClause("task_gettime DESC");
         criteria.andTaskStatusNotEqualTo(Constant.THE_TASK_WAS_SUCCESSFULLY_POSTED);
         criteria.andTaskStatusNotEqualTo(Constant.MISSION_COMPLETED);
         criteria.andUserIdEqualTo(userId);
@@ -492,6 +496,7 @@ public class TaskServiceImpl implements TaskService {
         }
         TaskExample taskExample = new TaskExample();
         TaskExample.Criteria criteria = taskExample.createCriteria();
+        taskExample.setOrderByClause("task_starttime DESC");
         criteria.andTaskStatusEqualTo(Constant.TASK_SUBMISSION_REVIEW);
         // 总行数
         int total = taskMapper.countByExample(taskExample);
