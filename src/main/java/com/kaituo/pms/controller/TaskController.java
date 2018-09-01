@@ -503,6 +503,14 @@ public class TaskController {
         }
     }
 
+    /**
+     * 通过任务id获取任务对象
+     * @Param:
+     * @param taskId
+     * @return: com.kaituo.pms.utils.OutJSON
+     * @Author: 苏泽华
+     * @Date: 2018/8/21
+     */
     @GetMapping("authority/five/task/again/{taskId}")
     public OutJSON getTask(@PathVariable("taskId") int taskId){
         try {

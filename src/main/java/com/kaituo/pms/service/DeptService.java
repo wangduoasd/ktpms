@@ -2,7 +2,6 @@ package com.kaituo.pms.service;
 
 import com.kaituo.pms.bean.Dept;
 
-import java.sql.SQLException;
 import java.util.List;
 
 public interface DeptService {
@@ -23,4 +22,5 @@ public interface DeptService {
     //修改部门
     int upDept(Dept dept, List<String>  positionArray);
 
+    Dept getDeptById(int deptId);
 }

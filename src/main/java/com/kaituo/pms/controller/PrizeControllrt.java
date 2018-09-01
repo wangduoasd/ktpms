@@ -237,6 +237,7 @@ public class PrizeControllrt {
                     return OutJSON.getInstance(CodeAndMessageEnum.PUBLISHING_TASK_IMAGE_UPLOAD_FAILED);
                 case Constant.IMG_UPLOSD_SUCCESS:
                     String url = (String) map.get("url");
+                    url = url.replace(Util.seperator , "/");
                     prize.setPrizeImage(url);
                     if (0 >= prizeService.addPrize(prize)) {
                         return OutJSON.getInstance(CodeAndMessageEnum.ADJUNCTION_ERROR);
@@ -280,6 +281,7 @@ public class PrizeControllrt {
                 case Constant.IMG_UPLOSD_SUCCESS:
                     // 获取相对路径
                     String url = (String) map.get("url");
+                    url = url.replace(Util.seperator , "/");
                     prize.setPrizeImage(url);
                     if (0 >= prizeService.modifyPrize(prize)){
                         return OutJSON.getInstance(CodeAndMessageEnum.MODIFICATION_EMPTY);

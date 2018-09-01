@@ -118,7 +118,7 @@ public class Util {
          outPut.put("url","");
 
 
-         if(file.isEmpty()){
+         if(null==file || file.isEmpty()){
              outPut.put("code",Constant.IMG_UPLOSD_EMPTY);
              return outPut;
          }
