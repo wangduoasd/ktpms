@@ -1,30 +1,18 @@
 package com.kaituo.pms.serviceImpl;
 
+import com.kaituo.pms.bean.Login;
 import com.kaituo.pms.bean.Role;
 import com.kaituo.pms.bean.UserExample;
 import com.kaituo.pms.dao.UserMapper;
 import com.kaituo.pms.service.*;
+import org.apache.tomcat.util.security.MD5Encoder;
 import org.springframework.beans.factory.annotation.Autowired;
-/*import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;*//*
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;*/
-import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
+
 import org.springframework.stereotype.Service;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import com.kaituo.pms.bean.User;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,11 +24,11 @@ import org.springframework.transaction.annotation.Transactional;
  * @create: 2018-08-08 14:35
  **/
 @Service
-public class UserServiceImpl implements UserService,UserDetailsService {
+public class UserServiceImpl implements UserService/*,UserDetailsService*/ {
     @Autowired
     UserMapper userMapper;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+/*    @Autowired
+    private PasswordEncoder passwordEncoder;*/
     @Autowired
     UserRoleService userRoleService;
     @Autowired
@@ -131,39 +119,6 @@ public class UserServiceImpl implements UserService,UserDetailsService {
         return userMapper.selectByPrimaryKey(userid);
     }
 
-    /**
-     　  * @Description: 用户登录校验
-     　　* @param s 用户ID
-     　　* @return org.springframework.security.core.userdetails.UserDetails
-     　　* @throws
-     　　* @author 张金行
-     　　* @date 2018/8/20 0020 17:22
-     　　*/
-   @Override
-    @Transactional(rollbackFor = Exception.class)
-    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        int userId=Integer.parseInt(s);
-        User user = userMapper.selectByPrimaryKey(userId);
-        if(user == null){
-            throw new UsernameNotFoundException("用户名不存在");
-        }
-        user.setRole(userRoleService.findAllRole(userId));
-        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        //用于添加用户的权限。只要把用户权限添加到authorities 就万事大吉。
-    /*   if(user==null||user.s)*/
-        for(Role role:user.getRole())
-        {
-            if(null==role)
-                break;
-            authorities.add(new SimpleGrantedAuthority("ROLE_"+role.getRoleId()));//必须加"ROLE_"
-
-        }
-
-        return new org.springframework.security.core.userdetails.User(s, user.getUserPassword(),
-              /*  AuthorityUtils.commaSeparatedStringToAuthorityList("admin");*/
-                authorities);
-    }
-
     @Override
     @Transactional(rollbackFor = Exception.class)
     public List<User> findAllUser() {
@@ -186,7 +141,8 @@ public class UserServiceImpl implements UserService,UserDetailsService {
            if( u.getUserId().equals(user.getUserId())){
                return 2;}
         }
-        user.setUserPassword(passwordEncoder.encode(user.getUserPassword()));
+
+        user.setUserPassword(MD5Encoder.encode(user.getUserPassword().getBytes()));
         return userMapper.insert(user);
     }
 
@@ -243,13 +199,13 @@ public class UserServiceImpl implements UserService,UserDetailsService {
 
     @Override
     public int upUserPassword(int userId,String oldPassWord, String newPassWord) {
-        if(!userMapper.selectByPrimaryKey(userId).getUserPassword().equals(passwordEncoder.encode(oldPassWord))){
+        if(!userMapper.selectByPrimaryKey(userId).getUserPassword().equals(MD5Encoder.encode(oldPassWord.getBytes()))){
 
             return 2;
         }
         User user = new User();
         user.setUserId(userId);
-        user.setUserPassword(passwordEncoder.encode(newPassWord));
+        user.setUserPassword(MD5Encoder.encode(newPassWord.getBytes()));
         return userMapper.updateByPrimaryKeySelective(user);
 
     }
@@ -267,4 +223,66 @@ public class UserServiceImpl implements UserService,UserDetailsService {
         userMapper.updateByPrimaryKeySelective(user1);
         return integralService.addIntegral(operatorId,changeStr,userId,endNum-startNum,endNum );
     }
+
+
+
+    @Override
+    public Login login(String username, String password){
+        Login login = new Login();
+        int userId=Integer.parseInt(username);
+        User user = userMapper.selectByPrimaryKey(userId);
+        if(user == null||!user.getUserPassword().equals(password)){
+            return null;
+        }
+        user.setRole(userRoleService.findAllRole(userId));
+
+        //用于添加用户的权限。只要把用户权限添加到authorities 就万事大吉。
+        /*   if(user==null||user.s)*/
+        int i=0;
+        Object[] objects = new Object[6];
+        for(Role role:user.getRole())
+        {
+            if(null==role)
+                break;
+            HashMap<String, String> authorities = new HashMap<>();
+            authorities.put("authority",""+role.getRoleId());
+            objects[i]=authorities;
+            i++;
+        }
+        login.setAuthorities(objects);
+        login.setName(username);
+        return login;
+    }
+    /**
+     　  * @Description: 用户登录校验
+     　　* @param s 用户ID
+     　　* @return org.springframework.security.core.userdetails.UserDetails
+     　　* @throws
+     　　* @author 张金行
+     　　* @date 2018/8/20 0020 17:22
+     　　*/
+/*    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
+        int userId=Integer.parseInt(s);
+        User user = userMapper.selectByPrimaryKey(userId);
+        if(user == null){
+            throw new UsernameNotFoundException("用户名不存在");
+        }
+        user.setRole(userRoleService.findAllRole(userId));
+        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        //用于添加用户的权限。只要把用户权限添加到authorities 就万事大吉。
+        *//*   if(user==null||user.s)*//*
+        for(Role role:user.getRole())
+        {
+            if(null==role)
+                break;
+            authorities.add(new SimpleGrantedAuthority(""+role.getRoleId()));
+
+        }
+
+        return new org.springframework.security.core.userdetails.User(s, user.getUserPassword(),
+                *//*  AuthorityUtils.commaSeparatedStringToAuthorityList("admin");*//*
+                authorities);
+    }*/
 }

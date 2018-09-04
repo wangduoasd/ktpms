@@ -1,15 +1,11 @@
+/*
 
 package com.kaituo.pms.config;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
-import org.springframework.security.access.AccessDecisionVoter;
-import org.springframework.security.access.vote.RoleVoter;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
-import org.springframework.security.web.firewall.DefaultHttpFirewall;
-import org.springframework.security.web.firewall.HttpFirewall;
-import org.springframework.security.web.firewall.StrictHttpFirewall;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
@@ -37,21 +33,22 @@ import org.springframework.security.web.authentication.rememberme.PersistentToke
 import org.springframework.web.bind.annotation.CrossOrigin;
 
 import javax.sql.DataSource;
-import java.util.ArrayList;
-import java.util.List;
 
 @Configuration
 @EnableWebSecurity
+@CrossOrigin(origins = "*", maxAge = 3600)
 public class BrowerSecurityConfig extends WebSecurityConfigurerAdapter {
+*/
 /*  @Autowired
-    private CustomAuthenticationProvider customAuthenticationProvider;*/
+    private CustomAuthenticationProvider customAuthenticationProvider;*//*
+
 
 
     @Autowired
 UserServiceImpl userService;
-/*    @Autowired
+    @Autowired
     @Qualifier("dataSource")
-    DataSource dataSource;*/
+    DataSource dataSource;
 
     @Autowired
     private MyAuthenctiationFailureHandler myAuthenctiationFailureHandler;
@@ -59,13 +56,17 @@ UserServiceImpl userService;
     private MyAuthenctiationSuccessHandler myAuthenctiationSuccessHandler;
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        http.sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeRequests()
-                .antMatchers("/authority/one/**").hasAnyRole("1","6")
+*/
+/*                .antMatchers("/authority/one/**").hasAnyRole("1","6")
                 .antMatchers("/authority/two/**").hasAnyRole("2","6")
-                .antMatchers("/authority/three/**").hasAnyRole("3","6")
+                .antMatchers("/authority/three/**").hasAnyRole("3","6")a
                 .antMatchers("/authority/four/**").hasAnyRole("4","6")
                 .antMatchers("/authority/five/**").hasAnyRole("5","6")
-                .antMatchers("/authority/all/**").hasAnyRole("6")
+                .antMatchers("/authority/all/**").hasAnyRole("6")*//*
+
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
@@ -73,16 +74,22 @@ UserServiceImpl userService;
                 .loginProcessingUrl("/user/login")//默认post
                 .failureHandler(myAuthenctiationFailureHandler)
                 .successHandler(myAuthenctiationSuccessHandler)
+*/
+/*  .defaultSuccessUrl("/user/success")
+
+.successForwardUrl("/user/success")*//*
 
 
                 .usernameParameter("username").passwordParameter("password").permitAll()
                 .and()
                 .rememberMe()                                   // 记住我相关配置
+*/
 /*                .tokenRepository(persistentTokenRepository())   // 设置TokenRepository
                 // 配置Cookie过期时间
                 .tokenValiditySeconds(securityProperties.getBrowser().getRememberMeSeconds())
                 // 配置UserDetailsService
-                .userDetailsService(rememberMeServices())*/
+                .userDetailsService(rememberMeServices())*//*
+
                 .and().logout().logoutSuccessUrl("/user/loginout").permitAll()
                 .and()
                 .csrf().disable();
@@ -114,13 +121,15 @@ auth.authenticationProvider(authenticationProvider());
       }
 
     }
+*/
 /**
      * 返回 RememberMeServices 实例
      *
-     * @return the remember me services*/
+     * @return the remember me services*//*
 
 
-/*    @Bean
+
+    @Bean
     public RememberMeServices rememberMeServices() {
 
         JdbcTokenRepositoryImpl rememberMeTokenRepository = new JdbcTokenRepositoryImpl();
@@ -134,9 +143,10 @@ auth.authenticationProvider(authenticationProvider());
         // 该参数不是必须的，默认值为 "remember-me", 但如果设置必须和页面复选框的 name 一致
         rememberMeServices.setParameter("remember-me");
         return rememberMeServices;
-    }*/
+    }
 
 
+*/
 /*@Bean
 public FilterRegistrationBean corsFilter() {
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -152,7 +162,8 @@ public FilterRegistrationBean corsFilter() {
     // 这个顺序很重要哦，为避免麻烦请设置在最前
     bean.setOrder(Ordered.HIGHEST_PRECEDENCE);
     return bean;
-}*/
+}*//*
+
 
 @Bean
 public FilterRegistrationBean corsFilter() {
@@ -167,36 +178,6 @@ public FilterRegistrationBean corsFilter() {
     bean.setOrder(Ordered.HIGHEST_PRECEDENCE);
     return bean;
 }
-/*    @Bean
-    public DynamicallyUrlInterceptor dynamicallyUrlInterceptor(){
-        DynamicallyUrlInterceptor interceptor = new DynamicallyUrlInterceptor();
-        interceptor.setSecurityMetadataSource(new MyFilterSecurityMetadataSource());
 
-        //配置RoleVoter决策
-        List<AccessDecisionVoter<? extends Object>> decisionVoters = new ArrayList<AccessDecisionVoter<? extends Object>>();
-        decisionVoters.add(new RoleVoter());
-        //设置认证决策管理器
-        interceptor.setAccessDecisionManager(new DynamicallyUrlAccessDecisionManager(decisionVoters));
-        return interceptor;
-    }*/
-
-    @Bean
-    public HttpFirewall allowUrlEncodedSlashHttpFirewall() {
-        StrictHttpFirewall firewall = new StrictHttpFirewall();
-     /*   firewall.setAllowUrlEncodedSlash();*/
-        firewall.setAllowUrlEncodedSlash(true);
-        return firewall;
-    }
-/*    @Bean
-    public HttpFirewall defaultHttpFirewall() {
-        return new DefaultHttpFirewall();
-    }*/
-    @Override
-    public void configure(WebSecurity web) throws Exception {
-
-            super.configure(web);
-            web.httpFirewall(allowUrlEncodedSlashHttpFirewall());
-
-
-    }
 }
+*/

@@ -1,3 +1,4 @@
+/*
 package com.kaituo.pms.securityhandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kaituo.pms.utils.CodeAndMessageEnum;
@@ -29,3 +30,4 @@ public class MyAuthenctiationFailureHandler extends SimpleUrlAuthenticationFailu
         response.getWriter().write(objectMapper.writeValueAsString(OutJSON.getInstance(CodeAndMessageEnum.USER_LOGIN_ERROR)));
     }
 }
+*/

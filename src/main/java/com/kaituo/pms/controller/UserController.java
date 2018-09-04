@@ -3,6 +3,7 @@ package com.kaituo.pms.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.kaituo.pms.bean.Login;
 import com.kaituo.pms.bean.User;
 import com.kaituo.pms.service.UserService;
 
@@ -10,12 +11,16 @@ import com.kaituo.pms.utils.CodeAndMessageEnum;
 import com.kaituo.pms.utils.OutJSON;
 import com.kaituo.pms.utils.Util;
 import com.kaituo.pms.utils.ExportExcelSeedBack;
+import com.sun.deploy.net.HttpResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.*;
@@ -40,8 +45,9 @@ public class UserController {
     * @Date: 2018/8/9
     */
     @GetMapping("userIntegrals/{pageNumber}")
-    public OutJSON findRankingByPage(@PathVariable(value = "pageNumber") int pageNumber) {
+    public OutJSON findRankingByPage(@PathVariable(value = "pageNumber") int pageNumber,@SessionAttribute("userId") Object userId) {
         try {
+           log.info(""+(int)userId);
             // 每页显示数量设置为8条
             int pageSize = 8;
             // 查询总条数
@@ -455,4 +461,32 @@ public class UserController {
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
         }
     }
+    @PostMapping("user/login")
+        public OutJSON login(@RequestParam("username")String username, @RequestParam("password")String password, HttpServletRequest httpRequest, HttpServletResponse httpResponse){
+       try {
+           Login login = userService.login(username, password);
+
+           HttpSession session=httpRequest.getSession();
+           //修改Session有效时间
+           session.setMaxInactiveInterval(20);
+/*           //销毁session
+           if (session!=null){
+               session.invalidate();
+           }*/
+           log.info(session.getId());
+           session.setAttribute("userId",Integer.parseInt(username));
+           Cookie cookie = new Cookie("JSESSIONID",session.getId());
+           cookie.setMaxAge(60*60*24);
+           cookie.setMaxAge(-1);//该cookie保存在浏览器内存中，关闭浏览器则销毁该cookie
+           cookie.setMaxAge(0);//删除根该cookie同名的cookie
+           httpResponse.addCookie(cookie);
+           if (login == null) {
+               return OutJSON.getInstance(CodeAndMessageEnum.USER_LOGIN_ERROR);
+           }
+           return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,login);
+       }catch (Exception e){
+           log.error( e.getMessage());
+           return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
+       }
+        }
 }

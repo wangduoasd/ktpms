@@ -1,6 +1,7 @@
 package com.kaituo.pms.service;
 
 
+import com.kaituo.pms.bean.Login;
 import com.kaituo.pms.bean.User;
 
 import java.util.List;
@@ -91,7 +92,6 @@ public interface UserService {
 
     int upUserIntegral(int operatorId,int userId,String changeStr,int startNum,int endNum);
 
-
-    //userID唯一校验
+    public Login login(String username, String password);
 
 }
