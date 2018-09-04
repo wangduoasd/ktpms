@@ -253,6 +253,7 @@ public class UserServiceImpl implements UserService/*,UserDetailsService*/ {
         login.setName(username);
         return login;
     }
+
     /**
      　  * @Description: 用户登录校验
      　　* @param s 用户ID

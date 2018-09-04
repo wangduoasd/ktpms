@@ -26,6 +26,8 @@ public class Login {
     private Object principal;
     private Object credentials;
     private String name;
+    private String JSESSIONID;
+
 
     public Object[] getAuthorities() {
         return authorities;
@@ -73,5 +75,13 @@ public class Login {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getJSESSIONID() {
+        return JSESSIONID;
+    }
+
+    public void setJSESSIONID(String JSESSIONID) {
+        this.JSESSIONID = JSESSIONID;
     }
 }

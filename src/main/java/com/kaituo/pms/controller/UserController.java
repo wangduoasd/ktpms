@@ -13,9 +13,11 @@ import com.kaituo.pms.utils.Util;
 import com.kaituo.pms.utils.ExportExcelSeedBack;
 import com.sun.deploy.net.HttpResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.catalina.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpRequest;
 import org.springframework.web.bind.annotation.*;
+import sun.util.locale.provider.LocaleServiceProviderPool;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -45,9 +47,10 @@ public class UserController {
     * @Date: 2018/8/9
     */
     @GetMapping("userIntegrals/{pageNumber}")
-    public OutJSON findRankingByPage(@PathVariable(value = "pageNumber") int pageNumber,@SessionAttribute("userId") Object userId) {
+    public OutJSON findRankingByPage(@PathVariable(value = "pageNumber") int pageNumber,HttpServletRequest httpRequest) {
         try {
-           log.info(""+(int)userId);
+
+           log.info(""+httpRequest.getSession().getAttribute("userId"));
             // 每页显示数量设置为8条
             int pageSize = 8;
             // 查询总条数
@@ -467,19 +470,8 @@ public class UserController {
            Login login = userService.login(username, password);
 
            HttpSession session=httpRequest.getSession();
-           //修改Session有效时间
-           session.setMaxInactiveInterval(20);
-/*           //销毁session
-           if (session!=null){
-               session.invalidate();
-           }*/
+           login.setJSESSIONID(session.getId());
            log.info(session.getId());
-           session.setAttribute("userId",Integer.parseInt(username));
-           Cookie cookie = new Cookie("JSESSIONID",session.getId());
-           cookie.setMaxAge(60*60*24);
-           cookie.setMaxAge(-1);//该cookie保存在浏览器内存中，关闭浏览器则销毁该cookie
-           cookie.setMaxAge(0);//删除根该cookie同名的cookie
-           httpResponse.addCookie(cookie);
            if (login == null) {
                return OutJSON.getInstance(CodeAndMessageEnum.USER_LOGIN_ERROR);
            }
