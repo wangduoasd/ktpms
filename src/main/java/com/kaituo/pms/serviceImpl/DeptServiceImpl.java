@@ -78,8 +78,6 @@ public class DeptServiceImpl implements DeptService {
 
     @Override
     public Dept getDeptById(int deptId) {
-        Dept dept = deptMapper.selectByPrimaryKey(deptId);
-        dept.setPositions(positionService.getPositionNameBydeptId(deptId));
-        return dept;
+        return deptMapper.selectByPrimaryKey(deptId);
     }
 }

@@ -39,6 +39,7 @@ public class ExchangeServiceImpl implements ExchangeService {
     @Transactional
     public  int updateExchange(int exchangeId, int iniStatus,int endStasus){
         Exchange exchange = exchangeMapper.selectByPrimaryKey(exchangeId);
+        System.out.println(exchange.toString());
       if(exchange.getExchangeStatus()==iniStatus) {
           exchange.setExchangeStatus(endStasus);
           System.out.println(exchange.toString());

@@ -47,9 +47,9 @@ public class UserRoleServiceImpl implements UserRoleService {
             int i = 0;*/
             List<Role> list=new ArrayList<>();
             for (UserRole userRole : userRoles) {
-
+                System.out.println(userRole.getRoleId());
                 list .add(roleService.getRoleById(userRole.getRoleId())) ;
-
+                System.out.println(roleService.getRoleById(userRole.getRoleId()).getRoleName());
             }
             return list;
         }

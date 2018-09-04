@@ -17,7 +17,6 @@ public class Dept {
     private Date deptInductiontime;
 
     private Integer deptStatus;
-    private List<Position> positions;
 
     private List<String> positionArray;
 
@@ -49,16 +48,6 @@ public class Dept {
     public Dept(Integer deptId, String deptName) {
         this.deptId = deptId;
         this.deptName = deptName;
-    }
-
-    public Dept(Integer deptId, String deptName, String deptDescribe, Date deptInductiontime, Integer deptStatus, List<Position> positions, List<String> positionArray) {
-        this.deptId = deptId;
-        this.deptName = deptName;
-        this.deptDescribe = deptDescribe;
-        this.deptInductiontime = deptInductiontime;
-        this.deptStatus = deptStatus;
-        this.positions = positions;
-        this.positionArray = positionArray;
     }
 
     public Dept() {
@@ -103,13 +92,5 @@ public class Dept {
 
     public void setDeptStatus(Integer deptStatus) {
         this.deptStatus = deptStatus;
-    }
-
-    public List<Position> getPositions() {
-        return positions;
-    }
-
-    public void setPositions(List<Position> positions) {
-        this.positions = positions;
     }
 }
