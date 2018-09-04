@@ -1,5 +1,6 @@
 package com.kaituo.pms.serviceImpl;
 
+import com.kaituo.pms.bean.Role;
 import com.kaituo.pms.bean.UserExample;
 import com.kaituo.pms.dao.UserMapper;
 import com.kaituo.pms.service.*;
@@ -14,9 +15,16 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;*/
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import com.kaituo.pms.bean.User;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,11 +36,11 @@ import org.springframework.transaction.annotation.Transactional;
  * @create: 2018-08-08 14:35
  **/
 @Service
-public class UserServiceImpl implements UserService/*,UserDetailsService */{
+public class UserServiceImpl implements UserService,UserDetailsService {
     @Autowired
     UserMapper userMapper;
-/*    @Autowired
-    private PasswordEncoder passwordEncoder;*/
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     @Autowired
     UserRoleService userRoleService;
     @Autowired
@@ -131,7 +139,7 @@ public class UserServiceImpl implements UserService/*,UserDetailsService */{
      　　* @author 张金行
      　　* @date 2018/8/20 0020 17:22
      　　*/
-/*   @Override
+   @Override
     @Transactional(rollbackFor = Exception.class)
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
         int userId=Integer.parseInt(s);
@@ -139,21 +147,22 @@ public class UserServiceImpl implements UserService/*,UserDetailsService */{
         if(user == null){
             throw new UsernameNotFoundException("用户名不存在");
         }
-        user.setRoles(userRoleService.findAllRole(userId));
+        user.setRole(userRoleService.findAllRole(userId));
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
         //用于添加用户的权限。只要把用户权限添加到authorities 就万事大吉。
-        for(String role:user.getRoles())
+    /*   if(user==null||user.s)*/
+        for(Role role:user.getRole())
         {
             if(null==role)
                 break;
-            authorities.add(new SimpleGrantedAuthority("authority"+role));
-            System.out.println(role);
+            authorities.add(new SimpleGrantedAuthority(""+role.getRoleId()));
+
         }
-        String ps=passwordEncoder.encode(user.getUserPassword());
-        return new org.springframework.security.core.userdetails.User(s, ps,
-                *//*AuthorityUtils.commaSeparatedStringToAuthorityList("admin")*//*
+
+        return new org.springframework.security.core.userdetails.User(s, user.getUserPassword(),
+              /*  AuthorityUtils.commaSeparatedStringToAuthorityList("admin");*/
                 authorities);
-    }*/
+    }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -177,6 +186,7 @@ public class UserServiceImpl implements UserService/*,UserDetailsService */{
            if( u.getUserId().equals(user.getUserId())){
                return 2;}
         }
+        user.setUserPassword(passwordEncoder.encode(user.getUserPassword()));
         return userMapper.insert(user);
     }
 
@@ -233,13 +243,13 @@ public class UserServiceImpl implements UserService/*,UserDetailsService */{
 
     @Override
     public int upUserPassword(int userId,String oldPassWord, String newPassWord) {
-        if(!userMapper.selectByPrimaryKey(userId).getUserPassword().equals(oldPassWord)){
+        if(!userMapper.selectByPrimaryKey(userId).getUserPassword().equals(passwordEncoder.encode(oldPassWord))){
 
             return 2;
         }
         User user = new User();
         user.setUserId(userId);
-        user.setUserPassword(newPassWord);
+        user.setUserPassword(passwordEncoder.encode(newPassWord));
         return userMapper.updateByPrimaryKeySelective(user);
 
     }
