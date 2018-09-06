@@ -64,7 +64,7 @@ public class JwtToken {
                 .withClaim("iss", "zji") // payload
                 .withClaim("aud", "user").withClaim("user_id", null == user_id ? null : user_id.toString())
                 .withIssuedAt(iatDate) // sign time
-                .withExpiresAt(new Date(iatDate.getTime()+1000*60*30))// expire time
+                .withExpiresAt(new Date(iatDate.getTime()+1000*60*24*7))// expire time
                 .sign(Algorithm.HMAC256(SECRET)); // signature
 
         return token;

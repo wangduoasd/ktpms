@@ -108,7 +108,7 @@ public enum CodeAndMessageEnum {
     //100 用户错误  200 系统错误
     ALL_OPERATION_ERROR("-31","操作失败，请稍后重试"),
     //兑换记录
-    EXCHANGE_STATUS_ERROR("-32","兑换失败，请刷新页面重试"),
+    EXCHANGE_STATUS_ERROR("-32","确认领取失败，请刷新页面重试"),
     USER_ADD_ERROR("-33","添加失败，工号已被使用，请更换工号"),
     USER_UP_ERROR("-34","修改失败，工号已被使用，请更换工号"),
     //职位
@@ -120,7 +120,10 @@ public enum CodeAndMessageEnum {
     USER_PASSWORD_CHECK("-38","原密码错误"),
     USER_LOGIN_ERROR("-39","用户名或者密码错误"),
     //权限
-    ROLE_EMPTY("-40","权限列表为空，请先添加权限");
+    ROLE_EMPTY("-40","权限列表为空，请先添加权限"),
+    // token过期
+    TOKEN_EXPIRED("-41" , "请重新登录")
+    ;
 
     private String code;
 
