@@ -10,10 +10,7 @@ import com.kaituo.pms.service.ExchangeService;
 import com.kaituo.pms.service.IntegralService;
 import com.kaituo.pms.service.PrizeService;
 import com.kaituo.pms.service.UserService;
-import com.kaituo.pms.utils.CodeAndMessageEnum;
-import com.kaituo.pms.utils.Constant;
-import com.kaituo.pms.utils.OutJSON;
-import com.kaituo.pms.utils.Util;
+import com.kaituo.pms.utils.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -72,12 +69,13 @@ public class PrizeControllrt {
    * @Author: 侯鹏
    * @Date:  2018/8/17
    */
-   @GetMapping(value="prizes/{userId}/{pageNumber}")
-   public OutJSON findAllPrizePrize(@PathVariable("userId") int userId,
+   @GetMapping(value="prizes/{token:.+}/{pageNumber}")
+   public OutJSON findAllPrizePrize(@PathVariable("token") String token,
                                     @PathVariable(value = "pageNumber") int pageNumber,
                                     @RequestParam (value = "pageSize",defaultValue = "6") int pageSize){
        try {
            PageHelper.startPage(pageNumber, pageSize);
+           int userId = JwtToken.getUserId(token);
            List<Prize> prizess = prizeService.findAllPrizePrize(userId);
            PageInfo objectPageInfo = new PageInfo<>(prizess,4);
            System.out.print(prizess+"666666");
@@ -95,12 +93,15 @@ public class PrizeControllrt {
    * @Author: 侯鹏
    * @Date:  2018/8/20
    */
-   @PutMapping(value="prize/{userId}/{number}/{prizeId}")
-   public OutJSON exchangePrize(@PathVariable("userId")  int userId, @PathVariable("number") int number,
+   @PutMapping(value="prize/{{token:.+}}/{number}/{prizeId}")
+   public OutJSON exchangePrize(@PathVariable("token") String token, @PathVariable("number") int number,
                                 @PathVariable("prizeId") int prizeId){
        int newCount = 0;
       try {
-       Prize prize = prizeService.selectByPrimaryKey(prizeId);
+          int userId = JwtToken.getUserId(token);
+
+          Prize prize = prizeService.selectByPrimaryKey(prizeId);
+
           User user = userService.findPersonalDetail(userId);
           List<Exchange> exchanges = exchangeService.selectByUserIdPrizeId(prizeId, userId);
           if (null != exchanges && exchanges.size() > 0) {

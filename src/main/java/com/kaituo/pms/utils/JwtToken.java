@@ -97,7 +97,7 @@ public class JwtToken {
      * @param token
      * @return user_id
      */
-    public static int getAppUID(String token) {
+    public static int getUserId(String token) {
         Map<String, Claim> claims = verifyToken(token);
         Claim user_id_claim = claims.get("user_id");
         if (null == user_id_claim || StringUtils.isEmpty(user_id_claim.asString())) {
