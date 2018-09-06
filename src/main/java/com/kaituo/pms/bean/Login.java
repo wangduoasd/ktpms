@@ -21,13 +21,8 @@ public class Login {
 
     void setAuthenticated(boolean var1) throws IllegalArgumentException;*/
     private Object[] authorities;
-    private Object details;
-    private boolean authenticated;
-    private Object principal;
-    private Object credentials;
-    private String name;
-    private String JSESSIONID;
 
+    private String token;
 
     public Object[] getAuthorities() {
         return authorities;
@@ -37,51 +32,11 @@ public class Login {
         this.authorities = authorities;
     }
 
-    public Object getDetails() {
-        return details;
+    public String getToken() {
+        return token;
     }
 
-    public void setDetails(Object details) {
-        this.details = details;
-    }
-
-    public boolean isAuthenticated() {
-        return authenticated;
-    }
-
-    public void setAuthenticated(boolean authenticated) {
-        this.authenticated = authenticated;
-    }
-
-    public Object getPrincipal() {
-        return principal;
-    }
-
-    public void setPrincipal(Object principal) {
-        this.principal = principal;
-    }
-
-    public Object getCredentials() {
-        return credentials;
-    }
-
-    public void setCredentials(Object credentials) {
-        this.credentials = credentials;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getJSESSIONID() {
-        return JSESSIONID;
-    }
-
-    public void setJSESSIONID(String JSESSIONID) {
-        this.JSESSIONID = JSESSIONID;
+    public void setToken(String token) {
+        this.token = token;
     }
 }

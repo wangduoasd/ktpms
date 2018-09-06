@@ -7,10 +7,7 @@ import com.kaituo.pms.bean.Login;
 import com.kaituo.pms.bean.User;
 import com.kaituo.pms.service.UserService;
 
-import com.kaituo.pms.utils.CodeAndMessageEnum;
-import com.kaituo.pms.utils.OutJSON;
-import com.kaituo.pms.utils.Util;
-import com.kaituo.pms.utils.ExportExcelSeedBack;
+import com.kaituo.pms.utils.*;
 import com.sun.deploy.net.HttpResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.catalina.Session;
@@ -468,9 +465,9 @@ public class UserController {
         public OutJSON login(@RequestParam("username")String username, @RequestParam("password")String password, HttpServletRequest httpRequest, HttpServletResponse httpResponse){
        try {
            Login login = userService.login(username, password);
-
+           String token = JwtToken.createToken(Integer.parseInt(username));
+           login.setToken(token);
            HttpSession session=httpRequest.getSession();
-           login.setJSESSIONID(session.getId());
            log.info(session.getId());
            if (login == null) {
                return OutJSON.getInstance(CodeAndMessageEnum.USER_LOGIN_ERROR);

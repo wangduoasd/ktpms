@@ -254,6 +254,11 @@ public class UserServiceImpl implements UserService/*,UserDetailsService*/ {
         return login;
     }
 
+    @Override
+    public Login login() {
+        return null;
+    }
+
     /**
      　  * @Description: 用户登录校验
      　　* @param s 用户ID
