@@ -41,8 +41,10 @@ public class TaskController {
     public OutJSON findCollectionStatus(@PathVariable("callPage") String callPage ,
                                         @PathVariable(value = "token") String token,
                                         @PathVariable(value = "pageNumber") int pageNamber ) {
-        int userId = JwtToken.getUserId(token);
-
+        Integer userId = JwtToken.getUserId(token);
+        if (null == userId){
+            return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+        }
         try {
             switch (callPage){
                 // 未领取页面调用
@@ -151,7 +153,11 @@ public class TaskController {
     @PutMapping( "tasks/status/one/{taskId}/{token:.+}")
     public OutJSON recieveTheTask(@PathVariable(value = "taskId") int taskId ,
                                   @PathVariable(value = "token") String token){
-        int userId = JwtToken.getUserId(token);
+        Integer userId = JwtToken.getUserId(token);
+
+        if (null == userId){
+            return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+        }
 
         try{
 

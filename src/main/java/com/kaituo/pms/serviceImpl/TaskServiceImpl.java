@@ -59,6 +59,7 @@ public class TaskServiceImpl implements TaskService {
             // 查询所有相关任务
             TaskExample example = new TaskExample();
             TaskExample.Criteria criteria = example.createCriteria();
+            criteria.andTaskStatusEqualTo(Constant.THE_TASK_WAS_SUCCESSFULLY_POSTED);
             List<com.kaituo.pms.bean.Task> taskList = taskMapper.selectByExample(example);
             if (null != taskList && taskList.size() > 0) {
                 // 循环对比是否过期
@@ -99,6 +100,7 @@ public class TaskServiceImpl implements TaskService {
             // 查询所有相关任务
             TaskExample example = new TaskExample();
             TaskExample.Criteria criteria = example.createCriteria();
+            criteria.andTaskStatusEqualTo(Constant.THE_TASK_HAS_BEEN_RECEIVED);
             List<com.kaituo.pms.bean.Task> taskList = taskMapper.selectByExample(example);
             if (null != taskList && taskList.size() > 0) {
                 // 循环对比是否超时
