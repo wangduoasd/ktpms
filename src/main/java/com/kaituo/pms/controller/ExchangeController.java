@@ -5,6 +5,7 @@ import com.github.pagehelper.PageInfo;
 import com.kaituo.pms.bean.Exchange;
 import com.kaituo.pms.service.ExchangeService;
 import com.kaituo.pms.utils.CodeAndMessageEnum;
+import com.kaituo.pms.utils.JwtToken;
 import com.kaituo.pms.utils.OutJSON;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,12 +39,13 @@ public class ExchangeController {
      *
      */
     @ResponseBody
-    @GetMapping(value = "exchangeRecords/{userId}/{pageNumber}")
-    public OutJSON getExchangeRecords(@PathVariable("userId") int userId,
+    @GetMapping(value = "exchangeRecords/{token:.+}/{pageNumber}")
+    public OutJSON getExchangeRecords(@PathVariable("token") String token,
                                        @PathVariable(value = "pageNumber") int pageNumber,
                                        @RequestParam(value = "pageSize", defaultValue = "4") int pageSize
                                   ) {
         try {
+            int userId = JwtToken.getUserId(token);
             PageHelper.startPage(pageNumber, pageSize);
             //根据userId查询视图中该用户所有状态 状态1（显示为：未发送）  状态2（显示为：确定领取），状态3（显示为：已经领取）  的兑换列表
             List<Exchange> list = exchangeService.findExchangeRecord(userId);;
@@ -92,9 +94,10 @@ public class ExchangeController {
      *
      */
     @ResponseBody
-    @GetMapping(value = "exchangeRecords/{userId}/s/{keyWord}/{pn}")
-    public OutJSON findExchange( @RequestParam(value = "pageSize", defaultValue = "4") int pageSize,  @PathVariable("userId") int userId,@PathVariable("keyWord") String keyWord,@PathVariable(value = "pn") int pageNumber) {
+    @GetMapping(value = "exchangeRecords/{token:.+}/s/{keyWord}/{pn}")
+    public OutJSON findExchange( @RequestParam(value = "pageSize", defaultValue = "4") int pageSize,  @PathVariable("token") String token,@PathVariable("keyWord") String keyWord,@PathVariable(value = "pn") int pageNumber) {
         try {
+            int userId = JwtToken.getUserId(token);
             PageHelper.startPage(pageNumber, pageSize);
             //根据商品名keyWord搜索视图中该用户所有状态 状态1（显示为：未发送）  状态2（显示为：确定领取），状态3（显示为：已经领取）  的兑换列表
             List<Exchange> list = exchangeService.selectBykeyWord(keyWord, userId);

@@ -47,7 +47,6 @@ public class UserController {
     public OutJSON findRankingByPage(@PathVariable(value = "pageNumber") int pageNumber,HttpServletRequest httpRequest) {
         try {
 
-           log.info(""+httpRequest.getSession().getAttribute("userId"));
             // 每页显示数量设置为8条
             int pageSize = 8;
             // 查询总条数

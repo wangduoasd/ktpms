@@ -33,7 +33,7 @@ public class JwtToken {
 
 
     /** token秘钥，请勿泄露，请勿随便修改 backups:JKKLJOoasdlfj */
-    public static final String SECRET = "JKKLJOoasdlfj";
+    public static final String SECRET = "Kaituoweilai";
 /*    *//** token 过期时间: 10天 *//*
     public static final int calendarField = Calendar.DATE;
     public static final int calendarInterval = 10;*/
@@ -61,10 +61,10 @@ public class JwtToken {
         // build token
         // param backups {iss:Service, aud:APP}
         String token = JWT.create().withHeader(map) // header
-                .withClaim("iss", "Service") // payload
-                .withClaim("aud", "APP").withClaim("user_id", null == user_id ? null : user_id.toString())
+                .withClaim("iss", "zji") // payload
+                .withClaim("aud", "user").withClaim("user_id", null == user_id ? null : user_id.toString())
                 .withIssuedAt(iatDate) // sign time
-                .withExpiresAt(new Date(iatDate.getTime()+1000*60*1))// expire time
+                .withExpiresAt(new Date(iatDate.getTime()+1000*60*30))// expire time
                 .sign(Algorithm.HMAC256(SECRET)); // signature
 
         return token;

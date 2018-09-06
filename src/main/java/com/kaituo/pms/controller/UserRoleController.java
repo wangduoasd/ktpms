@@ -5,6 +5,7 @@ import com.github.pagehelper.PageInfo;
 import com.kaituo.pms.bean.User;
 import com.kaituo.pms.service.UserRoleService;
 import com.kaituo.pms.utils.CodeAndMessageEnum;
+import com.kaituo.pms.utils.JwtToken;
 import com.kaituo.pms.utils.OutJSON;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.annotations.Delete;
@@ -79,9 +80,10 @@ public class UserRoleController {
      　　* @date 2018/8/23 0023 14:08
      　　*/
     @ResponseBody
-    @DeleteMapping(value = "authority/all/role/{userId}")
-    public OutJSON addUserRole(@PathVariable("userId") int userId) {
+    @DeleteMapping(value = "authority/all/role/{token:.+}")
+    public OutJSON addUserRole(@PathVariable("token") String token) {
         try {
+            int userId = JwtToken.getUserId(token);
             int i=userRoleService.delUserRole(userId);
             if(i>=1){
                 return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);}

@@ -3,6 +3,7 @@ package com.kaituo.pms.controller;
 import com.kaituo.pms.bean.Role;
 import com.kaituo.pms.service.RoleService;
 import com.kaituo.pms.utils.CodeAndMessageEnum;
+import com.kaituo.pms.utils.JwtToken;
 import com.kaituo.pms.utils.OutJSON;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,9 +60,10 @@ public class RoleController {
      　　* @date 2018/8/23 0023 14:08
      　　*/
     @ResponseBody
-    @GetMapping(value = "authority/all/roles/{userId}")
-    public OutJSON getRolesById(@PathVariable("userId")int userId) {
+    @GetMapping(value = "authority/all/roles/{token:.+}")
+    public OutJSON getRolesById(@PathVariable("token")String token) {
         try {
+            int userId = JwtToken.getUserId(token);
             List<Role> list = roleService.findRoleById(userId);
             if(list.size()==0||list==null){
                 return OutJSON.getInstance(CodeAndMessageEnum.ROLE_EMPTY);

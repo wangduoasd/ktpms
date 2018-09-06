@@ -250,7 +250,6 @@ public class UserServiceImpl implements UserService/*,UserDetailsService*/ {
             i++;
         }
         login.setAuthorities(objects);
-
         return login;
     }
 
