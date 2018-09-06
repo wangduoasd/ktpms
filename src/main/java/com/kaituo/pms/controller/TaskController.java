@@ -4,10 +4,7 @@ import com.kaituo.pms.bean.Task;
 import com.kaituo.pms.bean.User;
 import com.kaituo.pms.service.TaskService;
 import com.kaituo.pms.service.UserService;
-import com.kaituo.pms.utils.CodeAndMessageEnum;
-import com.kaituo.pms.utils.Constant;
-import com.kaituo.pms.utils.OutJSON;
-import com.kaituo.pms.utils.Util;
+import com.kaituo.pms.utils.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -35,66 +32,16 @@ public class TaskController {
     /**
      * 分页查寻任务
      * @param callPage 调用的页面
-     * @param userId 员工id
-     * @param pageNumber 目标页面
-     * @return: com.kaituo.pms.utils.OutJSON
-     * @Author: 苏泽华
-     * @Date: 2018/8/13
-     */
-    @GetMapping("task/status/list/{callPage}/{pageNumber}")
-    public OutJSON findCollectionStatus(@PathVariable("callPage") String callPage ,
-                                        @SessionAttribute("userId") Integer userId,
-                                        @PathVariable(value = "pageNumber") int pageNumber) {
-        if (null == userId){
-            return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
-        }
-
-        try {
-            switch (callPage){
-                // 未领取页面调用
-                case Constant.MISSION_CENTER_TASK_LIST_PENDING:
-                    //已发布但未被领取的任务为1
-                    int status = Constant.THE_TASK_WAS_SUCCESSFULLY_POSTED;
-                    // 处理过期数据
-                    taskService.expiredVerification();
-                    //查询所有已发布但未被领取的任务的信息
-                    //分页
-                    return taskService.getStatesTaskByPage(pageNumber , null , status);
-                // 未完成页面调用
-                case Constant.MISSION_CENTER_TASK_LIST_UNDONE:
-                    // 处理超时数据
-                    taskService.timeOutDetection();
-                    //查询所有已发布但未被领取的任务的信息
-                    //分页
-                    return taskService.getUndoneByPage(pageNumber , null , userId);
-                // 已完成页面调用
-                case Constant.MISSION_CENTER_TASK_LIST_COMPLETED:
-                    //查询所有当前id的已完成数据
-                    //分页
-                    return taskService.getStatesTaskByPage(pageNumber , null , Constant.MISSION_COMPLETED , userId);
-                default:
-                    return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR,"调用页面错误");
-        }
-        } catch (Exception e) {
-            e.printStackTrace();
-            log.error(e.getMessage());
-            return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
-        }
-    }
-
-    /**
-     * 分页查寻任务(零时)
-     * @param callPage 调用的页面
-     * @param userId 员工id
      * @param pageNamber 目标页面
      * @return: com.kaituo.pms.utils.OutJSON
      * @Author: 苏泽华
      * @Date: 2018/8/13
      */
-    @GetMapping("tasks/status/list/{callPage}/{pageNumber}/u/{userId}")
+    @GetMapping("tasks/status/list/{callPage}/{pageNumber}/u/{token:.+}")
     public OutJSON findCollectionStatus(@PathVariable("callPage") String callPage ,
-                                        @PathVariable("userId") int userId,
+                                        @PathVariable(value = "token") String token,
                                         @PathVariable(value = "pageNumber") int pageNamber ) {
+        int userId = JwtToken.getUserId(token);
 
         try {
             switch (callPage){
@@ -129,82 +76,82 @@ public class TaskController {
         }
     }
 
+//    /**
+//     * 领取任务
+//     * @Param:
+//     * @param taskId 任务id
+//     * @param userId 员工id
+//     * @return: com.kaituo.pms.utils.OutJSON
+//     * @Author: 苏泽华
+//     * @Date: 2018/8/13
+//     */
+//    @PutMapping("tasks/status/one/{taskId}")
+//    public OutJSON recieveTheTask(@PathVariable(value = "taskId") int taskId ,
+//                                  @SessionAttribute("userId") Integer userId){
+//
+//        try{
+//
+//            User user =  userService.getUserFromTable(userId);
+//
+//            // 处理过期数据
+//            taskService.expiredVerification();
+//
+//            // 通过任务id找到任务信息
+//            Task task = taskService.getTask(taskId);
+//            // 判断是否取得了user和task
+//            if(null!=user && null!=task){
+//
+//                // 检查是否超过结束时间
+//                if (task.getTaskEndtime().getTime() > System.currentTimeMillis()) {
+//
+//                    // 如果任务状态为1（已发布）则返回消息
+//                    if (Constant.THE_TASK_WAS_SUCCESSFULLY_POSTED == task.getTaskStatus()){
+//
+//                        // 如果用户的积分大于等于任务消耗积分则扣除积分添加积分明细修改任务状态
+//                        if (user.getUserIntegral()>=task.getTaskPrice()){
+//
+//                            // 任务已被领取时，再次领取
+//                            if(task.getTaskStatus() == Constant.THE_TASK_HAS_BEEN_RECEIVED){
+//                                return OutJSON.getInstance(CodeAndMessageEnum.RECIEVE_THE_TASK_STATUS_IS_RECEIVED);
+//                            }
+//
+//                            // 数据的修改
+//                            return taskService.recieveTheTask(task , user);
+//
+//                        }else {
+//                            return OutJSON.getInstance(CodeAndMessageEnum.RECIEVE_THE_TASK_INSUFFICIENT_POINTS);
+//                        }
+//
+//                    }else {
+//                        return  OutJSON.getInstance(CodeAndMessageEnum.RECIEVE_THE_TASK_STATUS_NOT_ONE);
+//                    }
+//
+//                } else {
+//                    return OutJSON.getInstance(CodeAndMessageEnum.RECIEVE_THE_TASK_STATUS_TIME_OUT);
+//                }
+//
+//            }else {
+//                return OutJSON.getInstance(CodeAndMessageEnum.RECIEVE_THE_TASK_USER_OR_TASK_NULL);
+//            }
+//        }catch (Exception e){
+//            e.printStackTrace();
+//            log.error(e.getMessage());
+//            return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
+//        }
+//    }
+
     /**
      * 领取任务
      * @Param:
      * @param taskId 任务id
-     * @param userId 员工id
      * @return: com.kaituo.pms.utils.OutJSON
      * @Author: 苏泽华
      * @Date: 2018/8/13
      */
-    @PutMapping("tasks/status/one/{taskId}")
+    @PutMapping( "tasks/status/one/{taskId}/{token:.+}")
     public OutJSON recieveTheTask(@PathVariable(value = "taskId") int taskId ,
-                                  @SessionAttribute("userId") Integer userId){
-
-        try{
-
-            User user =  userService.getUserFromTable(userId);
-
-            // 处理过期数据
-            taskService.expiredVerification();
-
-            // 通过任务id找到任务信息
-            Task task = taskService.getTask(taskId);
-            // 判断是否取得了user和task
-            if(null!=user && null!=task){
-
-                // 检查是否超过结束时间
-                if (task.getTaskEndtime().getTime() > System.currentTimeMillis()) {
-
-                    // 如果任务状态为1（已发布）则返回消息
-                    if (Constant.THE_TASK_WAS_SUCCESSFULLY_POSTED == task.getTaskStatus()){
-
-                        // 如果用户的积分大于等于任务消耗积分则扣除积分添加积分明细修改任务状态
-                        if (user.getUserIntegral()>=task.getTaskPrice()){
-
-                            // 任务已被领取时，再次领取
-                            if(task.getTaskStatus() == Constant.THE_TASK_HAS_BEEN_RECEIVED){
-                                return OutJSON.getInstance(CodeAndMessageEnum.RECIEVE_THE_TASK_STATUS_IS_RECEIVED);
-                            }
-
-                            // 数据的修改
-                            return taskService.recieveTheTask(task , user);
-
-                        }else {
-                            return OutJSON.getInstance(CodeAndMessageEnum.RECIEVE_THE_TASK_INSUFFICIENT_POINTS);
-                        }
-
-                    }else {
-                        return  OutJSON.getInstance(CodeAndMessageEnum.RECIEVE_THE_TASK_STATUS_NOT_ONE);
-                    }
-
-                } else {
-                    return OutJSON.getInstance(CodeAndMessageEnum.RECIEVE_THE_TASK_STATUS_TIME_OUT);
-                }
-
-            }else {
-                return OutJSON.getInstance(CodeAndMessageEnum.RECIEVE_THE_TASK_USER_OR_TASK_NULL);
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-            log.error(e.getMessage());
-            return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
-        }
-    }
-
-    /**
-     * 领取任务(零时)
-     * @Param:   2
-     * @param taskId 任务id
-     * @param userId 员工id
-     * @return: com.kaituo.pms.utils.OutJSON
-     * @Author: 苏泽华
-     * @Date: 2018/8/13
-     */
-    @PutMapping( "tasks/status/one/{taskId}/{userId}")
-    public OutJSON recieveTheTask(@PathVariable(value = "taskId") int taskId ,
-                                  @PathVariable("userId") int userId){
+                                  @PathVariable(value = "token") String token){
+        int userId = JwtToken.getUserId(token);
 
         try{
 

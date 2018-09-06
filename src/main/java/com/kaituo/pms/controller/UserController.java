@@ -85,12 +85,13 @@ public class UserController {
      * @Author: 侯鹏
      * @Date: 2018/8/8
      */
-    @GetMapping(value = "user/{id}")
-    public OutJSON findPersonalDetail(@PathVariable("id") int id) {
+    @GetMapping(value = "user/{token:.+}")
+    public OutJSON findPersonalDetail(@PathVariable("token") String token) {
 
         //个人信息获取成功
         try {
-            User personalDetail = userService.findPersonalDetail(id);
+            int userId = JwtToken.getUserId(token);
+            User personalDetail = userService.findPersonalDetail(userId);
             if (null != personalDetail)
                 return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS , personalDetail);
 
@@ -277,10 +278,10 @@ public class UserController {
      * @date 2018/8/17 0017 17:35
      */
     @ResponseBody
-    @GetMapping(value = "authority/one/user/{userId}")
-    public OutJSON findAllUser(@PathVariable(value = "userId") int userId) {
+    @GetMapping(value = "authority/one/user/{token:.+}")
+    public OutJSON findAllUser(@PathVariable(value = "token") String token) {
         try {
-
+            int userId = JwtToken.getUserId(token);
             User user = userService.getUserById(userId);
             if(user==null){
                 return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);}
@@ -416,9 +417,10 @@ public class UserController {
      　　* @date 2018/8/23 0023 13:40
      　　*/
     @ResponseBody
-    @PutMapping(value = "user/password/{userId}")
-    public OutJSON upUserPassword(@PathVariable(value = "userId") int userId,@RequestParam("oldPassWord") String oldPassWord,@RequestParam("newPassWord")String newPassWord) {
+    @PutMapping(value = "user/password/{token:.+}")
+    public OutJSON upUserPassword(@PathVariable("token") String token,@RequestParam("oldPassWord") String oldPassWord,@RequestParam("newPassWord")String newPassWord) {
         try {
+            int userId = JwtToken.getUserId(token);
             int i=userService.upUserPassword(userId,oldPassWord,newPassWord);
             if(i==1)
                 return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);
@@ -440,14 +442,15 @@ public class UserController {
      　　* @date 2018/8/23 0023 13:40
      　　*/
     @ResponseBody
-    @PutMapping(value = "authority/one/user/integral/{operatorId}/{userId}")
-    public OutJSON upUserPassword(@PathVariable(value = "userId") int userId,
+    @PutMapping(value = "authority/one/user/integral/{operatorId}/{token:.+}")
+    public OutJSON upUserPassword(@PathVariable("token") String token ,
                                   @RequestParam("startNum")int startNum,
                                   @RequestParam("endNum")int endNum,
                                   @RequestParam("changestr") String changestr,
                                   @PathVariable(value = "operatorId")int operatorId
                                   ) {
         try {
+            int userId = JwtToken.getUserId(token);
             int i=userService.upUserIntegral(operatorId,userId, changestr, startNum, endNum);
             if(i==1)
                 return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);
