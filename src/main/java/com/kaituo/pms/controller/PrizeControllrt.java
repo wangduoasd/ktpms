@@ -72,13 +72,12 @@ public class PrizeControllrt {
    @GetMapping(value="prizes/{token:.+}/{pageNumber}")
    public OutJSON findAllPrizePrize(@PathVariable("token") String token,
                                     @PathVariable(value = "pageNumber") int pageNumber,
-                                    @RequestParam (value = "pageSize",defaultValue = "6") int pageSize){
+                                    @RequestParam (value = "pageSize",defaultValue = "4") int pageSize){
        try {
            PageHelper.startPage(pageNumber, pageSize);
            int userId = JwtToken.getUserId(token);
            List<Prize> prizess = prizeService.findAllPrizePrize(userId);
            PageInfo objectPageInfo = new PageInfo<>(prizess,4);
-           System.out.print(prizess+"666666");
            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,objectPageInfo);
        } catch (Exception e) {
            log.error(e.getMessage());
