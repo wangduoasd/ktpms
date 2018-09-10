@@ -44,7 +44,7 @@ public class UserController {
     * @Date: 2018/8/9
     */
     @GetMapping("userIntegrals/{pageNumber}")
-    public OutJSON findRankingByPage(@PathVariable(value = "pageNumber") int pageNumber,HttpServletRequest httpRequest) {
+    public OutJSON findRankingByPage(@PathVariable(value = "pageNumber") int pageNumber) {
         try {
 
             // 每页显示数量设置为8条
