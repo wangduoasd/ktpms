@@ -60,10 +60,10 @@ public class RoleController {
      　　* @date 2018/8/23 0023 14:08
      　　*/
     @ResponseBody
-    @GetMapping(value = "authority/all/roles/{token:.+}")
-    public OutJSON getRolesById(@PathVariable("token")String token) {
+    @GetMapping(value = "authority/all/roles/{userId}")
+    public OutJSON getRolesById(@PathVariable("userId")int userId) {
         try {
-            int userId = JwtToken.getUserId(token);
+
             List<Role> list = roleService.findRoleById(userId);
             if(list.size()==0||list==null){
                 return OutJSON.getInstance(CodeAndMessageEnum.ROLE_EMPTY);

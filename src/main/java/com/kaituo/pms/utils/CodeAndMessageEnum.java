@@ -17,7 +17,7 @@ public enum CodeAndMessageEnum {
     FIND_RANKING_BY_PAGE_AND_CONDITION_NULL("-3" , "没有得到员工信息"),
 
     // 任务分页-没有找到任务信息
-    GET_STATES_TASK_BY_PAGE_NULL("-4" , "未找到任务"),
+    GET_STATES_TASK_BY_PAGE_NULL("1" , "未找到任务"),
     // 待领取任务领取任务按钮
     RECIEVE_THE_TASK_USER_OR_TASK_NULL("-5" , "没有找到对应员工或任务信息"),
     // 待领取任务领取任务按钮—任务已被领取
@@ -98,7 +98,7 @@ public enum CodeAndMessageEnum {
     // 没有修改任何商品
     MODIFICATION_EMPTY("-30" , "修改商品失败"),
 
-
+NOREASON("-48" , "未知错误"),
 
 
 

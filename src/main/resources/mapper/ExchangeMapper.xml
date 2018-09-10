@@ -141,6 +141,9 @@
       <if test="prizeImage != null">
         prize_image,
       </if>
+      <if test="exchangeTotal != null">
+        exchange_total,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="exchangeId != null">
@@ -166,6 +169,9 @@
       </if>
       <if test="prizeImage != null">
         #{prizeImage,jdbcType=VARCHAR},
+      </if>
+      <if test="exchangeTotal != null">
+        #{exchangeTotal,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -274,7 +280,7 @@
   </resultMap>
   <!--findExchangeRecord-->
   <select id="findExchangeRecord" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select * from p_exchange where user_id=#{userId}
+    select exchange_id,prize_id,user_id,exchange_count,exchange_time,exchange_status,prize_name,prize_image,exchange_total from p_exchange where user_id=#{userId}
   </select>
   <!--模糊查询-->
   <select id="selectBykeyWord" resultMap="BaseResultMap">

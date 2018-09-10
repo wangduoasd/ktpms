@@ -227,9 +227,8 @@ public class UserServiceImpl implements UserService/*,UserDetailsService*/ {
 
 
     @Override
-    public Login login(String username, String password){
+    public Login login(int userId, String password){
         Login login = new Login();
-        int userId=Integer.parseInt(username);
         User user = userMapper.selectByPrimaryKey(userId);
         if(user == null||!user.getUserPassword().equals(password)){
             return null;
@@ -240,14 +239,15 @@ public class UserServiceImpl implements UserService/*,UserDetailsService*/ {
         /*   if(user==null||user.s)*/
         int i=0;
         Object[] objects = new Object[6];
-        for(Role role:user.getRole())
-        {
-            if(null==role)
-                break;
-            HashMap<String, String> authorities = new HashMap<>();
-            authorities.put("authority",""+role.getRoleId());
-            objects[i]=authorities;
-            i++;
+        if(user.getRole()!=null) {
+            for (Role role : user.getRole()) {
+                if (null == role)
+                    break;
+                HashMap<String, String> authorities = new HashMap<>();
+                authorities.put("authority", "" + role.getRoleId());
+                objects[i] = authorities;
+                i++;
+            }
         }
         login.setAuthorities(objects);
         return login;

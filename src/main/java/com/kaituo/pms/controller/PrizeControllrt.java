@@ -92,29 +92,26 @@ public class PrizeControllrt {
    * @Author: 侯鹏
    * @Date:  2018/8/20
    */
-   @PutMapping(value="prize/{{token:.+}}/{number}/{prizeId}")
+   @PutMapping(value="prize/{token:.+}/{number}/{prizeId}")
    public OutJSON exchangePrize(@PathVariable("token") String token, @PathVariable("number") int number,
                                 @PathVariable("prizeId") int prizeId){
-       int newCount = 0;
+       int newCount = number;
       try {
           int userId = JwtToken.getUserId(token);
-
           Prize prize = prizeService.selectByPrimaryKey(prizeId);
-
           User user = userService.findPersonalDetail(userId);
           List<Exchange> exchanges = exchangeService.selectByUserIdPrizeId(prizeId, userId);
           if (null != exchanges && exchanges.size() > 0) {
               for(Exchange exchange:  exchanges){
-                  newCount= exchange.getExchangeCount() + number;
+                  newCount += exchange.getExchangeCount();
               }
           }
-
 
           int totalPrice = number * prize.getPrizePrice();
        if (null == user || null == prize) {
            //用户名或商品为空
-           return OutJSON.getInstance(CodeAndMessageEnum.GET_STATES_TASK_BY_PAGE_NULL);
-       } else if (number >prize.getPrizeQuota()||prize.getPrizeAmount()<0||prize.getPrizeQuota()<=0||newCount>prize.getPrizeQuota()) {
+           return OutJSON.getInstance(CodeAndMessageEnum.NOREASON);
+       } else if (number >prize.getPrizeQuota()||prize.getPrizeAmount()<=0||newCount>prize.getPrizeQuota()) {
            //购买失败，超过上限
            return OutJSON.getInstance(CodeAndMessageEnum.FIND_PRIZE_CAP);
        } else if (totalPrice > user.getUserIntegral()) {

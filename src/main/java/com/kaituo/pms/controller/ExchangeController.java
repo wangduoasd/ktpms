@@ -3,15 +3,20 @@ package com.kaituo.pms.controller;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.kaituo.pms.bean.Exchange;
+import com.kaituo.pms.error.MyException;
 import com.kaituo.pms.service.ExchangeService;
 import com.kaituo.pms.utils.CodeAndMessageEnum;
 import com.kaituo.pms.utils.JwtToken;
 import com.kaituo.pms.utils.OutJSON;
+import com.kaituo.pms.utils.TokenMap;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -45,12 +50,20 @@ public class ExchangeController {
                                        @RequestParam(value = "pageSize", defaultValue = "4") int pageSize
                                   ) {
         try {
-            int userId = JwtToken.getUserId(token);
+            HashMap<String, Integer> tokenMap = TokenMap.getInstance().getTokenMap();
+            Integer userId =tokenMap.get(token);
+            if(userId==null){
+                return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
+            log.info(""+userId);
             PageHelper.startPage(pageNumber, pageSize);
             //根据userId查询视图中该用户所有状态 状态1（显示为：未发送）  状态2（显示为：确定领取），状态3（显示为：已经领取）  的兑换列表
             List<Exchange> list = exchangeService.findExchangeRecord(userId);;
             PageInfo pageInfo = new PageInfo(list, 5);
-            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, pageInfo);
+            tokenMap.remove(token);
+            String newToken = JwtToken.createToken(userId);
+            TokenMap.getInstance().putTokenMap(newToken);
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, pageInfo,newToken);
         } catch (Exception e) {
             log.error( e.getMessage());
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
@@ -179,5 +192,19 @@ public class ExchangeController {
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
         }
     }
+    @ResponseBody
+    @GetMapping(value = "test")
+    public OutJSON test(HttpServletRequest request) {
 
+        try {
+
+            System.out.println( request.getAttribute("test"));
+            System.out.println(request.getSession().getId());
+            System.out.println(request.getSession().getAttribute("test"));
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);
+        } catch (Exception e) {
+            log.error( e.getMessage());
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
+        }
+    }
 }
