@@ -103,15 +103,27 @@ public class PrizeControllrt {
           List<Exchange> exchanges = exchangeService.selectByUserIdPrizeId(prizeId, userId);
           if (null != exchanges && exchanges.size() > 0) {
               for(Exchange exchange:  exchanges){
-                  newCount += exchange.getExchangeCount();
+
+
+
+                  newCount = exchange.getExchangeCount()+newCount;
+
               }
           }
 
           int totalPrice = number * prize.getPrizePrice();
-       if (null == user || null == prize) {
+       if (null == user.getUserName()|| null == prize.getPrizeName()) {
            //用户名或商品为空
+
            return OutJSON.getInstance(CodeAndMessageEnum.NOREASON);
        } else if (number >prize.getPrizeQuota()||prize.getPrizeAmount()<=0||newCount>prize.getPrizeQuota()) {
+         return OutJSON.getInstance(CodeAndMessageEnum.GET_STATES_TASK_BY_PAGE_NULL);
+       } else if (number >prize.getPrizeQuota()||
+               prize.getPrizeAmount()<= 0||
+               prize.getPrizeQuota()<=0||
+               newCount>prize.getPrizeQuota()||
+               number>prize.getPrizeAmount()) {
+
            //购买失败，超过上限
            return OutJSON.getInstance(CodeAndMessageEnum.FIND_PRIZE_CAP);
        } else if (totalPrice > user.getUserIntegral()) {
