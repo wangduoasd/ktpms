@@ -59,6 +59,19 @@ public class Exchange {
 
     }
 
+    public Exchange(Integer exchangeId, Integer prizeId, Integer userId, String userName, Integer exchangeCount, Date exchangeTime, Integer exchangeStatus, String prizeName, String prizeImage, int exchangeTotal) {
+        this.exchangeId = exchangeId;
+        this.prizeId = prizeId;
+        this.userId = userId;
+        this.userName = userName;
+        this.exchangeCount = exchangeCount;
+        this.exchangeTime = exchangeTime;
+        this.exchangeStatus = exchangeStatus;
+        this.prizeName = prizeName;
+        this.prizeImage = prizeImage;
+        this.exchangeTotal = exchangeTotal;
+    }
+
     public Exchange() {
         super();
     }

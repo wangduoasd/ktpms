@@ -92,7 +92,7 @@ public interface UserService {
 
     int upUserIntegral(int operatorId,int userId,String changeStr,int startNum,int endNum);
 
-    public Login login(String username, String password);
+    public Login login(int userId, String password);
 
     public Login  login();
 }

@@ -464,20 +464,24 @@ public class UserController {
         }
     }
     @PostMapping("user/login")
-        public OutJSON login(@RequestParam("username")String username, @RequestParam("password")String password, HttpServletRequest httpRequest, HttpServletResponse httpResponse){
-       try {
-           Login login = userService.login(username, password);
-           String token = JwtToken.createToken(Integer.parseInt(username));
-           login.setToken(token);
-           HttpSession session=httpRequest.getSession();
-           log.info(session.getId());
-           if (login == null) {
-               return OutJSON.getInstance(CodeAndMessageEnum.USER_LOGIN_ERROR);
-           }
-           return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,login);
-       }catch (Exception e){
-           log.error( e.getMessage());
-           return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
-       }
+        public OutJSON login(@RequestParam("username")String username, @RequestParam("password")String password, HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
+        try {
+            int userId=Integer.parseInt(username);
+            Login login = userService.login(userId, password);
+            String token = JwtToken.createToken(Integer.parseInt(username));
+            TokenMap.getInstance().putTokenMap(token);
+            login.setToken(token);
+            log.info("token========"+token);
+            HttpSession session = httpRequest.getSession();
+            log.info(session.getId());
+            if (login == null) {
+                return OutJSON.getInstance(CodeAndMessageEnum.USER_LOGIN_ERROR);
+            }
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, login);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
         }
+    }
+
 }

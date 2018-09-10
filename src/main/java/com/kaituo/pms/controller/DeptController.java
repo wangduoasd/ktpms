@@ -132,8 +132,8 @@ public class DeptController {
             int i = deptService.delDept(deptId);
             if(i==1){
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);}
-            if(i==0)
-                return OutJSON.getInstance(CodeAndMessageEnum.ALL_OPERATION_ERROR);
+            if(i==0){
+                return OutJSON.getInstance(CodeAndMessageEnum.ALL_OPERATION_ERROR);}
             String message="此部门还有"+(i-1)+"名员工，不能删除";
             return OutJSON.getInstance(CodeAndMessageEnum.DELETE_ERROR,message);
         }catch (Exception e){

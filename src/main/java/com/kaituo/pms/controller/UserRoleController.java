@@ -80,10 +80,10 @@ public class UserRoleController {
      　　* @date 2018/8/23 0023 14:08
      　　*/
     @ResponseBody
-    @DeleteMapping(value = "authority/all/role/{token:.+}")
-    public OutJSON addUserRole(@PathVariable("token") String token) {
+    @DeleteMapping(value = "authority/all/role/{userId}")
+    public OutJSON addUserRole(@PathVariable("userId") int userId) {
         try {
-            int userId = JwtToken.getUserId(token);
+
             int i=userRoleService.delUserRole(userId);
             if(i>=1){
                 return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);}
