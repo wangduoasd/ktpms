@@ -211,12 +211,19 @@ public class UserController {
      * @Author: 苏泽华
      * @Date: 2018/8/9
      */
-    @GetMapping(value = {"userIntegrals/{pageNumber}/{pageSize}/{condition}/{token:.+}" , "userIntegrals/{pageNumber}/{condition}/{token:.+}"})
+    @GetMapping(value = {"userIntegrals/{pageNumber}/{pageSize}/{condition}" , "userIntegrals/{pageNumber}/{condition}"})
     public OutJSON findRankingByPageAndCondition(@PathVariable(value = "pageNumber")
                                                          int pageNumber,
                                                  @PathVariable(required = false)
                                                          Integer pageSize,
-                                                 @PathVariable(value = "condition" , required = false) String condition) {
+                                                 @PathVariable(value = "condition" , required = false) String condition ,
+                                                 @PathVariable(value = "token") String token) {
+        // 检查token并获得userID
+        Integer userId = TokenMap.check(token);
+
+        if (null == userId){
+            return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+        }
         try {
             // 如果没有传每页显示数量设置为8条
             if (null==pageSize){
@@ -238,7 +245,9 @@ public class UserController {
                 data.put("total", total);
                 //员工的信息
                 data.put("User", leaderboardList);
-                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, data);
+                // 重置token
+                String newToken = TokenMap.remove(token , userId);
+                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, data , newToken);
             } else {
                 return OutJSON.getInstance(CodeAndMessageEnum.FIND_RANKING_BY_PAGE_AND_CONDITION_NULL);
             }
@@ -496,7 +505,6 @@ public class UserController {
             String token=TokenMap.create(userId);
             login.setToken(token);
             log.info("token========"+token);
-
             HttpSession session = httpRequest.getSession();
             log.info(session.getId());
             if (login == null) {
