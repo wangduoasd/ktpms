@@ -11,19 +11,27 @@ import java.util.HashMap;
  * @date 2018/9/10 001011:20
  */
 public class TokenMap {
-    private HashMap<String,Integer> tokenMap=new HashMap<>();
+    private static HashMap<String,Integer> tokenMap=new HashMap<>();
     private static class TokenMapHolder{
         private  static final  TokenMap instance=new TokenMap();
     }
 
-    public HashMap<String, Integer> getTokenMap() {
-        return tokenMap;
-    }
-     public static TokenMap getInstance(){
+    public static TokenMap getInstance(){
         return  TokenMapHolder.instance;
-     }
+    }
 
-    public void putTokenMap(String token) {
-        this.tokenMap.put(token,JwtToken.getUserId(token));
+    public static int check(String token){
+        return tokenMap.get(token);
+    }
+    public static String remove(String token,int userId){
+        tokenMap.remove(token);
+        String newToken = null;
+        try {
+            newToken = JwtToken.createToken(userId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        tokenMap.put(token,userId);
+        return newToken;
     }
 }
