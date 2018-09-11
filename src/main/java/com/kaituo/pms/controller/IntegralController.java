@@ -7,6 +7,7 @@ import com.kaituo.pms.service.IntegralService;
 import com.kaituo.pms.utils.CodeAndMessageEnum;
 import com.kaituo.pms.utils.JwtToken;
 import com.kaituo.pms.utils.OutJSON;
+import com.kaituo.pms.utils.TokenMap;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -35,12 +36,16 @@ public class IntegralController {
                                 @RequestParam (value = "pageSize",defaultValue = "10") int pageSize){
         PageHelper.startPage(ageNumber,pageSize);
         try {
-            int userId = JwtToken.getUserId(token);
+            Integer userId=TokenMap.check(token);
+            if(userId==null){
+                return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
             Map<String , Object> map = new HashMap<>();
             List<Map<String, Object>> integrals = integralService.listIntegeral(userId);
           PageInfo pageInfo = new PageInfo(integrals, 5);
             if(integrals!=null&&integrals.size()>0){
-                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,pageInfo);
+                String newToken=TokenMap.remove(token,userId);
+                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,pageInfo,newToken);
 
             }
         } catch (Exception e) {            e.printStackTrace();
