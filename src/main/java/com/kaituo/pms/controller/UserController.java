@@ -488,8 +488,7 @@ public class UserController {
         try {
             int userId=Integer.parseInt(username);
             Login login = userService.login(userId, password);
-            String token = JwtToken.createToken(Integer.parseInt(username));
-            TokenMap.create(userId);
+            String token=TokenMap.create(userId);
             login.setToken(token);
             log.info("token========"+token);
             HttpSession session = httpRequest.getSession();

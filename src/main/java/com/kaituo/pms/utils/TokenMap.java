@@ -11,8 +11,9 @@ import java.util.HashMap;
  * @date 2018/9/10 001011:20
  */
 public class TokenMap {
-    private static HashMap<String,Integer> tokenMap=new HashMap<>();
+    private static HashMap<String,Integer> tokenMap;
     private static class TokenMapHolder{
+        private static final HashMap<String,Integer> tokenMap=new HashMap<>();
         private  static final  TokenMap instance=new TokenMap();
     }
 
@@ -21,6 +22,7 @@ public class TokenMap {
      }
 
     public static int check(String token){
+        System.out.println(token);
         return tokenMap.get(token);
     }
     public static String remove(String token,int userId){
@@ -28,18 +30,31 @@ public class TokenMap {
         String newToken = null;
         try {
             newToken = JwtToken.createToken(userId);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
         tokenMap.put(token,JwtToken.getUserId(token));
         return newToken;
     }
-    public static void create(Integer userId){
+    public static String create(Integer userId){
+        String token=null;
         try {
-            String token=JwtToken.createToken(userId);
+             token=JwtToken.createToken(userId);
+            setTokenMap();
             tokenMap.put(token,userId);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return  token;
+    }
+
+    public static void setTokenMap() {
+        TokenMap.tokenMap = TokenMapHolder.tokenMap;
+    }
+
+    public static HashMap<String, Integer> getTokenMap() {
+        return tokenMap;
     }
 }

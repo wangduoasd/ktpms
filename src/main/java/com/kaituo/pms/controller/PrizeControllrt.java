@@ -81,7 +81,11 @@ public class PrizeControllrt {
                                     @PathVariable(value = "pageNumber") int pageNumber,
                                     @RequestParam (value = "pageSize",defaultValue = "4") int pageSize){
        try {
+           log.info("kaishi");
+           log.info(""+TokenMap.getTokenMap().isEmpty());
+           log.info(TokenMap.getTokenMap().toString());
            Integer userId=TokenMap.check(token);
+             log.info(""+userId);
            if(userId==null){
                return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
            }
