@@ -469,7 +469,7 @@ public class UserController {
             int userId=Integer.parseInt(username);
             Login login = userService.login(userId, password);
             String token = JwtToken.createToken(Integer.parseInt(username));
-            TokenMap.getInstance().putTokenMap(token);
+
             login.setToken(token);
             log.info("token========"+token);
             HttpSession session = httpRequest.getSession();
