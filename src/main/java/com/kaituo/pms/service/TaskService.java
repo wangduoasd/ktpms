@@ -72,18 +72,19 @@ public interface TaskService {
      * @Author: 苏泽华
      * @Date: 2018/8/9
      */
-    OutJSON getStatesTaskByPage(Integer pageNamber , Integer pageSize , int status);
+    OutJSON getPendingTaskByPage(Integer pageNamber , Integer pageSize , int status , String token , int userId);
     /**
      * 将获得的任务数据封装成map(已完成)
      * @Description:  将获得的任务数据封装成map
      * @param pageNamber 目标页数
      * @param pageSize 每页条数
      * @param status 任务状态值
+     * @param userId
      * @return:
      * @Author: 苏泽华
      * @Date: 2018/8/9
      */
-    OutJSON getStatesTaskByPage(Integer pageNamber , Integer pageSize , int status , int userId);
+    OutJSON getStatesTaskByPage(Integer pageNamber , Integer pageSize , int status , int userId , String token);
 
     /**
      * 获取未完成页面数据并封装好
@@ -96,7 +97,7 @@ public interface TaskService {
      * @Author: 苏泽华
      * @Date: 2018/8/13
      */
-    OutJSON getUndoneByPage(Integer pageNamber, Integer pageSize , int userId);
+    OutJSON getUndoneByPage(Integer pageNamber, Integer pageSize , int userId , String token);
 
     /**
      * 通过任务id获得对应任务信息
@@ -119,7 +120,7 @@ public interface TaskService {
      * @Date: 2018/8/10
      */
 
-    OutJSON recieveTheTask(Task task , User user);
+    OutJSON recieveTheTask(Task task , User user , String token);
 
     /**
      * 提交审核
@@ -150,7 +151,7 @@ public interface TaskService {
      * @Author: 苏泽华
      * @Date: 2018/8/20
      */
-    OutJSON listPublishedTask(int pageNamber , Integer pageSize) ;
+    OutJSON listPublishedTask(int pageNamber , Integer pageSize , int userId , String token);
 
     /**
      * 获取风控中心——任务管理——待审核任务的数据
@@ -160,7 +161,7 @@ public interface TaskService {
      * @Author: 苏泽华
      * @Date: 2018/8/20
      */
-    OutJSON listPendingTask(int pageNamber , Integer pageSize);
+    OutJSON listPendingTask(int pageNamber , Integer pageSize , int userId , String token);
 
     /**
      * 风控中心——任务管理——失效任务
@@ -170,7 +171,7 @@ public interface TaskService {
      * @Author: 苏泽华
      * @Date: 2018/8/20
      */
-    OutJSON lisInvalidTask(int pageNamber , Integer pageSize);
+    OutJSON lisInvalidTask(int pageNamber , Integer pageSize , int userId , String token);
 
     /**
      * 获取风控中心——任务管理——已发布任务的数据的总数
