@@ -254,16 +254,22 @@ public class UserController {
      * @date 2018/8/17 0017 17:35
      */
     @ResponseBody
-    @GetMapping(value = "authority/one/users/{pn}")
+    @GetMapping(value = "authority/one/users/{pn}/{token:.+}")
     public OutJSON findAllUser(@PathVariable(value = "pn") int pageNumber,
-                                      @RequestParam(value = "pageSize", defaultValue = "8") int pageSize) {
+                               @RequestParam(value = "pageSize", defaultValue = "8") int pageSize,
+                               @PathVariable("token") String token) {
         try {
+            Integer userId = TokenMap.check(token);
+            if(userId==null){
+                return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
             PageHelper.startPage(pageNumber, pageSize);
             List<User> list = userService.findAllUser();
             if(list==null)
                 return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
             PageInfo pageInfo = new PageInfo(list, 5);
-            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, pageInfo);
+            String newToken = TokenMap.remove(token, userId);
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, pageInfo,newToken);
         } catch (Exception e) {
             log.error( e.getMessage());
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
@@ -281,12 +287,15 @@ public class UserController {
     @GetMapping(value = "authority/one/user/{token:.+}")
     public OutJSON findAllUser(@PathVariable(value = "token") String token) {
         try {
-            int userId = JwtToken.getUserId(token);
+            Integer userId = TokenMap.check(token);
+            if(userId==null){
+                return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
             User user = userService.getUserById(userId);
             if(user==null){
                 return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);}
-
-            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,user);
+            String newToken = TokenMap.remove(token, userId);
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,user,newToken);
         } catch (Exception e) {
             log.error( e.getMessage());
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
@@ -301,15 +310,21 @@ public class UserController {
      　　* @date 2018/8/23 0023 13:42
      　　*/
     @ResponseBody
-    @GetMapping(value = "authority/one/users/s/{keyword}/{pn}")
+    @GetMapping(value = "authority/one/users/s/{keyword}/{pn}/{token:.+}")
     public OutJSON findByKeyWord(@PathVariable(value = "keyword") String keyword,
                                @PathVariable(value = "pn") int pageNumber,
-                               @RequestParam(value = "pageSize", defaultValue = "8") int pageSize) {
+                               @RequestParam(value = "pageSize", defaultValue = "8") int pageSize,
+                                 @PathVariable(value = "token") String token ) {
         try {
+            Integer userId = TokenMap.check(token);
+            if(userId==null){
+                return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
             PageHelper.startPage(pageNumber, pageSize);
             List<User> list = userService.findByKeyWord(keyword);
             PageInfo pageInfo = new PageInfo(list, 5);
-            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, pageInfo);
+            String newToken = TokenMap.remove(token, userId);
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, pageInfo,newToken);
         } catch (Exception e) {
             log.error( e.getMessage());
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
@@ -324,12 +339,17 @@ public class UserController {
      　　* @date 2018/8/23 0023 13:42
      　　*/
     @ResponseBody
-    @PostMapping(value = "authority/one/user")
-    public OutJSON addUser(User user) {
+    @PostMapping(value = "authority/one/user/{token:.+}")
+    public OutJSON addUser(User user,@PathVariable(value = "token") String token) {
         try {
+            Integer userId = TokenMap.check(token);
+            if(userId==null){
+                return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
             int i=userService.addUser(user);
-            if(i==1)
-                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);
+            if(i==1){
+                String newToken = TokenMap.remove(token, userId);
+                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,null,newToken);}
             if(i==2){
                 return OutJSON.getInstance(CodeAndMessageEnum.USER_ADD_ERROR);
             }
@@ -469,7 +489,7 @@ public class UserController {
             int userId=Integer.parseInt(username);
             Login login = userService.login(userId, password);
             String token = JwtToken.createToken(Integer.parseInt(username));
-            TokenMap.getInstance().putTokenMap(token);
+            TokenMap.create(userId);
             login.setToken(token);
             log.info("token========"+token);
             HttpSession session = httpRequest.getSession();

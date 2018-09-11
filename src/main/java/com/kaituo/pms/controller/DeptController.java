@@ -8,6 +8,7 @@ import com.kaituo.pms.bean.Exchange;
 import com.kaituo.pms.service.DeptService;
 import com.kaituo.pms.utils.CodeAndMessageEnum;
 import com.kaituo.pms.utils.OutJSON;
+import com.kaituo.pms.utils.TokenMap;
 import com.mysql.cj.xdevapi.JsonArray;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,12 +45,17 @@ public class DeptController {
      　　* @author 张金行
      　　* @date 2018/8/23 0023 15:54
      　　*/
-    @GetMapping(value ="authority/one/depts")
+    @GetMapping(value ="authority/one/depts/{token:.+}")
     @ResponseBody
-    public OutJSON getAllDeptName() {
+    public OutJSON getAllDeptName(@PathVariable("token") String token) {
         try {
+            Integer userId = TokenMap.check(token);
+            if(userId==null){
+                return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
             List<Dept> list = deptService.getAllDeptName();
-            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, list);
+            String newToken = TokenMap.remove(token, userId);
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, list,newToken);
         } catch (Exception e) {
             log.error( e.getMessage());
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
@@ -63,15 +69,20 @@ public class DeptController {
      * @author 张金行
      * @date 2018/8/23 0023 15:54
      */
-    @GetMapping(value ="authority/four/dept/{deptId}")
+    @GetMapping(value ="authority/four/dept/{deptId}/{token:.+}")
     @ResponseBody
-    public OutJSON getDeptById(@PathVariable("deptId")int deptId){
+    public OutJSON getDeptById(@PathVariable("deptId")int deptId,@PathVariable("token") String token){
         try {
+            Integer userId = TokenMap.check(token);
+            if(userId==null){
+                return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
             Dept dept = deptService.getDeptById(deptId);
             if(dept==null){
                 return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
             }
-            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, dept);
+            String newToken = TokenMap.remove(token, userId);
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, dept,newToken);
         } catch (Exception e) {
             log.error( e.getMessage());
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
@@ -85,16 +96,21 @@ public class DeptController {
      　　* @author 张金行
      　　* @date 2018/8/23 0023 15:54
      　　*/
-    @GetMapping(value ="authority/four/depts/{pn}")
+    @GetMapping(value ="authority/four/depts/{pn}/{token:.+}")
     @ResponseBody
     public OutJSON findAllDept(@PathVariable(value = "pn") int pageNumber,
-                               @RequestParam(value = "pageSize",defaultValue ="8") Integer pageSize
-    ) {
+                               @RequestParam(value = "pageSize",defaultValue ="8") Integer pageSize,
+                               @PathVariable("token") String token) {
         try {
+            Integer userId = TokenMap.check(token);
+            if(userId==null){
+                return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
             PageHelper.startPage(pageNumber, pageSize);
             List<Dept> list = deptService.findAllDept();
             PageInfo pageInfo = new PageInfo(list, 5);
-            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, pageInfo);
+            String newToken = TokenMap.remove(token, userId);
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, pageInfo,newToken);
         } catch (Exception e) {
             log.error( e.getMessage());
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
@@ -109,13 +125,17 @@ public class DeptController {
      　　* @date 2018/8/23 0023 15:54
      　　*/
     @ResponseBody
-    @PostMapping (value = "authority/four/dept")
-    public OutJSON addDept(Dept dept) {
+    @PostMapping (value = "authority/four/dept/{token:.+}")
+    public OutJSON addDept(Dept dept,@PathVariable("token") String token) {
         try {
-
+            Integer userId = TokenMap.check(token);
+            if(userId==null){
+                return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
             int i= deptService.addDept(dept,dept.getPositionArray());
             if(i==1){
-                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);}
+                String newToken = TokenMap.remove(token, userId);
+                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,null,newToken);}
             if(i==2)
                 return OutJSON.getInstance(CodeAndMessageEnum.DEPT_ADD_ERROR);
                 return OutJSON.getInstance(CodeAndMessageEnum.ALL_OPERATION_ERROR);
@@ -125,13 +145,18 @@ public class DeptController {
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
         }
     }
-    @DeleteMapping("authority/four/dept/{deptId}")
+    @DeleteMapping("authority/four/dept/{deptId}/{token:.+}")
     @ResponseBody
-    public OutJSON delDept(@PathVariable("deptId")int deptId) {
+    public OutJSON delDept(@PathVariable("deptId")int deptId,@PathVariable("token") String token) {
         try {
+            Integer userId = TokenMap.check(token);
+            if(userId==null){
+                return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
             int i = deptService.delDept(deptId);
             if(i==1){
-            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);}
+                String newToken = TokenMap.remove(token, userId);
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,null,newToken);}
             if(i==0){
                 return OutJSON.getInstance(CodeAndMessageEnum.ALL_OPERATION_ERROR);}
             String message="此部门还有"+(i-1)+"名员工，不能删除";
@@ -148,13 +173,18 @@ public class DeptController {
      　　* @author 张金行
      　　* @date 2018/8/23 0023 15:54
      　　*/
-    @PutMapping("authority/four/dept")
+    @PutMapping("authority/four/dept/{token:.+}")
     @ResponseBody
-    public OutJSON upDept(Dept dept) {
+    public OutJSON upDept(Dept dept,@PathVariable("token") String token) {
         try {
+            Integer userId = TokenMap.check(token);
+            if(userId==null){
+                return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
             int i = deptService.upDept(dept,dept.getPositionArray());
             if(i==1){
-                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);}
+                String newToken = TokenMap.remove(token, userId);
+                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,null,newToken);}
             if(i==2)
                 return OutJSON.getInstance(CodeAndMessageEnum.DEPT_ADD_ERROR);
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_OPERATION_ERROR);

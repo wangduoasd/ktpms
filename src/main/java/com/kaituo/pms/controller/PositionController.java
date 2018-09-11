@@ -6,6 +6,7 @@ import com.kaituo.pms.bean.Position;
 import com.kaituo.pms.service.PositionService;
 import com.kaituo.pms.utils.CodeAndMessageEnum;
 import com.kaituo.pms.utils.OutJSON;
+import com.kaituo.pms.utils.TokenMap;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -36,13 +37,18 @@ public class PositionController {
      　　* @date 2018/8/23 0023 16:02
      　　*/
     @ResponseBody
-    @GetMapping(value = "authority/one/positions/{deptId}")
-    public OutJSON findAllDept(@PathVariable(value = "deptId") int deptId) {
+    @GetMapping(value = "authority/one/positions/{deptId}/{token:.+}")
+    public OutJSON findAllDept(@PathVariable(value = "deptId") int deptId,@PathVariable("token") String token) {
         try {
+            Integer userId = TokenMap.check(token);
+            if(userId==null){
+                return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
             List<Position> list = positionService.getPositionNameBydeptId(deptId);
             if(list.size()==0||list==null)
                 return OutJSON.getInstance(CodeAndMessageEnum.POSITION_FIND_ERROR);
-            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, list);
+            String newToken = TokenMap.remove(token, userId);
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, list,newToken);
         } catch (Exception e) {
             log.error( e.getMessage());
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);

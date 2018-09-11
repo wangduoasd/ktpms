@@ -5,6 +5,7 @@ import com.kaituo.pms.service.RoleService;
 import com.kaituo.pms.utils.CodeAndMessageEnum;
 import com.kaituo.pms.utils.JwtToken;
 import com.kaituo.pms.utils.OutJSON;
+import com.kaituo.pms.utils.TokenMap;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -38,14 +39,19 @@ public class RoleController {
      　　* @date 2018/8/23 0023 14:08
      　　*/
     @ResponseBody
-    @GetMapping(value = "authority/all/roles")
-    public OutJSON getAll() {
+    @GetMapping(value = "authority/all/roles/{token:.+}")
+    public OutJSON getAll(@PathVariable("token") String token) {
         try {
+            Integer userId = TokenMap.check(token);
+            if(userId==null){
+                return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
             List<Role> list = roleService.getAll();
             if(list.size()==0||list==null){
                 return OutJSON.getInstance(CodeAndMessageEnum.ROLE_EMPTY);
             }
-            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, list);
+            String newToken = TokenMap.remove(token, userId);
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, list,newToken);
         } catch (Exception e) {
             log.error( e.getMessage());
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
@@ -60,15 +66,19 @@ public class RoleController {
      　　* @date 2018/8/23 0023 14:08
      　　*/
     @ResponseBody
-    @GetMapping(value = "authority/all/roles/{userId}")
-    public OutJSON getRolesById(@PathVariable("userId")int userId) {
+    @GetMapping(value = "authority/all/roles/{userId}/{token:.+}")
+    public OutJSON getRolesById(@PathVariable("token") String token) {
         try {
-
+            Integer userId = TokenMap.check(token);
+            if(userId==null){
+                return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
             List<Role> list = roleService.findRoleById(userId);
             if(list.size()==0||list==null){
                 return OutJSON.getInstance(CodeAndMessageEnum.ROLE_EMPTY);
             }
-            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,list);
+            String newToken = TokenMap.remove(token, userId);
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,list,newToken);
         } catch (Exception e) {
             log.error( e.getMessage());
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
