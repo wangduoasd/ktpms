@@ -43,10 +43,14 @@ public class UserController {
     * @Author: 苏泽华
     * @Date: 2018/8/9
     */
-    @GetMapping("userIntegrals/{pageNumber}")
-    public OutJSON findRankingByPage(@PathVariable(value = "pageNumber") int pageNumber,HttpServletRequest httpRequest) {
+    @GetMapping("userIntegrals/{pageNumber}/{token:.+}")
+    public OutJSON findRankingByPage(@PathVariable(value = "pageNumber") int pageNumber,@PathVariable("token")String token) {
         try {
+            Integer userId = TokenMap.check(token);
 
+            if (null == userId){
+                return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
             // 每页显示数量设置为8条
             int pageSize = 8;
             // 查询总条数
@@ -65,7 +69,8 @@ public class UserController {
                 data.put("total", total);
                 //员工的信息
                 data.put("User", leaderboardList);
-                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, data);
+                String newToken=TokenMap.remove(token,userId);
+                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, data,newToken);
             } else {
                 return OutJSON.getInstance(CodeAndMessageEnum.FIND_RANKING_BY_PAGE_NULL);
             }
@@ -206,7 +211,7 @@ public class UserController {
      * @Author: 苏泽华
      * @Date: 2018/8/9
      */
-    @GetMapping(value = {"userIntegrals/{pageNumber}/{pageSize}/{condition}" , "userIntegrals/{pageNumber}/{condition}"})
+    @GetMapping(value = {"userIntegrals/{pageNumber}/{pageSize}/{condition}/{token:.+}" , "userIntegrals/{pageNumber}/{condition}/{token:.+}"})
     public OutJSON findRankingByPageAndCondition(@PathVariable(value = "pageNumber")
                                                          int pageNumber,
                                                  @PathVariable(required = false)
@@ -491,6 +496,7 @@ public class UserController {
             String token=TokenMap.create(userId);
             login.setToken(token);
             log.info("token========"+token);
+
             HttpSession session = httpRequest.getSession();
             log.info(session.getId());
             if (login == null) {
