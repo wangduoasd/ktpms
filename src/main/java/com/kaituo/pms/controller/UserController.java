@@ -90,10 +90,14 @@ public class UserController {
 
         //个人信息获取成功
         try {
-            int userId = JwtToken.getUserId(token);
+            Integer userId=TokenMap.check(token);
+            if(userId==null){
+                return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
             User personalDetail = userService.findPersonalDetail(userId);
+            String newToken=TokenMap.remove(token,userId);
             if (null != personalDetail)
-                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS , personalDetail);
+                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS , personalDetail,newToken);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -496,6 +500,23 @@ public class UserController {
             if (login == null) {
                 return OutJSON.getInstance(CodeAndMessageEnum.USER_LOGIN_ERROR);
             }
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, login);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
+        }
+    }
+    @PostMapping("user/login")
+    public OutJSON newlogin(HttpSession sesssion,@RequestParam("username")String username, @RequestParam("password")String password, HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
+        try {
+            int userId=Integer.parseInt(username);
+
+            Login login = userService.login(userId, password);
+            log.info(sesssion.getId());
+            if (login == null) {
+                return OutJSON.getInstance(CodeAndMessageEnum.USER_LOGIN_ERROR);
+            }
+            sesssion.setAttribute(newConStants.SESSION_USER,userId);
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, login);
         } catch (Exception e) {
             log.error(e.getMessage());

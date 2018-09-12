@@ -186,8 +186,9 @@ public class PrizeControllrt {
            PageHelper.startPage(pageNumber,pageSize);
            List<Prize> prizes = prizeService.listAllPrize();
            PageInfo<Object> objectPageInfo = new PageInfo(prizes,5);
-           String newToken=TokenMap.remove(token,userId);
+
            if(prizes!=null&&prizes.size()>0){
+               String newToken=TokenMap.remove(token,userId);
                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,objectPageInfo,newToken);
            }
 
@@ -379,8 +380,9 @@ public class PrizeControllrt {
                 return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
             }
             boolean b = prizeService.prizeIsEmpty(prizeName);
-            String newToken=TokenMap.remove(token,userId);
+
             if(b){
+                String newToken=TokenMap.remove(token,userId);
                 return OutJSON.getInstance(CodeAndMessageEnum.PRIZENAME_CANADD,b,newToken);
             }
         } catch (Exception e) {
