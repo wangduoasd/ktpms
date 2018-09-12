@@ -24,19 +24,17 @@ public class OutJSON {
     public void setData(Object data) {
         this.data = data;
     }
-    private static class OutJSONHolder{
-        private  static final  OutJSON instance=new OutJSON();
-    }
+
     private OutJSON(){ };
     public  static OutJSON getInstance(CodeAndMessageEnum codeAndMessageEnum, Object data){
-        OutJSON outJSON = OutJSONHolder.instance;
+        OutJSON outJSON = new OutJSON();
       outJSON.code = codeAndMessageEnum.getCode();
       outJSON.message = codeAndMessageEnum.getMessage();
       outJSON.data = data;
       return  outJSON;
     }
     public  static OutJSON getInstance(CodeAndMessageEnum codeAndMessageEnum, Object data,String token){
-        OutJSON outJSON = OutJSONHolder.instance;
+        OutJSON outJSON = new OutJSON();
         outJSON.code = codeAndMessageEnum.getCode();
         outJSON.message = codeAndMessageEnum.getMessage();
         outJSON.data = data;
@@ -44,7 +42,7 @@ public class OutJSON {
         return  outJSON;
     }
     public  static OutJSON getInstance(CodeAndMessageEnum codeAndMessageEnum){
-        OutJSON outJSON = OutJSONHolder.instance;
+        OutJSON outJSON = new OutJSON();
         outJSON.data=null;
         outJSON.code = codeAndMessageEnum.getCode();
         outJSON.message = codeAndMessageEnum.getMessage();

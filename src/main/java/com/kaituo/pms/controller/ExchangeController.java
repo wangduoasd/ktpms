@@ -3,12 +3,10 @@ package com.kaituo.pms.controller;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.kaituo.pms.bean.Exchange;
+import com.kaituo.pms.bean.Token;
 import com.kaituo.pms.error.MyException;
 import com.kaituo.pms.service.ExchangeService;
-import com.kaituo.pms.utils.CodeAndMessageEnum;
-import com.kaituo.pms.utils.JwtToken;
-import com.kaituo.pms.utils.OutJSON;
-import com.kaituo.pms.utils.TokenMap;
+import com.kaituo.pms.utils.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,6 +80,9 @@ public class ExchangeController {
     @PutMapping(value = "exchangeRecords/{exchangeId}/{token:.+}")
     public OutJSON updateExchange(@PathVariable("exchangeId") int exchangeId,@PathVariable("token") String token) {
         try {
+            Token tokenUser = ResourceUtil.getTokenUser();
+            System.out.println(tokenUser.getToken());
+
             Integer userId =TokenMap.check(token);
             if(userId==null){
                 return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);

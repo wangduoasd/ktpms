@@ -7,6 +7,7 @@ import com.kaituo.pms.service.UserRoleService;
 import com.kaituo.pms.utils.CodeAndMessageEnum;
 import com.kaituo.pms.utils.JwtToken;
 import com.kaituo.pms.utils.OutJSON;
+import com.kaituo.pms.utils.TokenMap;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.annotations.Delete;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,12 +39,17 @@ public class UserRoleController {
      　　* @date 2018/8/23 0023 14:08
      　　*/
     @ResponseBody
-    @PostMapping(value = "authority/all/roles")
-    public OutJSON addUserRole(User user) {
+    @PostMapping(value = "authority/all/roles/{token:.+}")
+    public OutJSON addUserRole(User user,@PathVariable("token")String token) {
         try {
+            Integer userId = TokenMap.check(token);
+            if(userId==null){
+                return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
             int i=userRoleService.addRoles(user.getRoles(),user.getUserId());
             if(i==1){
-                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);}
+                String newToken = TokenMap.remove(token, userId);
+                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,null,newToken);}
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_OPERATION_ERROR);
         } catch (Exception e) {
             log.error( e.getMessage());
@@ -59,12 +65,17 @@ public class UserRoleController {
      　　* @date 2018/8/23 0023 14:27
      　　*/
     @ResponseBody
-    @PutMapping(value = "authority/all/roles")
-    public OutJSON upUserRole(User user) {
+    @PutMapping(value = "authority/all/roles/{token:.+}")
+    public OutJSON upUserRole(User user,@PathVariable("token")String token) {
         try {
+            Integer userId = TokenMap.check(token);
+            if(userId==null){
+                return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
             int i=userRoleService.upUserRoles(user.getRoles(),user.getUserId());
             if(i==1){
-                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);}
+                String newToken = TokenMap.remove(token, userId);
+                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,null,newToken);}
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_OPERATION_ERROR);
         } catch (Exception e) {
             log.error( e.getMessage());
@@ -80,13 +91,17 @@ public class UserRoleController {
      　　* @date 2018/8/23 0023 14:08
      　　*/
     @ResponseBody
-    @DeleteMapping(value = "authority/all/role/{userId}")
-    public OutJSON addUserRole(@PathVariable("userId") int userId) {
+    @DeleteMapping(value = "authority/all/role/{userId}/{token:.+}")
+    public OutJSON addUserRole(@PathVariable("userId") int userId,@PathVariable("token")String token) {
         try {
-
+            Integer managerId = TokenMap.check(token);
+            if(managerId==null){
+                return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
             int i=userRoleService.delUserRole(userId);
             if(i>=1){
-                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);}
+                String newToken = TokenMap.remove(token, userId);
+                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,null,newToken);}
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_OPERATION_ERROR);
         } catch (Exception e) {
             log.error( e.getMessage());

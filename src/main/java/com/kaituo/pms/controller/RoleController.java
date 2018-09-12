@@ -66,18 +66,19 @@ public class RoleController {
      　　* @date 2018/8/23 0023 14:08
      　　*/
     @ResponseBody
+
     @GetMapping(value = "authority/all/roles/{userId}/{token:.+}")
-    public OutJSON getRolesById(@PathVariable("token") String token) {
+    public OutJSON getRolesById(@PathVariable("userId")int userId,@PathVariable("token") String token) {
         try {
-            Integer userId = TokenMap.check(token);
-            if(userId==null){
+            Integer managerId = TokenMap.check(token);
+            if(managerId==null){
                 return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
             }
             List<Role> list = roleService.findRoleById(userId);
             if(list.size()==0||list==null){
                 return OutJSON.getInstance(CodeAndMessageEnum.ROLE_EMPTY);
             }
-            String newToken = TokenMap.remove(token, userId);
+            String newToken = TokenMap.remove(token, managerId);
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,list,newToken);
         } catch (Exception e) {
             log.error( e.getMessage());

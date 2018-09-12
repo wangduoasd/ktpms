@@ -1,21 +1,25 @@
 package com.kaituo.pms.serviceImpl;
 
-import com.kaituo.pms.bean.Login;
-import com.kaituo.pms.bean.Role;
-import com.kaituo.pms.bean.UserExample;
+import com.kaituo.pms.bean.*;
 import com.kaituo.pms.dao.UserMapper;
 import com.kaituo.pms.service.*;
+import com.kaituo.pms.utils.JwtToken;
 import org.apache.tomcat.util.security.MD5Encoder;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
 
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import com.kaituo.pms.bean.User;
+
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.xml.crypto.Data;
 
 /**
  * @program: ktpms
@@ -37,6 +41,8 @@ public class UserServiceImpl implements UserService/*,UserDetailsService*/ {
     PositionService positionService;
     @Autowired
     IntegralService integralService;
+    @Autowired
+    TokenService tokenService;
     /**
     * @Description:  从用户视图中获取除超级管理员外全部数据
     * @Param:
@@ -142,7 +148,6 @@ public class UserServiceImpl implements UserService/*,UserDetailsService*/ {
                return 2;}
         }
 
-        user.setUserPassword(MD5Encoder.encode(user.getUserPassword().getBytes()));
         return userMapper.insert(user);
     }
 
@@ -199,13 +204,13 @@ public class UserServiceImpl implements UserService/*,UserDetailsService*/ {
 
     @Override
     public int upUserPassword(int userId,String oldPassWord, String newPassWord) {
-        if(!userMapper.selectByPrimaryKey(userId).getUserPassword().equals(MD5Encoder.encode(oldPassWord.getBytes()))){
+        if(!userMapper.selectByPrimaryKey(userId).getUserPassword().equals(oldPassWord)){
 
             return 2;
         }
         User user = new User();
         user.setUserId(userId);
-        user.setUserPassword(MD5Encoder.encode(newPassWord.getBytes()));
+        user.setUserPassword(newPassWord);
         return userMapper.updateByPrimaryKeySelective(user);
 
     }
@@ -216,12 +221,13 @@ public class UserServiceImpl implements UserService/*,UserDetailsService*/ {
     }
 
     @Override
-    public int upUserIntegral(int operatorId,int userId,String changeStr,int startNum,int endNum) {
-        User user1 = new User();
-        user1.setUserId(userId);
-        user1.setUserIntegral(endNum);
-        userMapper.updateByPrimaryKeySelective(user1);
-        return integralService.addIntegral(operatorId,changeStr,userId,endNum-startNum,endNum );
+    public int upUserIntegral(int operatorId,int userId,String changeStr,int changeInt) {
+        User user = userMapper.getUserById(userId);
+        int startNum=user.getUserIntegral();
+        user.setUserId(userId);
+        user.setUserIntegral(changeInt);
+        userMapper.updateByPrimaryKeySelective(user);
+        return integralService.addIntegral(operatorId,changeStr,userId,changeInt-startNum,changeInt );
     }
 
 
@@ -250,13 +256,20 @@ public class UserServiceImpl implements UserService/*,UserDetailsService*/ {
             }
         }
         login.setAuthorities(objects);
+        Token token = new Token();
+        try {
+            token.setToken(JwtToken.createToken(userId));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        token.setUserId(userId);
+        String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+        token.setFailureTime(Timestamp.valueOf(time));
+        tokenService.addToken(token);
         return login;
     }
 
-    @Override
-    public Login login() {
-        return null;
-    }
+
 
     /**
      　  * @Description: 用户登录校验
@@ -290,4 +303,12 @@ public class UserServiceImpl implements UserService/*,UserDetailsService*/ {
                 *//*  AuthorityUtils.commaSeparatedStringToAuthorityList("admin");*//*
                 authorities);
     }*/
+    @Override
+    public int findUserByDeptPositionId(int deptPositionId){
+        UserExample userExample = new UserExample();
+        userExample.createCriteria().andUserDeptPositionEqualTo(deptPositionId);
+        List<User> users = userMapper.selectByExample(userExample);
+        if(users==null){return 0;}
+        return users.size();
+    }
 }

@@ -395,8 +395,7 @@ public class TaskController {
             return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
         }
         // 图片上传并获取上传的状态
-        Map<String, Object> map = Util.imgUpload(file , Util.getImgRelativePath());
-
+      Map<String, Object> map = Util.imgUpload(file , Util.getImgRelativePath());
         // 时间处理
         Date startDate = Util.stampToDate(starttime);
         Date endDate = Util.stampToDate(endtime);
@@ -404,7 +403,6 @@ public class TaskController {
         // 上传的状态码
         int key = (int)map.get("code");
         switch (key){
-
             // 如果是零
             case Constant.IMG_UPLOSD_ERROR :
                 // 返回图片上传失败
@@ -422,7 +420,7 @@ public class TaskController {
                 if (taskService.republish(task)){
                     // 重置token
                     String newToken = TokenMap.remove(token , userId);
-                    return OutJSON.getInstance(CodeAndMessageEnum.THE_TASK_WAS_SUCCESSFULLY_POSTDE , null , newToken);
+                    return OutJSON.getInstance(CodeAndMessageEnum.THE_TASK_WAS_SUCCESSFULLY_POSTDE ,null,newToken);
                 }else{
                     return OutJSON.getInstance(CodeAndMessageEnum.TASK_POSTING_FAILED);
                 }

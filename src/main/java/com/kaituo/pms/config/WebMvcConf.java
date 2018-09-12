@@ -41,6 +41,7 @@ public  class WebMvcConf extends WebMvcConfigurerAdapter {
         config.setAllowCredentials(true);
         config.addAllowedOrigin("http://192.168.3.12:8081");
         config.addAllowedHeader(CorsConfiguration.ALL);
+   /*     config.addAllowedHeader("x-requested-with,token");*/
         config.addAllowedMethod(CorsConfiguration.ALL);
         source.registerCorsConfiguration("/**", config);
         FilterRegistrationBean bean = new FilterRegistrationBean(new CorsFilter(source));
