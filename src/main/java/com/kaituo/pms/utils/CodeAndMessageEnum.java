@@ -115,6 +115,7 @@ NOREASON("-48" , "未知错误"),
     POSITION_FIND_ERROR("-35","该部门尚未设置职位"),
     //部门
     DEPT_ADD_ERROR("-36","部门名已被使用，请更换部门名"),
+    DEPT_UP_ERROR("-42","删除职位中有人"),
     DEPT_DEL_ERROR("-37","部门尚有员工，请将员工删除后再操作"),
     //信息
     USER_PASSWORD_CHECK("-38","原密码错误"),

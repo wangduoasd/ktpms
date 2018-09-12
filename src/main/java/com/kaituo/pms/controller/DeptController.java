@@ -185,8 +185,10 @@ public class DeptController {
             if(i==1){
                 String newToken = TokenMap.remove(token, userId);
                 return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,null,newToken);}
-            if(i==2)
-                return OutJSON.getInstance(CodeAndMessageEnum.DEPT_ADD_ERROR);
+            if(i==2){
+                return OutJSON.getInstance(CodeAndMessageEnum.DEPT_ADD_ERROR);}
+            if(i==3){
+                return OutJSON.getInstance(CodeAndMessageEnum.DEPT_UP_ERROR);}
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_OPERATION_ERROR);
 
         } catch (Exception e) {

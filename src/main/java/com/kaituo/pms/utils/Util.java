@@ -5,6 +5,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.net.URLEncoder;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -237,5 +238,8 @@ public class Util {
         relativePath = relativePath.replace("/" , seperator);
         return relativePath;
     }
-
+    public static Timestamp getTimestamp() {
+        String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+        return  Timestamp.valueOf(time);
+    }
 }

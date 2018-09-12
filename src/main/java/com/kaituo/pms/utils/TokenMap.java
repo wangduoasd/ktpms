@@ -34,8 +34,12 @@ public class TokenMap {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        tokenMap.put(token,JwtToken.getUserId(token));
+        tokenMap.put(newToken,userId);
         return newToken;
+    }
+    public static void delete(String token){
+        tokenMap.remove(token);
+
     }
     public static String create(Integer userId){
 

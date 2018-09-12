@@ -90,9 +90,9 @@ public interface UserService {
 
     int upUserPassword(int userId,String oldPassWord, String newPassWord);
 
-    int upUserIntegral(int operatorId,int userId,String changeStr,int startNum,int endNum);
+    int upUserIntegral(int operatorId,int userId,String changeStr,int changeInt);
 
-    public Login login(int userId, String password);
+     Login login(int userId, String password);
 
-    public Login  login();
+     int findUserByDeptPositionId(int deptPositionId);
 }

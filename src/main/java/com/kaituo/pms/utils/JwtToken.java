@@ -65,12 +65,11 @@ public class JwtToken {
                 .withClaim("iss", "zji") // payload
                 .withClaim("aud", "user").withClaim("user_id", null == user_id ? null : user_id.toString())
                 .withIssuedAt(iatDate) // sign time
-                .withExpiresAt(new Date(iatDate.getTime()+1000*5))// expire time
+                .withExpiresAt(new Date(iatDate.getTime()+1000*60*60*24*3))// expire time
                 .sign(Algorithm.HMAC256(SECRET)); // signature
 
         return token;
     }
-
     /**
      * 解密Token
      *
@@ -105,5 +104,16 @@ public class JwtToken {
             // token 校验失败, 抛出Token验证非法异常
         }
         return Integer.valueOf(user_id_claim.asString());
+    }
+
+    public static void main(String[] args) {
+        String token = null;
+        try {
+            token = JwtToken.createToken(9);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.out.println(token);
+        System.out.println(JwtToken.getUserId(token));
     }
 }

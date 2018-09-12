@@ -134,14 +134,9 @@ public class PrizeControllrt {
            //用户名或商品为空
 
            return OutJSON.getInstance(CodeAndMessageEnum.NOREASON);
-       } else if (number >prize.getPrizeQuota()||prize.getPrizeAmount()<=0||newCount>prize.getPrizeQuota()) {
-         return OutJSON.getInstance(CodeAndMessageEnum.GET_STATES_TASK_BY_PAGE_NULL);
-       } else if (number >prize.getPrizeQuota()||
-               prize.getPrizeAmount()<= 0||
-               prize.getPrizeQuota()<=0||
-               newCount>prize.getPrizeQuota()||
+       }
+        else if (number >prize.getPrizeQuota()|| prize.getPrizeAmount()<= 0|| prize.getPrizeQuota()<=0|| newCount>prize.getPrizeQuota()||
                number>prize.getPrizeAmount()) {
-
            //购买失败，超过上限
            return OutJSON.getInstance(CodeAndMessageEnum.FIND_PRIZE_CAP);
        } else if (totalPrice > user.getUserIntegral()) {
