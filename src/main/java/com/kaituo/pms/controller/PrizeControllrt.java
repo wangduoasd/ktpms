@@ -4,12 +4,10 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.kaituo.pms.bean.Exchange;
 import com.kaituo.pms.bean.Prize;
+import com.kaituo.pms.bean.Token;
 import com.kaituo.pms.bean.User;
 import com.kaituo.pms.dao.IntegralMapper;
-import com.kaituo.pms.service.ExchangeService;
-import com.kaituo.pms.service.IntegralService;
-import com.kaituo.pms.service.PrizeService;
-import com.kaituo.pms.service.UserService;
+import com.kaituo.pms.service.*;
 import com.kaituo.pms.utils.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +30,9 @@ public class PrizeControllrt {
     IntegralService  integralService;
     @Autowired
     ExchangeService exchangeService;
+    @Autowired
+    TokenService tokenService;
+
 
     /**
      * @Description:兑换中心_商品列表 点击按钮进行搜索查询 根据商品名查询已经上架商品
@@ -47,17 +48,18 @@ public class PrizeControllrt {
                               @PathVariable("token") String token
                               ){
         try {
-            Integer userId=TokenMap.check(token);
-            if(userId==null){
-                return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            // 检查token并获得userID
+            Token token1 = tokenService.selectUserIdByToken(token);
+            if (null == token1){
+                return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
             }
             prizeName = "%" + prizeName +"%";
             PageHelper.startPage(pageNumber, pageSize);
             List<Prize> prizeList = prizeService.selectByName(prizeName);
             PageInfo pageInfo = new PageInfo<>(prizeList,5);
             if(prizeList!=null&&prizeList.size()>0){
-                String newToken=TokenMap.remove(token,userId);
-                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,pageInfo,newToken);
+
+                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,pageInfo);
             }
 
         } catch (Exception e) {
@@ -84,16 +86,18 @@ public class PrizeControllrt {
            log.info("kaishi");
            log.info(""+TokenMap.getTokenMap().isEmpty());
            log.info(TokenMap.getTokenMap().toString());
-           Integer userId=TokenMap.check(token);
-             log.info(""+userId);
-           if(userId==null){
-               return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+         /*  Integer userId=TokenMap.check(token);
+             log.info(""+userId);*/
+           Token token1 = tokenService.selectUserIdByToken(token);
+           if (null == token1){
+               return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
            }
+
            PageHelper.startPage(pageNumber, pageSize);
-           List<Prize> prizess = prizeService.findAllPrizePrize(userId);
+           List<Prize> prizess = prizeService.findAllPrizePrize(token1.getUserId());
            PageInfo objectPageInfo = new PageInfo<>(prizess,4);
-           String newToken=TokenMap.remove(token,userId);
-           return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,objectPageInfo,newToken);
+
+           return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,objectPageInfo);
        } catch (Exception e) {
            log.error(e.getMessage());
            return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
@@ -175,8 +179,9 @@ public class PrizeControllrt {
    public OutJSON listAllPrize(@PathVariable("pageNumber") int pageNumber, @RequestParam (value = "pageSize",defaultValue = "6") int pageSize,@PathVariable("token") String token ){
        try {
            Integer userId=TokenMap.check(token);
-           if(userId==null){
-               return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+           Token token1 = tokenService.selectUserIdByToken(token);
+           if (null == token1){
+               return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
            }
            PageHelper.startPage(pageNumber,pageSize);
            List<Prize> prizes = prizeService.listAllPrize();
@@ -200,8 +205,14 @@ public class PrizeControllrt {
    * @Author: 侯鹏
    * @Date:2018/8/21
    */
-   @DeleteMapping("authority/two/prize/{prizeId}/{token:.+}")
-   public OutJSON deleteById(@PathVariable("prizeId") int prizeId,@PathVariable("token") String token) {
+   @DeleteMapping("authority/two/prize/{prizeId}")
+   public OutJSON deleteById(@PathVariable("prizeId") int prizeId) {
+       String token =ContextHolderUtils.getRequest().getHeader("token");
+       // 检查token并获得userID
+       Token token1 = tokenService.selectUserIdByToken(token);
+       if (null == token1){
+           return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+       }
        Prize prize = prizeService.selectByPrimaryKey(prizeId);
        int deleteFalg = 0;
        try {
@@ -215,13 +226,13 @@ public class PrizeControllrt {
                    return OutJSON.getInstance(CodeAndMessageEnum.DELETE_ERROR);
                case Constant.IMG_DELECT_SUCCESS:
                    int i = prizeService.deleteById(prizeId);
-                   Integer userId=TokenMap.check(token);
+                   Integer userId=token1.getUserId();
                    if(userId==null){
                        return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
                    }
                    if (i > 0) {
-                       String newToken=TokenMap.remove(token,userId);
-                       return OutJSON.getInstance(CodeAndMessageEnum.DELELETE_SUCCESS,null, newToken);
+
+                       return OutJSON.getInstance(CodeAndMessageEnum.DELELETE_SUCCESS);
                    }else {
                        return OutJSON.getInstance(CodeAndMessageEnum.DELETE_ERROR);
                    }
@@ -244,9 +255,17 @@ public class PrizeControllrt {
    * @Author: 侯鹏
    * @Date: 2018/8/21
    */
-   @GetMapping("authority/two/prize/s/{prizeName}/{pageNumber}/{token:.+}")
-   public OutJSON selectServiceByName(@PathVariable("prizeName") String prizeName,@RequestParam (value = "pageSize",defaultValue = "6") int pageSize,@PathVariable("pageNumber") int pageNumber,@PathVariable("token") String token){
+   @GetMapping("authority/two/prize/s/{prizeName}/{pageNumber}")
+   public OutJSON selectServiceByName(@PathVariable("prizeName") String prizeName,
+                                      @RequestParam (value = "pageSize",defaultValue = "6") int pageSize,
+                                      @PathVariable("pageNumber") int pageNumber){
      try {
+         String token =ContextHolderUtils.getRequest().getHeader("token");
+         // 检查token并获得userID
+         Token token1 = tokenService.selectUserIdByToken(token);
+         if (null == token1){
+             return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+         }
          prizeName = "%" + prizeName + "%";
          Integer userId=TokenMap.check(token);
          if(userId==null){
@@ -256,8 +275,7 @@ public class PrizeControllrt {
          List<Prize> prizeList = prizeService.selectServiceByName(prizeName);
          if (null != prizeList && prizeList.size() > 0) {
              PageInfo<Prize> prizePageInfo = new PageInfo<>(prizeList);
-             String newToken=TokenMap.remove(token,userId);
-             return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, prizePageInfo,newToken);
+             return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, prizePageInfo);
          }
          return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
      }catch (Exception e){
@@ -275,12 +293,14 @@ public class PrizeControllrt {
      * @Author: 侯鹏
      * @Date: 2018/9/21
      */
-    @PostMapping("authority/two/prize/{token:.+}")
-    public OutJSON addPrize(@RequestParam("file") MultipartFile file , Prize prize,@PathVariable("token") String token) {
+    @PostMapping("authority/two/prize")
+    public OutJSON addPrize(@RequestParam("file") MultipartFile file , Prize prize) {
         try {
-            Integer userId=TokenMap.check(token);
-            if(userId==null){
-                return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            String token =ContextHolderUtils.getRequest().getHeader("token");
+            // 检查token并获得userID
+            Token token1 = tokenService.selectUserIdByToken(token);
+            if (null == token1){
+                return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
             }
             Map<String, Object> map = Util.imgUpload(file, Util.getImgRelativePath());
             int key = (int) map.get("code");
@@ -294,8 +314,8 @@ public class PrizeControllrt {
                     if (0 >= prizeService.addPrize(prize)) {
                         return OutJSON.getInstance(CodeAndMessageEnum.ADJUNCTION_ERROR);
                     }
-                    String newToken=TokenMap.remove(token,userId);
-                    return OutJSON.getInstance(CodeAndMessageEnum.ADJUNCTION_SUCCESS,null,newToken);
+
+                    return OutJSON.getInstance(CodeAndMessageEnum.ADJUNCTION_SUCCESS);
                 case Constant.IMG_UPLOSD_EMPTY:
                     return OutJSON.getInstance(CodeAndMessageEnum.PUBLISHING_TASK_IMAGE_IS_EMPTY);
                 default:
@@ -318,15 +338,17 @@ public class PrizeControllrt {
      * @Author: 苏泽华
      * @Date: 2018/8/24
      */
-    @PutMapping("authority/two/prize/{token:.+}")
-    public OutJSON modifyPrize(MultipartFile file, Prize prize,@PathVariable("token") String token) {
+    @PutMapping("authority/two/prize")
+    public OutJSON modifyPrize(MultipartFile file, Prize prize) {
         Map<String, Object> map = Util.imgUpload(file, Util.getImgRelativePath());
         // 上传的状态码
         int key = (int) map.get("code");
         try {
-            Integer userId=TokenMap.check(token);
-            if(userId==null){
-                return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            String token =ContextHolderUtils.getRequest().getHeader("token");
+            // 检查token并获得userID
+            Token token1 = tokenService.selectUserIdByToken(token);
+            if (null == token1){
+                return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
             }
             switch (key) {
 
@@ -348,8 +370,8 @@ public class PrizeControllrt {
                 case Constant.IMG_UPLOSD_EMPTY:
                     prize.setPrizeImage(null);
                     prizeService.modifyPrize(prize);
-                    String newToken=TokenMap.remove(token,userId);
-                    return OutJSON.getInstance(CodeAndMessageEnum.MODIFICATION_SUCCESS ,null,newToken);
+
+                    return OutJSON.getInstance(CodeAndMessageEnum.MODIFICATION_SUCCESS );
                 default:
                     return OutJSON.getInstance(CodeAndMessageEnum.MODIFICATION_ERROR);
             }
@@ -370,15 +392,16 @@ public class PrizeControllrt {
     @GetMapping("authority/two/prizeEmpty/{prizeName}/{token:.+}")
     public OutJSON  prizeIsEmpty(@PathVariable("prizeName")  String prizeName,@PathVariable("token") String token ){
         try {
-            Integer userId=TokenMap.check(token);
-            if(userId==null){
-                return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            // 检查token并获得userID
+            Token token1 = tokenService.selectUserIdByToken(token);
+            if (null == token1){
+                return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
             }
             boolean b = prizeService.prizeIsEmpty(prizeName);
 
             if(b){
-                String newToken=TokenMap.remove(token,userId);
-                return OutJSON.getInstance(CodeAndMessageEnum.PRIZENAME_CANADD,b,newToken);
+
+                return OutJSON.getInstance(CodeAndMessageEnum.PRIZENAME_CANADD,b);
             }
         } catch (Exception e) {
             log.error(e.getMessage(),e);
@@ -393,17 +416,19 @@ public class PrizeControllrt {
     * @Author: 侯鹏
     * @Date: 2018/8/22
     */
-    @PostMapping("authority/two/prize/statusOne/{prizeId}/{token:.+}")
-    public OutJSON goodsShelves(@PathVariable("prizeId") int prizeId,@PathVariable("token") String token){
+    @PostMapping("authority/two/prize/statusOne/{prizeId}")
+    public OutJSON goodsShelves(@PathVariable("prizeId") int prizeId){
         try {
-            Integer userId=TokenMap.check(token);
-            if(userId==null){
-                return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            String token =ContextHolderUtils.getRequest().getHeader("token");
+            // 检查token并获得userID
+            Token token1 = tokenService.selectUserIdByToken(token);
+            if (null == token1){
+                return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
             }
             int goodsshelves = prizeService.goodsshelves(prizeId);
             if(goodsshelves>0){
-                String newToken=TokenMap.remove(token,userId);
-                return OutJSON.getInstance(CodeAndMessageEnum.GOODS_SHELVES,goodsshelves,newToken);
+
+                return OutJSON.getInstance(CodeAndMessageEnum.GOODS_SHELVES,goodsshelves);
             }
 
         } catch (Exception e) {
@@ -419,17 +444,19 @@ public class PrizeControllrt {
     * @Author: 侯鹏
     * @Date: 2018/8/22
     */
-    @PostMapping("authority/two/prize/statusTwo/{prizeId}/{token:.+}")
-    public OutJSON goodsSoldout(@PathVariable("prizeId") int prizeId,@PathVariable("token") String token){
+    @PostMapping("authority/two/prize/statusTwo/{prizeId}")
+    public OutJSON goodsSoldout(@PathVariable("prizeId") int prizeId){
         try {
-            Integer userId=TokenMap.check(token);
-            if(userId==null){
-                return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            String token =ContextHolderUtils.getRequest().getHeader("token");
+            // 检查token并获得userID
+            Token token1 = tokenService.selectUserIdByToken(token);
+            if (null == token1){
+                return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
             }
             int goodsshelves = prizeService.goodsoldout(prizeId);
             if(goodsshelves>0){
-                String newToken=TokenMap.remove(token,userId);
-                return OutJSON.getInstance(CodeAndMessageEnum.GOODS_SOLDOUT_SUCCESS,goodsshelves,newToken);
+
+                return OutJSON.getInstance(CodeAndMessageEnum.GOODS_SOLDOUT_SUCCESS,goodsshelves);
             }
 
         } catch (Exception e) {
@@ -449,16 +476,17 @@ public class PrizeControllrt {
     @GetMapping("authority/two/prize/s/{prizeID}/{token:.+}")
     public OutJSON gatPrize(@PathVariable("prizeId") int prizeId,@PathVariable("token") String token){
         try {
-            Integer userId=TokenMap.check(token);
-            if(userId==null){
-                return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            // 检查token并获得userID
+            Token token1 = tokenService.selectUserIdByToken(token);
+            if (null == token1){
+                return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
             }
             Prize prize = prizeService.getPrize(prizeId);
             if (null == prize){
                 return OutJSON.getInstance(CodeAndMessageEnum.NO_GOODS_WERE_FOUND);
             }
-            String newToken=TokenMap.remove(token,userId);
-            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS ,prize,newToken);
+
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS ,prize);
         } catch (Exception e) {
             e.printStackTrace();
             log.error("gatPrize=>" + e.getMessage() , e);
