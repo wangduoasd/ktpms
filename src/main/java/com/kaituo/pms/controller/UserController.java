@@ -53,11 +53,10 @@ public class UserController {
     @GetMapping("userIntegrals/{pageNumber}/{token:.+}")
     public OutJSON findRankingByPage(@PathVariable(value = "pageNumber") int pageNumber,@PathVariable("token")String token) {
         try {
+
             // 检查token并获得userID
             Token token1 = tokenService.selectUserIdByToken(token);
-            log.info(""+token1.getFailureTime());
-            Integer userId =JwtToken.getUserId(token);
-            if (null == userId){
+            if (null == token1){
                 return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
             }
             // 每页显示数量设置为8条
@@ -78,7 +77,6 @@ public class UserController {
                 data.put("total", total);
                 //员工的信息
                 data.put("User", leaderboardList);
-                tokenService.upToken(Token.getNewToken(userId,token));
                 return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, data);
             } else {
                 return OutJSON.getInstance(CodeAndMessageEnum.FIND_RANKING_BY_PAGE_NULL);
@@ -105,14 +103,14 @@ public class UserController {
         //个人信息获取成功
         try {
             // 检查token并获得userID
-            Integer userId =JwtToken.getUserId(token);
-            if (null == userId){
+            Token token1 = tokenService.selectUserIdByToken(token);
+            if (null == token1){
                 return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
             }
+            Integer userId = token1.getUserId();
+
             User personalDetail = userService.findPersonalDetail(userId);
             if (null != personalDetail){
-                // 重置token
-                tokenService.upToken(Token.getNewToken(userId,token));
                 return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS , personalDetail);}
 
         } catch (Exception e) {
@@ -234,9 +232,8 @@ public class UserController {
                                                  @PathVariable(value = "condition" , required = false) String condition ,
                                                  @PathVariable(value = "token") String token) {
         // 检查token并获得userID
-        Integer userId = TokenMap.check(token);
-
-        if (null == userId){
+        Token token1 = tokenService.selectUserIdByToken(token);
+        if (null == token1){
             return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
         }
         try {
@@ -260,9 +257,8 @@ public class UserController {
                 data.put("total", total);
                 //员工的信息
                 data.put("User", leaderboardList);
-                // 重置token
-                String newToken = TokenMap.remove(token , userId);
-                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, data , newToken);
+
+                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, data );
             } else {
                 return OutJSON.getInstance(CodeAndMessageEnum.FIND_RANKING_BY_PAGE_AND_CONDITION_NULL);
             }

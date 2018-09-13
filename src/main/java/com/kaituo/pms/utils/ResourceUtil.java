@@ -2,16 +2,14 @@ package com.kaituo.pms.utils;
 
 
 import com.kaituo.pms.bean.Token;
-import com.kaituo.pms.bean.User;
-import com.kaituo.pms.dao.TokenMapper;
+
 import com.kaituo.pms.service.TokenService;
 import com.kaituo.pms.serviceImpl.TokenServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.util.StringUtils;
 
-import javax.servlet.http.HttpSession;
 import java.util.Enumeration;
 
 
@@ -21,8 +19,6 @@ public class ResourceUtil {
 	private static final Logger log = LoggerFactory.getLogger(ResourceUtil.class);
 
 	public static final Token getTokenUser() {
-
-
         String token =ContextHolderUtils.getRequest().getHeader("token");
 
         Enumeration<String> HeaderNames1 =ContextHolderUtils.getRequest().getHeaders("token");
