@@ -9,4 +9,6 @@ public interface TokenService {
     int upToken(Token token);
     int delectToken(String token);
     Token selectUserIdByToken(String token);
+    boolean haveToken(Integer userId);
+    int delectToken(Integer userId);
 }

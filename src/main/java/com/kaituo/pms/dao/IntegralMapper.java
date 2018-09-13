@@ -35,4 +35,5 @@ public interface IntegralMapper {
     int updateByPrimaryKey(Integral record);
 
     List<Integral>  selectALLIntegral();
+    List<Integral>  selectIntegralById(int userId);
 }

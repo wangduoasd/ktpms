@@ -556,7 +556,9 @@ public class UserController {
             if (login == null) {
                 return OutJSON.getInstance(CodeAndMessageEnum.USER_LOGIN_ERROR);
             }
-
+            if (tokenService.haveToken(userId)){
+                tokenService.delectToken(userId);
+            }
             tokenService.addToken(Token.getNewToken(userId,token));
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, login);
         } catch (Exception e) {

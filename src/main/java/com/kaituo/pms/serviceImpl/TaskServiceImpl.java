@@ -21,10 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -199,6 +196,25 @@ public class TaskServiceImpl implements TaskService {
     }
 
     /**
+     * 查询指定状态指定对象的任务信息的条数
+     *@Description:
+     *@param status :任务状态
+     *@return long
+     *@Author: 苏泽华
+     *@Date: 2018/8/9
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public long countTaskByStatus(int status , int userId) {
+        TaskExample example = new TaskExample();
+        TaskExample.Criteria criteria = example.createCriteria();
+        example.setOrderByClause("task_starttime DESC");
+        criteria.andTaskStatusEqualTo(status);
+        criteria.andUserIdEqualTo(userId);
+        return taskMapper.countByExample(example);
+    }
+
+    /**
      * 将获得的任务数据封装成map（待领取）
      * @Description:  将获得的任务数据封装成map
      * @param pageNumber 目标页数
@@ -230,7 +246,8 @@ public class TaskServiceImpl implements TaskService {
             pageMap.put("taskList" , list);
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS , pageMap);
         }else {
-            return OutJSON.getInstance(CodeAndMessageEnum.GET_STATES_TASK_BY_PAGE_NULL);
+            String taskList[] = {};
+            return OutJSON.getInstance(CodeAndMessageEnum.GET_STATES_TASK_BY_PAGE_NULL ,taskList);
         }
     }
 
@@ -253,7 +270,7 @@ public class TaskServiceImpl implements TaskService {
         }
 
         // 条数
-        int total = (int)countTaskByStatus(status);
+        int total = (int)countTaskByStatus(status , userId);
         // 有数据就封装map返回上层
         if (0<total){
             // 分页
@@ -266,7 +283,11 @@ public class TaskServiceImpl implements TaskService {
             pageMap.put("taskList" , list);
             return OutJSON.getInstance(CodeAndMessageEnum.COMPLETED_TASK , pageMap);
         }else {
-            return OutJSON.getInstance(CodeAndMessageEnum.GET_STATES_TASK_BY_PAGE_NULL);
+            Map<String , Object> pageMap = new HashMap<>(2);
+
+            pageMap.put("total" , null);
+            pageMap.put("taskList" , null);
+            return OutJSON.getInstance(CodeAndMessageEnum.GET_STATES_TASK_BY_PAGE_NULL , pageMap);
         }
     }
 
@@ -309,7 +330,8 @@ public class TaskServiceImpl implements TaskService {
             pageMap.put("taskList" , list);
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS , pageMap);
         }else {
-            return OutJSON.getInstance(CodeAndMessageEnum.GET_STATES_TASK_BY_PAGE_NULL);
+            List<Task> taskList = new ArrayList();
+            return OutJSON.getInstance(CodeAndMessageEnum.GET_STATES_TASK_BY_PAGE_NULL , taskList);
         }
     }
 
@@ -472,7 +494,11 @@ public class TaskServiceImpl implements TaskService {
         pageMap.put("taskList" , publishedTaskList);
         return OutJSON.getInstance(CodeAndMessageEnum.PUBLISHED_TASK_COMPLETED , pageMap);
         }else {
-            return OutJSON.getInstance(CodeAndMessageEnum.GET_STATES_TASK_BY_PAGE_NULL);
+            Map<String , Object> pageMap = new HashMap<>(2);
+
+            pageMap.put("total" , null);
+            pageMap.put("taskList" , null);
+            return OutJSON.getInstance(CodeAndMessageEnum.GET_STATES_TASK_BY_PAGE_NULL , pageMap);
         }
     }
 
@@ -508,7 +534,11 @@ public class TaskServiceImpl implements TaskService {
 
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS , pageMap);
         }else {
-            return OutJSON.getInstance(CodeAndMessageEnum.GET_STATES_TASK_BY_PAGE_NULL);
+            Map<String , Object> pageMap = new HashMap<>(2);
+
+            pageMap.put("total" , null);
+            pageMap.put("taskList" , null);
+            return OutJSON.getInstance(CodeAndMessageEnum.GET_STATES_TASK_BY_PAGE_NULL , pageMap);
         }
     }
 
@@ -539,7 +569,11 @@ public class TaskServiceImpl implements TaskService {
             pageMap.put("taskList" , invalidTaskList);
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS , pageMap);
         }else {
-            return OutJSON.getInstance(CodeAndMessageEnum.GET_STATES_TASK_BY_PAGE_NULL);
+            Map<String , Object> pageMap = new HashMap<>(2);
+
+            pageMap.put("total" , null);
+            pageMap.put("taskList" , null);
+            return OutJSON.getInstance(CodeAndMessageEnum.GET_STATES_TASK_BY_PAGE_NULL , pageMap);
         }
     }
 

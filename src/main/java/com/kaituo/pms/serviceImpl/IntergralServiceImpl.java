@@ -44,6 +44,7 @@ public class IntergralServiceImpl implements IntegralService {
         List<Map<String, Object>> integralMap = new ArrayList<>();
         List<Integral> integralList = integralMapper.selectByExample(integralExample);
         if(null != integralList && integralList.size() > 0){
+
             for (Integral integral : integralList) {
                 Map<String , Object> map = new HashMap<>();
                 User user;
@@ -97,5 +98,8 @@ public class IntergralServiceImpl implements IntegralService {
         return integralMapper.insertSelective(integral);
     }
 
-
+    @Override
+    public List<Integral> selectIntegralById(int userId) {
+       return integralMapper.selectIntegralById(userId);
+    }
 }

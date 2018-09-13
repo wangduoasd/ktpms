@@ -61,6 +61,15 @@ public interface TaskService {
      *@Date: 2018/8/9
      */
     long countTaskByStatus(int status);
+    /**
+     * 查询指定状态指定对象的任务信息的条数
+     *@Description:
+     *@param status :任务状态
+     *@return long
+     *@Author: 苏泽华
+     *@Date: 2018/8/9
+     */
+    long countTaskByStatus(int status , int userId);
 
     /**
      * 将获得的任务数据封装成map（待领取）

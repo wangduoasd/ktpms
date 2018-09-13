@@ -10,6 +10,8 @@ public class Integral {
 
     private Integer userId;
 
+    private String username;
+
     private Integer integralStartnum;
 
     private String integralChangestr;
@@ -21,6 +23,7 @@ public class Integral {
     private Integer integralChangeint;
 
     private Integer integralOperator;
+    private String operationName;
 
     private Integer integralEndnum;
 
@@ -100,6 +103,23 @@ public class Integral {
     }
 
     public void setIntegralEndnum(Integer integralEndnum) {
+        this.integralEndnum = integralEndnum;
+    }
+
+    public Integral(String username, String integralChangestr, Date integralTime, Integer integralChangeint) {
+        this.username = username;
+        this.integralChangestr = integralChangestr;
+        this.integralTime = integralTime;
+        this.integralChangeint = integralChangeint;
+    }
+
+    public Integral(Integer integralId, String username, String integralChangestr, Date integralTime, Integer integralChangeint, String operationName, Integer integralEndnum) {
+        this.integralId = integralId;
+        this.username = username;
+        this.integralChangestr = integralChangestr;
+        this.integralTime = integralTime;
+        this.integralChangeint = integralChangeint;
+        this.operationName = operationName;
         this.integralEndnum = integralEndnum;
     }
 }

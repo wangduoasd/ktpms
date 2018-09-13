@@ -258,7 +258,26 @@
       integral_endnum = #{integralEndnum,jdbcType=INTEGER}
     where integral_id = #{integralId,jdbcType=INTEGER}
   </update>
+  <resultMap id="MyResultMap" type="com.kaituo.pms.bean.Integral" >
+    <constructor >
+      <idArg column="integral_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+
+      <arg column="integral_changeInt" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="integral_changeStr" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="user_name" jdbcType="VARCHAR" javaType="java.lang.String" />
+
+
+      <arg column="integral_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+      <arg column="integral_endnum" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="operator_name" jdbcType="VARCHAR" javaType="java.lang.String" />
+
+    </constructor>
+  </resultMap>
   <select id="selectALLIntegral" resultMap="BaseResultMap">
     select * from p_integral
+  </select>
+  <select id="selectIntegralById" resultMap="MyResultMap">
+    select integral_id,integral_changeInt,integral_changeStr,user_name,integral_time,integral_endnum,operator_name
+    from v_integraldetail where user_id=#{userId}
   </select>
 </mapper>

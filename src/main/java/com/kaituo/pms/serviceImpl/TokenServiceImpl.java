@@ -54,4 +54,17 @@ public class TokenServiceImpl implements TokenService {
         int userId = JwtToken.getUserId(token);
         return tokenMapper.deleteByPrimaryKey(userId);
     }
+
+    @Override
+    public int delectToken(Integer userId) {
+        return tokenMapper.deleteByPrimaryKey(userId);
+    }
+
+    @Override
+    public boolean haveToken(Integer userId) {
+        if (null!=tokenMapper.selectByPrimaryKey(userId)){
+            return true;
+        }
+        return false;
+    }
 }

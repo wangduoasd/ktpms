@@ -123,7 +123,9 @@ NOREASON("-48" , "未知错误"),
     //权限
     ROLE_EMPTY("-40","权限列表为空，请先添加权限"),
     // token过期
-    TOKEN_EXPIRED("-41" , "请重新登录")
+    TOKEN_EXPIRED("-41" , "请重新登录"),
+    PRIZE_NUMBER_ERROR("-43","请重新输入兑换数量"),
+    PRIZE_USERSTATUS_ERROR("-44","请先解除积分冻结或离职后再兑换")
     ;
 
     private String code;

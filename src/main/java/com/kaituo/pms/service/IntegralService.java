@@ -23,5 +23,5 @@ public interface IntegralService {
 
     int addPrizeIntegral(int changint,int userId,String changestr,int endnum);
     int addIntegral(int operatorId,String changestr,int userId,int changeInt,int endNum );
-
+    List<Integral>  selectIntegralById(int userId);
 }

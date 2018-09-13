@@ -110,15 +110,22 @@ public class PrizeControllrt {
    public OutJSON exchangePrize( @PathVariable("number") int number,
                                 @PathVariable("prizeId") int prizeId){
       try {
+
           String token =ContextHolderUtils.getRequest().getHeader("token");
           Token token1 = tokenService.selectUserIdByToken(token);
           if (null == token1){
               return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
           }
+          if(number==0){
+              return OutJSON.getInstance(CodeAndMessageEnum.PRIZE_NUMBER_ERROR);
+          }
           int newCount = number;
           int userId=token1.getUserId();
           Prize prize = prizeService.selectByPrimaryKey(prizeId);
           User user = userService.findPersonalDetail(token1.getUserId());
+          if(user.getUserStatus()==1||user.getUserStatus()==4){
+              return OutJSON.getInstance(CodeAndMessageEnum.PRIZE_USERSTATUS_ERROR);
+          }
           List<Exchange> exchanges = exchangeService.selectByUserIdPrizeId(prizeId, token1.getUserId());
           if (null != exchanges && exchanges.size() > 0) {
               for(Exchange exchange:  exchanges){
@@ -151,8 +158,8 @@ public class PrizeControllrt {
            prizeService.updateByPrimaryKey(userId,number,prizeId);
            int i = prizeService.exhangePrize(userId, number, prizeId);
            String changestr = "兑换"+prize.getPrizeName()+"成功";
-           int changint=-number*prize.getPrizePrice();
-          int endnum=user.getUserIntegral()-changint;
+           int changint=number*prize.getPrizePrice();
+          int endnum=user.getUserIntegral();
            int k = integralService.addPrizeIntegral(changint, userId, changestr, endnum);
            userService.upUserIntegral(user);
 
@@ -173,7 +180,9 @@ public class PrizeControllrt {
    * @Date:2018/8/16
    */
    @GetMapping("authority/two/prizes/{pageNumber}/{token:.+}")
-   public OutJSON listAllPrize(@PathVariable("pageNumber") int pageNumber, @RequestParam (value = "pageSize",defaultValue = "6") int pageSize,@PathVariable("token") String token ){
+   public OutJSON listAllPrize(@PathVariable("pageNumber") int pageNumber,
+                               @RequestParam (value = "pageSize",defaultValue = "6") int pageSize,
+                               @PathVariable("token") String token ){
        try {
            Token token1 = tokenService.selectUserIdByToken(token);
            if (null == token1){
@@ -183,7 +192,7 @@ public class PrizeControllrt {
            List<Prize> prizes = prizeService.listAllPrize();
            PageInfo<Object> objectPageInfo = new PageInfo(prizes,5);
 
-           if(prizes!=null&&prizes.size()>0){
+           if(prizes!=null){
 
                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,objectPageInfo);
            }
@@ -201,9 +210,8 @@ public class PrizeControllrt {
    * @Author: 侯鹏
    * @Date:2018/8/21
    */
-   @DeleteMapping("authority/two/prize/{prizeId}")
-   public OutJSON deleteById(@PathVariable("prizeId") int prizeId) {
-       String token =ContextHolderUtils.getRequest().getHeader("token");
+   @DeleteMapping("authority/two/prize/{prizeId}/{token:.+}")
+   public OutJSON deleteById(@PathVariable("prizeId") int prizeId ,@PathVariable("token") String token ) {
        // 检查token并获得userID
        Token token1 = tokenService.selectUserIdByToken(token);
        if (null == token1){

@@ -36,7 +36,7 @@ public class IntegralController {
      */
     @GetMapping(value="integral/{token:.+}/{pageNumber}")
     public OutJSON findIntegral(@PathVariable("token") String token, @PathVariable("pageNumber")  int ageNumber,
-                                @RequestParam (value = "pageSize",defaultValue = "8") int pageSize){
+                                @RequestParam (value = "pageSize",defaultValue = "10") int pageSize){
 
         try {
             // 检查token并获得userID
@@ -45,9 +45,8 @@ public class IntegralController {
                 return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
             }
             PageHelper.startPage(ageNumber,pageSize);
-            Map<String , Object> map = new HashMap<>();
             List<Map<String, Object>> integrals = integralService.listIntegeral(token1.getUserId());
-          PageInfo pageInfo = new PageInfo(integrals, 5);
+            PageInfo pageInfo = new PageInfo(integrals, 5);
             if(integrals!=null){
 
                 return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,pageInfo);

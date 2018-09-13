@@ -19,7 +19,6 @@ public class OutJSON {
 
     private Object data;
 
-    private String token;
 
     public void setData(Object data) {
         this.data = data;
@@ -38,7 +37,6 @@ public class OutJSON {
         outJSON.code = codeAndMessageEnum.getCode();
         outJSON.message = codeAndMessageEnum.getMessage();
         outJSON.data = data;
-        outJSON.token=token;
         return  outJSON;
     }
     public  static OutJSON getInstance(CodeAndMessageEnum codeAndMessageEnum){
@@ -68,11 +66,5 @@ public class OutJSON {
         return data;
     }
 
-    public String getToken() {
-        return token;
-    }
 
-    public void setToken(String token) {
-        this.token = token;
-    }
 }

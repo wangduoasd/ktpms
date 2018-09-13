@@ -155,11 +155,11 @@ public class DeptController {
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
         }
     }
-    @DeleteMapping("authority/four/dept/{deptId}")
+    @DeleteMapping("authority/four/dept/{deptId}/{token:.+}")
     @ResponseBody
-    public OutJSON delDept(@PathVariable("deptId")int deptId) {
+    public OutJSON delDept(@PathVariable("deptId")int deptId,@PathVariable("token")String  token) {
         try {
-            String token =ContextHolderUtils.getRequest().getHeader("token");
+
             // 检查token并获得userID
             Token token1 = tokenService.selectUserIdByToken(token);
             if (null == token1){
