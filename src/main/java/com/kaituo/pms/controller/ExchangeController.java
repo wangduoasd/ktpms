@@ -79,20 +79,20 @@ public class ExchangeController {
      */
 
     @ResponseBody
-    @PutMapping(value = "exchangeRecords/{exchangeId}/{token:.+}")
-    public OutJSON updateExchange(@PathVariable("exchangeId") int exchangeId,@PathVariable("token") String token) {
+    @PutMapping(value = "exchangeRecords/{exchangeId}")
+    public OutJSON updateExchange(@PathVariable("exchangeId") int exchangeId) {
         try {
-            Token tokenUser = ResourceUtil.getTokenUser();
-            System.out.println(tokenUser.getToken());
-            Integer userId =TokenMap.check(token);
-            if(userId==null){
-                return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            String token =ContextHolderUtils.getRequest().getHeader("token");
+            // 检查token并获得userID
+            Token token1 = tokenService.selectUserIdByToken(token);
+            if (null == token1){
+                return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
             }
             //根据userId将视图中该用户状态从  状态2（显示为：确定领取）改变到 状态3（显示为：已经领取）
             int i = exchangeService.updateExchange(exchangeId, 2,3);
-            String newToken = TokenMap.remove(token, userId);
+
             if(i==1)
-                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,newToken);
+                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);
             if(i==2){
                 return OutJSON.getInstance(CodeAndMessageEnum.EXCHANGE_STATUS_ERROR);
             }
@@ -173,18 +173,20 @@ public class ExchangeController {
      　　* @date 2018/8/10 0010 11:00
      　　*/
     @ResponseBody
-    @PutMapping(value = "authority/three/exchangeLists/{exchangeId}/{token:.+}")
-    public OutJSON updateExchangeList(@PathVariable("exchangeId") int exchangeId,
-                                      @PathVariable("token") String token) {
+    @PutMapping(value = "authority/three/exchangeLists/{exchangeId}")
+    public OutJSON updateExchangeList(@PathVariable("exchangeId") int exchangeId
+                                      ) {
         try {
-            Integer userId = TokenMap.check(token);
-            if(userId==null){
-                return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            String token =ContextHolderUtils.getRequest().getHeader("token");
+            // 检查token并获得userID
+            Token token1 = tokenService.selectUserIdByToken(token);
+            if (null == token1){
+                return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
             }
             int i = exchangeService.updateExchange(exchangeId, 1,2);
             if(i==1){
-                String newToken = TokenMap.remove(token, userId);
-                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,null,newToken);}
+
+                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);}
             if(i==2){
                 return OutJSON.getInstance(CodeAndMessageEnum.EXCHANGE_STATUS_ERROR);
             }
