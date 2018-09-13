@@ -72,7 +72,7 @@ public interface TaskService {
      * @Author: 苏泽华
      * @Date: 2018/8/9
      */
-    OutJSON getPendingTaskByPage(Integer pageNamber , Integer pageSize , int status , String token , int userId);
+    OutJSON getPendingTaskByPage(Integer pageNamber , Integer pageSize , int status);
     /**
      * 将获得的任务数据封装成map(已完成)
      * @Description:  将获得的任务数据封装成map
@@ -84,7 +84,7 @@ public interface TaskService {
      * @Author: 苏泽华
      * @Date: 2018/8/9
      */
-    OutJSON getStatesTaskByPage(Integer pageNamber , Integer pageSize , int status , int userId , String token);
+    OutJSON getStatesTaskByPage(Integer pageNamber , Integer pageSize , int status , int userId);
 
     /**
      * 获取未完成页面数据并封装好
@@ -97,7 +97,7 @@ public interface TaskService {
      * @Author: 苏泽华
      * @Date: 2018/8/13
      */
-    OutJSON getUndoneByPage(Integer pageNamber, Integer pageSize , int userId , String token);
+    OutJSON getUndoneByPage(Integer pageNamber, Integer pageSize , int userId);
 
     /**
      * 通过任务id获得对应任务信息
@@ -151,7 +151,7 @@ public interface TaskService {
      * @Author: 苏泽华
      * @Date: 2018/8/20
      */
-    OutJSON listPublishedTask(int pageNamber , Integer pageSize , int userId , String token);
+    OutJSON listPublishedTask(int pageNamber , Integer pageSize);
 
     /**
      * 获取风控中心——任务管理——待审核任务的数据
@@ -161,7 +161,7 @@ public interface TaskService {
      * @Author: 苏泽华
      * @Date: 2018/8/20
      */
-    OutJSON listPendingTask(int pageNamber , Integer pageSize , int userId , String token);
+    OutJSON listPendingTask(int pageNamber , Integer pageSize);
 
     /**
      * 风控中心——任务管理——失效任务
@@ -171,7 +171,7 @@ public interface TaskService {
      * @Author: 苏泽华
      * @Date: 2018/8/20
      */
-    OutJSON lisInvalidTask(int pageNamber , Integer pageSize , int userId , String token);
+    OutJSON lisInvalidTask(int pageNamber , Integer pageSize);
 
     /**
      * 获取风控中心——任务管理——已发布任务的数据的总数

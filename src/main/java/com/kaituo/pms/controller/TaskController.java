@@ -1,8 +1,10 @@
 package com.kaituo.pms.controller;
 
 import com.kaituo.pms.bean.Task;
+import com.kaituo.pms.bean.Token;
 import com.kaituo.pms.bean.User;
 import com.kaituo.pms.service.TaskService;
+import com.kaituo.pms.service.TokenService;
 import com.kaituo.pms.service.UserService;
 import com.kaituo.pms.utils.*;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +31,9 @@ public class TaskController {
     @Autowired
     UserService userService;
 
+    @Autowired
+    TokenService tokenService;
+
     /**
      * 分页查寻任务
      * @param callPage 调用的页面
@@ -37,15 +42,20 @@ public class TaskController {
      * @Author: 苏泽华
      * @Date: 2018/8/13
      */
-    @GetMapping("tasks/status/list/{callPage}/{pageNumber}/u/{token:.+}")
+    @GetMapping("tasks/status/list/{callPage}/{pageNumber}/{token}")
     public OutJSON findCollectionStatus(@PathVariable("callPage") String callPage ,
                                         @PathVariable(value = "token") String token,
                                         @PathVariable(value = "pageNumber") int pageNamber ) {
         // 检查token并获得userID
-        Integer userId = TokenMap.check(token);
-        if (null == userId){
+        Token token1 = tokenService.selectUserIdByToken(token);
+        if (null == token1){
             return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
         }
+        if (null == token1.getUserId()){
+            return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+        }
+        int userId = token1.getUserId();
+
         try {
             switch (callPage){
                 // 未领取页面调用
@@ -56,19 +66,19 @@ public class TaskController {
                     taskService.expiredVerification();
                     //查询所有已发布但未被领取的任务的信息
                     //分页
-                    return taskService.getPendingTaskByPage(pageNamber , null , status , token , userId);
+                    return taskService.getPendingTaskByPage(pageNamber , null , status);
                 // 未完成页面调用
                 case Constant.MISSION_CENTER_TASK_LIST_UNDONE:
                     // 处理超时数据
                     taskService.timeOutDetection();
                     //查询所有已发布但未被领取的任务的信息
                     //分页
-                    return taskService.getUndoneByPage(pageNamber , null , userId , token);
+                    return taskService.getUndoneByPage(pageNamber , null , userId);
                 // 已完成页面调用
                 case Constant.MISSION_CENTER_TASK_LIST_COMPLETED:
                     //查询所有当前id的已完成数据
                     //分页
-                    return taskService.getStatesTaskByPage(pageNamber , null , Constant.MISSION_COMPLETED , userId , token);
+                    return taskService.getStatesTaskByPage(pageNamber , null , Constant.MISSION_COMPLETED , userId);
                 default:
                     return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR,"调用页面错误");
             }
@@ -87,15 +97,18 @@ public class TaskController {
      * @Author: 苏泽华
      * @Date: 2018/8/13
      */
-    @PutMapping( "tasks/status/one/{taskId}/{token:.+}")
-    public OutJSON recieveTheTask(@PathVariable(value = "taskId") int taskId ,
-                                  @PathVariable(value = "token") String token){
+    @PutMapping( "tasks/status/one/{taskId}")
+    public OutJSON recieveTheTask(@PathVariable(value = "taskId") int taskId){
+        String token =ContextHolderUtils.getRequest().getHeader("token");
         // 检查token并获得userID
-        Integer userId = TokenMap.check(token);
-
-        if (null == userId){
+        Token token1 = tokenService.selectUserIdByToken(token);
+        if (null == token1){
             return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
         }
+        if (null == token1.getUserId()){
+            return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+        }
+        int userId = token1.getUserId();
 
         try{
 
@@ -156,24 +169,25 @@ public class TaskController {
      * @Author: 苏泽华
      * @Date: 2018/8/14
      */
-    @PutMapping("tasks/status/four/{taskId}/{token:.+}")
-    public OutJSON submitTask(@PathVariable("taskId") Integer taskId ,
-                                  @PathVariable(value = "token") String token){
+    @PutMapping("tasks/status/four/{taskId}")
+    public OutJSON submitTask(@PathVariable("taskId") Integer taskId){
+        String token =ContextHolderUtils.getRequest().getHeader("token");
         // 检查token并获得userID
-        Integer userId = TokenMap.check(token);
-
-        if (null == userId){
+        Token token1 = tokenService.selectUserIdByToken(token);
+        if (null == token1){
             return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
         }
+        if (null == token1.getUserId()){
+            return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+        }
+        int userId = token1.getUserId();
 
         Task task = taskService.getTask(taskId);
         if (task.getTaskStatus() == Constant.THE_TASK_HAS_BEEN_RECEIVED) {
             task.setTaskStatus(Constant.TASK_SUBMISSION_REVIEW);
             return taskService.submitReview(task);
         }
-        // 重置token
-        String newToken = TokenMap.remove(token , userId);
-        return OutJSON.getInstance(CodeAndMessageEnum.SUBMIT_TASK_ERROR , null , newToken);
+        return OutJSON.getInstance(CodeAndMessageEnum.SUBMIT_TASK_ERROR , null);
     }
 
     /**
@@ -187,13 +201,12 @@ public class TaskController {
      * @Author: 苏泽华
      * @Date: 2018/8/20
      */
-    @PostMapping("authority/five/tasks/status/{token:.+}")
-    public OutJSON publishTask(MultipartFile file,String starttime , String endtime , Task task ,
-                               @PathVariable(value = "token") String token){
+    @PostMapping("authority/five/tasks/status")
+    public OutJSON publishTask(MultipartFile file,String starttime , String endtime , Task task){
+        String token =ContextHolderUtils.getRequest().getHeader("token");
         // 检查token并获得userID
-        Integer userId = TokenMap.check(token);
-
-        if (null == userId){
+        Token token1 = tokenService.selectUserIdByToken(token);
+        if (null == token1){
             return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
         }
         // 图片上传并获取上传的状态
@@ -227,9 +240,7 @@ public class TaskController {
                 task.setTaskNumber(0);
                 // 数据库添加数据，如果失败则返回任务发布失败，成功则返回任务已发布
                 if (taskService.publishTask(task) == 1){
-                    // 重置token
-                    String newToken = TokenMap.remove(token , userId);
-                    return OutJSON.getInstance(CodeAndMessageEnum.THE_TASK_WAS_SUCCESSFULLY_POSTDE , null , newToken);
+                    return OutJSON.getInstance(CodeAndMessageEnum.THE_TASK_WAS_SUCCESSFULLY_POSTDE , null);
                 }else{
                     return OutJSON.getInstance(CodeAndMessageEnum.TASK_POSTING_FAILED);
                 }
@@ -254,9 +265,8 @@ public class TaskController {
                                         @PathVariable(value = "pageSize" , required = false) Integer pageSize ,
                                         @PathVariable(value = "token") String token) {
         // 检查token并获得userID
-        Integer userId = TokenMap.check(token);
-
-        if (null == userId){
+        Token token1 = tokenService.selectUserIdByToken(token);
+        if (null == token1){
             return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
         }
         try {
@@ -271,18 +281,18 @@ public class TaskController {
                 case Constant.RISK_CONTROL_CENTER_TASK_MANAGEMENT_RELEASED_TASK:
                     //查询所有已发布任务的信息
                     //分页
-                    return taskService.listPublishedTask(pageNamber , pageSize , userId , token);
+                    return taskService.listPublishedTask(pageNamber , pageSize);
                 // 待审核页面调用
                 case Constant.RISK_CONTROL_CENTER_TASK_MANAGEMENT_PENDING_TASK:
 
                     //查询所有状态为待审核的任务的信息
                     //分页
-                    return taskService.listPendingTask(pageNamber , pageSize , userId , token);
+                    return taskService.listPendingTask(pageNamber , pageSize);
                 // 失效任务页面调用
                 case Constant.RISK_CONTROL_CENTER_TASK_MANAGEMENT_INVALID_TASK:
                     //查询所有当前id的已完成数据
                     //分页
-                    return taskService.lisInvalidTask(pageNamber , pageSize , userId , token);
+                    return taskService.lisInvalidTask(pageNamber , pageSize);
                 default:
                     return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR,"调用页面错误");
             }
@@ -301,19 +311,18 @@ public class TaskController {
      * @Author: 苏泽华
      * @Date: 2018/8/21
      */
-    @PutMapping("authority/five/task/{taskId}/{token:.+}")
-    public OutJSON cancelInAdvance(@PathVariable("taskId") int taskId ,
-                                   @PathVariable(value = "token") String token){
-        // 检查token并获得userID
-        Integer userId = TokenMap.check(token);
+    @PutMapping("authority/five/task/{taskId}")
+    public OutJSON cancelInAdvance(@PathVariable("taskId") int taskId){
 
-        if (null == userId){
+        String token =ContextHolderUtils.getRequest().getHeader("token");
+        // 检查token并获得userID
+        Token token1 = tokenService.selectUserIdByToken(token);
+        if (null == token1){
             return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
         }
+
         if (0<taskService.cancelInAdvance(taskId)) {
-            // 重置token
-            String newToken = TokenMap.remove(token , userId);
-            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS , null , newToken);
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS , null);
         } else {
             return OutJSON.getInstance(CodeAndMessageEnum.TASK_CANCELED_IN_ADVANCE);
         }
@@ -329,23 +338,21 @@ public class TaskController {
      * @Author: 苏泽华
      * @Date: 2018/8/21
      */
-    @PostMapping("authority/five/task/{taskId}/{auditType}/{token:.+}")
+    @PostMapping("authority/five/task/{taskId}/{auditType}")
     public OutJSON auditTask(@PathVariable("taskId") int taskId ,
-                             @PathVariable("auditType") int auditType ,
-                             @PathVariable(value = "token") String token){
-        // 检查token并获得userID
-        Integer userId = TokenMap.check(token);
+                             @PathVariable("auditType") int auditType){
 
-        if (null == userId){
+        String token =ContextHolderUtils.getRequest().getHeader("token");
+        // 检查token并获得userID
+        Token token1 = tokenService.selectUserIdByToken(token);
+        if (null == token1){
             return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
         }
         switch (auditType){
             case Constant.AUDIT_PASSED :
                 try {
                     if(taskService.auditPassed(taskId)){
-                        // 重置token
-                        String newToken = TokenMap.remove(token , userId);
-                        return OutJSON.getInstance(CodeAndMessageEnum.AUDIT_PASSED_SUCCESS , null , newToken);
+                        return OutJSON.getInstance(CodeAndMessageEnum.AUDIT_PASSED_SUCCESS , null);
                     }else {
                         return OutJSON.getInstance(CodeAndMessageEnum.AUDIT_PASSED_ERROR);
                     }
@@ -357,9 +364,7 @@ public class TaskController {
             case Constant.AUDIT_REJECTION:
                 try {
                     if (taskService.auditRejection(taskId)){
-                        // 重置token
-                        String newToken = TokenMap.remove(token , userId);
-                        return OutJSON.getInstance(CodeAndMessageEnum.AUDIT_REJECTION_SUCCESS , null , newToken);
+                        return OutJSON.getInstance(CodeAndMessageEnum.AUDIT_REJECTION_SUCCESS , null);
                     }else {
                         return OutJSON.getInstance(CodeAndMessageEnum.AUDIT_REJECTION_ERROR);
                     }
@@ -385,15 +390,16 @@ public class TaskController {
      * @Author: 苏泽华
      * @Date: 2018/8/21
      */
-    @PutMapping("authority/five/task/again/{token:.+}")
-    public OutJSON republish(MultipartFile file,String starttime , String endtime , Task task ,
-                             @PathVariable(value = "token") String token){
-        // 检查token并获得userID
-        Integer userId = TokenMap.check(token);
+    @PutMapping("authority/five/task/again")
+    public OutJSON republish(MultipartFile file,String starttime , String endtime , Task task){
 
-        if (null == userId){
+        String token =ContextHolderUtils.getRequest().getHeader("token");
+        // 检查token并获得userID
+        Token token1 = tokenService.selectUserIdByToken(token);
+        if (null == token1){
             return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
         }
+
         // 图片上传并获取上传的状态
       Map<String, Object> map = Util.imgUpload(file , Util.getImgRelativePath());
         // 时间处理
@@ -418,9 +424,7 @@ public class TaskController {
                 task.setTaskNumber(0);
                 // 数据库添加数据，如果失败则返回任务发布失败，成功则返回任务已发布
                 if (taskService.republish(task)){
-                    // 重置token
-                    String newToken = TokenMap.remove(token , userId);
-                    return OutJSON.getInstance(CodeAndMessageEnum.THE_TASK_WAS_SUCCESSFULLY_POSTDE ,null,newToken);
+                    return OutJSON.getInstance(CodeAndMessageEnum.THE_TASK_WAS_SUCCESSFULLY_POSTDE ,null);
                 }else{
                     return OutJSON.getInstance(CodeAndMessageEnum.TASK_POSTING_FAILED);
                 }
@@ -437,9 +441,7 @@ public class TaskController {
                 task.setTaskNumber(0);
                 // 数据库添加数据，如果失败则返回任务发布失败，成功则返回任务已发布
                 if (taskService.republish(task)){
-                    // 重置token
-                    String newToken = TokenMap.remove(token , userId);
-                    return OutJSON.getInstance(CodeAndMessageEnum.THE_TASK_WAS_SUCCESSFULLY_POSTDE , null , newToken);
+                    return OutJSON.getInstance(CodeAndMessageEnum.THE_TASK_WAS_SUCCESSFULLY_POSTDE , null);
                 }else{
                     return OutJSON.getInstance(CodeAndMessageEnum.TASK_POSTING_FAILED);
                 }
@@ -460,19 +462,17 @@ public class TaskController {
     public OutJSON getTask(@PathVariable("taskId") int taskId ,
                            @PathVariable(value = "token") String token){
         // 检查token并获得userID
-        Integer userId = TokenMap.check(token);
-
-        if (null == userId){
+        Token token1 = tokenService.selectUserIdByToken(token);
+        if (null == token1){
             return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
         }
+
         try {
             Task task = taskService.getTask(taskId);
             if(null == task){
                 return OutJSON.getInstance(CodeAndMessageEnum.TASK_NOT_FOUND);
             }
-            // 重置token
-            String newToken = TokenMap.remove(token , userId);
-            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS , task , newToken);
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS , task);
         } catch (Exception e) {
             log.error("getTask=>" + e.getMessage() , e);
             e.printStackTrace();

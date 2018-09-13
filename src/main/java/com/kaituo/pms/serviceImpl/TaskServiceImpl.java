@@ -210,7 +210,7 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public OutJSON getPendingTaskByPage(Integer pageNumber, Integer pageSize, int status , String token , int userId) {
+    public OutJSON getPendingTaskByPage(Integer pageNumber, Integer pageSize, int status) {
         // 如果每页条数为空则将每页条数设为4
         if (null==pageSize){
             pageSize = 4;
@@ -228,9 +228,7 @@ public class TaskServiceImpl implements TaskService {
 
             pageMap.put("total" , total);
             pageMap.put("taskList" , list);
-            // 重置token
-            String newToken = TokenMap.remove(token , userId);
-            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS , pageMap , newToken);
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS , pageMap);
         }else {
             return OutJSON.getInstance(CodeAndMessageEnum.GET_STATES_TASK_BY_PAGE_NULL);
         }
@@ -248,7 +246,7 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public OutJSON getStatesTaskByPage(Integer pageNumber, Integer pageSize, int status , int userId , String token) {
+    public OutJSON getStatesTaskByPage(Integer pageNumber, Integer pageSize, int status , int userId) {
         // 如果每页条数为空则将每页条数设为4
         if (null==pageSize){
             pageSize = 4;
@@ -266,9 +264,7 @@ public class TaskServiceImpl implements TaskService {
 
             pageMap.put("total" , total);
             pageMap.put("taskList" , list);
-            // 重置token
-            String newToken = TokenMap.remove(token , userId);
-            return OutJSON.getInstance(CodeAndMessageEnum.COMPLETED_TASK , pageMap , newToken);
+            return OutJSON.getInstance(CodeAndMessageEnum.COMPLETED_TASK , pageMap);
         }else {
             return OutJSON.getInstance(CodeAndMessageEnum.GET_STATES_TASK_BY_PAGE_NULL);
         }
@@ -286,7 +282,7 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public OutJSON getUndoneByPage(Integer pageNumber, Integer pageSize , int userId , String token) {
+    public OutJSON getUndoneByPage(Integer pageNumber, Integer pageSize , int userId) {
         // 如果每页条数为空则将每页条数设为4
         if (null==pageSize){
             pageSize = 4;
@@ -311,9 +307,7 @@ public class TaskServiceImpl implements TaskService {
 
             pageMap.put("total" , total);
             pageMap.put("taskList" , list);
-            // 重置token
-            String newToken = TokenMap.remove(token , userId);
-            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS , pageMap , newToken);
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS , pageMap);
         }else {
             return OutJSON.getInstance(CodeAndMessageEnum.GET_STATES_TASK_BY_PAGE_NULL);
         }
@@ -460,7 +454,7 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public OutJSON listPublishedTask(int pageNumber , Integer pageSize , int userId , String token) {
+    public OutJSON listPublishedTask(int pageNumber , Integer pageSize) {
         // 如果每页条数为空则将每页条数设为4
         if (null==pageSize){
             pageSize = 4;
@@ -476,9 +470,7 @@ public class TaskServiceImpl implements TaskService {
 
         pageMap.put("total" , total);
         pageMap.put("taskList" , publishedTaskList);
-        // 重置token
-        String newToken = TokenMap.remove(token , userId);
-        return OutJSON.getInstance(CodeAndMessageEnum.PUBLISHED_TASK_COMPLETED , pageMap , newToken);
+        return OutJSON.getInstance(CodeAndMessageEnum.PUBLISHED_TASK_COMPLETED , pageMap);
         }else {
             return OutJSON.getInstance(CodeAndMessageEnum.GET_STATES_TASK_BY_PAGE_NULL);
         }
@@ -493,7 +485,7 @@ public class TaskServiceImpl implements TaskService {
      * @Date: 2018/8/20
      */
     @Override
-    public OutJSON listPendingTask(int pageNamber , Integer pageSize , int userId , String token) {
+    public OutJSON listPendingTask(int pageNamber , Integer pageSize) {
         // 如果每页条数为空则将每页条数设为4
         if (null==pageSize){
             pageSize = 4;
@@ -514,9 +506,7 @@ public class TaskServiceImpl implements TaskService {
             pageMap.put("total" , total);
             pageMap.put("taskList" , list);
 
-            // 重置token
-            String newToken = TokenMap.remove(token , userId);
-            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS , pageMap , newToken);
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS , pageMap);
         }else {
             return OutJSON.getInstance(CodeAndMessageEnum.GET_STATES_TASK_BY_PAGE_NULL);
         }
@@ -531,7 +521,7 @@ public class TaskServiceImpl implements TaskService {
      * @Date: 2018/8/20
      */
     @Override
-    public OutJSON lisInvalidTask(int pageNamber , Integer pageSize , int userId , String token) {
+    public OutJSON lisInvalidTask(int pageNamber , Integer pageSize) {
         // 如果每页条数为空则将每页条数设为4
         if (null==pageSize){
             pageSize = 4;
@@ -547,10 +537,7 @@ public class TaskServiceImpl implements TaskService {
 
             pageMap.put("total" , total);
             pageMap.put("taskList" , invalidTaskList);
-
-            // 重置token
-            String newToken = TokenMap.remove(token , userId);
-            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS , pageMap , newToken);
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS , pageMap);
         }else {
             return OutJSON.getInstance(CodeAndMessageEnum.GET_STATES_TASK_BY_PAGE_NULL);
         }
