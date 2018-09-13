@@ -262,10 +262,10 @@ public class UserServiceImpl implements UserService/*,UserDetailsService*/ {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        token.setUserId(userId);
+/*        token.setUserId(userId);
         String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
         token.setFailureTime(Timestamp.valueOf(time));
-        tokenService.addToken(token);
+        tokenService.addToken(token);*/
         return login;
     }
 

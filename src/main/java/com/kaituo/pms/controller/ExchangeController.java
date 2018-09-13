@@ -82,7 +82,6 @@ public class ExchangeController {
         try {
             Token tokenUser = ResourceUtil.getTokenUser();
             System.out.println(tokenUser.getToken());
-
             Integer userId =TokenMap.check(token);
             if(userId==null){
                 return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);

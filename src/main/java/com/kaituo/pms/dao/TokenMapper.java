@@ -1,21 +1,35 @@
 package com.kaituo.pms.dao;
 
 import com.kaituo.pms.bean.Token;
-import com.kaituo.pms.utils.TokenMap;
-import org.apache.ibatis.annotations.*;
-import org.springframework.stereotype.Component;
+import com.kaituo.pms.bean.TokenExample;
+import java.util.List;
 
-import java.sql.Timestamp;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
-@Component
+@Repository
 @Mapper
 public interface TokenMapper {
-    @Insert("insert into p_token(user_id,token,failure_time) values(#{userId},#{token},#{failureTime})")
-    int addToken(Token token);
-    @Update("update p_token set failure_time=#{failureTime} where token=#{token}")
-    int upToken(Token token);
-    @Select("select user_id,token,failure_time from p_token where token=#{token}")
-    Token selectUserIdByToken(String token);
-    @Delete("delete from p_token where token=#{token}")
-    int delectToken(String token);
+    int countByExample(TokenExample example);
+
+    int deleteByExample(TokenExample example);
+
+    int deleteByPrimaryKey(Integer userId);
+
+    int insert(Token record);
+
+    int insertSelective(Token record);
+
+    List<Token> selectByExample(TokenExample example);
+
+    Token selectByPrimaryKey(Integer userId);
+
+    int updateByExampleSelective(@Param("record") Token record, @Param("example") TokenExample example);
+
+    int updateByExample(@Param("record") Token record, @Param("example") TokenExample example);
+
+    int updateByPrimaryKeySelective(Token record);
+
+    int updateByPrimaryKey(Token record);
 }

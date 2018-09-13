@@ -54,6 +54,8 @@ public class UserController {
     public OutJSON findRankingByPage(@PathVariable(value = "pageNumber") int pageNumber,@PathVariable("token")String token) {
         try {
             // 检查token并获得userID
+            Token token1 = tokenService.selectUserIdByToken(token);
+            log.info(""+token1.getFailureTime());
             Integer userId =JwtToken.getUserId(token);
             if (null == userId){
                 return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
@@ -539,12 +541,14 @@ public class UserController {
         try {
             int userId=Integer.parseInt(username);
             Login login = userService.login(userId, password);
-            login.setToken(JwtToken.createToken(userId));
+            String token = JwtToken.createToken(userId);
+            login.setToken(token);
             HttpSession session = httpRequest.getSession();
             log.info(session.getId());
             if (login == null) {
                 return OutJSON.getInstance(CodeAndMessageEnum.USER_LOGIN_ERROR);
             }
+            tokenService.addToken(Token.getNewToken(userId,token));
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, login);
         } catch (Exception e) {
             log.error(e.getMessage());

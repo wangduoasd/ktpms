@@ -3,10 +3,12 @@ package com.kaituo.pms.serviceImpl;
 import com.kaituo.pms.bean.Token;
 import com.kaituo.pms.dao.TokenMapper;
 import com.kaituo.pms.service.TokenService;
+import com.kaituo.pms.utils.JwtToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.util.Date;
 
 /**
  * @author 张金行
@@ -22,30 +24,34 @@ public class TokenServiceImpl implements TokenService {
     TokenMapper tokenMapper;
     @Override
     public int addToken(Token token) {
-        return tokenMapper.addToken(token);
+        return tokenMapper.insertSelective(token);
     }
 
     @Override
     public int upToken(Token token) {
-        return tokenMapper.upToken(token);
+        return tokenMapper.updateByPrimaryKeySelective(token);
     }
-   @Override
+    @Override
     public Token selectUserIdByToken(String token) {
-        Token tokenEntity = tokenMapper.selectUserIdByToken(token);
+        int userId = JwtToken.getUserId(token);
+        Token tokenEntity = tokenMapper.selectByPrimaryKey(userId);
         if (null == tokenEntity){
             return null;
         }
-        long time = tokenEntity.getFailureTime().getTime();
-        if (time <= System.currentTimeMillis()){
+        long time = tokenEntity.getFailureTime().getTime()+24*60*60*1000;
+        if (time < System.currentTimeMillis()){
             delectToken(token);
             return null;
         }else {
+
+            upToken(Token.getNewToken(tokenEntity.getUserId(),tokenEntity.getToken()));
             return tokenEntity;
         }
     }
 
     @Override
     public int delectToken(String token) {
-        return tokenMapper.delectToken(token);
+        int userId = JwtToken.getUserId(token);
+        return tokenMapper.deleteByPrimaryKey(userId);
     }
 }
