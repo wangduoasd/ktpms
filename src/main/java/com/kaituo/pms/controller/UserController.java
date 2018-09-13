@@ -556,6 +556,7 @@ public class UserController {
             if (login == null) {
                 return OutJSON.getInstance(CodeAndMessageEnum.USER_LOGIN_ERROR);
             }
+
             tokenService.addToken(Token.getNewToken(userId,token));
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, login);
         } catch (Exception e) {
@@ -563,10 +564,16 @@ public class UserController {
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
         }
     }
-    @PutMapping("logout/{token:.+}")
-    public OutJSON logout(@PathVariable("token")String token) {
+    @PutMapping("logout")
+    public OutJSON logout() {
         try {
-             TokenMap.delete(token);
+            String token =ContextHolderUtils.getRequest().getHeader("token");
+            // 检查token并获得userID
+            Token token1 = tokenService.selectUserIdByToken(token);
+            if (null == token1){
+                return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
+             tokenService.delectToken(token);
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);
         } catch (Exception e) {
             log.error(e.getMessage());

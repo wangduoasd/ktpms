@@ -96,10 +96,9 @@ public class UserRoleController {
      　　* @date 2018/8/23 0023 14:08
      　　*/
     @ResponseBody
-    @DeleteMapping(value = "authority/all/role/{userId}")
-    public OutJSON addUserRole(@PathVariable("userId") int userId) {
+    @DeleteMapping(value = "authority/all/role/{userId}/{token:.+}")
+    public OutJSON addUserRole(@PathVariable("userId") int userId,@PathVariable("token")String token) {
         try {
-            String token =ContextHolderUtils.getRequest().getHeader("token");
             // 检查token并获得userID
             Token token1 = tokenService.selectUserIdByToken(token);
             if (null == token1){

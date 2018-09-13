@@ -78,16 +78,11 @@ public class PrizeControllrt {
    * @Author: 侯鹏
    * @Date:  2018/8/17
    */
-   @GetMapping(value="prizes/{token:.+}/{pageNumber}")
+   @GetMapping(value="prizes/{pageNumber}/{token:.+}")
    public OutJSON findAllPrizePrize(@PathVariable("token") String token,
                                     @PathVariable(value = "pageNumber") int pageNumber,
                                     @RequestParam (value = "pageSize",defaultValue = "4") int pageSize){
        try {
-           log.info("kaishi");
-           log.info(""+TokenMap.getTokenMap().isEmpty());
-           log.info(TokenMap.getTokenMap().toString());
-         /*  Integer userId=TokenMap.check(token);
-             log.info(""+userId);*/
            Token token1 = tokenService.selectUserIdByToken(token);
            if (null == token1){
                return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
@@ -111,18 +106,20 @@ public class PrizeControllrt {
    * @Author: 侯鹏
    * @Date:  2018/8/20
    */
-   @PutMapping(value="prize/{token:.+}/{number}/{prizeId}")
-   public OutJSON exchangePrize(@PathVariable("token") String token, @PathVariable("number") int number,
+   @PutMapping(value="prize/{number}/{prizeId}")
+   public OutJSON exchangePrize( @PathVariable("number") int number,
                                 @PathVariable("prizeId") int prizeId){
-       int newCount = number;
       try {
-          Integer userId=TokenMap.check(token);
-          if(userId==null){
-              return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+          String token =ContextHolderUtils.getRequest().getHeader("token");
+          Token token1 = tokenService.selectUserIdByToken(token);
+          if (null == token1){
+              return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
           }
+          int newCount = number;
+          int userId=token1.getUserId();
           Prize prize = prizeService.selectByPrimaryKey(prizeId);
-          User user = userService.findPersonalDetail(userId);
-          List<Exchange> exchanges = exchangeService.selectByUserIdPrizeId(prizeId, userId);
+          User user = userService.findPersonalDetail(token1.getUserId());
+          List<Exchange> exchanges = exchangeService.selectByUserIdPrizeId(prizeId, token1.getUserId());
           if (null != exchanges && exchanges.size() > 0) {
               for(Exchange exchange:  exchanges){
 
@@ -158,8 +155,8 @@ public class PrizeControllrt {
           int endnum=user.getUserIntegral()-changint;
            int k = integralService.addPrizeIntegral(changint, userId, changestr, endnum);
            userService.upUserIntegral(user);
-           String newToken=TokenMap.remove(token,userId);
-         return OutJSON.getInstance(CodeAndMessageEnum.FIND_PRIZE_SUCCESS,i,newToken);
+
+         return OutJSON.getInstance(CodeAndMessageEnum.FIND_PRIZE_SUCCESS,i);
    }}catch (Exception e){
           e.printStackTrace();
           log.error(e.getMessage());
@@ -178,7 +175,6 @@ public class PrizeControllrt {
    @GetMapping("authority/two/prizes/{pageNumber}/{token:.+}")
    public OutJSON listAllPrize(@PathVariable("pageNumber") int pageNumber, @RequestParam (value = "pageSize",defaultValue = "6") int pageSize,@PathVariable("token") String token ){
        try {
-           Integer userId=TokenMap.check(token);
            Token token1 = tokenService.selectUserIdByToken(token);
            if (null == token1){
                return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
@@ -188,8 +184,8 @@ public class PrizeControllrt {
            PageInfo<Object> objectPageInfo = new PageInfo(prizes,5);
 
            if(prizes!=null&&prizes.size()>0){
-               String newToken=TokenMap.remove(token,userId);
-               return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,objectPageInfo,newToken);
+
+               return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,objectPageInfo);
            }
 
        } catch (Exception e) {
@@ -267,10 +263,7 @@ public class PrizeControllrt {
              return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
          }
          prizeName = "%" + prizeName + "%";
-         Integer userId=TokenMap.check(token);
-         if(userId==null){
-             return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
-         }
+
          PageHelper.startPage(pageNumber, pageSize);
          List<Prize> prizeList = prizeService.selectServiceByName(prizeName);
          if (null != prizeList && prizeList.size() > 0) {

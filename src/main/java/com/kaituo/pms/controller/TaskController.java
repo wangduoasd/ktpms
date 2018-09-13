@@ -42,7 +42,7 @@ public class TaskController {
      * @Author: 苏泽华
      * @Date: 2018/8/13
      */
-    @GetMapping("tasks/status/list/{callPage}/{pageNumber}/{token}")
+    @GetMapping("tasks/status/list/{callPage}/{pageNumber}/u/{token}")
     public OutJSON findCollectionStatus(@PathVariable("callPage") String callPage ,
                                         @PathVariable(value = "token") String token,
                                         @PathVariable(value = "pageNumber") int pageNamber ) {

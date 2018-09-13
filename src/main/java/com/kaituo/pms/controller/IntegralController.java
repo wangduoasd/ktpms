@@ -3,11 +3,12 @@ package com.kaituo.pms.controller;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.kaituo.pms.bean.Integral;
+import com.kaituo.pms.bean.Token;
 import com.kaituo.pms.service.IntegralService;
+import com.kaituo.pms.service.TokenService;
 import com.kaituo.pms.utils.CodeAndMessageEnum;
 import com.kaituo.pms.utils.JwtToken;
 import com.kaituo.pms.utils.OutJSON;
-import com.kaituo.pms.utils.TokenMap;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +24,8 @@ import java.util.jar.JarEntry;
 public class IntegralController {
     @Autowired
     IntegralService integralService;
+    @Autowired
+    TokenService tokenService;
     /**
      * 积分明细
      * @Description: 积分明细
@@ -33,22 +36,24 @@ public class IntegralController {
      */
     @GetMapping(value="integral/{token:.+}/{pageNumber}")
     public OutJSON findIntegral(@PathVariable("token") String token, @PathVariable("pageNumber")  int ageNumber,
-                                @RequestParam (value = "pageSize",defaultValue = "10") int pageSize){
-        PageHelper.startPage(ageNumber,pageSize);
+                                @RequestParam (value = "pageSize",defaultValue = "8") int pageSize){
+
         try {
-            Integer userId=TokenMap.check(token);
-            if(userId==null){
-                return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            // 检查token并获得userID
+            Token token1 = tokenService.selectUserIdByToken(token);
+            if (null == token1){
+                return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
             }
+            PageHelper.startPage(ageNumber,pageSize);
             Map<String , Object> map = new HashMap<>();
-            List<Map<String, Object>> integrals = integralService.listIntegeral(userId);
+            List<Map<String, Object>> integrals = integralService.listIntegeral(token1.getUserId());
           PageInfo pageInfo = new PageInfo(integrals, 5);
-            if(integrals!=null&&integrals.size()>0){
-                String newToken=TokenMap.remove(token,userId);
-                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,pageInfo,newToken);
+            if(integrals!=null){
+
+                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,pageInfo);
 
             }
-        } catch (Exception e) {            e.printStackTrace();
+        } catch (Exception e) {
 
             log.error(e.getMessage());
         }

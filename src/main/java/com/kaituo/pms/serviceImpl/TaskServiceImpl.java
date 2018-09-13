@@ -394,8 +394,8 @@ public class TaskServiceImpl implements TaskService {
             log.error(e.getMessage(),e);
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
         }
-        String newToken = TokenMap.remove(token , user.getUserId());
-        return OutJSON.getInstance(CodeAndMessageEnum.RECIEVE_THE_TASK_STATUS_SUCCESS , null , newToken);
+
+        return OutJSON.getInstance(CodeAndMessageEnum.RECIEVE_THE_TASK_STATUS_SUCCESS );
     }
 
     /**

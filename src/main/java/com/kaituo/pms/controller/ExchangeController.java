@@ -223,8 +223,8 @@ public class ExchangeController {
             if(list==null)
                 return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
             PageInfo pageInfo = new PageInfo(list, 5);
-            String newToken = TokenMap.remove(token, token1.getUserId());
-            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, pageInfo,newToken);
+
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, pageInfo);
         } catch (Exception e) {
             log.error( e.getMessage());
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);

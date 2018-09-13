@@ -11,7 +11,6 @@ import com.kaituo.pms.service.TokenService;
 import com.kaituo.pms.utils.CodeAndMessageEnum;
 import com.kaituo.pms.utils.ContextHolderUtils;
 import com.kaituo.pms.utils.OutJSON;
-import com.kaituo.pms.utils.TokenMap;
 import com.mysql.cj.xdevapi.JsonArray;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -147,8 +146,8 @@ public class DeptController {
             if(i==1){
 
                 return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);}
-            if(i==2)
-                return OutJSON.getInstance(CodeAndMessageEnum.DEPT_ADD_ERROR);
+            if(i==2){
+                return OutJSON.getInstance(CodeAndMessageEnum.DEPT_ADD_ERROR);}
                 return OutJSON.getInstance(CodeAndMessageEnum.ALL_OPERATION_ERROR);
 
         } catch (Exception e) {

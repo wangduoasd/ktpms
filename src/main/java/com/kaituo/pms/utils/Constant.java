@@ -109,7 +109,7 @@ public class Constant {
     /**
      * 审核状态 驳回
      */
-    public static final int AUDIT_REJECTION = 1;
+    public static final int AUDIT_REJECTION = 2;
 
 
 }
