@@ -284,16 +284,16 @@ public class UserController {
                                @RequestParam(value = "pageSize", defaultValue = "8") int pageSize,
                                @PathVariable("token") String token) {
         try {
-            Integer userId = JwtToken.getUserId(token);
-            if(userId==null){
-                return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            // 检查token并获得userID
+            Token token1 = tokenService.selectUserIdByToken(token);
+            if (null == token1){
+                return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
             }
             PageHelper.startPage(pageNumber, pageSize);
             List<User> list = userService.findAllUser();
             if(list==null)
                 return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
             PageInfo pageInfo = new PageInfo(list, 5);
-            tokenService.upToken(Token.getNewToken(userId,token));
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, pageInfo);
         } catch (Exception e) {
             log.error( e.getMessage());
@@ -312,15 +312,16 @@ public class UserController {
     @GetMapping(value = "authority/one/user/{userId}/{token:.+}")
     public OutJSON findAllUser(@PathVariable(value = "userId") int userId,@PathVariable(value = "token") String token) {
         try {
-            Integer managerId = TokenMap.check(token);
-            if(managerId==null){
-                return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            // 检查token并获得userID
+            Token token1 = tokenService.selectUserIdByToken(token);
+            if (null == token1){
+                return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
             }
             User user = userService.getUserById(userId);
             if(user==null){
                 return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);}
-            String newToken = TokenMap.remove(token, managerId);
-            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,user,newToken);
+
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,user);
         } catch (Exception e) {
             log.error( e.getMessage());
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
@@ -341,15 +342,16 @@ public class UserController {
                                @RequestParam(value = "pageSize", defaultValue = "8") int pageSize,
                                  @PathVariable(value = "token") String token ) {
         try {
-            Integer userId = TokenMap.check(token);
-            if(userId==null){
-                return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            // 检查token并获得userID
+            Token token1 = tokenService.selectUserIdByToken(token);
+            if (null == token1){
+                return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
             }
             PageHelper.startPage(pageNumber, pageSize);
             List<User> list = userService.findByKeyWord(keyword);
             PageInfo pageInfo = new PageInfo(list, 5);
-            String newToken = TokenMap.remove(token, userId);
-            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, pageInfo,newToken);
+
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, pageInfo);
         } catch (Exception e) {
             log.error( e.getMessage());
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
@@ -364,17 +366,19 @@ public class UserController {
      　　* @date 2018/8/23 0023 13:42
      　　*/
     @ResponseBody
-    @PostMapping(value = "authority/one/user/{token:.+}")
-    public OutJSON addUser(User user,@PathVariable(value = "token") String token) {
+    @PostMapping(value = "authority/one/user")
+    public OutJSON addUser(User user) {
         try {
-            Integer userId = TokenMap.check(token);
-            if(userId==null){
-                return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            String token =ContextHolderUtils.getRequest().getHeader("token");
+            // 检查token并获得userID
+            Token token1 = tokenService.selectUserIdByToken(token);
+            if (null == token1){
+                return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
             }
             int i=userService.addUser(user);
             if(i==1){
-                String newToken = TokenMap.remove(token, userId);
-                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,null,newToken);}
+
+                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);}
             if(i==2){
                 return OutJSON.getInstance(CodeAndMessageEnum.USER_ADD_ERROR);
             }
@@ -393,17 +397,19 @@ public class UserController {
      　　* @date 2018/8/23 0023 13:40
      　　*/
     @ResponseBody
-    @PutMapping(value = "authority/one/user/{token:.+}")
-    public OutJSON upUser(User user,@RequestParam("oldUserId") int oldUserId,@PathVariable("token")String token) {
+    @PutMapping(value = "authority/one/user")
+    public OutJSON upUser(User user,@RequestParam("oldUserId") int oldUserId) {
         try {
-            Integer userId =TokenMap.check(token);
-            if(userId==null){
-                return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            String token =ContextHolderUtils.getRequest().getHeader("token");
+            // 检查token并获得userID
+            Token token1 = tokenService.selectUserIdByToken(token);
+            if (null == token1){
+                return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
             }
             int i=userService.upUser(user,oldUserId);
             if(i==1){
-                String newToken = TokenMap.remove(token, userId);
-                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,null,newToken);}
+
+                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);}
             if(i==2){
                 return OutJSON.getInstance(CodeAndMessageEnum.USER_UP_ERROR);
             }
@@ -424,13 +430,14 @@ public class UserController {
     @GetMapping(value = "authority/all/role/users/{token:.+}")
     public OutJSON findUserRole( @PathVariable("token")String token) {
         try {
-            Integer userId = TokenMap.check(token);
-            if(userId==null){
-                return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            // 检查token并获得userID
+            Token token1 = tokenService.selectUserIdByToken(token);
+            if (null == token1){
+                return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
             }
             List<User> userRole = userService.findUserRole();
-            String newToken = TokenMap.remove(token, userId);
-            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,userRole,newToken);
+
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,userRole);
         } catch (Exception e) {
             log.error("" + e.getMessage());
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
@@ -455,15 +462,16 @@ public class UserController {
                                 @PathVariable("token")String token) {
 
         try {
-            Integer userId = TokenMap.check(token);
-            if(userId==null){
-                return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            // 检查token并获得userID
+            Token token1 = tokenService.selectUserIdByToken(token);
+            if (null == token1){
+                return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
             }
             PageHelper.startPage(pageNumber, pageSize);
             List<User> list = userService.findRoleUser();
             PageInfo pageInfo = new PageInfo(list, 5);
-            String newToken = TokenMap.remove(token, userId);
-            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, pageInfo,newToken);
+
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, pageInfo);
         } catch (Exception e) {
             log.error( e.getMessage());
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
@@ -478,17 +486,19 @@ public class UserController {
      　　* @date 2018/8/23 0023 13:40
      　　*/
     @ResponseBody
-    @PutMapping(value = "user/password/{token:.+}")
-    public OutJSON upUserPassword(@PathVariable("token") String token,@RequestParam("oldPassWord") String oldPassWord,@RequestParam("newPassWord")String newPassWord) {
+    @PutMapping(value = "user/password")
+    public OutJSON upUserPassword(@RequestParam("oldPassWord") String oldPassWord,@RequestParam("newPassWord")String newPassWord) {
         try {
-            Integer userId =TokenMap.check(token);
-            if(userId==null){
-                return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            String token =ContextHolderUtils.getRequest().getHeader("token");
+            // 检查token并获得userID
+            Token token1 = tokenService.selectUserIdByToken(token);
+            if (null == token1){
+                return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
             }
-            int i=userService.upUserPassword(userId,oldPassWord,newPassWord);
+            int i=userService.upUserPassword(token1.getUserId(),oldPassWord,newPassWord);
             if(i==1){
-                String newToken = TokenMap.remove(token, userId);
-                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,null,newToken);}
+
+                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);}
             if(i==2){
                 return OutJSON.getInstance(CodeAndMessageEnum.USER_PASSWORD_CHECK);
             }
@@ -507,22 +517,24 @@ public class UserController {
      　　* @date 2018/8/23 0023 13:40
      　　*/
     @ResponseBody
-    @PutMapping(value = "authority/one/user/integral/{operatorId}/{token:.+}")
-    public OutJSON upUserPassword(@PathVariable("token") String token ,
+    @PutMapping(value = "authority/one/user/integral/{operatorId}")
+    public OutJSON upUserPassword(
                                   @RequestParam("changeInt")int changeInt,
                                   @RequestParam("changestr") String changestr,
                                   @PathVariable(value = "operatorId")int operatorId
                                   ) {
 
         try {
-            Integer userId =TokenMap.check(token);
-            if(userId==null){
-                return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            String token =ContextHolderUtils.getRequest().getHeader("token");
+            // 检查token并获得userID
+            Token token1 = tokenService.selectUserIdByToken(token);
+            if (null == token1){
+                return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
             }
-            int i=userService.upUserIntegral(operatorId,userId, changestr, changeInt);
+            int i=userService.upUserIntegral(operatorId,token1.getUserId(), changestr, changeInt);
             if(i==1){
-                String newToken = TokenMap.remove(token, userId);
-                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,null,newToken);}
+
+                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);}
             if(i==2){
                 return OutJSON.getInstance(CodeAndMessageEnum.USER_PASSWORD_CHECK);
             }

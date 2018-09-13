@@ -1,7 +1,9 @@
 package com.kaituo.pms.controller;
 
 import com.kaituo.pms.bean.Role;
+import com.kaituo.pms.bean.Token;
 import com.kaituo.pms.service.RoleService;
+import com.kaituo.pms.service.TokenService;
 import com.kaituo.pms.utils.CodeAndMessageEnum;
 import com.kaituo.pms.utils.JwtToken;
 import com.kaituo.pms.utils.OutJSON;
@@ -30,6 +32,8 @@ import java.util.List;
 public class RoleController {
     @Autowired
     RoleService roleService;
+    @Autowired
+    TokenService tokenService;
     /**
      　  * @Description: 权限管理_添加员工_权限列表
      　　* @param [user, roleArray]
@@ -42,16 +46,16 @@ public class RoleController {
     @GetMapping(value = "authority/all/roles/{token:.+}")
     public OutJSON getAll(@PathVariable("token") String token) {
         try {
-            Integer userId = TokenMap.check(token);
-            if(userId==null){
-                return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            // 检查token并获得userID
+            Token token1 = tokenService.selectUserIdByToken(token);
+            if (null == token1){
+                return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
             }
             List<Role> list = roleService.getAll();
             if(list.size()==0||list==null){
                 return OutJSON.getInstance(CodeAndMessageEnum.ROLE_EMPTY);
             }
-            String newToken = TokenMap.remove(token, userId);
-            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, list,newToken);
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, list);
         } catch (Exception e) {
             log.error( e.getMessage());
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
@@ -70,16 +74,17 @@ public class RoleController {
     @GetMapping(value = "authority/all/roles/{userId}/{token:.+}")
     public OutJSON getRolesById(@PathVariable("userId")int userId,@PathVariable("token") String token) {
         try {
-            Integer managerId = TokenMap.check(token);
-            if(managerId==null){
-                return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            // 检查token并获得userID
+            Token token1 = tokenService.selectUserIdByToken(token);
+            if (null == token1){
+                return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
             }
             List<Role> list = roleService.findRoleById(userId);
             if(list.size()==0||list==null){
                 return OutJSON.getInstance(CodeAndMessageEnum.ROLE_EMPTY);
             }
-            String newToken = TokenMap.remove(token, managerId);
-            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,list,newToken);
+
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,list);
         } catch (Exception e) {
             log.error( e.getMessage());
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
