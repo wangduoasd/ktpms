@@ -375,8 +375,9 @@ public class PrizeControllrt {
                 return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
             }
             boolean b = prizeService.prizeIsEmpty(prizeName);
-            String newToken=TokenMap.remove(token,userId);
+
             if(b){
+                String newToken=TokenMap.remove(token,userId);
                 return OutJSON.getInstance(CodeAndMessageEnum.PRIZENAME_CANADD,b,newToken);
             }
         } catch (Exception e) {
