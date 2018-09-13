@@ -1,6 +1,8 @@
 package com.kaituo.pms.controller;
 
+import com.kaituo.pms.bean.Token;
 import com.kaituo.pms.bean.Version;
+import com.kaituo.pms.service.TokenService;
 import com.kaituo.pms.service.VerinforService;
 import com.kaituo.pms.utils.CodeAndMessageEnum;
 import com.kaituo.pms.utils.OutJSON;
@@ -19,6 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class VerInforController {
     @Autowired
     VerinforService verinforService;
+    @Autowired
+    TokenService tokenService;
     /**
      * 查询版本信息
     * @Description: 个人中心 ，版本信息
@@ -30,15 +34,16 @@ public class VerInforController {
     @GetMapping(value="sys/versioninformaion/{token:.+}")
     public OutJSON findAllVerinfor(@PathVariable("token") String token){
         try {
-            Integer userId=TokenMap.check(token);
-            if(userId==null){
-                return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            // 检查token并获得userID
+            Token token1 = tokenService.selectUserIdByToken(token);
+            if (null == token1){
+                return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
             }
             Version allVerfor = verinforService.findAllVerfor();
             if (allVerfor != null) {
-                String newToken=TokenMap.remove(token,userId);
+
                 //版本信息获取成功
-                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, allVerfor,newToken);
+                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, allVerfor);
             } else {
                 //版本信息获取失败
                 return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
