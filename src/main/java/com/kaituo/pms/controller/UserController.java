@@ -493,6 +493,9 @@ public class UserController {
     @PutMapping(value = "user/password")
     public OutJSON upUserPassword(@RequestParam("oldPassWord") String oldPassWord,@RequestParam("newPassWord")String newPassWord) {
         try {
+            if(newPassWord.isEmpty()||null==newPassWord){
+              return OutJSON.getInstance(CodeAndMessageEnum.User_PASSWORD_ERROR);
+            }
             String token =ContextHolderUtils.getRequest().getHeader("token");
             // 检查token并获得userID
             Token token1 = tokenService.selectUserIdByToken(token);
