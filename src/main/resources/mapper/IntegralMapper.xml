@@ -264,7 +264,7 @@
 
       <arg column="integral_changeInt" jdbcType="INTEGER" javaType="java.lang.Integer" />
       <arg column="integral_changeStr" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="user_name" jdbcType="VARCHAR" javaType="java.lang.String" />
+
 
 
       <arg column="integral_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
@@ -277,7 +277,7 @@
     select * from p_integral
   </select>
   <select id="selectIntegralById" resultMap="MyResultMap">
-    select integral_id,integral_changeInt,integral_changeStr,user_name,integral_time,integral_endnum,operator_name
-    from v_integraldetail where user_id=#{userId}
+    select integral_id,integral_changeInt,integral_changeStr,integral_time,integral_endnum,operator_name
+    from v_integraldetail where user_id=#{userId} order by integral_time desc
   </select>
 </mapper>

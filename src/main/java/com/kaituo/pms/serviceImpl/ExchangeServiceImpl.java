@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -32,7 +33,8 @@ public class ExchangeServiceImpl implements ExchangeService {
     @Override
     @Transactional
     public List<Exchange> findExchangeRecord(int userId) {
-       return exchangeMapper.findExchangeRecord(userId);
+
+        return exchangeMapper.findExchangeRecord(userId);
     }
 
     @Override
@@ -84,6 +86,7 @@ public class ExchangeServiceImpl implements ExchangeService {
         exchange.setPrizeImage(prize.getPrizeImage());
         exchange.setUserId(userId);
         exchange.setExchangeCount(num);
+        exchange.setExchangeTime(new Date());
         exchange.setUserName(userService.findUserById(userId).getUserName());
         exchange.setExchangeTotal(prize.getPrizePrice()*num);
       return   exchangeMapper.insertSelective(exchange);

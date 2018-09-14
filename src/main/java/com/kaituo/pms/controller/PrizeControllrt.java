@@ -122,7 +122,7 @@ public class PrizeControllrt {
           int newCount = number;
           int userId=token1.getUserId();
           Prize prize = prizeService.selectByPrimaryKey(prizeId);
-          User user = userService.findPersonalDetail(token1.getUserId());
+          User user = userService.findUserById(token1.getUserId());
           if(user.getUserStatus()==1||user.getUserStatus()==4){
               return OutJSON.getInstance(CodeAndMessageEnum.PRIZE_USERSTATUS_ERROR);
           }
@@ -157,10 +157,10 @@ public class PrizeControllrt {
            user.setUserIntegral(user.getUserIntegral()-totalPrice);
            prizeService.updateByPrimaryKey(userId,number,prizeId);
            int i = prizeService.exhangePrize(userId, number, prizeId);
-           String changestr = "兑换"+prize.getPrizeName()+"成功";
+           String changestr = "兑换商品"+prize.getPrizeName()+"成功";
            int changint=number*prize.getPrizePrice();
           int endnum=user.getUserIntegral();
-           int k = integralService.addPrizeIntegral(changint, userId, changestr, endnum);
+           int k = integralService.addPrizeIntegral(-changint, userId, changestr, endnum);
            userService.upUserIntegral(user);
 
          return OutJSON.getInstance(CodeAndMessageEnum.FIND_PRIZE_SUCCESS,i);
@@ -181,7 +181,7 @@ public class PrizeControllrt {
    */
    @GetMapping("authority/two/prizes/{pageNumber}/{token:.+}")
    public OutJSON listAllPrize(@PathVariable("pageNumber") int pageNumber,
-                               @RequestParam (value = "pageSize",defaultValue = "6") int pageSize,
+                               @RequestParam (value = "pageSize",defaultValue = "4") int pageSize,
                                @PathVariable("token") String token ){
        try {
            Token token1 = tokenService.selectUserIdByToken(token);
@@ -261,7 +261,7 @@ public class PrizeControllrt {
    */
    @GetMapping("authority/two/prize/s/{prizeName}/{pageNumber}")
    public OutJSON selectServiceByName(@PathVariable("prizeName") String prizeName,
-                                      @RequestParam (value = "pageSize",defaultValue = "6") int pageSize,
+                                      @RequestParam (value = "pageSize",defaultValue = "4") int pageSize,
                                       @PathVariable("pageNumber") int pageNumber){
      try {
          String token =ContextHolderUtils.getRequest().getHeader("token");
@@ -341,6 +341,7 @@ public class PrizeControllrt {
      */
     @PutMapping("authority/two/prize")
     public OutJSON modifyPrize(MultipartFile file, Prize prize) {
+
         Map<String, Object> map = Util.imgUpload(file, Util.getImgRelativePath());
         // 上传的状态码
         int key = (int) map.get("code");

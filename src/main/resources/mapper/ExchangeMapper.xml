@@ -280,7 +280,8 @@
   </resultMap>
   <!--findExchangeRecord-->
   <select id="findExchangeRecord" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select exchange_id,prize_id,user_id,exchange_count,exchange_time,exchange_status,prize_name,prize_image,exchange_total from p_exchange where user_id=#{userId}
+    select exchange_id,prize_id,user_id,exchange_count,exchange_time,exchange_status,prize_name,prize_image,exchange_total from p_exchange
+    where user_id=#{userId} order by exchange_time desc
   </select>
   <!--模糊查询-->
   <select id="selectBykeyWord" resultMap="BaseResultMap">
@@ -296,7 +297,7 @@
         SELECT
         *
         FROM
-        v_exchangelist
+        v_exchangelist order by exchange_time desc
     </select>
   <select id="selectBykeyWord2" parameterType="java.lang.String" resultMap="MyResultMap">
         SELECT
@@ -304,7 +305,7 @@
         FROM
         v_exchangelist
         WHERE
-        prize_name LIKE concat(concat('%',#{keyWord}),'%') or  user_name LIKE concat(concat('%',#{keyWord}),'%')
+        prize_name LIKE concat(concat('%',#{keyWord}),'%') or  user_name LIKE concat(concat('%',#{keyWord}),'%') order by exchange_time desc
     </select>
 
 </mapper>

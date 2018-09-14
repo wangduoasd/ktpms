@@ -4,6 +4,7 @@ import com.kaituo.pms.bean.*;
 import com.kaituo.pms.dao.UserMapper;
 import com.kaituo.pms.service.*;
 import com.kaituo.pms.utils.JwtToken;
+import com.kaituo.pms.utils.MD5Util;
 import org.apache.tomcat.util.security.MD5Encoder;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -12,10 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 import org.springframework.transaction.annotation.Transactional;
 
@@ -141,6 +139,8 @@ public class UserServiceImpl implements UserService/*,UserDetailsService*/ {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public int addUser(User user) {
+        user.setUserPassword(MD5Util.getMD5(user.getUserPassword()));
+        user.setUserInductiontime(new Date());
         UserExample userExample = new UserExample();
         List<User> users = userMapper.selectByExample(userExample);
         for(User u:users){
@@ -154,6 +154,7 @@ public class UserServiceImpl implements UserService/*,UserDetailsService*/ {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public int upUser(User user,int oldUserId) {
+        user.setUserPassword(MD5Util.getMD5(user.getUserPassword()));
         if(user.getUserStatus()==4){user.setUserIntegral(0);}
         if(user.getUserId()==oldUserId){return userMapper.updateByPrimaryKey(user);}
         User userById = findUserById(user.getUserId());
@@ -236,7 +237,7 @@ public class UserServiceImpl implements UserService/*,UserDetailsService*/ {
     public Login login(int userId, String password){
         Login login = new Login();
         User user = userMapper.selectByPrimaryKey(userId);
-        if(user == null||!user.getUserPassword().equals(password)){
+        if(user == null||!user.getUserPassword().equals(password)||user.getUserStatus()==4){
             return null;
         }
         user.setRole(userRoleService.findAllRole(userId));
@@ -244,28 +245,29 @@ public class UserServiceImpl implements UserService/*,UserDetailsService*/ {
         //用于添加用户的权限。只要把用户权限添加到authorities 就万事大吉。
         /*   if(user==null||user.s)*/
         int i=0;
-        Object[] objects = new Object[6];
+        Integer[] src = {1,2,3,4,5,6};
+        Integer [] des=new Integer[6];
         if(user.getRole()!=null) {
             for (Role role : user.getRole()) {
                 if (null == role)
                     break;
-                HashMap<String, String> authorities = new HashMap<>();
-                authorities.put("authority", "" + role.getRoleId());
-                objects[i] = authorities;
+                des[i]=role.getRoleId();
                 i++;
             }
         }
-        login.setAuthorities(objects);
+        List <Integer> objects=new ArrayList(Arrays.asList(src));
+        List <Integer> integers=new ArrayList(Arrays.asList(des));
+        objects.removeAll(integers);
+        login.setAuthorities(objects.toArray());
+        login.setUserName(user.getUserName());
+        login.setIntegral(user.getUserIntegral());
         Token token = new Token();
         try {
             token.setToken(JwtToken.createToken(userId));
         } catch (Exception e) {
             e.printStackTrace();
         }
-/*        token.setUserId(userId);
-        String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
-        token.setFailureTime(Timestamp.valueOf(time));
-        tokenService.addToken(token);*/
+
         return login;
     }
 

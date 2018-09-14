@@ -62,7 +62,7 @@ public class JwtToken {
         // param backups {iss:Service, aud:APP}
         String token = JWT.create().withHeader(map) // header
                 .withJWTId(""+Math.random())
-                .withClaim("iss", "zji") // payload
+                .withClaim("iss", "zjh") // payload
                 .withClaim("aud", "user").withClaim("user_id", null == user_id ? null : user_id.toString())
                 .withIssuedAt(iatDate) // sign time
                 .withExpiresAt(new Date(iatDate.getTime()+1000*60*60*24*3))// expire time

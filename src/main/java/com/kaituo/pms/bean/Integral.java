@@ -10,14 +10,14 @@ public class Integral {
 
     private Integer userId;
 
-    private String username;
+
 
     private Integer integralStartnum;
 
     private String integralChangestr;
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8" , pattern = "yyyy-MM-dd HH:mm:ss")
     private Date integralTime;
 
     private Integer integralChangeint;
@@ -106,16 +106,16 @@ public class Integral {
         this.integralEndnum = integralEndnum;
     }
 
-    public Integral(String username, String integralChangestr, Date integralTime, Integer integralChangeint) {
-        this.username = username;
-        this.integralChangestr = integralChangestr;
-        this.integralTime = integralTime;
-        this.integralChangeint = integralChangeint;
+    public String getOperationName() {
+        return operationName;
     }
 
-    public Integral(Integer integralId, String username, String integralChangestr, Date integralTime, Integer integralChangeint, String operationName, Integer integralEndnum) {
+    public void setOperationName(String operationName) {
+        this.operationName = operationName;
+    }
+
+    public Integral(Integer integralId, Integer integralChangeint, String integralChangestr, Date integralTime, Integer integralEndnum, String operationName) {
         this.integralId = integralId;
-        this.username = username;
         this.integralChangestr = integralChangestr;
         this.integralTime = integralTime;
         this.integralChangeint = integralChangeint;

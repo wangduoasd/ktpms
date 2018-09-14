@@ -23,6 +23,8 @@ public class Login {
     private Object[] authorities;
 
     private String token;
+    private String userName;
+    private Integer integral;
 
     public Object[] getAuthorities() {
         return authorities;
@@ -38,5 +40,31 @@ public class Login {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public Integer getIntegral() {
+        return integral;
+    }
+
+    public void setIntegral(Integer integral) {
+        this.integral = integral;
+    }
+
+    public Login(Object[] authorities, String token, String userName, Integer integral) {
+        this.authorities = authorities;
+        this.token = token;
+        this.userName = userName;
+        this.integral = integral;
+    }
+
+    public Login() {
     }
 }

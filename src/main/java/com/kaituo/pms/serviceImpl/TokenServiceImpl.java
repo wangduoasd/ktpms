@@ -33,7 +33,10 @@ public class TokenServiceImpl implements TokenService {
     }
     @Override
     public Token selectUserIdByToken(String token) {
-        int userId = JwtToken.getUserId(token);
+        Integer userId = JwtToken.getUserId(token);
+        if(null == userId){
+            return null;
+        }
         Token tokenEntity = tokenMapper.selectByPrimaryKey(userId);
         if (null == tokenEntity){
             return null;

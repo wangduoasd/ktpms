@@ -45,7 +45,8 @@ public class IntegralController {
                 return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
             }
             PageHelper.startPage(ageNumber,pageSize);
-            List<Map<String, Object>> integrals = integralService.listIntegeral(token1.getUserId());
+          /*  List<Map<String, Object>> integrals = integralService.listIntegeral(token1.getUserId());*/
+            List<Integral> integrals = integralService.selectIntegralById(token1.getUserId());
             PageInfo pageInfo = new PageInfo(integrals, 5);
             if(integrals!=null){
 

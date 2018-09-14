@@ -17,7 +17,7 @@ public class User implements Serializable {
     private Integer userDeptPosition;
     private  String positionName;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    @JsonFormat(timezone = "GMT+8" , pattern = "yyyy-MM-dd HH:mm:ss")
     private Date userInductiontime;
     private Integer userIntegral;
     private Integer userStatus;

@@ -39,7 +39,8 @@ public  class WebMvcConf extends WebMvcConfigurerAdapter {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.addAllowedOrigin("http://192.168.3.12:8081");
+      /*  config.addAllowedOrigin("http://192.168.3.12:8081");*/
+        config.addAllowedOrigin(CorsConfiguration.ALL);
         config.addAllowedHeader(CorsConfiguration.ALL);
    /*     config.addAllowedHeader("x-requested-with,token");*/
         config.addAllowedMethod(CorsConfiguration.ALL);

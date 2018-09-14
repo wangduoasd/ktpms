@@ -107,9 +107,13 @@ public class UserController {
             if (null == token1){
                 return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
             }
-            Integer userId = token1.getUserId();
 
+            Integer userId = token1.getUserId();
             User personalDetail = userService.findPersonalDetail(userId);
+            if(personalDetail==null){
+                personalDetail=userService.findUserById(userId);
+
+              }
             if (null != personalDetail){
                 return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS , personalDetail);}
 
@@ -495,7 +499,7 @@ public class UserController {
             if (null == token1){
                 return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
             }
-            int i=userService.upUserPassword(token1.getUserId(),oldPassWord,newPassWord);
+            int i=userService.upUserPassword(token1.getUserId(),MD5Util.getMD5(oldPassWord),MD5Util.getMD5(newPassWord));
             if(i==1){
 
                 return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);}
@@ -517,11 +521,11 @@ public class UserController {
      　　* @date 2018/8/23 0023 13:40
      　　*/
     @ResponseBody
-    @PutMapping(value = "authority/one/user/integral/{operatorId}")
+    @PutMapping(value = "authority/one/user/integral/{userId}")
     public OutJSON upUserPassword(
                                   @RequestParam("changeInt")int changeInt,
                                   @RequestParam("changestr") String changestr,
-                                  @PathVariable(value = "operatorId")int operatorId
+                                  @PathVariable(value = "userId")int userId
                                   ) {
 
         try {
@@ -531,7 +535,7 @@ public class UserController {
             if (null == token1){
                 return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
             }
-            int i=userService.upUserIntegral(operatorId,token1.getUserId(), changestr, changeInt);
+            int i=userService.upUserIntegral(token1.getUserId(),userId, changestr, changeInt);
             if(i==1){
 
                 return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);}
@@ -547,21 +551,28 @@ public class UserController {
     @PostMapping("user/login")
         public OutJSON login(@RequestParam("username")String username, @RequestParam("password")String password, HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
         try {
-            int userId=Integer.parseInt(username);
-            Login login = userService.login(userId, password);
-            String token = JwtToken.createToken(userId);
-            login.setToken(token);
-            HttpSession session = httpRequest.getSession();
-            log.info(session.getId());
+
+            int userId= 0;
+            try {
+                userId = Integer.parseInt(username);
+            } catch (NumberFormatException e) {
+                return OutJSON.getInstance(CodeAndMessageEnum.USER_LOGIN_ERROR);
+            }
+            String passwordMD5 = MD5Util.getMD5(password);
+            Login login = userService.login(userId, passwordMD5);
             if (login == null) {
                 return OutJSON.getInstance(CodeAndMessageEnum.USER_LOGIN_ERROR);
             }
+            String token = JwtToken.createToken(userId);
+            login.setToken(token);
+
             if (tokenService.haveToken(userId)){
                 tokenService.delectToken(userId);
             }
             tokenService.addToken(Token.getNewToken(userId,token));
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, login);
         } catch (Exception e) {
+
             log.error(e.getMessage());
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
         }

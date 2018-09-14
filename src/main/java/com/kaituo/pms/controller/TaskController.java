@@ -64,6 +64,14 @@ public class TaskController {
                     int status = Constant.THE_TASK_WAS_SUCCESSFULLY_POSTED;
                     // 处理过期数据
                     taskService.expiredVerification();
+                    // 获得user对象
+                    User user = userService.findUserById(userId);
+                    // 判断员工状态，如果积分冻结或者离职不可领取任务
+                    if(user.getUserStatus().equals(1) ||
+                            user.getUserStatus().equals(4) ||
+                            user.getUserStatus().equals(5)){
+                        return OutJSON.getInstance(CodeAndMessageEnum.RECIEVE_THE_TASK_USER_OR_TASK_NULL);
+                    }
                     //查询所有已发布但未被领取的任务的信息
                     //分页
                     return taskService.getPendingTaskByPage(pageNamber , null , status);
