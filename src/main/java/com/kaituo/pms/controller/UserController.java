@@ -379,6 +379,12 @@ public class UserController {
             if (null == token1){
                 return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
             }
+            if (null == user.getUserPassword()||user.getUserPassword().isEmpty()){
+                return OutJSON.getInstance(CodeAndMessageEnum.USER_PASSWORD_EMPTY_CHECK);
+            }
+            if (user.getUserPassword().length()<6){
+                return OutJSON.getInstance(CodeAndMessageEnum.USER_PASSWORD_LONG_CHECK);
+            }
             int i=userService.addUser(user);
             if(i==1){
 

@@ -126,7 +126,9 @@ NOREASON("-48" , "未知错误"),
     TOKEN_EXPIRED("-41" , "请重新登录"),
     PRIZE_NUMBER_ERROR("-43","请重新输入兑换数量"),
     PRIZE_USERSTATUS_ERROR("-44","请先解除积分冻结或离职后再兑换"),
-    User_PASSWORD_ERROR("-45","请输入新密码")
+    User_PASSWORD_ERROR("-45","请输入新密码"),
+    USER_PASSWORD_EMPTY_CHECK("-46","未输入密码"),
+    USER_PASSWORD_LONG_CHECK("-47","密码长度过短")
     ;
 
     private String code;

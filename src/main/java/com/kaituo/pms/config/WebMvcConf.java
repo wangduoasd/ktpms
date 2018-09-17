@@ -31,6 +31,10 @@ public  class WebMvcConf extends WebMvcConfigurerAdapter {
 
         registry.addResourceHandler("/img/**").addResourceLocations("file:/pms/imgUpload/img/");
 
+        registry.addResourceHandler("/PDF/**").addResourceLocations("file:E:/PDFfile/PDF/");
+
+        registry.addResourceHandler("/PDFfile/**").addResourceLocations("file:/pms/PDFfile/PDF/");
+
         super.addResourceHandlers(registry);
     }
 
