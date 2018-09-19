@@ -1,9 +1,11 @@
 package com.kaituo.pms.serviceImpl;
 
-import com.kaituo.pms.bean.Role;
-import com.kaituo.pms.bean.UserExample;
+import com.kaituo.pms.bean.*;
 import com.kaituo.pms.dao.UserMapper;
 import com.kaituo.pms.service.*;
+import com.kaituo.pms.utils.JwtToken;
+import com.kaituo.pms.utils.MD5Util;
+import org.apache.tomcat.util.security.MD5Encoder;
 import org.springframework.beans.factory.annotation.Autowired;
 /*import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,10 +26,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
-import java.util.ArrayList;
-import java.util.List;
-import com.kaituo.pms.bean.User;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.*;
+
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.xml.crypto.Data;
 
 /**
  * @program: ktpms
@@ -49,6 +54,8 @@ public class UserServiceImpl implements UserService,UserDetailsService {
     PositionService positionService;
     @Autowired
     IntegralService integralService;
+    @Autowired
+    TokenService tokenService;
     /**
     * @Description:  从用户视图中获取除超级管理员外全部数据
     * @Param:
@@ -180,19 +187,22 @@ public class UserServiceImpl implements UserService,UserDetailsService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public int addUser(User user) {
+        user.setUserPassword(MD5Util.getMD5(user.getUserPassword()));
+        user.setUserInductiontime(new Date());
         UserExample userExample = new UserExample();
         List<User> users = userMapper.selectByExample(userExample);
         for(User u:users){
            if( u.getUserId().equals(user.getUserId())){
                return 2;}
         }
-        user.setUserPassword(passwordEncoder.encode(user.getUserPassword()));
+
         return userMapper.insert(user);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public int upUser(User user,int oldUserId) {
+        user.setUserPassword(MD5Util.getMD5(user.getUserPassword()));
         if(user.getUserStatus()==4){user.setUserIntegral(0);}
         if(user.getUserId()==oldUserId){return userMapper.updateByPrimaryKey(user);}
         User userById = findUserById(user.getUserId());
@@ -243,13 +253,13 @@ public class UserServiceImpl implements UserService,UserDetailsService {
 
     @Override
     public int upUserPassword(int userId,String oldPassWord, String newPassWord) {
-        if(!userMapper.selectByPrimaryKey(userId).getUserPassword().equals(passwordEncoder.encode(oldPassWord))){
+        if(!userMapper.selectByPrimaryKey(userId).getUserPassword().equals(oldPassWord)){
 
             return 2;
         }
         User user = new User();
         user.setUserId(userId);
-        user.setUserPassword(passwordEncoder.encode(newPassWord));
+        user.setUserPassword(newPassWord);
         return userMapper.updateByPrimaryKeySelective(user);
 
     }
@@ -260,11 +270,95 @@ public class UserServiceImpl implements UserService,UserDetailsService {
     }
 
     @Override
-    public int upUserIntegral(int operatorId,int userId,String changeStr,int startNum,int endNum) {
-        User user1 = new User();
-        user1.setUserId(userId);
-        user1.setUserIntegral(endNum);
-        userMapper.updateByPrimaryKeySelective(user1);
-        return integralService.addIntegral(operatorId,changeStr,userId,endNum-startNum,endNum );
+    public int upUserIntegral(int operatorId,int userId,String changeStr,int changeInt) {
+        User user = userMapper.getUserById(userId);
+        int startNum=user.getUserIntegral();
+        user.setUserId(userId);
+        user.setUserIntegral(changeInt);
+        userMapper.updateByPrimaryKeySelective(user);
+        return integralService.addIntegral(operatorId,changeStr,userId,changeInt-startNum,changeInt );
+    }
+
+
+
+    @Override
+    public Login login(int userId, String password){
+        Login login = new Login();
+        User user = userMapper.selectByPrimaryKey(userId);
+        if(user == null||!user.getUserPassword().equals(password)||user.getUserStatus()==4){
+            return null;
+        }
+        user.setRole(userRoleService.findAllRole(userId));
+
+        //用于添加用户的权限。只要把用户权限添加到authorities 就万事大吉。
+        /*   if(user==null||user.s)*/
+        int i=0;
+        Integer[] src = {1,2,3,4,5,6};
+        Integer [] des=new Integer[6];
+        if(user.getRole()!=null) {
+            for (Role role : user.getRole()) {
+                if (null == role)
+                    break;
+                des[i]=role.getRoleId();
+                i++;
+            }
+        }
+        List <Integer> objects=new ArrayList(Arrays.asList(src));
+        List <Integer> integers=new ArrayList(Arrays.asList(des));
+        objects.removeAll(integers);
+        login.setAuthorities(objects.toArray());
+        login.setUserName(user.getUserName());
+        login.setIntegral(user.getUserIntegral());
+        Token token = new Token();
+        try {
+            token.setToken(JwtToken.createToken(userId));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return login;
+    }
+
+
+
+    /**
+     　  * @Description: 用户登录校验
+     　　* @param s 用户ID
+     　　* @return org.springframework.security.core.userdetails.UserDetails
+     　　* @throws
+     　　* @author 张金行
+     　　* @date 2018/8/20 0020 17:22
+     　　*/
+/*    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
+        int userId=Integer.parseInt(s);
+        User user = userMapper.selectByPrimaryKey(userId);
+        if(user == null){
+            throw new UsernameNotFoundException("用户名不存在");
+        }
+        user.setRole(userRoleService.findAllRole(userId));
+        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        //用于添加用户的权限。只要把用户权限添加到authorities 就万事大吉。
+        *//*   if(user==null||user.s)*//*
+        for(Role role:user.getRole())
+        {
+            if(null==role)
+                break;
+            authorities.add(new SimpleGrantedAuthority(""+role.getRoleId()));
+
+        }
+
+        return new org.springframework.security.core.userdetails.User(s, user.getUserPassword(),
+                *//*  AuthorityUtils.commaSeparatedStringToAuthorityList("admin");*//*
+                authorities);
+    }*/
+    @Override
+    public int findUserByDeptPositionId(int deptPositionId){
+        UserExample userExample = new UserExample();
+        userExample.createCriteria().andUserDeptPositionEqualTo(deptPositionId);
+        List<User> users = userMapper.selectByExample(userExample);
+        if(users==null){return 0;}
+        return users.size();
     }
 }

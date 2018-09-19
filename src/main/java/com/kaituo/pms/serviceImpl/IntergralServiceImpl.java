@@ -36,37 +36,7 @@ public class IntergralServiceImpl implements IntegralService {
         return integralMapper.countByExample(integralExample);
     }
 
-    @Override
-    public List<Map<String, Object>> listIntegeral(int uid) {
-        IntegralExample integralExample = new IntegralExample();
-        IntegralExample.Criteria criteria = integralExample.createCriteria();
-        criteria.andUserIdEqualTo(uid);
-        List<Map<String, Object>> integralMap = new ArrayList<>();
-        List<Integral> integralList = integralMapper.selectByExample(integralExample);
-        if(null != integralList && integralList.size() > 0){
-            for (Integral integral : integralList) {
-                Map<String , Object> map = new HashMap<>();
-                User user;
-                if (null != integral.getIntegralOperator()) {
-                    user = userMapper.selectByPrimaryKey(integral.getIntegralOperator());
-                    map.put("integralChangeInt" , integral.getIntegralChangeint());
-                    map.put("integralChangeStr" , integral.getIntegralChangestr());
-                    map.put("integralOperator" , user.getUserName());
-                    map.put("integralTime" , integral.getIntegralTime());
-                    map.put("integralEndnum" , integral.getIntegralEndnum());
-                    integralMap.add(map);
-                    //integralMap.add(map);
-                }else {
-                    map.put("integralChangeInt" , integral.getIntegralChangeint());
-                    map.put("integralChangeStr" , integral.getIntegralChangestr());
-                    map.put("integralTime" , integral.getIntegralTime());
-                    map.put("integralEndnum" , integral.getIntegralEndnum());
-                    integralMap.add(map);
-                }
-            }
-        }
-        return integralMap;
-    }
+
 
     @Override
     public int addPrizeIntegral(int changint,int userId,String changestr,int endnum) {
@@ -97,5 +67,8 @@ public class IntergralServiceImpl implements IntegralService {
         return integralMapper.insertSelective(integral);
     }
 
-
+    @Override
+    public List<Integral> selectIntegralById(int userId) {
+       return integralMapper.selectIntegralById(userId);
+    }
 }

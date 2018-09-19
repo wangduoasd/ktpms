@@ -12,22 +12,16 @@ import com.kaituo.pms.dao.TaskMapper;
 import com.kaituo.pms.dao.UserMapper;
 
 import com.kaituo.pms.service.TaskService;
-import com.kaituo.pms.utils.CodeAndMessageEnum;
-import com.kaituo.pms.utils.Constant;
-import com.kaituo.pms.utils.OutJSON;
+import com.kaituo.pms.utils.*;
 
 
-import com.kaituo.pms.utils.Util;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -59,6 +53,7 @@ public class TaskServiceImpl implements TaskService {
             // 查询所有相关任务
             TaskExample example = new TaskExample();
             TaskExample.Criteria criteria = example.createCriteria();
+            criteria.andTaskStatusEqualTo(Constant.THE_TASK_WAS_SUCCESSFULLY_POSTED);
             List<com.kaituo.pms.bean.Task> taskList = taskMapper.selectByExample(example);
             if (null != taskList && taskList.size() > 0) {
                 // 循环对比是否过期
@@ -99,6 +94,7 @@ public class TaskServiceImpl implements TaskService {
             // 查询所有相关任务
             TaskExample example = new TaskExample();
             TaskExample.Criteria criteria = example.createCriteria();
+            criteria.andTaskStatusEqualTo(Constant.THE_TASK_HAS_BEEN_RECEIVED);
             List<com.kaituo.pms.bean.Task> taskList = taskMapper.selectByExample(example);
             if (null != taskList && taskList.size() > 0) {
                 // 循环对比是否超时
@@ -200,6 +196,25 @@ public class TaskServiceImpl implements TaskService {
     }
 
     /**
+     * 查询指定状态指定对象的任务信息的条数
+     *@Description:
+     *@param status :任务状态
+     *@return long
+     *@Author: 苏泽华
+     *@Date: 2018/8/9
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public long countTaskByStatus(int status , int userId) {
+        TaskExample example = new TaskExample();
+        TaskExample.Criteria criteria = example.createCriteria();
+        example.setOrderByClause("task_starttime DESC");
+        criteria.andTaskStatusEqualTo(status);
+        criteria.andUserIdEqualTo(userId);
+        return taskMapper.countByExample(example);
+    }
+
+    /**
      * 将获得的任务数据封装成map（待领取）
      * @Description:  将获得的任务数据封装成map
      * @param pageNumber 目标页数
@@ -211,7 +226,7 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public OutJSON getStatesTaskByPage(Integer pageNumber, Integer pageSize, int status) {
+    public OutJSON getPendingTaskByPage(Integer pageNumber, Integer pageSize, int status) {
         // 如果每页条数为空则将每页条数设为4
         if (null==pageSize){
             pageSize = 4;
@@ -229,10 +244,10 @@ public class TaskServiceImpl implements TaskService {
 
             pageMap.put("total" , total);
             pageMap.put("taskList" , list);
-
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS , pageMap);
         }else {
-            return OutJSON.getInstance(CodeAndMessageEnum.GET_STATES_TASK_BY_PAGE_NULL);
+            String taskList[] = {};
+            return OutJSON.getInstance(CodeAndMessageEnum.GET_STATES_TASK_BY_PAGE_NULL ,taskList);
         }
     }
 
@@ -255,7 +270,7 @@ public class TaskServiceImpl implements TaskService {
         }
 
         // 条数
-        int total = (int)countTaskByStatus(status);
+        int total = (int)countTaskByStatus(status , userId);
         // 有数据就封装map返回上层
         if (0<total){
             // 分页
@@ -266,10 +281,13 @@ public class TaskServiceImpl implements TaskService {
 
             pageMap.put("total" , total);
             pageMap.put("taskList" , list);
-
             return OutJSON.getInstance(CodeAndMessageEnum.COMPLETED_TASK , pageMap);
         }else {
-            return OutJSON.getInstance(CodeAndMessageEnum.GET_STATES_TASK_BY_PAGE_NULL);
+            Map<String , Object> pageMap = new HashMap<>(2);
+
+            pageMap.put("total" , null);
+            pageMap.put("taskList" , null);
+            return OutJSON.getInstance(CodeAndMessageEnum.GET_STATES_TASK_BY_PAGE_NULL , pageMap);
         }
     }
 
@@ -310,10 +328,10 @@ public class TaskServiceImpl implements TaskService {
 
             pageMap.put("total" , total);
             pageMap.put("taskList" , list);
-
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS , pageMap);
         }else {
-            return OutJSON.getInstance(CodeAndMessageEnum.GET_STATES_TASK_BY_PAGE_NULL);
+            List<Task> taskList = new ArrayList();
+            return OutJSON.getInstance(CodeAndMessageEnum.GET_STATES_TASK_BY_PAGE_NULL , taskList);
         }
     }
 
@@ -343,7 +361,7 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public OutJSON recieveTheTask(com.kaituo.pms.bean.Task task , User user) {
+    public OutJSON recieveTheTask(com.kaituo.pms.bean.Task task , User user , String token) {
         try {
             // 修改员工积分操作
             // 员工当前积分
@@ -398,7 +416,8 @@ public class TaskServiceImpl implements TaskService {
             log.error(e.getMessage(),e);
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
         }
-        return OutJSON.getInstance(CodeAndMessageEnum.RECIEVE_THE_TASK_STATUS_SUCCESS);
+
+        return OutJSON.getInstance(CodeAndMessageEnum.RECIEVE_THE_TASK_STATUS_SUCCESS );
     }
 
     /**
@@ -473,10 +492,13 @@ public class TaskServiceImpl implements TaskService {
 
         pageMap.put("total" , total);
         pageMap.put("taskList" , publishedTaskList);
-
         return OutJSON.getInstance(CodeAndMessageEnum.PUBLISHED_TASK_COMPLETED , pageMap);
         }else {
-            return OutJSON.getInstance(CodeAndMessageEnum.GET_STATES_TASK_BY_PAGE_NULL);
+            Map<String , Object> pageMap = new HashMap<>(2);
+
+            pageMap.put("total" , null);
+            pageMap.put("taskList" , null);
+            return OutJSON.getInstance(CodeAndMessageEnum.GET_STATES_TASK_BY_PAGE_NULL , pageMap);
         }
     }
 
@@ -512,7 +534,11 @@ public class TaskServiceImpl implements TaskService {
 
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS , pageMap);
         }else {
-            return OutJSON.getInstance(CodeAndMessageEnum.GET_STATES_TASK_BY_PAGE_NULL);
+            Map<String , Object> pageMap = new HashMap<>(2);
+
+            pageMap.put("total" , null);
+            pageMap.put("taskList" , null);
+            return OutJSON.getInstance(CodeAndMessageEnum.GET_STATES_TASK_BY_PAGE_NULL , pageMap);
         }
     }
 
@@ -541,10 +567,13 @@ public class TaskServiceImpl implements TaskService {
 
             pageMap.put("total" , total);
             pageMap.put("taskList" , invalidTaskList);
-
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS , pageMap);
         }else {
-            return OutJSON.getInstance(CodeAndMessageEnum.GET_STATES_TASK_BY_PAGE_NULL);
+            Map<String , Object> pageMap = new HashMap<>(2);
+
+            pageMap.put("total" , null);
+            pageMap.put("taskList" , null);
+            return OutJSON.getInstance(CodeAndMessageEnum.GET_STATES_TASK_BY_PAGE_NULL , pageMap);
         }
     }
 

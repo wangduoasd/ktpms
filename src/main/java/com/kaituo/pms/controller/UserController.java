@@ -4,27 +4,25 @@ package com.kaituo.pms.controller;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.kaituo.pms.bean.Login;
+import com.kaituo.pms.bean.Token;
 import com.kaituo.pms.bean.User;
+
+import com.kaituo.pms.service.TokenService;
 import com.kaituo.pms.service.UserService;
 
-import com.kaituo.pms.utils.CodeAndMessageEnum;
-import com.kaituo.pms.utils.OutJSON;
-import com.kaituo.pms.utils.Util;
-import com.kaituo.pms.utils.ExportExcelSeedBack;
-import com.sun.deploy.net.HttpResponse;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.catalina.Session;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
-import org.springframework.web.bind.annotation.*;
-import sun.util.locale.provider.LocaleServiceProviderPool;
+import com.kaituo.pms.utils.*;
 
-import javax.servlet.http.Cookie;
+import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.web.bind.annotation.*;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+
 import java.io.OutputStream;
-import java.io.PrintWriter;
+
 import java.util.*;
 
 /**
@@ -39,6 +37,9 @@ import java.util.*;
 public class UserController {
     @Autowired
     UserService userService;
+    @Autowired
+    TokenService tokenService;
+
     /**
     * @Description: 积分排行榜分页
     * @Param:
@@ -46,11 +47,15 @@ public class UserController {
     * @Author: 苏泽华
     * @Date: 2018/8/9
     */
-    @GetMapping("userIntegrals/{pageNumber}")
-    public OutJSON findRankingByPage(@PathVariable(value = "pageNumber") int pageNumber,HttpServletRequest httpRequest) {
+    @GetMapping("userIntegrals/{pageNumber}/{token:.+}")
+    public OutJSON findRankingByPage(@PathVariable(value = "pageNumber") int pageNumber,@PathVariable("token")String token) {
         try {
 
-           log.info(""+httpRequest.getSession().getAttribute("userId"));
+            // 检查token并获得userID
+            Token token1 = tokenService.selectUserIdByToken(token);
+            if (null == token1){
+                return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
             // 每页显示数量设置为8条
             int pageSize = 8;
             // 查询总条数
@@ -89,14 +94,25 @@ public class UserController {
      * @Author: 侯鹏
      * @Date: 2018/8/8
      */
-    @GetMapping(value = "user/{id}")
-    public OutJSON findPersonalDetail(@PathVariable("id") int id) {
+    @GetMapping(value = "user/{token:.+}")
+    public OutJSON findPersonalDetail(@PathVariable("token") String token) {
 
         //个人信息获取成功
         try {
-            User personalDetail = userService.findPersonalDetail(id);
-            if (null != personalDetail)
-                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS , personalDetail);
+            // 检查token并获得userID
+            Token token1 = tokenService.selectUserIdByToken(token);
+            if (null == token1){
+                return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
+
+            Integer userId = token1.getUserId();
+            User personalDetail = userService.findPersonalDetail(userId);
+            if(personalDetail==null){
+                personalDetail=userService.findUserById(userId);
+
+              }
+            if (null != personalDetail){
+                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS , personalDetail);}
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -150,7 +166,7 @@ public class UserController {
                     objs[5] = "无";
                 }
                 // 当前积分
-                objs[6] = user.getUserId();
+                objs[6] = user.getUserIntegral();
                 // 状态
                 switch (user.getUserStatus()) {
                     case 0:
@@ -209,12 +225,18 @@ public class UserController {
      * @Author: 苏泽华
      * @Date: 2018/8/9
      */
-    @GetMapping(value = {"userIntegrals/{pageNumber}/{pageSize}/{condition}" , "userIntegrals/{pageNumber}/{condition}"})
+    @GetMapping(value = {"userIntegrals/{pageNumber}/{pageSize}/{condition}/{token:.+}" , "userIntegrals/{pageNumber}/{condition}/{token:.+}"})
     public OutJSON findRankingByPageAndCondition(@PathVariable(value = "pageNumber")
                                                          int pageNumber,
                                                  @PathVariable(required = false)
                                                          Integer pageSize,
-                                                 @PathVariable(value = "condition" , required = false) String condition) {
+                                                 @PathVariable(value = "condition" , required = false) String condition ,
+                                                 @PathVariable(value = "token") String token) {
+        // 检查token并获得userID
+        Token token1 = tokenService.selectUserIdByToken(token);
+        if (null == token1){
+            return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+        }
         try {
             // 如果没有传每页显示数量设置为8条
             if (null==pageSize){
@@ -236,7 +258,8 @@ public class UserController {
                 data.put("total", total);
                 //员工的信息
                 data.put("User", leaderboardList);
-                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, data);
+
+                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, data );
             } else {
                 return OutJSON.getInstance(CodeAndMessageEnum.FIND_RANKING_BY_PAGE_AND_CONDITION_NULL);
             }
@@ -257,10 +280,16 @@ public class UserController {
      * @date 2018/8/17 0017 17:35
      */
     @ResponseBody
-    @GetMapping(value = "authority/one/users/{pn}")
+    @GetMapping(value = "authority/one/users/{pn}/{token:.+}")
     public OutJSON findAllUser(@PathVariable(value = "pn") int pageNumber,
-                                      @RequestParam(value = "pageSize", defaultValue = "8") int pageSize) {
+                               @RequestParam(value = "pageSize", defaultValue = "8") int pageSize,
+                               @PathVariable("token") String token) {
         try {
+            // 检查token并获得userID
+            Token token1 = tokenService.selectUserIdByToken(token);
+            if (null == token1){
+                return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
             PageHelper.startPage(pageNumber, pageSize);
             List<User> list = userService.findAllUser();
             if(list==null)
@@ -281,10 +310,14 @@ public class UserController {
      * @date 2018/8/17 0017 17:35
      */
     @ResponseBody
-    @GetMapping(value = "authority/one/user/{userId}")
-    public OutJSON findAllUser(@PathVariable(value = "userId") int userId) {
+    @GetMapping(value = "authority/one/user/{userId}/{token:.+}")
+    public OutJSON findAllUser(@PathVariable(value = "userId") int userId,@PathVariable(value = "token") String token) {
         try {
-
+            // 检查token并获得userID
+            Token token1 = tokenService.selectUserIdByToken(token);
+            if (null == token1){
+                return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
             User user = userService.getUserById(userId);
             if(user==null){
                 return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);}
@@ -304,14 +337,21 @@ public class UserController {
      　　* @date 2018/8/23 0023 13:42
      　　*/
     @ResponseBody
-    @GetMapping(value = "authority/one/users/s/{keyword}/{pn}")
+    @GetMapping(value = "authority/one/users/s/{keyword}/{pn}/{token:.+}")
     public OutJSON findByKeyWord(@PathVariable(value = "keyword") String keyword,
                                @PathVariable(value = "pn") int pageNumber,
-                               @RequestParam(value = "pageSize", defaultValue = "8") int pageSize) {
+                               @RequestParam(value = "pageSize", defaultValue = "8") int pageSize,
+                                 @PathVariable(value = "token") String token ) {
         try {
+            // 检查token并获得userID
+            Token token1 = tokenService.selectUserIdByToken(token);
+            if (null == token1){
+                return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
             PageHelper.startPage(pageNumber, pageSize);
             List<User> list = userService.findByKeyWord(keyword);
             PageInfo pageInfo = new PageInfo(list, 5);
+
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, pageInfo);
         } catch (Exception e) {
             log.error( e.getMessage());
@@ -330,9 +370,22 @@ public class UserController {
     @PostMapping(value = "authority/one/user")
     public OutJSON addUser(User user) {
         try {
+            String token =ContextHolderUtils.getRequest().getHeader("token");
+            // 检查token并获得userID
+            Token token1 = tokenService.selectUserIdByToken(token);
+            if (null == token1){
+                return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
+            if (null == user.getUserPassword()||user.getUserPassword().isEmpty()){
+                return OutJSON.getInstance(CodeAndMessageEnum.USER_PASSWORD_EMPTY_CHECK);
+            }
+            if (user.getUserPassword().length()<6){
+                return OutJSON.getInstance(CodeAndMessageEnum.USER_PASSWORD_LONG_CHECK);
+            }
             int i=userService.addUser(user);
-            if(i==1)
-                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);
+            if(i==1){
+
+                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);}
             if(i==2){
                 return OutJSON.getInstance(CodeAndMessageEnum.USER_ADD_ERROR);
             }
@@ -354,9 +407,16 @@ public class UserController {
     @PutMapping(value = "authority/one/user")
     public OutJSON upUser(User user,@RequestParam("oldUserId") int oldUserId) {
         try {
+            String token =ContextHolderUtils.getRequest().getHeader("token");
+            // 检查token并获得userID
+            Token token1 = tokenService.selectUserIdByToken(token);
+            if (null == token1){
+                return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
             int i=userService.upUser(user,oldUserId);
-            if(i==1)
-                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);
+            if(i==1){
+
+                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);}
             if(i==2){
                 return OutJSON.getInstance(CodeAndMessageEnum.USER_UP_ERROR);
             }
@@ -374,10 +434,16 @@ public class UserController {
      　　* @author 张金行
      　　* @date 2018/8/23 0023 13:37
      　　*/
-    @GetMapping(value = "authority/all/role/users")
-    public OutJSON findUserRole() {
+    @GetMapping(value = "authority/all/role/users/{token:.+}")
+    public OutJSON findUserRole( @PathVariable("token")String token) {
         try {
+            // 检查token并获得userID
+            Token token1 = tokenService.selectUserIdByToken(token);
+            if (null == token1){
+                return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
             List<User> userRole = userService.findUserRole();
+
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,userRole);
         } catch (Exception e) {
             log.error("" + e.getMessage());
@@ -397,14 +463,21 @@ public class UserController {
      　　* @date 2018/8/23 0023 13:39
      　　*/
     @ResponseBody
-    @GetMapping(value = "authority/all/role/users/{pn}")
+    @GetMapping(value = "authority/all/role/users/{pn}/{token:.+}")
     public OutJSON findRoleUser(@PathVariable(value = "pn") int pageNumber,
-                                @RequestParam(value = "pageSize", defaultValue = "8") int pageSize) {
+                                @RequestParam(value = "pageSize", defaultValue = "8") int pageSize,
+                                @PathVariable("token")String token) {
 
         try {
+            // 检查token并获得userID
+            Token token1 = tokenService.selectUserIdByToken(token);
+            if (null == token1){
+                return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
             PageHelper.startPage(pageNumber, pageSize);
             List<User> list = userService.findRoleUser();
             PageInfo pageInfo = new PageInfo(list, 5);
+
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, pageInfo);
         } catch (Exception e) {
             log.error( e.getMessage());
@@ -413,7 +486,7 @@ public class UserController {
     }
 
     /**
-     　  * @Description: 综服中心_员工设置_修改员工
+     　  * @Description: 密码修改
      　　* @param [user]
      　　* @return com.kaituo.pms.utils.OutJSON
      　　* @throws
@@ -421,12 +494,22 @@ public class UserController {
      　　* @date 2018/8/23 0023 13:40
      　　*/
     @ResponseBody
-    @PutMapping(value = "user/password/{userId}")
-    public OutJSON upUserPassword(@PathVariable(value = "userId") int userId,@RequestParam("oldPassWord") String oldPassWord,@RequestParam("newPassWord")String newPassWord) {
+    @PutMapping(value = "user/password")
+    public OutJSON upUserPassword(@RequestParam("oldPassWord") String oldPassWord,@RequestParam("newPassWord")String newPassWord) {
         try {
-            int i=userService.upUserPassword(userId,oldPassWord,newPassWord);
-            if(i==1)
-                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);
+            if(newPassWord.isEmpty()||null==newPassWord){
+              return OutJSON.getInstance(CodeAndMessageEnum.User_PASSWORD_ERROR);
+            }
+            String token =ContextHolderUtils.getRequest().getHeader("token");
+            // 检查token并获得userID
+            Token token1 = tokenService.selectUserIdByToken(token);
+            if (null == token1){
+                return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
+            int i=userService.upUserPassword(token1.getUserId(),MD5Util.getMD5(oldPassWord),MD5Util.getMD5(newPassWord));
+            if(i==1){
+
+                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);}
             if(i==2){
                 return OutJSON.getInstance(CodeAndMessageEnum.USER_PASSWORD_CHECK);
             }
@@ -445,17 +528,24 @@ public class UserController {
      　　* @date 2018/8/23 0023 13:40
      　　*/
     @ResponseBody
-    @PutMapping(value = "authority/one/user/integral/{operatorId}/{userId}")
-    public OutJSON upUserPassword(@PathVariable(value = "userId") int userId,
-                                  @RequestParam("startNum")int startNum,
-                                  @RequestParam("endNum")int endNum,
+    @PutMapping(value = "authority/one/user/integral/{userId}")
+    public OutJSON upUserPassword(
+                                  @RequestParam("changeInt")int changeInt,
                                   @RequestParam("changestr") String changestr,
-                                  @PathVariable(value = "operatorId")int operatorId
+                                  @PathVariable(value = "userId")int userId
                                   ) {
+
         try {
-            int i=userService.upUserIntegral(operatorId,userId, changestr, startNum, endNum);
-            if(i==1)
-                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);
+            String token =ContextHolderUtils.getRequest().getHeader("token");
+            // 检查token并获得userID
+            Token token1 = tokenService.selectUserIdByToken(token);
+            if (null == token1){
+                return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
+            int i=userService.upUserIntegral(token1.getUserId(),userId, changestr, changeInt);
+            if(i==1){
+
+                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);}
             if(i==2){
                 return OutJSON.getInstance(CodeAndMessageEnum.USER_PASSWORD_CHECK);
             }
@@ -466,20 +556,49 @@ public class UserController {
         }
     }
     @PostMapping("user/login")
-        public OutJSON login(@RequestParam("username")String username, @RequestParam("password")String password, HttpServletRequest httpRequest, HttpServletResponse httpResponse){
-       try {
-           Login login = userService.login(username, password);
+        public OutJSON login(@RequestParam("username")String username, @RequestParam("password")String password, HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
+        try {
 
-           HttpSession session=httpRequest.getSession();
-           login.setJSESSIONID(session.getId());
-           log.info(session.getId());
-           if (login == null) {
-               return OutJSON.getInstance(CodeAndMessageEnum.USER_LOGIN_ERROR);
-           }
-           return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,login);
-       }catch (Exception e){
-           log.error( e.getMessage());
-           return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
-       }
+            int userId= 0;
+            try {
+                userId = Integer.parseInt(username);
+            } catch (NumberFormatException e) {
+                return OutJSON.getInstance(CodeAndMessageEnum.USER_LOGIN_ERROR);
+            }
+            String passwordMD5 = MD5Util.getMD5(password);
+            Login login = userService.login(userId, passwordMD5);
+            if (login == null) {
+                return OutJSON.getInstance(CodeAndMessageEnum.USER_LOGIN_ERROR);
+            }
+            String token = JwtToken.createToken(userId);
+            login.setToken(token);
+
+            if (tokenService.haveToken(userId)){
+                tokenService.delectToken(userId);
+            }
+            tokenService.addToken(Token.getNewToken(userId,token));
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, login);
+        } catch (Exception e) {
+
+            log.error(e.getMessage());
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
         }
+    }
+    @PutMapping("logout")
+    public OutJSON logout() {
+        try {
+            String token =ContextHolderUtils.getRequest().getHeader("token");
+            // 检查token并获得userID
+            Token token1 = tokenService.selectUserIdByToken(token);
+            if (null == token1){
+                return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
+             tokenService.delectToken(token);
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
+        }
+    }
+
 }

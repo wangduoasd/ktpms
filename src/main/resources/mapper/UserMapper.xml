@@ -9,7 +9,7 @@
       <arg column="user_integral" jdbcType="INTEGER" javaType="java.lang.Integer" />
       <arg column="user_dept_position" jdbcType="INTEGER" javaType="java.lang.Integer" />
       <arg column="user_status" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="user_inductiontime" jdbcType="DATE" javaType="java.util.Date" />
+      <arg column="user_inductiontime" jdbcType="TIMESTAMP" javaType="java.util.Date" />
     </constructor>
   </resultMap>
   <resultMap id="MyResultMap" type="com.kaituo.pms.bean.User" >
@@ -21,7 +21,7 @@
       <arg column="dept_name" jdbcType="VARCHAR" javaType="java.lang.String" />
       <arg column="position_name" jdbcType="VARCHAR" javaType="java.lang.String" />
       <arg column="user_status" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="user_inductiontime" jdbcType="DATE" javaType="java.util.Date" />
+      <arg column="user_inductiontime" jdbcType="TIMESTAMP" javaType="java.util.Date" />
       <arg column="user_password" jdbcType="VARCHAR" javaType="java.lang.String" />
     </constructor>
   </resultMap>
@@ -84,7 +84,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    user_id, user_name, user_password, user_integral, user_dept_position, user_status, 
+    user_id, user_name, user_password, user_integral, user_dept_position, user_status,
     user_inductiontime
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.kaituo.pms.bean.UserExample" >
@@ -102,7 +102,7 @@
     </if>
   </select>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select 
+    select
     <include refid="Base_Column_List" />
     from p_user
     where user_id = #{userId,jdbcType=INTEGER}
@@ -118,12 +118,12 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.kaituo.pms.bean.User" >
-    insert into p_user (user_id, user_name, user_password, 
-      user_integral, user_dept_position, user_status, 
+    insert into p_user (user_id, user_name, user_password,
+      user_integral, user_dept_position, user_status,
       user_inductiontime)
-    values (#{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{userPassword,jdbcType=VARCHAR}, 
-      #{userIntegral,jdbcType=INTEGER}, #{userDeptPosition,jdbcType=INTEGER}, #{userStatus,jdbcType=INTEGER}, 
-      #{userInductiontime,jdbcType=DATE})
+    values (#{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{userPassword,jdbcType=VARCHAR},
+      #{userIntegral,jdbcType=INTEGER}, #{userDeptPosition,jdbcType=INTEGER}, #{userStatus,jdbcType=INTEGER},
+      #{userInductiontime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.kaituo.pms.bean.User" >
     insert into p_user
@@ -170,7 +170,7 @@
         #{userStatus,jdbcType=INTEGER},
       </if>
       <if test="userInductiontime != null" >
-        #{userInductiontime,jdbcType=DATE},
+        #{userInductiontime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -182,7 +182,22 @@
   </select>
   <!--积分排行榜-->
     <select id="selectUsersByView" resultMap="MyResultMap">
-      select * from v_userinfo where user_status != ${5} and user_status != ${4}
+      select * from (SELECT (SELECT @num:=@num+1 FROM (SELECT @num:=0) r)  AS num,v.* FROM
+        (SELECT
+           u.user_name          AS user_name,
+           d.dept_name          AS dept_name,
+           p.position_name      AS position_name,
+           u.user_id            AS user_id,
+           u.user_inductiontime AS user_inductiontime,
+           u.user_integral      AS user_integral,
+           u.user_status        AS user_status,
+           u.user_password      AS user_password
+         FROM p_user u,p_dept d,p_position p
+         WHERE u.user_dept_position = p.dept_position_id
+               AND p.dept_id = d.dept_id
+               AND u.user_status != 4
+               AND u.user_status != 5
+         ORDER BY u.user_integral DESC) v) v_user where user_status != ${5} and user_status != ${4}
     </select>
 
     <update id="updateByExampleSelective" parameterType="map" >
@@ -207,7 +222,7 @@
         user_status = #{record.userStatus,jdbcType=INTEGER},
       </if>
       <if test="record.userInductiontime != null" >
-        user_inductiontime = #{record.userInductiontime,jdbcType=DATE},
+        user_inductiontime = #{record.userInductiontime,jdbcType=TIMESTAMP},
       </if>
     </set>
     <if test="_parameter != null" >
@@ -222,7 +237,7 @@
       user_integral = #{record.userIntegral,jdbcType=INTEGER},
       user_dept_position = #{record.userDeptPosition,jdbcType=INTEGER},
       user_status = #{record.userStatus,jdbcType=INTEGER},
-      user_inductiontime = #{record.userInductiontime,jdbcType=DATE}
+      user_inductiontime = #{record.userInductiontime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -246,7 +261,7 @@
         user_status = #{userStatus,jdbcType=INTEGER},
       </if>
       <if test="userInductiontime != null" >
-        user_inductiontime = #{userInductiontime,jdbcType=DATE},
+        user_inductiontime = #{userInductiontime,jdbcType=TIMESTAMP},
       </if>
     </set>
     where user_id = #{userId,jdbcType=INTEGER}
@@ -258,27 +273,87 @@
       user_integral = #{userIntegral,jdbcType=INTEGER},
       user_dept_position = #{userDeptPosition,jdbcType=INTEGER},
       user_status = #{userStatus,jdbcType=INTEGER},
-      user_inductiontime = #{userInductiontime,jdbcType=DATE}
+      user_inductiontime = #{userInductiontime,jdbcType=TIMESTAMP}
     where user_id = #{userId,jdbcType=INTEGER}
   </update>
 <!--自定义个人信息-->
   <select id="findPersonalDetail" parameterType="java.lang.Integer" resultMap="MyResultMap">
     select num,user_name,dept_name,position_name,user_id,user_inductiontime,user_integral,user_status,user_password
-    from v_userinfo where user_id=#{userId}
+    from (SELECT (SELECT @num:=@num+1 FROM (SELECT @num:=0) r)  AS num,v.* FROM
+    (SELECT
+    u.user_name          AS user_name,
+    d.dept_name          AS dept_name,
+    p.position_name      AS position_name,
+    u.user_id            AS user_id,
+    u.user_inductiontime AS user_inductiontime,
+    u.user_integral      AS user_integral,
+    u.user_status        AS user_status,
+    u.user_password      AS user_password
+    FROM p_user u,p_dept d,p_position p
+    WHERE u.user_dept_position = p.dept_position_id
+    AND p.dept_id = d.dept_id
+    AND u.user_status != 4
+    AND u.user_status != 5
+    ORDER BY u.user_integral DESC) v) v_user where user_id=#{userId}
   <!--积分排行榜的条数-->
   </select>
     <select id="countUsersByView" resultType="java.lang.Long">
-      select count(*) from v_userinfo where user_status != ${5} and user_status != ${4}
+      select count(*) from (SELECT (SELECT @num:=@num+1 FROM (SELECT @num:=0) r)  AS num,v.* FROM
+        (SELECT
+           u.user_name          AS user_name,
+           d.dept_name          AS dept_name,
+           p.position_name      AS position_name,
+           u.user_id            AS user_id,
+           u.user_inductiontime AS user_inductiontime,
+           u.user_integral      AS user_integral,
+           u.user_status        AS user_status,
+           u.user_password      AS user_password
+         FROM p_user u,p_dept d,p_position p
+         WHERE u.user_dept_position = p.dept_position_id
+               AND p.dept_id = d.dept_id
+               AND u.user_status != 4
+               AND u.user_status != 5
+         ORDER BY u.user_integral DESC) v) v_user where user_status != ${5} and user_status != ${4}
     </select>
     <!--按检索条件查询积分排行-->
     <select id="selectUsersByViewAndCondition" parameterType="java.lang.String" resultMap="MyResultMap">
         select num,user_name,dept_name,position_name,user_id,user_inductiontime,user_integral,user_status,user_password
-         from v_userinfo where user_status != ${5} and user_status != ${4} and user_name like concat(concat('%',#{condition}),'%')
+         from (SELECT (SELECT @num:=@num+1 FROM (SELECT @num:=0) r)  AS num,v.* FROM
+           (SELECT
+              u.user_name          AS user_name,
+              d.dept_name          AS dept_name,
+              p.position_name      AS position_name,
+              u.user_id            AS user_id,
+              u.user_inductiontime AS user_inductiontime,
+              u.user_integral      AS user_integral,
+              u.user_status        AS user_status,
+              u.user_password      AS user_password
+            FROM p_user u,p_dept d,p_position p
+            WHERE u.user_dept_position = p.dept_position_id
+                  AND p.dept_id = d.dept_id
+                  AND u.user_status != 4
+                  AND u.user_status != 5
+            ORDER BY u.user_integral DESC) v) v_user where user_status != ${5} and user_status != ${4} and user_name like concat(concat('%',#{condition}),'%')
                                        or dept_name like concat(concat('%',#{condition}),'%')
     </select>
     <!--按检索条件查询积分排行的数据条数-->
     <select id="countUsersByViewAndCondition" resultType="java.lang.Long">
-        select count(*) from v_userinfo where user_status != ${5} and user_status != ${4} and user_name like concat(concat('%',#{condition}),'%')
+        select count(*) from (SELECT (SELECT @num:=@num+1 FROM (SELECT @num:=0) r)  AS num,v.* FROM
+          (SELECT
+             u.user_name          AS user_name,
+             d.dept_name          AS dept_name,
+             p.position_name      AS position_name,
+             u.user_id            AS user_id,
+             u.user_inductiontime AS user_inductiontime,
+             u.user_integral      AS user_integral,
+             u.user_status        AS user_status,
+             u.user_password      AS user_password
+           FROM p_user u,p_dept d,p_position p
+           WHERE u.user_dept_position = p.dept_position_id
+                 AND p.dept_id = d.dept_id
+                 AND u.user_status != 4
+                 AND u.user_status != 5
+           ORDER BY u.user_integral DESC) v) v_user where user_status != ${5} and user_status != ${4} and user_name like concat(concat('%',#{condition}),'%')
                                        or dept_name like concat(concat('%',#{condition}),'%')
     </select>
   <resultMap id="UserSetResultMap" type="com.kaituo.pms.bean.User" >
@@ -289,7 +364,7 @@
       <arg column="dept_name" jdbcType="VARCHAR" javaType="java.lang.String" />
       <arg column="dept_position_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
       <arg column="position_name" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="user_inductiontime" jdbcType="DATE" javaType="java.util.Date" />
+      <arg column="user_inductiontime" jdbcType="TIMESTAMP" javaType="java.util.Date" />
       <arg column="user_integral" jdbcType="INTEGER" javaType="java.lang.Integer" />
       <arg column="user_status" jdbcType="INTEGER" javaType="java.lang.Integer" />
       <arg column="user_password" jdbcType="VARCHAR" javaType="java.lang.String" />
@@ -324,7 +399,7 @@
       <arg column="user_name" jdbcType="VARCHAR" javaType="java.lang.String" />
       <arg column="dept_name" jdbcType="VARCHAR" javaType="java.lang.String" />
       <arg column="position_name" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="induction_time" jdbcType="DATE" javaType="java.util.Date" />
+      <arg column="induction_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
     </constructor>
   </resultMap>
   <select id="findUserRole" resultMap="UserRoleResultMap">
@@ -332,9 +407,25 @@
     </select>
 
   <select id="findRoleUser" resultMap="RoleUserResultMap">
-        SELECT u.user_id,u.user_name,dept_name,position_name,r.induction_time  FROM v_userinfo v,
-(SELECT user_id,induction_time FROM p_user_role GROUP BY user_id) r,p_user u WHERE
-u.`user_id`=r.`user_id` AND u.`user_id`=v.`user_id`
+      SELECT u.user_id,u.user_name,dept_name,position_name,induction_time
+      FROM (SELECT (SELECT @num:=@num+1 FROM (SELECT @num:=0) n)  AS num,v.* FROM
+          (SELECT
+               u.user_name          AS user_name,
+               d.dept_name          AS dept_name,
+               p.position_name      AS position_name,
+               u.user_id            AS user_id,
+               u.user_inductiontime AS user_inductiontime,
+               u.user_integral      AS user_integral,
+               u.user_status        AS user_status,
+               u.user_password      AS user_password
+           FROM p_user u,p_dept d,p_position p
+           WHERE u.user_dept_position = p.dept_position_id
+                 AND p.dept_id = d.dept_id
+                 AND u.user_status != 4
+                 AND u.user_status != 5
+           ORDER BY u.user_integral DESC) v) v_user,
+          (SELECT user_id,induction_time FROM p_user_role GROUP BY user_id,induction_time) r,p_user u WHERE
+          u.`user_id`=r.`user_id` AND u.`user_id`=v_user.`user_id`
     </select>
 
 

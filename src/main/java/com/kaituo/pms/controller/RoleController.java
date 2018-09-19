@@ -1,8 +1,11 @@
 package com.kaituo.pms.controller;
 
 import com.kaituo.pms.bean.Role;
+import com.kaituo.pms.bean.Token;
 import com.kaituo.pms.service.RoleService;
+import com.kaituo.pms.service.TokenService;
 import com.kaituo.pms.utils.CodeAndMessageEnum;
+import com.kaituo.pms.utils.JwtToken;
 import com.kaituo.pms.utils.OutJSON;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +31,8 @@ import java.util.List;
 public class RoleController {
     @Autowired
     RoleService roleService;
+    @Autowired
+    TokenService tokenService;
     /**
      　  * @Description: 权限管理_添加员工_权限列表
      　　* @param [user, roleArray]
@@ -37,9 +42,14 @@ public class RoleController {
      　　* @date 2018/8/23 0023 14:08
      　　*/
     @ResponseBody
-    @GetMapping(value = "authority/all/roles")
-    public OutJSON getAll() {
+    @GetMapping(value = "authority/all/roles/{token:.+}")
+    public OutJSON getAll(@PathVariable("token") String token) {
         try {
+            // 检查token并获得userID
+            Token token1 = tokenService.selectUserIdByToken(token);
+            if (null == token1){
+                return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
             List<Role> list = roleService.getAll();
             if(list.size()==0||list==null){
                 return OutJSON.getInstance(CodeAndMessageEnum.ROLE_EMPTY);
@@ -59,13 +69,20 @@ public class RoleController {
      　　* @date 2018/8/23 0023 14:08
      　　*/
     @ResponseBody
-    @GetMapping(value = "authority/all/roles/{userId}")
-    public OutJSON getRolesById(@PathVariable("userId")int userId) {
+
+    @GetMapping(value = "authority/all/roles/{userId}/{token:.+}")
+    public OutJSON getRolesById(@PathVariable("userId")int userId,@PathVariable("token") String token) {
         try {
+            // 检查token并获得userID
+            Token token1 = tokenService.selectUserIdByToken(token);
+            if (null == token1){
+                return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
             List<Role> list = roleService.findRoleById(userId);
             if(list.size()==0||list==null){
                 return OutJSON.getInstance(CodeAndMessageEnum.ROLE_EMPTY);
             }
+
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,list);
         } catch (Exception e) {
             log.error( e.getMessage());
