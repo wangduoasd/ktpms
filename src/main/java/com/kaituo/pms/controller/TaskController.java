@@ -3,7 +3,6 @@ package com.kaituo.pms.controller;
 import com.kaituo.pms.bean.Task;
 import com.kaituo.pms.bean.Token;
 import com.kaituo.pms.bean.User;
-import com.kaituo.pms.service.RoleService;
 import com.kaituo.pms.service.TaskService;
 import com.kaituo.pms.service.TokenService;
 import com.kaituo.pms.service.UserService;
@@ -35,9 +34,6 @@ public class TaskController {
     @Autowired
     TokenService tokenService;
 
-    @Autowired
-    RoleService roleService;
-
     /**
      * 分页查寻任务
      * @param callPage 调用的页面
@@ -58,7 +54,6 @@ public class TaskController {
         if (null == token1.getUserId()){
             return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
         }
-
         int userId = token1.getUserId();
 
         try {
@@ -121,7 +116,6 @@ public class TaskController {
         if (null == token1.getUserId()){
             return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
         }
-
         int userId = token1.getUserId();
 
         try{
@@ -135,9 +129,7 @@ public class TaskController {
             Task task = taskService.getTask(taskId);
             // 判断是否取得了user和task
             if(null!=user && null!=task){
-                if(task.getTaskStarttime().getTime() > System.currentTimeMillis()){
-                    return OutJSON.getInstance(CodeAndMessageEnum.RECIEVE_THE_TASK_STATUS_TIME_NOT_START);
-                }
+
                 // 检查是否超过结束时间
                 if (task.getTaskEndtime().getTime() > System.currentTimeMillis()) {
 
@@ -225,11 +217,6 @@ public class TaskController {
         if (null == token1){
             return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
         }
-        // 权限控制
-
-        if(roleService.checkRole(Constant.ROLE_TASK,token1.getUserId())){
-            return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
-        }
         // 图片上传并获取上传的状态
         Map<String, Object> map = Util.imgUpload(file , Util.getImgRelativePath());
 
@@ -290,11 +277,6 @@ public class TaskController {
         if (null == token1){
             return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
         }
-        // 权限控制
-
-        if(roleService.checkRole(Constant.ROLE_TASK,token1.getUserId())){
-            return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
-        }
         try {
 
             // 处理过期数据
@@ -347,11 +329,6 @@ public class TaskController {
             return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
         }
 
-        // 权限控制
-        if(roleService.checkRole(Constant.ROLE_TASK,token1.getUserId())){
-            return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
-        }
-
         if (0<taskService.cancelInAdvance(taskId)) {
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS , null);
         } else {
@@ -377,11 +354,6 @@ public class TaskController {
         // 检查token并获得userID
         Token token1 = tokenService.selectUserIdByToken(token);
         if (null == token1){
-            return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
-        }
-        // 权限控制
-
-        if(roleService.checkRole(Constant.ROLE_TASK,token1.getUserId())){
             return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
         }
         switch (auditType){
@@ -435,11 +407,7 @@ public class TaskController {
         if (null == token1){
             return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
         }
-        // 权限控制
 
-        if(roleService.checkRole(Constant.ROLE_TASK,token1.getUserId())){
-            return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
-        }
         // 图片上传并获取上传的状态
       Map<String, Object> map = Util.imgUpload(file , Util.getImgRelativePath());
         // 时间处理
@@ -506,11 +474,7 @@ public class TaskController {
         if (null == token1){
             return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
         }
-        // 权限控制
 
-        if(roleService.checkRole(Constant.ROLE_TASK,token1.getUserId())){
-            return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
-        }
         try {
             Task task = taskService.getTask(taskId);
             if(null == task){

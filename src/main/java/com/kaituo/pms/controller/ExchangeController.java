@@ -6,7 +6,6 @@ import com.kaituo.pms.bean.Exchange;
 import com.kaituo.pms.bean.Token;
 import com.kaituo.pms.error.MyException;
 import com.kaituo.pms.service.ExchangeService;
-import com.kaituo.pms.service.RoleService;
 import com.kaituo.pms.service.TokenService;
 import com.kaituo.pms.utils.*;
 import lombok.extern.slf4j.Slf4j;
@@ -35,8 +34,6 @@ public class ExchangeController {
     ExchangeService exchangeService;
     @Autowired
     TokenService tokenService;
-    @Autowired
-    RoleService roleService;
 
     /**
      * 　  * @Description: 兑换中心_兑换记录_分页查询
@@ -157,11 +154,6 @@ public class ExchangeController {
             if (null == token1){
                 return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
             }
-            // 权限控制
-
-            if(roleService.checkRole(Constant.ROLE_SURE_EXCHANGE,token1.getUserId())){
-                return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
-            }
                 PageHelper.startPage(pageNumber, pageSize);
             //查询视图中所有用户   状态1（显示为：确定兑换），状态2（显示为：已兑换）  的兑换列表
             List<Exchange> list = exchangeService.getExchangeLists();
@@ -190,11 +182,6 @@ public class ExchangeController {
             // 检查token并获得userID
             Token token1 = tokenService.selectUserIdByToken(token);
             if (null == token1){
-                return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
-            }
-            // 权限控制
-
-            if(roleService.checkRole(Constant.ROLE_SURE_EXCHANGE,token1.getUserId())){
                 return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
             }
             int i = exchangeService.updateExchange(exchangeId, 1,2);
@@ -228,11 +215,6 @@ public class ExchangeController {
             // 检查token并获得userID
             Token token1 = tokenService.selectUserIdByToken(token);
             if (null == token1){
-                return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
-            }
-            // 权限控制
-
-            if(roleService.checkRole(Constant.ROLE_SURE_EXCHANGE,token1.getUserId())){
                 return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
             }
             PageHelper.startPage(pageNumber, pageSize);

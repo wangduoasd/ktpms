@@ -5,7 +5,6 @@ import com.kaituo.pms.bean.Token;
 import com.kaituo.pms.service.RoleService;
 import com.kaituo.pms.service.TokenService;
 import com.kaituo.pms.utils.CodeAndMessageEnum;
-import com.kaituo.pms.utils.Constant;
 import com.kaituo.pms.utils.JwtToken;
 import com.kaituo.pms.utils.OutJSON;
 import lombok.extern.slf4j.Slf4j;
@@ -51,11 +50,6 @@ public class RoleController {
             if (null == token1){
                 return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
             }
-            // 权限控制
-
-            if(roleService.checkRole(Constant.ROLE_ALL,token1.getUserId())){
-                return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
-            }
             List<Role> list = roleService.getAll();
             if(list.size()==0||list==null){
                 return OutJSON.getInstance(CodeAndMessageEnum.ROLE_EMPTY);
@@ -82,11 +76,6 @@ public class RoleController {
             // 检查token并获得userID
             Token token1 = tokenService.selectUserIdByToken(token);
             if (null == token1){
-                return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
-            }
-            // 权限控制
-
-            if(roleService.checkRole(Constant.ROLE_ALL,token1.getUserId())){
                 return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
             }
             List<Role> list = roleService.findRoleById(userId);
