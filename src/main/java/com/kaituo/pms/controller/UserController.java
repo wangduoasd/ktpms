@@ -6,26 +6,23 @@ import com.github.pagehelper.PageInfo;
 import com.kaituo.pms.bean.Login;
 import com.kaituo.pms.bean.Token;
 import com.kaituo.pms.bean.User;
-import com.kaituo.pms.dao.TokenMapper;
+
 import com.kaituo.pms.service.TokenService;
 import com.kaituo.pms.service.UserService;
 
 import com.kaituo.pms.utils.*;
-import com.sun.deploy.net.HttpResponse;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.catalina.Session;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
-import org.springframework.web.bind.annotation.*;
-import sun.util.locale.provider.LocaleServiceProviderPool;
 
-import javax.servlet.http.Cookie;
+import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.web.bind.annotation.*;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+
 import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.text.SimpleDateFormat;
+
 import java.util.*;
 
 /**
@@ -169,7 +166,7 @@ public class UserController {
                     objs[5] = "无";
                 }
                 // 当前积分
-                objs[6] = user.getUserId();
+                objs[6] = user.getUserIntegral();
                 // 状态
                 switch (user.getUserStatus()) {
                     case 0:

@@ -175,6 +175,10 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <!--com.kismet.p2p.APPConfig即mainClass-->
+                    <mainClass>com.kaituo.pms.PmsApplication</mainClass>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.mybatis.generator</groupId>

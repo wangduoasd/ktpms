@@ -106,14 +106,14 @@ public class JwtToken {
         return Integer.valueOf(user_id_claim.asString());
     }
 
-    public static void main(String[] args) {
-        String token = null;
-        try {
-            token = JwtToken.createToken(9);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        System.out.println(token);
-        System.out.println(JwtToken.getUserId(token));
-    }
+//    public static void main(String[] args) {
+//        String token = null;
+//        try {
+//            token = JwtToken.createToken(9);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        System.out.println(token);
+//        System.out.println(JwtToken.getUserId(token));
+//    }
 }

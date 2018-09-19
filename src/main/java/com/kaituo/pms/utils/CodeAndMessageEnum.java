@@ -128,7 +128,8 @@ NOREASON("-48" , "未知错误"),
     PRIZE_USERSTATUS_ERROR("-44","请先解除积分冻结或离职后再兑换"),
     User_PASSWORD_ERROR("-45","请输入新密码"),
     USER_PASSWORD_EMPTY_CHECK("-46","未输入密码"),
-    USER_PASSWORD_LONG_CHECK("-47","密码长度过短")
+    USER_PASSWORD_LONG_CHECK("-47","密码长度过短"),
+    DEPT_ADD_OPTION_ERROR("-48","职位不能为空，请先添加部门"),
     ;
 
     private String code;

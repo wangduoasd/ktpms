@@ -5,9 +5,7 @@ import com.kaituo.pms.bean.VersionExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
-import sun.text.normalizer.VersionInfo;
 @Repository
 @Mapper
 public interface VersionMapper {

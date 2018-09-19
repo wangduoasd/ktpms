@@ -141,6 +141,8 @@ public class DeptController {
             if (null == token1){
                 return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
             }
+            if(dept.getPositionArray()==null||dept.getPositionArray().size()==0){
+                return OutJSON.getInstance(CodeAndMessageEnum.DEPT_ADD_OPTION_ERROR);}
 
             int i= deptService.addDept(dept,dept.getPositionArray());
             if(i==1){

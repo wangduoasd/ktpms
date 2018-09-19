@@ -182,7 +182,22 @@
   </select>
   <!--积分排行榜-->
     <select id="selectUsersByView" resultMap="MyResultMap">
-      select * from v_userinfo where user_status != ${5} and user_status != ${4}
+      select * from (SELECT (SELECT @num:=@num+1 FROM (SELECT @num:=0) r)  AS num,v.* FROM
+        (SELECT
+           u.user_name          AS user_name,
+           d.dept_name          AS dept_name,
+           p.position_name      AS position_name,
+           u.user_id            AS user_id,
+           u.user_inductiontime AS user_inductiontime,
+           u.user_integral      AS user_integral,
+           u.user_status        AS user_status,
+           u.user_password      AS user_password
+         FROM p_user u,p_dept d,p_position p
+         WHERE u.user_dept_position = p.dept_position_id
+               AND p.dept_id = d.dept_id
+               AND u.user_status != 4
+               AND u.user_status != 5
+         ORDER BY u.user_integral DESC) v) v_user where user_status != ${5} and user_status != ${4}
     </select>
 
     <update id="updateByExampleSelective" parameterType="map" >
@@ -264,21 +279,81 @@
 <!--自定义个人信息-->
   <select id="findPersonalDetail" parameterType="java.lang.Integer" resultMap="MyResultMap">
     select num,user_name,dept_name,position_name,user_id,user_inductiontime,user_integral,user_status,user_password
-    from v_userinfo where user_id=#{userId}
+    from (SELECT (SELECT @num:=@num+1 FROM (SELECT @num:=0) r)  AS num,v.* FROM
+    (SELECT
+    u.user_name          AS user_name,
+    d.dept_name          AS dept_name,
+    p.position_name      AS position_name,
+    u.user_id            AS user_id,
+    u.user_inductiontime AS user_inductiontime,
+    u.user_integral      AS user_integral,
+    u.user_status        AS user_status,
+    u.user_password      AS user_password
+    FROM p_user u,p_dept d,p_position p
+    WHERE u.user_dept_position = p.dept_position_id
+    AND p.dept_id = d.dept_id
+    AND u.user_status != 4
+    AND u.user_status != 5
+    ORDER BY u.user_integral DESC) v) v_user where user_id=#{userId}
   <!--积分排行榜的条数-->
   </select>
     <select id="countUsersByView" resultType="java.lang.Long">
-      select count(*) from v_userinfo where user_status != ${5} and user_status != ${4}
+      select count(*) from (SELECT (SELECT @num:=@num+1 FROM (SELECT @num:=0) r)  AS num,v.* FROM
+        (SELECT
+           u.user_name          AS user_name,
+           d.dept_name          AS dept_name,
+           p.position_name      AS position_name,
+           u.user_id            AS user_id,
+           u.user_inductiontime AS user_inductiontime,
+           u.user_integral      AS user_integral,
+           u.user_status        AS user_status,
+           u.user_password      AS user_password
+         FROM p_user u,p_dept d,p_position p
+         WHERE u.user_dept_position = p.dept_position_id
+               AND p.dept_id = d.dept_id
+               AND u.user_status != 4
+               AND u.user_status != 5
+         ORDER BY u.user_integral DESC) v) v_user where user_status != ${5} and user_status != ${4}
     </select>
     <!--按检索条件查询积分排行-->
     <select id="selectUsersByViewAndCondition" parameterType="java.lang.String" resultMap="MyResultMap">
         select num,user_name,dept_name,position_name,user_id,user_inductiontime,user_integral,user_status,user_password
-         from v_userinfo where user_status != ${5} and user_status != ${4} and user_name like concat(concat('%',#{condition}),'%')
+         from (SELECT (SELECT @num:=@num+1 FROM (SELECT @num:=0) r)  AS num,v.* FROM
+           (SELECT
+              u.user_name          AS user_name,
+              d.dept_name          AS dept_name,
+              p.position_name      AS position_name,
+              u.user_id            AS user_id,
+              u.user_inductiontime AS user_inductiontime,
+              u.user_integral      AS user_integral,
+              u.user_status        AS user_status,
+              u.user_password      AS user_password
+            FROM p_user u,p_dept d,p_position p
+            WHERE u.user_dept_position = p.dept_position_id
+                  AND p.dept_id = d.dept_id
+                  AND u.user_status != 4
+                  AND u.user_status != 5
+            ORDER BY u.user_integral DESC) v) v_user where user_status != ${5} and user_status != ${4} and user_name like concat(concat('%',#{condition}),'%')
                                        or dept_name like concat(concat('%',#{condition}),'%')
     </select>
     <!--按检索条件查询积分排行的数据条数-->
     <select id="countUsersByViewAndCondition" resultType="java.lang.Long">
-        select count(*) from v_userinfo where user_status != ${5} and user_status != ${4} and user_name like concat(concat('%',#{condition}),'%')
+        select count(*) from (SELECT (SELECT @num:=@num+1 FROM (SELECT @num:=0) r)  AS num,v.* FROM
+          (SELECT
+             u.user_name          AS user_name,
+             d.dept_name          AS dept_name,
+             p.position_name      AS position_name,
+             u.user_id            AS user_id,
+             u.user_inductiontime AS user_inductiontime,
+             u.user_integral      AS user_integral,
+             u.user_status        AS user_status,
+             u.user_password      AS user_password
+           FROM p_user u,p_dept d,p_position p
+           WHERE u.user_dept_position = p.dept_position_id
+                 AND p.dept_id = d.dept_id
+                 AND u.user_status != 4
+                 AND u.user_status != 5
+           ORDER BY u.user_integral DESC) v) v_user where user_status != ${5} and user_status != ${4} and user_name like concat(concat('%',#{condition}),'%')
                                        or dept_name like concat(concat('%',#{condition}),'%')
     </select>
   <resultMap id="UserSetResultMap" type="com.kaituo.pms.bean.User" >
@@ -332,9 +407,25 @@
     </select>
 
   <select id="findRoleUser" resultMap="RoleUserResultMap">
-        SELECT u.user_id,u.user_name,dept_name,position_name,r.induction_time  FROM v_userinfo v,
-(SELECT user_id,induction_time FROM p_user_role GROUP BY user_id) r,p_user u WHERE
-u.`user_id`=r.`user_id` AND u.`user_id`=v.`user_id`
+      SELECT u.user_id,u.user_name,dept_name,position_name,induction_time
+      FROM (SELECT (SELECT @num:=@num+1 FROM (SELECT @num:=0) n)  AS num,v.* FROM
+          (SELECT
+               u.user_name          AS user_name,
+               d.dept_name          AS dept_name,
+               p.position_name      AS position_name,
+               u.user_id            AS user_id,
+               u.user_inductiontime AS user_inductiontime,
+               u.user_integral      AS user_integral,
+               u.user_status        AS user_status,
+               u.user_password      AS user_password
+           FROM p_user u,p_dept d,p_position p
+           WHERE u.user_dept_position = p.dept_position_id
+                 AND p.dept_id = d.dept_id
+                 AND u.user_status != 4
+                 AND u.user_status != 5
+           ORDER BY u.user_integral DESC) v) v_user,
+          (SELECT user_id,induction_time FROM p_user_role GROUP BY user_id,induction_time) r,p_user u WHERE
+          u.`user_id`=r.`user_id` AND u.`user_id`=v_user.`user_id`
     </select>
 
 
