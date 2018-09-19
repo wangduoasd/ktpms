@@ -1,11 +1,9 @@
-/*
 
 package com.kaituo.pms.config;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
@@ -38,10 +36,8 @@ import javax.sql.DataSource;
 @EnableWebSecurity
 @CrossOrigin(origins = "*", maxAge = 3600)
 public class BrowerSecurityConfig extends WebSecurityConfigurerAdapter {
-*/
 /*  @Autowired
-    private CustomAuthenticationProvider customAuthenticationProvider;*//*
-
+    private CustomAuthenticationProvider customAuthenticationProvider;*/
 
 
     @Autowired
@@ -56,17 +52,13 @@ UserServiceImpl userService;
     private MyAuthenctiationSuccessHandler myAuthenctiationSuccessHandler;
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeRequests()
-*/
-/*                .antMatchers("/authority/one/**").hasAnyRole("1","6")
+                .antMatchers("/authority/one/**").hasAnyRole("1","6")
                 .antMatchers("/authority/two/**").hasAnyRole("2","6")
-                .antMatchers("/authority/three/**").hasAnyRole("3","6")a
+                .antMatchers("/authority/three/**").hasAnyRole("3","6")
                 .antMatchers("/authority/four/**").hasAnyRole("4","6")
                 .antMatchers("/authority/five/**").hasAnyRole("5","6")
-                .antMatchers("/authority/all/**").hasAnyRole("6")*//*
-
+                .antMatchers("/authority/all/**").hasAnyRole("6")
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
@@ -74,22 +66,18 @@ UserServiceImpl userService;
                 .loginProcessingUrl("/user/login")//默认post
                 .failureHandler(myAuthenctiationFailureHandler)
                 .successHandler(myAuthenctiationSuccessHandler)
-*/
 /*  .defaultSuccessUrl("/user/success")
 
-.successForwardUrl("/user/success")*//*
-
+.successForwardUrl("/user/success")*/
 
                 .usernameParameter("username").passwordParameter("password").permitAll()
                 .and()
                 .rememberMe()                                   // 记住我相关配置
-*/
 /*                .tokenRepository(persistentTokenRepository())   // 设置TokenRepository
                 // 配置Cookie过期时间
                 .tokenValiditySeconds(securityProperties.getBrowser().getRememberMeSeconds())
                 // 配置UserDetailsService
-                .userDetailsService(rememberMeServices())*//*
-
+                .userDetailsService(rememberMeServices())*/
                 .and().logout().logoutSuccessUrl("/user/loginout").permitAll()
                 .and()
                 .csrf().disable();
@@ -121,12 +109,10 @@ auth.authenticationProvider(authenticationProvider());
       }
 
     }
-*/
 /**
      * 返回 RememberMeServices 实例
      *
-     * @return the remember me services*//*
-
+     * @return the remember me services*/
 
 
     @Bean
@@ -146,7 +132,6 @@ auth.authenticationProvider(authenticationProvider());
     }
 
 
-*/
 /*@Bean
 public FilterRegistrationBean corsFilter() {
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -162,8 +147,7 @@ public FilterRegistrationBean corsFilter() {
     // 这个顺序很重要哦，为避免麻烦请设置在最前
     bean.setOrder(Ordered.HIGHEST_PRECEDENCE);
     return bean;
-}*//*
-
+}*/
 
 @Bean
 public FilterRegistrationBean corsFilter() {
@@ -180,4 +164,3 @@ public FilterRegistrationBean corsFilter() {
 }
 
 }
-*/
