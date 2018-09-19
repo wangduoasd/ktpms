@@ -7,10 +7,8 @@ import com.kaituo.pms.bean.Dept;
 import com.kaituo.pms.bean.Exchange;
 import com.kaituo.pms.bean.Token;
 import com.kaituo.pms.service.DeptService;
-import com.kaituo.pms.service.RoleService;
 import com.kaituo.pms.service.TokenService;
 import com.kaituo.pms.utils.CodeAndMessageEnum;
-import com.kaituo.pms.utils.Constant;
 import com.kaituo.pms.utils.ContextHolderUtils;
 import com.kaituo.pms.utils.OutJSON;
 import com.mysql.cj.xdevapi.JsonArray;
@@ -43,8 +41,6 @@ public class DeptController {
     DeptService deptService;
     @Autowired
     TokenService tokenService;
-    @Autowired
-    RoleService roleService;
     /*
      　  * @Description: 综服中心-员工设置-添加员工  获取所有部门列表
      　　* @param [dept, positionArray]
@@ -60,11 +56,6 @@ public class DeptController {
             // 检查token并获得userID
             Token token1 = tokenService.selectUserIdByToken(token);
             if (null == token1){
-                return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
-            }
-            // 权限控制
-
-            if(roleService.checkRole(Constant.ROLE_USER_SET,token1.getUserId())){
                 return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
             }
             List<Dept> list = deptService.getAllDeptName();
@@ -90,11 +81,6 @@ public class DeptController {
             // 检查token并获得userID
             Token token1 = tokenService.selectUserIdByToken(token);
             if (null == token1){
-                return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
-            }
-            // 权限控制
-
-            if(roleService.checkRole(Constant.ROLE_DEPT,token1.getUserId())){
                 return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
             }
             Dept dept = deptService.getDeptById(deptId);
@@ -127,12 +113,6 @@ public class DeptController {
             if (null == token1){
                 return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
             }
-            // 权限控制
-
-            if(roleService.checkRole(Constant.ROLE_DEPT,token1.getUserId())){
-                return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
-            }
-
             PageHelper.startPage(pageNumber, pageSize);
             List<Dept> list = deptService.findAllDept();
             PageInfo pageInfo = new PageInfo(list, 5);
@@ -161,17 +141,8 @@ public class DeptController {
             if (null == token1){
                 return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
             }
-            // 权限控制
-
-            if(roleService.checkRole(Constant.ROLE_DEPT,token1.getUserId())){
-                return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
-            }
             if(dept.getPositionArray()==null||dept.getPositionArray().size()==0){
                 return OutJSON.getInstance(CodeAndMessageEnum.DEPT_ADD_OPTION_ERROR);}
-                for(String position:dept.getPositionArray()){
-                if(position.length()>5){
-                    return OutJSON.getInstance(CodeAndMessageEnum.DEPT_ADD_OPTION_LENGTH_ERROR);}
-                }
 
             int i= deptService.addDept(dept,dept.getPositionArray());
             if(i==1){
@@ -196,11 +167,7 @@ public class DeptController {
             if (null == token1){
                 return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
             }
-            // 权限控制
 
-            if(roleService.checkRole(Constant.ROLE_DEPT,token1.getUserId())){
-                return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
-            }
             int i = deptService.delDept(deptId);
             if(i==1){
 
@@ -230,17 +197,6 @@ public class DeptController {
             Token token1 = tokenService.selectUserIdByToken(token);
             if (null == token1){
                 return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
-            }
-            // 权限控制
-
-            if(roleService.checkRole(Constant.ROLE_DEPT,token1.getUserId())){
-                return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
-            }
-            if(dept.getPositionArray()==null||dept.getPositionArray().size()==0){
-                return OutJSON.getInstance(CodeAndMessageEnum.DEPT_ADD_OPTION_ERROR);}
-            for(String position:dept.getPositionArray()){
-                if(position.length()>5){
-                    return OutJSON.getInstance(CodeAndMessageEnum.DEPT_ADD_OPTION_LENGTH_ERROR);}
             }
             int i = deptService.upDept(dept,dept.getPositionArray());
             if(i==1){

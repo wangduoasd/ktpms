@@ -4,7 +4,6 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.kaituo.pms.bean.Token;
 import com.kaituo.pms.bean.User;
-import com.kaituo.pms.service.RoleService;
 import com.kaituo.pms.service.TokenService;
 import com.kaituo.pms.service.UserRoleService;
 import com.kaituo.pms.utils.*;
@@ -14,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.security.RolesAllowed;
 import java.util.List;
 
 /**
@@ -33,8 +31,6 @@ public class UserRoleController {
     UserRoleService userRoleService;
     @Autowired
     TokenService tokenService;
-    @Autowired
-    RoleService roleService;
     /**
      　  * @Description: 权限管理_添加员工_确认按钮  添加权限
      　　* @param [user, roleArray]
@@ -53,17 +49,7 @@ public class UserRoleController {
             if (null == token1){
                 return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
             }
-            // 权限控制
-
-            if(roleService.checkRole(Constant.ROLE_ALL,token1.getUserId())){
-                return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
-            }
-
-            if(user.getUserId()==null||user.getRoles()==null||user.getRoles().size()==0){
-                return OutJSON.getInstance(CodeAndMessageEnum.FIND_RANKING_BY_PAGE_NULL);
-            }
             int i=userRoleService.addRoles(user.getRoles(),user.getUserId());
-
             if(i==1){
 
                 return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,null);}
@@ -91,14 +77,6 @@ public class UserRoleController {
             if (null == token1){
                 return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
             }
-            // 权限控制
-
-            if(roleService.checkRole(Constant.ROLE_ALL,token1.getUserId())){
-                return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
-            }
-            if(user.getUserId()==null||user.getRoles()==null||user.getRoles().size()==0){
-                return OutJSON.getInstance(CodeAndMessageEnum.USER_AUTH_ADD_ERROR);
-            }
             int i=userRoleService.upUserRoles(user.getRoles(),user.getUserId());
             if(i==1){
 
@@ -124,11 +102,6 @@ public class UserRoleController {
             // 检查token并获得userID
             Token token1 = tokenService.selectUserIdByToken(token);
             if (null == token1){
-                return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
-            }
-            // 权限控制
-
-            if(roleService.checkRole(Constant.ROLE_ALL,token1.getUserId())){
                 return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
             }
             int i=userRoleService.delUserRole(userId);
