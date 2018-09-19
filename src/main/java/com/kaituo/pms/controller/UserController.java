@@ -533,6 +533,7 @@ public class UserController {
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
         }
     }
+
     /**
      　  * @Description: 密码修改
      　　* @param [user]

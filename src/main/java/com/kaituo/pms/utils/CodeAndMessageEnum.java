@@ -67,7 +67,7 @@ public enum CodeAndMessageEnum {
     //购买成功
     FIND_PRIZE_SUCCESS("1","兑换成功"),
     //用户名或商品为空
-    FIND_USER_PRIZE_NULL("-21","用户名或商品为空"),
+    FIND_USER_PRIZE_NULL("-21","用户名或密码为空"),
     //删除成功
     DELELETE_SUCCESS("1","删除成功"),
     //删除失败
@@ -103,7 +103,6 @@ NOREASON("-48" , "未知错误"),
 
 
 
-
     //ZJH
     //100 用户错误  200 系统错误
     ALL_OPERATION_ERROR("-31","操作失败，请稍后重试"),
@@ -119,7 +118,6 @@ NOREASON("-48" , "未知错误"),
     DEPT_DEL_ERROR("-37","部门尚有员工，请将员工删除后再操作"),
     //信息
     USER_PASSWORD_CHECK("-38","原密码错误"),
-    USER_LOGIN_ERROR("-39","用户名或者密码错误"),
     //权限
     ROLE_EMPTY("-40","权限列表为空，请先添加权限"),
     // token过期
