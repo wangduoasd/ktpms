@@ -130,6 +130,11 @@ NOREASON("-48" , "未知错误"),
     USER_PASSWORD_EMPTY_CHECK("-46","未输入密码"),
     USER_PASSWORD_LONG_CHECK("-47","密码长度过短"),
     DEPT_ADD_OPTION_ERROR("-48","职位不能为空，请先添加部门"),
+    // 待领取任务领取任务按钮—未开始
+    RECIEVE_THE_TASK_STATUS_TIME_NOT_START("-49" , "任务未开始，稍等等吧。"),
+    DEPT_ADD_OPTION_LENGTH_ERROR("-50","职位长度不能超过5位"),
+    USER_ADD_USERID_ERROR("-51","工号不能为零或负数"),
+    USER_AUTH_ADD_ERROR("-52","如要取消该用户所有权限，请直接删除")
     ;
 
     private String code;

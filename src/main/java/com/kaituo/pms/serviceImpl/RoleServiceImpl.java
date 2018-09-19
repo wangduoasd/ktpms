@@ -37,4 +37,17 @@ public class RoleServiceImpl implements RoleService{
     public List<Role> findRoleById(int userId) {
         return roleMapper.findRoleById(userId);
     }
+
+    @Override
+    public boolean checkRole(int roleId , int userId) {
+        // 权限控制
+        List<Role> roleById = findRoleById(userId);
+        boolean falg = true;
+        for(Role r:roleById){
+            if (roleId==r.getRoleId()) {
+                falg = false;
+            }
+        }
+        return falg;
+    }
 }

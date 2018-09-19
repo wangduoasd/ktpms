@@ -32,6 +32,8 @@ public class PrizeControllrt {
     ExchangeService exchangeService;
     @Autowired
     TokenService tokenService;
+    @Autowired
+    RoleService roleService;
 
 
     /**
@@ -188,6 +190,11 @@ public class PrizeControllrt {
            if (null == token1){
                return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
            }
+           // 权限控制
+
+           if(roleService.checkRole(Constant.ROLE_PRIZE_RELEASE,token1.getUserId())){
+               return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+           }
            PageHelper.startPage(pageNumber,pageSize);
            List<Prize> prizes = prizeService.listAllPrize();
            PageInfo<Object> objectPageInfo = new PageInfo(prizes,5);
@@ -215,6 +222,11 @@ public class PrizeControllrt {
        // 检查token并获得userID
        Token token1 = tokenService.selectUserIdByToken(token);
        if (null == token1){
+           return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+       }
+       // 权限控制
+
+       if(roleService.checkRole(Constant.ROLE_PRIZE_RELEASE,token1.getUserId())){
            return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
        }
        Prize prize = prizeService.selectByPrimaryKey(prizeId);
@@ -270,6 +282,11 @@ public class PrizeControllrt {
          if (null == token1){
              return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
          }
+         // 权限控制
+
+         if(roleService.checkRole(Constant.ROLE_PRIZE_RELEASE,token1.getUserId())){
+             return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+         }
          prizeName = "%" + prizeName + "%";
 
          PageHelper.startPage(pageNumber, pageSize);
@@ -301,6 +318,11 @@ public class PrizeControllrt {
             // 检查token并获得userID
             Token token1 = tokenService.selectUserIdByToken(token);
             if (null == token1){
+                return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
+            // 权限控制
+
+            if(roleService.checkRole(Constant.ROLE_PRIZE_RELEASE,token1.getUserId())){
                 return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
             }
             Map<String, Object> map = Util.imgUpload(file, Util.getImgRelativePath());
@@ -341,10 +363,6 @@ public class PrizeControllrt {
      */
     @PutMapping("authority/two/prize")
     public OutJSON modifyPrize(MultipartFile file, Prize prize) {
-
-        Map<String, Object> map = Util.imgUpload(file, Util.getImgRelativePath());
-        // 上传的状态码
-        int key = (int) map.get("code");
         try {
             String token =ContextHolderUtils.getRequest().getHeader("token");
             // 检查token并获得userID
@@ -352,6 +370,14 @@ public class PrizeControllrt {
             if (null == token1){
                 return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
             }
+            // 权限控制
+
+            if(roleService.checkRole(Constant.ROLE_PRIZE_RELEASE,token1.getUserId())){
+                return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
+            Map<String, Object> map = Util.imgUpload(file, Util.getImgRelativePath());
+            // 上传的状态码
+            int key = (int) map.get("code");
             switch (key) {
 
                 // 如果是零
@@ -399,6 +425,11 @@ public class PrizeControllrt {
             if (null == token1){
                 return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
             }
+            // 权限控制
+
+            if(roleService.checkRole(Constant.ROLE_PRIZE_RELEASE,token1.getUserId())){
+                return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
             boolean b = prizeService.prizeIsEmpty(prizeName);
 
             if(b){
@@ -425,6 +456,11 @@ public class PrizeControllrt {
             // 检查token并获得userID
             Token token1 = tokenService.selectUserIdByToken(token);
             if (null == token1){
+                return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
+            // 权限控制
+
+            if(roleService.checkRole(Constant.ROLE_PRIZE_RELEASE,token1.getUserId())){
                 return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
             }
             int goodsshelves = prizeService.goodsshelves(prizeId);
@@ -455,6 +491,11 @@ public class PrizeControllrt {
             if (null == token1){
                 return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
             }
+            // 权限控制
+
+            if(roleService.checkRole(Constant.ROLE_PRIZE_RELEASE,token1.getUserId())){
+                return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
             int goodsshelves = prizeService.goodsoldout(prizeId);
             if(goodsshelves>0){
 
@@ -481,6 +522,11 @@ public class PrizeControllrt {
             // 检查token并获得userID
             Token token1 = tokenService.selectUserIdByToken(token);
             if (null == token1){
+                return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
+            // 权限控制
+
+            if(roleService.checkRole(Constant.ROLE_PRIZE_RELEASE,token1.getUserId())){
                 return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
             }
             Prize prize = prizeService.getPrize(prizeId);

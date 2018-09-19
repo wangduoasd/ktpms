@@ -3,10 +3,13 @@ package com.kaituo.pms.controller;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.kaituo.pms.bean.Position;
+import com.kaituo.pms.bean.Role;
 import com.kaituo.pms.bean.Token;
 import com.kaituo.pms.service.PositionService;
+import com.kaituo.pms.service.RoleService;
 import com.kaituo.pms.service.TokenService;
 import com.kaituo.pms.utils.CodeAndMessageEnum;
+import com.kaituo.pms.utils.Constant;
 import com.kaituo.pms.utils.OutJSON;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +34,8 @@ public class PositionController {
     PositionService positionService;
     @Autowired
     TokenService tokenService;
+    @Autowired
+    RoleService roleService;
     /**
      　  * @Description: 综服中心_员工设置_添加新员工 点击部门后获取职位列表
      　　* @param [deptId]
@@ -48,6 +53,11 @@ public class PositionController {
             if (null == token1){
                 return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
             }
+            // 权限控制
+            if(roleService.checkRole(Constant.ROLE_USER_SET,token1.getUserId())){
+                return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
+
             List<Position> list = positionService.getPositionNameBydeptId(deptId);
             if(list.size()==0||list==null)
                 return OutJSON.getInstance(CodeAndMessageEnum.POSITION_FIND_ERROR);

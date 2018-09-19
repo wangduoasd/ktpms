@@ -4,9 +4,11 @@ package com.kaituo.pms.controller;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.kaituo.pms.bean.Login;
+import com.kaituo.pms.bean.Role;
 import com.kaituo.pms.bean.Token;
 import com.kaituo.pms.bean.User;
 
+import com.kaituo.pms.service.RoleService;
 import com.kaituo.pms.service.TokenService;
 import com.kaituo.pms.service.UserService;
 
@@ -39,6 +41,8 @@ public class UserController {
     UserService userService;
     @Autowired
     TokenService tokenService;
+    @Autowired
+    RoleService roleService;
 
     /**
     * @Description: 积分排行榜分页
@@ -290,10 +294,18 @@ public class UserController {
             if (null == token1){
                 return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
             }
+
+            // 权限控制
+
+            if(roleService.checkRole(Constant.ROLE_USER_SET,token1.getUserId())){
+                return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
+
+
             PageHelper.startPage(pageNumber, pageSize);
             List<User> list = userService.findAllUser();
-            if(list==null)
-                return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
+            if(list==null){
+                return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);}
             PageInfo pageInfo = new PageInfo(list, 5);
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, pageInfo);
         } catch (Exception e) {
@@ -316,6 +328,11 @@ public class UserController {
             // 检查token并获得userID
             Token token1 = tokenService.selectUserIdByToken(token);
             if (null == token1){
+                return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
+            // 权限控制
+
+            if(roleService.checkRole(Constant.ROLE_USER_SET,token1.getUserId())){
                 return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
             }
             User user = userService.getUserById(userId);
@@ -348,6 +365,12 @@ public class UserController {
             if (null == token1){
                 return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
             }
+            // 权限控制
+
+            if(roleService.checkRole(Constant.ROLE_USER_SET,token1.getUserId())){
+                return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
+
             PageHelper.startPage(pageNumber, pageSize);
             List<User> list = userService.findByKeyWord(keyword);
             PageInfo pageInfo = new PageInfo(list, 5);
@@ -375,6 +398,14 @@ public class UserController {
             Token token1 = tokenService.selectUserIdByToken(token);
             if (null == token1){
                 return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
+            // 权限控制
+
+            if(roleService.checkRole(Constant.ROLE_USER_SET,token1.getUserId())){
+                return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
+            if(user.getUserId()<=0){
+                return OutJSON.getInstance(CodeAndMessageEnum.USER_ADD_USERID_ERROR);
             }
             if (null == user.getUserPassword()||user.getUserPassword().isEmpty()){
                 return OutJSON.getInstance(CodeAndMessageEnum.USER_PASSWORD_EMPTY_CHECK);
@@ -413,6 +444,12 @@ public class UserController {
             if (null == token1){
                 return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
             }
+            // 权限控制
+
+            if(roleService.checkRole(Constant.ROLE_USER_SET,token1.getUserId())){
+                return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
+
             int i=userService.upUser(user,oldUserId);
             if(i==1){
 
@@ -442,6 +479,12 @@ public class UserController {
             if (null == token1){
                 return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
             }
+            // 权限控制
+
+            if(roleService.checkRole(Constant.ROLE_ALL,token1.getUserId())){
+                return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
+
             List<User> userRole = userService.findUserRole();
 
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,userRole);
@@ -474,6 +517,12 @@ public class UserController {
             if (null == token1){
                 return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
             }
+            // 权限控制
+
+            if(roleService.checkRole(Constant.ROLE_ALL,token1.getUserId())){
+                return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
+
             PageHelper.startPage(pageNumber, pageSize);
             List<User> list = userService.findRoleUser();
             PageInfo pageInfo = new PageInfo(list, 5);
@@ -541,6 +590,12 @@ public class UserController {
             if (null == token1){
                 return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
             }
+            // 权限控制
+
+            if(roleService.checkRole(Constant.ROLE_USER_SET,token1.getUserId())){
+                return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
+
             int i=userService.upUserIntegral(token1.getUserId(),userId, changestr, changeInt);
             if(i==1){
 
@@ -592,7 +647,10 @@ public class UserController {
             if (null == token1){
                 return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
             }
-             tokenService.delectToken(token);
+            int i = tokenService.delectToken(token);
+            if(i==0){
+                return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);
         } catch (Exception e) {
             log.error(e.getMessage());
