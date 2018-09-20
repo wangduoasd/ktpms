@@ -35,6 +35,10 @@ public  class WebMvcConf extends WebMvcConfigurerAdapter {
 
         registry.addResourceHandler("/PDFfile/**").addResourceLocations("file:/var/www/jifen.kaituo.local/PDF/");
 
+        registry.addResourceHandler("/PDF/**").addResourceLocations("file:E:/PDFfile/PDF/");
+
+        registry.addResourceHandler("/PDFfile/**").addResourceLocations("file:/pms/PDFfile/PDF/");
+
         super.addResourceHandlers(registry);
     }
 
