@@ -61,6 +61,15 @@ public interface TaskService {
      *@Date: 2018/8/9
      */
     long countTaskByStatus(int status);
+    /**
+     * 查询指定状态指定对象的任务信息的条数
+     *@Description:
+     *@param status :任务状态
+     *@return long
+     *@Author: 苏泽华
+     *@Date: 2018/8/9
+     */
+    long countTaskByStatus(int status , int userId);
 
     /**
      * 将获得的任务数据封装成map（待领取）
@@ -72,13 +81,14 @@ public interface TaskService {
      * @Author: 苏泽华
      * @Date: 2018/8/9
      */
-    OutJSON getStatesTaskByPage(Integer pageNamber , Integer pageSize , int status);
+    OutJSON getPendingTaskByPage(Integer pageNamber , Integer pageSize , int status);
     /**
      * 将获得的任务数据封装成map(已完成)
      * @Description:  将获得的任务数据封装成map
      * @param pageNamber 目标页数
      * @param pageSize 每页条数
      * @param status 任务状态值
+     * @param userId
      * @return:
      * @Author: 苏泽华
      * @Date: 2018/8/9
@@ -119,7 +129,7 @@ public interface TaskService {
      * @Date: 2018/8/10
      */
 
-    OutJSON recieveTheTask(Task task , User user);
+    OutJSON recieveTheTask(Task task , User user , String token);
 
     /**
      * 提交审核
@@ -150,7 +160,7 @@ public interface TaskService {
      * @Author: 苏泽华
      * @Date: 2018/8/20
      */
-    OutJSON listPublishedTask(int pageNamber , Integer pageSize) ;
+    OutJSON listPublishedTask(int pageNamber , Integer pageSize);
 
     /**
      * 获取风控中心——任务管理——待审核任务的数据

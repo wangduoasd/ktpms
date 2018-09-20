@@ -17,7 +17,7 @@ public enum CodeAndMessageEnum {
     FIND_RANKING_BY_PAGE_AND_CONDITION_NULL("-3" , "没有得到员工信息"),
 
     // 任务分页-没有找到任务信息
-    GET_STATES_TASK_BY_PAGE_NULL("-4" , "未找到任务"),
+    GET_STATES_TASK_BY_PAGE_NULL("1" , "未找到任务"),
     // 待领取任务领取任务按钮
     RECIEVE_THE_TASK_USER_OR_TASK_NULL("-5" , "没有找到对应员工或任务信息"),
     // 待领取任务领取任务按钮—任务已被领取
@@ -67,7 +67,7 @@ public enum CodeAndMessageEnum {
     //购买成功
     FIND_PRIZE_SUCCESS("1","兑换成功"),
     //用户名或商品为空
-    FIND_USER_PRIZE_NULL("-21","用户名或密码为空"),
+    FIND_USER_PRIZE_NULL("-21","用户名或商品为空"),
     //删除成功
     DELELETE_SUCCESS("1","删除成功"),
     //删除失败
@@ -98,6 +98,7 @@ public enum CodeAndMessageEnum {
     // 没有修改任何商品
     MODIFICATION_EMPTY("-30" , "修改商品失败"),
 
+NOREASON("-48" , "未知错误"),
 
 
 
@@ -107,18 +108,34 @@ public enum CodeAndMessageEnum {
     //100 用户错误  200 系统错误
     ALL_OPERATION_ERROR("-31","操作失败，请稍后重试"),
     //兑换记录
-    EXCHANGE_STATUS_ERROR("-32","兑换失败，请刷新页面重试"),
+    EXCHANGE_STATUS_ERROR("-32","确认领取失败，请刷新页面重试"),
     USER_ADD_ERROR("-33","添加失败，工号已被使用，请更换工号"),
     USER_UP_ERROR("-34","修改失败，工号已被使用，请更换工号"),
     //职位
     POSITION_FIND_ERROR("-35","该部门尚未设置职位"),
     //部门
     DEPT_ADD_ERROR("-36","部门名已被使用，请更换部门名"),
+    DEPT_UP_ERROR("-42","删除职位中有人"),
     DEPT_DEL_ERROR("-37","部门尚有员工，请将员工删除后再操作"),
     //信息
     USER_PASSWORD_CHECK("-38","原密码错误"),
+    USER_LOGIN_ERROR("-39","用户名或者密码错误"),
     //权限
-    ROLE_EMPTY("-39","权限列表为空，请先添加权限");
+    ROLE_EMPTY("-40","权限列表为空，请先添加权限"),
+    // token过期
+    TOKEN_EXPIRED("-41" , "请重新登录"),
+    PRIZE_NUMBER_ERROR("-43","请重新输入兑换数量"),
+    PRIZE_USERSTATUS_ERROR("-44","请先解除积分冻结或离职后再兑换"),
+    User_PASSWORD_ERROR("-45","请输入新密码"),
+    USER_PASSWORD_EMPTY_CHECK("-46","未输入密码"),
+    USER_PASSWORD_LONG_CHECK("-47","密码长度过短"),
+    DEPT_ADD_OPTION_ERROR("-48","职位不能为空，请先添加部门"),
+    // 待领取任务领取任务按钮—未开始
+    RECIEVE_THE_TASK_STATUS_TIME_NOT_START("-49" , "任务未开始，稍等等吧。"),
+    DEPT_ADD_OPTION_LENGTH_ERROR("-50","职位长度不能超过5位"),
+    USER_ADD_USERID_ERROR("-51","工号不能为零或负数"),
+    USER_AUTH_ADD_ERROR("-52","如要取消该用户所有权限，请直接删除")
+    ;
 
     private String code;
 

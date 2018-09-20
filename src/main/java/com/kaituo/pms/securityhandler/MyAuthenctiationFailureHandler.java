@@ -1,6 +1,8 @@
 /*
 package com.kaituo.pms.securityhandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kaituo.pms.utils.CodeAndMessageEnum;
+import com.kaituo.pms.utils.OutJSON;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,13 +25,9 @@ public class MyAuthenctiationFailureHandler extends SimpleUrlAuthenticationFailu
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
                                         AuthenticationException exception) throws IOException, ServletException {
-
-        logger.error("登录失败");
-
         response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
         response.setContentType("application/json;charset=UTF-8");
-
-        response.getWriter().write(objectMapper.writeValueAsString("失败"));
+        response.getWriter().write(objectMapper.writeValueAsString(OutJSON.getInstance(CodeAndMessageEnum.USER_LOGIN_ERROR)));
     }
 }
 */

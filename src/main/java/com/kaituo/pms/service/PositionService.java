@@ -8,4 +8,6 @@ public interface PositionService {
    List<Position> getPositionNameBydeptId(int deptId);
 
    int addPositons(List<String>  positionArray,int deptId);
+
+   List<String> checkPositions(List<String>  positionArray,int deptId);
 }

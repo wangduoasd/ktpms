@@ -109,7 +109,16 @@ public class Constant {
     /**
      * 审核状态 驳回
      */
-    public static final int AUDIT_REJECTION = 1;
+    public static final int AUDIT_REJECTION = 2;
+
+    // 用户权限
+    public static final int ROLE_TASK = 1;
+    public static final int ROLE_DEPT = 2;
+    public static final int ROLE_USER_SET = 3;
+    public static final int ROLE_PRIZE_RELEASE = 4;
+    public static final int ROLE_SURE_EXCHANGE = 5;
+    public static final int ROLE_ALL = 6;
+
 
 
 }

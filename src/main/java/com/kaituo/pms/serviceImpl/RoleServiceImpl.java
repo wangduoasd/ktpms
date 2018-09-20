@@ -24,7 +24,7 @@ public class RoleServiceImpl implements RoleService{
     @Override
     public List<Role> getAll() {
         RoleExample roleExample = new RoleExample();
-
+       roleExample.createCriteria().andRoleIdNotEqualTo(6);
         return roleMapper.selectByExample(roleExample);
     }
     @Override
@@ -36,5 +36,18 @@ public class RoleServiceImpl implements RoleService{
     @Override
     public List<Role> findRoleById(int userId) {
         return roleMapper.findRoleById(userId);
+    }
+
+    @Override
+    public boolean checkRole(int roleId , int userId) {
+        // 权限控制
+        List<Role> roleById = findRoleById(userId);
+        boolean falg = true;
+        for(Role r:roleById){
+            if (roleId==r.getRoleId()) {
+                falg = false;
+            }
+        }
+        return falg;
     }
 }

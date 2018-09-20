@@ -3,14 +3,20 @@ package com.kaituo.pms.controller;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.kaituo.pms.bean.Exchange;
+import com.kaituo.pms.bean.Token;
+import com.kaituo.pms.error.MyException;
 import com.kaituo.pms.service.ExchangeService;
-import com.kaituo.pms.utils.CodeAndMessageEnum;
-import com.kaituo.pms.utils.OutJSON;
+import com.kaituo.pms.service.RoleService;
+import com.kaituo.pms.service.TokenService;
+import com.kaituo.pms.utils.*;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -27,6 +33,10 @@ import java.util.List;
 public class ExchangeController {
     @Autowired
     ExchangeService exchangeService;
+    @Autowired
+    TokenService tokenService;
+    @Autowired
+    RoleService roleService;
 
     /**
      * 　  * @Description: 兑换中心_兑换记录_分页查询
@@ -38,16 +48,23 @@ public class ExchangeController {
      *
      */
     @ResponseBody
-    @GetMapping(value = "exchangeRecords/{userId}/{pageNumber}")
-    public OutJSON getExchangeRecords(@PathVariable("userId") int userId,
+    @GetMapping(value = "exchangeRecords/{token:.+}/{pageNumber}")
+    public OutJSON getExchangeRecords(@PathVariable("token") String token,
                                        @PathVariable(value = "pageNumber") int pageNumber,
                                        @RequestParam(value = "pageSize", defaultValue = "4") int pageSize
                                   ) {
         try {
+            // 检查token并获得userID
+            Token token1 = tokenService.selectUserIdByToken(token);
+            if (null == token1){
+                return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
+
             PageHelper.startPage(pageNumber, pageSize);
             //根据userId查询视图中该用户所有状态 状态1（显示为：未发送）  状态2（显示为：确定领取），状态3（显示为：已经领取）  的兑换列表
-            List<Exchange> list = exchangeService.findExchangeRecord(userId);;
+            List<Exchange> list = exchangeService.findExchangeRecord(token1.getUserId());;
             PageInfo pageInfo = new PageInfo(list, 5);
+
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, pageInfo);
         } catch (Exception e) {
             log.error( e.getMessage());
@@ -64,12 +81,20 @@ public class ExchangeController {
      * 　　* @date 2018/8/8 0008 14:43
      *
      */
+
     @ResponseBody
     @PutMapping(value = "exchangeRecords/{exchangeId}")
     public OutJSON updateExchange(@PathVariable("exchangeId") int exchangeId) {
         try {
+            String token =ContextHolderUtils.getRequest().getHeader("token");
+            // 检查token并获得userID
+            Token token1 = tokenService.selectUserIdByToken(token);
+            if (null == token1){
+                return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
             //根据userId将视图中该用户状态从  状态2（显示为：确定领取）改变到 状态3（显示为：已经领取）
             int i = exchangeService.updateExchange(exchangeId, 2,3);
+
             if(i==1)
                 return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);
             if(i==2){
@@ -92,12 +117,19 @@ public class ExchangeController {
      *
      */
     @ResponseBody
-    @GetMapping(value = "exchangeRecords/{userId}/s/{keyWord}/{pn}")
-    public OutJSON findExchange( @RequestParam(value = "pageSize", defaultValue = "4") int pageSize,  @PathVariable("userId") int userId,@PathVariable("keyWord") String keyWord,@PathVariable(value = "pn") int pageNumber) {
+    @GetMapping(value = "exchangeRecords/{token:.+}/s/{keyWord}/{pn}/{token:.+}")
+    public OutJSON findExchange( @RequestParam(value = "pageSize",
+            defaultValue = "4") int pageSize,  @PathVariable("token") String token,
+                                 @PathVariable("keyWord") String keyWord,@PathVariable(value = "pn") int pageNumber) {
         try {
+            // 检查token并获得userID
+            Token token1 = tokenService.selectUserIdByToken(token);
+            if (null == token1){
+                return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
             PageHelper.startPage(pageNumber, pageSize);
             //根据商品名keyWord搜索视图中该用户所有状态 状态1（显示为：未发送）  状态2（显示为：确定领取），状态3（显示为：已经领取）  的兑换列表
-            List<Exchange> list = exchangeService.selectBykeyWord(keyWord, userId);
+            List<Exchange> list = exchangeService.selectBykeyWord(keyWord, token1.getUserId());
             PageInfo pageInfo = new PageInfo(list, 5);
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, pageInfo);
         } catch (Exception e) {
@@ -115,13 +147,26 @@ public class ExchangeController {
      　　* @date 2018/8/10 0010 10:59
      　　*/
     @ResponseBody
-    @GetMapping(value = "authority/three/exchangeLists/{pn}")
-    public OutJSON getExchangeLists(@PathVariable(value = "pn") int pageNumber, @RequestParam(value = "pageSize", defaultValue = "4") int pageSize) {
+    @GetMapping(value = "authority/three/exchangeLists/{pn}/{token:.+}")
+    public OutJSON getExchangeLists(@PathVariable(value = "pn") int pageNumber,
+                                    @RequestParam(value = "pageSize", defaultValue = "4") int pageSize,
+                                    @PathVariable("token") String token) {
         try {
-            PageHelper.startPage(pageNumber, pageSize);
+            // 检查token并获得userID
+            Token token1 = tokenService.selectUserIdByToken(token);
+            if (null == token1){
+                return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
+            // 权限控制
+
+            if(roleService.checkRole(Constant.ROLE_SURE_EXCHANGE,token1.getUserId())){
+                return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
+                PageHelper.startPage(pageNumber, pageSize);
             //查询视图中所有用户   状态1（显示为：确定兑换），状态2（显示为：已兑换）  的兑换列表
             List<Exchange> list = exchangeService.getExchangeLists();
             PageInfo pageInfo = new PageInfo(list, 5);
+
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, pageInfo);
         } catch (Exception e) {
             log.error("" + e.getMessage());
@@ -138,11 +183,24 @@ public class ExchangeController {
      　　*/
     @ResponseBody
     @PutMapping(value = "authority/three/exchangeLists/{exchangeId}")
-    public OutJSON updateExchangeList(@PathVariable("exchangeId") int exchangeId) {
+    public OutJSON updateExchangeList(@PathVariable("exchangeId") int exchangeId
+                                      ) {
         try {
+            String token =ContextHolderUtils.getRequest().getHeader("token");
+            // 检查token并获得userID
+            Token token1 = tokenService.selectUserIdByToken(token);
+            if (null == token1){
+                return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
+            // 权限控制
+
+            if(roleService.checkRole(Constant.ROLE_SURE_EXCHANGE,token1.getUserId())){
+                return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
             int i = exchangeService.updateExchange(exchangeId, 1,2);
-            if(i==1)
-                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);
+            if(i==1){
+
+                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);}
             if(i==2){
                 return OutJSON.getInstance(CodeAndMessageEnum.EXCHANGE_STATUS_ERROR);
             }
@@ -161,15 +219,29 @@ public class ExchangeController {
      　　* @date 2018/8/10 0010 11:00
      　　*/
     @ResponseBody
-    @GetMapping(value = "authority/three/exchangelists/s/{keyWord}/{pn}")
-    public OutJSON findExchangelists( @RequestParam(value = "pageSize", defaultValue = "4") int pageSize, @PathVariable("keyWord") String keyWord,@PathVariable(value = "pn") int pageNumber) {
+    @GetMapping(value = "authority/three/exchangelists/s/{keyWord}/{pn}/{token:.+}")
+    public OutJSON findExchangelists( @RequestParam(value = "pageSize", defaultValue = "4") int pageSize,
+                                      @PathVariable("keyWord") String keyWord,
+                                      @PathVariable(value = "pn") int pageNumber,
+                                      @PathVariable("token") String token) {
         try {
+            // 检查token并获得userID
+            Token token1 = tokenService.selectUserIdByToken(token);
+            if (null == token1){
+                return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
+            // 权限控制
+
+            if(roleService.checkRole(Constant.ROLE_SURE_EXCHANGE,token1.getUserId())){
+                return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
             PageHelper.startPage(pageNumber, pageSize);
             //根据商品名keyWord搜索视图中该用户所有状态 状态1（显示为：未发送）  状态2（显示为：确定领取），状态3（显示为：已经领取）  的兑换列表
             List<Exchange> list = exchangeService.selectBykeyWord(keyWord);
             if(list==null)
                 return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
             PageInfo pageInfo = new PageInfo(list, 5);
+
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, pageInfo);
         } catch (Exception e) {
             log.error( e.getMessage());

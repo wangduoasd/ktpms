@@ -5,6 +5,7 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
@@ -42,6 +43,7 @@ public class BrowerSecurityConfig extends WebSecurityConfigurerAdapter {
     private CustomAuthenticationProvider customAuthenticationProvider;*//*
 
 
+
     @Autowired
 UserServiceImpl userService;
     @Autowired
@@ -54,11 +56,17 @@ UserServiceImpl userService;
     private MyAuthenctiationSuccessHandler myAuthenctiationSuccessHandler;
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        http.sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeRequests()
 */
-/*              .antMatchers("/user/**").hasAnyRole("User")//个人首页只允许拥有MENBER,SUPER_ADMIN角色的用户访问
-                .antMatchers("/admin/**").hasAnyRole("Admin")
-                .antMatchers("/aa/**").hasAnyRole("Aa")*//*
+/*                .antMatchers("/authority/one/**").hasAnyRole("1","6")
+                .antMatchers("/authority/two/**").hasAnyRole("2","6")
+                .antMatchers("/authority/three/**").hasAnyRole("3","6")a
+                .antMatchers("/authority/four/**").hasAnyRole("4","6")
+                .antMatchers("/authority/five/**").hasAnyRole("5","6")
+                .antMatchers("/authority/all/**").hasAnyRole("6")*//*
+
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
@@ -81,7 +89,6 @@ UserServiceImpl userService;
                 .tokenValiditySeconds(securityProperties.getBrowser().getRememberMeSeconds())
                 // 配置UserDetailsService
                 .userDetailsService(rememberMeServices())*//*
-
 
                 .and().logout().logoutSuccessUrl("/user/loginout").permitAll()
                 .and()
@@ -118,7 +125,8 @@ auth.authenticationProvider(authenticationProvider());
 /**
      * 返回 RememberMeServices 实例
      *
-     * @return the remember me services
+     * @return the remember me services*//*
+
 
 
     @Bean
@@ -135,7 +143,7 @@ auth.authenticationProvider(authenticationProvider());
         // 该参数不是必须的，默认值为 "remember-me", 但如果设置必须和页面复选框的 name 一致
         rememberMeServices.setParameter("remember-me");
         return rememberMeServices;
-    }*//*
+    }
 
 
 */
@@ -155,6 +163,7 @@ public FilterRegistrationBean corsFilter() {
     bean.setOrder(Ordered.HIGHEST_PRECEDENCE);
     return bean;
 }*//*
+
 
 @Bean
 public FilterRegistrationBean corsFilter() {

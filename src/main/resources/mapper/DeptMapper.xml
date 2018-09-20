@@ -6,7 +6,7 @@
       <idArg column="dept_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
       <arg column="dept_name" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="dept_describe" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="dept_inductiontime" javaType="java.util.Date" jdbcType="DATE" />
+      <arg column="dept_inductiontime" javaType="java.util.Date" jdbcType="TIMESTAMP" />
       <arg column="dept_status" javaType="java.lang.Integer" jdbcType="INTEGER" />
     </constructor>
   </resultMap>
@@ -105,7 +105,7 @@
     insert into p_dept (dept_id, dept_name, dept_describe, 
       dept_inductiontime, dept_status)
     values (#{deptId,jdbcType=INTEGER}, #{deptName,jdbcType=VARCHAR}, #{deptDescribe,jdbcType=VARCHAR}, 
-      #{deptInductiontime,jdbcType=DATE}, #{deptStatus,jdbcType=INTEGER})
+      #{deptInductiontime,jdbcType=TIMESTAMP}, #{deptStatus,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.kaituo.pms.bean.Dept">
     insert into p_dept
@@ -137,7 +137,7 @@
         #{deptDescribe,jdbcType=VARCHAR},
       </if>
       <if test="deptInductiontime != null">
-        #{deptInductiontime,jdbcType=DATE},
+        #{deptInductiontime,jdbcType=TIMESTAMP},
       </if>
       <if test="deptStatus != null">
         #{deptStatus,jdbcType=INTEGER},
@@ -163,7 +163,7 @@
         dept_describe = #{record.deptDescribe,jdbcType=VARCHAR},
       </if>
       <if test="record.deptInductiontime != null">
-        dept_inductiontime = #{record.deptInductiontime,jdbcType=DATE},
+        dept_inductiontime = #{record.deptInductiontime,jdbcType=TIMESTAMP},
       </if>
       <if test="record.deptStatus != null">
         dept_status = #{record.deptStatus,jdbcType=INTEGER},
@@ -178,7 +178,7 @@
     set dept_id = #{record.deptId,jdbcType=INTEGER},
       dept_name = #{record.deptName,jdbcType=VARCHAR},
       dept_describe = #{record.deptDescribe,jdbcType=VARCHAR},
-      dept_inductiontime = #{record.deptInductiontime,jdbcType=DATE},
+      dept_inductiontime = #{record.deptInductiontime,jdbcType=TIMESTAMP},
       dept_status = #{record.deptStatus,jdbcType=INTEGER}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -194,7 +194,7 @@
         dept_describe = #{deptDescribe,jdbcType=VARCHAR},
       </if>
       <if test="deptInductiontime != null">
-        dept_inductiontime = #{deptInductiontime,jdbcType=DATE},
+        dept_inductiontime = #{deptInductiontime,jdbcType=TIMESTAMP},
       </if>
       <if test="deptStatus != null">
         dept_status = #{deptStatus,jdbcType=INTEGER},
@@ -206,7 +206,7 @@
     update p_dept
     set dept_name = #{deptName,jdbcType=VARCHAR},
       dept_describe = #{deptDescribe,jdbcType=VARCHAR},
-      dept_inductiontime = #{deptInductiontime,jdbcType=DATE},
+      dept_inductiontime = #{deptInductiontime,jdbcType=TIMESTAMP},
       dept_status = #{deptStatus,jdbcType=INTEGER}
     where dept_id = #{deptId,jdbcType=INTEGER}
   </update>
@@ -222,6 +222,21 @@
     </select>
 
   <select id="checkDept" resultType="java.lang.Integer">
-         SELECT COUNT(0) FROM v_userinfo WHERE dept_name=( SELECT d.`dept_name` FROM p_dept d WHERE dept_id=#{deptId})
+         SELECT COUNT(0) FROM (SELECT (SELECT @num:=@num+1 FROM (SELECT @num:=0) r)  AS num,v.* FROM
+           (SELECT
+              u.user_name          AS user_name,
+              d.dept_name          AS dept_name,
+              p.position_name      AS position_name,
+              u.user_id            AS user_id,
+              u.user_inductiontime AS user_inductiontime,
+              u.user_integral      AS user_integral,
+              u.user_status        AS user_status,
+              u.user_password      AS user_password
+            FROM p_user u,p_dept d,p_position p
+            WHERE u.user_dept_position = p.dept_position_id
+                  AND p.dept_id = d.dept_id
+                  AND u.user_status != 4
+                  AND u.user_status != 5
+            ORDER BY u.user_integral DESC) v) v_user WHERE dept_name=( SELECT d.`dept_name` FROM p_dept d WHERE dept_id=#{deptId})
     </select>
 </mapper>

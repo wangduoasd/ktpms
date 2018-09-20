@@ -21,13 +21,10 @@ public class Login {
 
     void setAuthenticated(boolean var1) throws IllegalArgumentException;*/
     private Object[] authorities;
-    private Object details;
-    private boolean authenticated;
-    private Object principal;
-    private Object credentials;
-    private String name;
-    private String JSESSIONID;
 
+    private String token;
+    private String userName;
+    private Integer integral;
 
     public Object[] getAuthorities() {
         return authorities;
@@ -37,51 +34,37 @@ public class Login {
         this.authorities = authorities;
     }
 
-    public Object getDetails() {
-        return details;
+    public String getToken() {
+        return token;
     }
 
-    public void setDetails(Object details) {
-        this.details = details;
+    public void setToken(String token) {
+        this.token = token;
     }
 
-    public boolean isAuthenticated() {
-        return authenticated;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setAuthenticated(boolean authenticated) {
-        this.authenticated = authenticated;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
-    public Object getPrincipal() {
-        return principal;
+    public Integer getIntegral() {
+        return integral;
     }
 
-    public void setPrincipal(Object principal) {
-        this.principal = principal;
+    public void setIntegral(Integer integral) {
+        this.integral = integral;
     }
 
-    public Object getCredentials() {
-        return credentials;
+    public Login(Object[] authorities, String token, String userName, Integer integral) {
+        this.authorities = authorities;
+        this.token = token;
+        this.userName = userName;
+        this.integral = integral;
     }
 
-    public void setCredentials(Object credentials) {
-        this.credentials = credentials;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getJSESSIONID() {
-        return JSESSIONID;
-    }
-
-    public void setJSESSIONID(String JSESSIONID) {
-        this.JSESSIONID = JSESSIONID;
+    public Login() {
     }
 }

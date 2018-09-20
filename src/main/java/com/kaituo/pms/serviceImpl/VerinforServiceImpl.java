@@ -6,6 +6,9 @@ import com.kaituo.pms.service.VerinforService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
 /**
  * 查询版本信息
  * @Description: 个人中心版本信息
@@ -20,8 +23,8 @@ public class VerinforServiceImpl implements VerinforService {
     VersionMapper versionMapper;
     @Override
     @Transactional
-    public Version findAllVerfor() {
-        Version version = versionMapper.selectAllVersionInfor();
-        return version;
+    public List<Version> findAllVerfor() {
+        List<Version> versions = versionMapper.selectAllVersionInfor();
+        return versions;
     }
 }

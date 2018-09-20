@@ -38,6 +38,6 @@ public interface ExchangeMapper {
 
     List<Exchange> getExchangeLists();
     List<Exchange> selectBykeyWord2(@Param("keyWord") String keyWord);
-    String toUserName(@Param("userId") int userId);
-    String getPrizeImage(@Param("prizeId") int prizeId);
+/*    String toUserName(@Param("userId") int userId);
+    String getPrizeImage(@Param("prizeId") int prizeId);*/
 }

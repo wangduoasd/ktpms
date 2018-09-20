@@ -12,8 +12,10 @@ import com.kaituo.pms.bean.Version;
 import com.kaituo.pms.dao.VersionMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.List;
+
 public interface VerinforService {
 
-   Version findAllVerfor();
+   List<Version> findAllVerfor();
 
 }

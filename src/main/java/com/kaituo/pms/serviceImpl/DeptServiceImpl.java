@@ -64,10 +64,13 @@ public class DeptServiceImpl implements DeptService {
     @Override
     public int upDept(Dept dept, List<String>  positionArray) {
         List<Dept> depts=findDeptByName(dept.getDeptName());
-        if(depts==null||depts.size()==0||depts.get(0).getDeptId()==dept.getDeptId()){
+        if(depts==null||depts.size()==0||depts.get(0).getDeptId().equals(dept.getDeptId())){
             deptMapper.updateByPrimaryKeySelective(dept);
-
-            return positionService.addPositons(positionArray,dept.getDeptId());
+            List<String> strings = positionService.checkPositions(positionArray, dept.getDeptId());
+            if(strings==null){
+                return 3;
+            }
+            return positionService.addPositons(strings,dept.getDeptId());
         }
 
             return 2;
@@ -78,6 +81,8 @@ public class DeptServiceImpl implements DeptService {
 
     @Override
     public Dept getDeptById(int deptId) {
-        return deptMapper.selectByPrimaryKey(deptId);
+        Dept dept = deptMapper.selectByPrimaryKey(deptId);
+        dept.setPositions(positionService.getPositionNameBydeptId(deptId));
+        return dept;
     }
 }

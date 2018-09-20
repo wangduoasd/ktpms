@@ -29,7 +29,11 @@ public  class WebMvcConf extends WebMvcConfigurerAdapter {
 
         registry.addResourceHandler("/image/**").addResourceLocations("file:E:/fileUpload/image/");
 
-        registry.addResourceHandler("/img/**").addResourceLocations("file:/pms/imgUpload/img/");
+        registry.addResourceHandler("/img/**").addResourceLocations("file:/var/www/jifen.kaituo.local/img/");
+
+        registry.addResourceHandler("/PDF/**").addResourceLocations("file:E:/PDFfile/PDF/");
+
+        registry.addResourceHandler("/PDFfile/**").addResourceLocations("file:/var/www/jifen.kaituo.local/PDF/");
 
         super.addResourceHandlers(registry);
     }
@@ -39,8 +43,10 @@ public  class WebMvcConf extends WebMvcConfigurerAdapter {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.addAllowedOrigin("http://192.168.3.12:8081");
+      /*  config.addAllowedOrigin("http://192.168.3.12:8081");*/
+        config.addAllowedOrigin(CorsConfiguration.ALL);
         config.addAllowedHeader(CorsConfiguration.ALL);
+   /*     config.addAllowedHeader("x-requested-with,token");*/
         config.addAllowedMethod(CorsConfiguration.ALL);
         source.registerCorsConfiguration("/**", config);
         FilterRegistrationBean bean = new FilterRegistrationBean(new CorsFilter(source));

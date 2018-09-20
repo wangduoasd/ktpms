@@ -10,17 +10,20 @@ public class Integral {
 
     private Integer userId;
 
+
+
     private Integer integralStartnum;
 
     private String integralChangestr;
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8" , pattern = "yyyy-MM-dd HH:mm:ss")
     private Date integralTime;
 
     private Integer integralChangeint;
 
     private Integer integralOperator;
+    private String operationName;
 
     private Integer integralEndnum;
 
@@ -100,6 +103,23 @@ public class Integral {
     }
 
     public void setIntegralEndnum(Integer integralEndnum) {
+        this.integralEndnum = integralEndnum;
+    }
+
+    public String getOperationName() {
+        return operationName;
+    }
+
+    public void setOperationName(String operationName) {
+        this.operationName = operationName;
+    }
+
+    public Integral(Integer integralId, Integer integralChangeint, String integralChangestr, Date integralTime, Integer integralEndnum, String operationName) {
+        this.integralId = integralId;
+        this.integralChangestr = integralChangestr;
+        this.integralTime = integralTime;
+        this.integralChangeint = integralChangeint;
+        this.operationName = operationName;
         this.integralEndnum = integralEndnum;
     }
 }
