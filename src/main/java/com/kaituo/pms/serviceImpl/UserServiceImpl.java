@@ -154,9 +154,14 @@ public class UserServiceImpl implements UserService/*,UserDetailsService*/ {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public int upUser(User user,int oldUserId) {
-        user.setUserPassword(MD5Util.getMD5(user.getUserPassword()));
+        if(user.getUserPassword().isEmpty()||user.getUserPassword()==null){
+            user.setUserPassword(userMapper.selectByPrimaryKey(user.getUserId()).getUserPassword());
+        }else{
+        user.setUserPassword(MD5Util.getMD5(user.getUserPassword()));}
         if(user.getUserStatus()==4){user.setUserIntegral(0);}
-        if(user.getUserId()==oldUserId){return userMapper.updateByPrimaryKey(user);}
+        if(user.getUserId()==oldUserId){
+            return userMapper.updateByPrimaryKey(user);
+        }
         User userById = findUserById(user.getUserId());
         if(userById!=null){
             return 2;}
@@ -226,9 +231,9 @@ public class UserServiceImpl implements UserService/*,UserDetailsService*/ {
         User user = userMapper.getUserById(userId);
         int startNum=user.getUserIntegral();
         user.setUserId(userId);
-        user.setUserIntegral(changeInt);
+        user.setUserIntegral(startNum+changeInt);
         userMapper.updateByPrimaryKeySelective(user);
-        return integralService.addIntegral(operatorId,changeStr,userId,changeInt-startNum,changeInt );
+        return integralService.addIntegral(operatorId,changeStr,userId,changeInt,startNum+changeInt );
     }
 
 

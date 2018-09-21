@@ -134,7 +134,9 @@ NOREASON("-48" , "未知错误"),
     RECIEVE_THE_TASK_STATUS_TIME_NOT_START("-49" , "任务未开始，稍等等吧。"),
     DEPT_ADD_OPTION_LENGTH_ERROR("-50","职位长度不能超过5位"),
     USER_ADD_USERID_ERROR("-51","工号不能为零或负数"),
-    USER_AUTH_ADD_ERROR("-52","如要取消该用户所有权限，请直接删除")
+    USER_AUTH_ADD_ERROR("-52","如要取消该用户所有权限，请直接删除"),
+    USER_STATUS_ERROR("-53","用户积分已被冻结"),
+    KEY_WORD_EMPTY("-54","请输入搜索关键词")
     ;
 
     private String code;

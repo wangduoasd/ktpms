@@ -121,6 +121,11 @@ public class TaskController {
         if (null == token1.getUserId()){
             return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
         }
+        // 判断是否是积分冻结
+        User userById = userService.findUserById(token1.getUserId());
+        if(userById.getUserStatus()==1){
+            return OutJSON.getInstance(CodeAndMessageEnum.USER_STATUS_ERROR);
+        }
 
         int userId = token1.getUserId();
 
@@ -196,6 +201,7 @@ public class TaskController {
         if (null == token1.getUserId()){
             return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
         }
+
         int userId = token1.getUserId();
 
         Task task = taskService.getTask(taskId);

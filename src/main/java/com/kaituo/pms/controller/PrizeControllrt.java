@@ -43,8 +43,8 @@ public class PrizeControllrt {
      * @Author: 侯鹏
      * @Date: 2018/8/14
      */
-    @GetMapping( value ="prizes/s/{prizeName}/{pageNumber}/{token:.+}")
-    public OutJSON findByName(@PathVariable("prizeName") String prizeName,
+    @GetMapping( value ="prizes/{prizeName}/{pageNumber}/{token:.+}")
+    public OutJSON findByName(@PathVariable(value="prizeName", required = false) String prizeName,
                               @PathVariable(value = "pageNumber") int pageNumber,
                               @RequestParam (value = "pageSize",defaultValue = "4") int pageSize,
                               @PathVariable("token") String token
@@ -55,14 +55,17 @@ public class PrizeControllrt {
             if (null == token1){
                 return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
             }
+            if(prizeName==null||prizeName.isEmpty()){
+                return OutJSON.getInstance(CodeAndMessageEnum.KEY_WORD_EMPTY);
+            }
             prizeName = "%" + prizeName +"%";
             PageHelper.startPage(pageNumber, pageSize);
             List<Prize> prizeList = prizeService.selectByName(prizeName);
             PageInfo pageInfo = new PageInfo<>(prizeList,5);
-            if(prizeList!=null&&prizeList.size()>0){
+
 
                 return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,pageInfo);
-            }
+
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -120,6 +123,11 @@ public class PrizeControllrt {
           }
           if(number==0){
               return OutJSON.getInstance(CodeAndMessageEnum.PRIZE_NUMBER_ERROR);
+          }
+          // 判断是否是积分冻结
+          User userById = userService.findUserById(token1.getUserId());
+          if(userById.getUserStatus()==1){
+              return OutJSON.getInstance(CodeAndMessageEnum.USER_STATUS_ERROR);
           }
           int newCount = number;
           int userId=token1.getUserId();
@@ -181,6 +189,7 @@ public class PrizeControllrt {
    * @Author: 侯鹏
    * @Date:2018/8/16
    */
+
    @GetMapping("authority/two/prizes/{pageNumber}/{token:.+}")
    public OutJSON listAllPrize(@PathVariable("pageNumber") int pageNumber,
                                @RequestParam (value = "pageSize",defaultValue = "4") int pageSize,
@@ -199,10 +208,9 @@ public class PrizeControllrt {
            List<Prize> prizes = prizeService.listAllPrize();
            PageInfo<Object> objectPageInfo = new PageInfo(prizes,5);
 
-           if(prizes!=null){
 
                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,objectPageInfo);
-           }
+
 
        } catch (Exception e) {
            e.printStackTrace();
@@ -271,12 +279,13 @@ public class PrizeControllrt {
    * @Author: 侯鹏
    * @Date: 2018/8/21
    */
-   @GetMapping("authority/two/prize/s/{prizeName}/{pageNumber}")
-   public OutJSON selectServiceByName(@PathVariable("prizeName") String prizeName,
+
+   @GetMapping("authority/two/prizes/{prizeName}/{pageNumber}/{token:.+}")
+   public OutJSON selectServiceByName(@PathVariable(value="prizeName", required = false) String prizeName,
                                       @RequestParam (value = "pageSize",defaultValue = "4") int pageSize,
-                                      @PathVariable("pageNumber") int pageNumber){
+                                      @PathVariable("pageNumber") int pageNumber,
+                                      @PathVariable("token") String token){
      try {
-         String token =ContextHolderUtils.getRequest().getHeader("token");
          // 检查token并获得userID
          Token token1 = tokenService.selectUserIdByToken(token);
          if (null == token1){
@@ -291,11 +300,11 @@ public class PrizeControllrt {
 
          PageHelper.startPage(pageNumber, pageSize);
          List<Prize> prizeList = prizeService.selectServiceByName(prizeName);
-         if (null != prizeList && prizeList.size() > 0) {
-             PageInfo<Prize> prizePageInfo = new PageInfo<>(prizeList);
-             return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, prizePageInfo);
-         }
-         return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
+
+         PageInfo pageInfo = new PageInfo(prizeList,5);
+         return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, pageInfo);
+
+
      }catch (Exception e){
          log.error(e.getMessage());
          return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);

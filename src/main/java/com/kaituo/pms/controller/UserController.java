@@ -354,8 +354,8 @@ public class UserController {
      　　* @date 2018/8/23 0023 13:42
      　　*/
     @ResponseBody
-    @GetMapping(value = "authority/one/users/s/{keyword}/{pn}/{token:.+}")
-    public OutJSON findByKeyWord(@PathVariable(value = "keyword") String keyword,
+    @GetMapping(value = "authority/one/users/{keyword}/{pn}/{token:.+}")
+    public OutJSON findByKeyWord(@PathVariable(value = "keyword",required = false) String keyword,
                                @PathVariable(value = "pn") int pageNumber,
                                @RequestParam(value = "pageSize", defaultValue = "8") int pageSize,
                                  @PathVariable(value = "token") String token ) {
@@ -595,6 +595,10 @@ public class UserController {
 
             if(roleService.checkRole(Constant.ROLE_USER_SET,token1.getUserId())){
                 return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
+            User userById = userService.findUserById(userId);
+            if(userById.getUserStatus()==1){
+                return OutJSON.getInstance(CodeAndMessageEnum.USER_STATUS_ERROR);
             }
 
             int i=userService.upUserIntegral(token1.getUserId(),userId, changestr, changeInt);

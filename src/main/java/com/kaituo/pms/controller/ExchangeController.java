@@ -117,15 +117,19 @@ public class ExchangeController {
      *
      */
     @ResponseBody
-    @GetMapping(value = "exchangeRecords/{token:.+}/s/{keyWord}/{pn}/{token:.+}")
-    public OutJSON findExchange( @RequestParam(value = "pageSize",
-            defaultValue = "4") int pageSize,  @PathVariable("token") String token,
-                                 @PathVariable("keyWord") String keyWord,@PathVariable(value = "pn") int pageNumber) {
+    @GetMapping(value = "exchangeRecords/{token:.+}/{keyWord}/{pn}")
+    public OutJSON findExchange( @RequestParam(value = "pageSize", defaultValue = "4") int pageSize,
+                                 @PathVariable("token") String token,
+                                 @PathVariable(value="keyWord", required = false) String keyWord,
+                                 @PathVariable(value = "pn") int pageNumber) {
         try {
             // 检查token并获得userID
             Token token1 = tokenService.selectUserIdByToken(token);
             if (null == token1){
                 return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
+            if(keyWord==null||keyWord.isEmpty()){
+                return OutJSON.getInstance(CodeAndMessageEnum.KEY_WORD_EMPTY);
             }
             PageHelper.startPage(pageNumber, pageSize);
             //根据商品名keyWord搜索视图中该用户所有状态 状态1（显示为：未发送）  状态2（显示为：确定领取），状态3（显示为：已经领取）  的兑换列表
@@ -146,6 +150,7 @@ public class ExchangeController {
      　　* @author 张金行
      　　* @date 2018/8/10 0010 10:59
      　　*/
+
     @ResponseBody
     @GetMapping(value = "authority/three/exchangeLists/{pn}/{token:.+}")
     public OutJSON getExchangeLists(@PathVariable(value = "pn") int pageNumber,
@@ -218,10 +223,11 @@ public class ExchangeController {
      　　* @author 张金行
      　　* @date 2018/8/10 0010 11:00
      　　*/
+
     @ResponseBody
-    @GetMapping(value = "authority/three/exchangelists/s/{keyWord}/{pn}/{token:.+}")
+    @GetMapping(value = "authority/three/exchangeLists/{keyWord}/{pn}/{token:.+}")
     public OutJSON findExchangelists( @RequestParam(value = "pageSize", defaultValue = "4") int pageSize,
-                                      @PathVariable("keyWord") String keyWord,
+                                      @PathVariable(value="keyWord",required = false) String keyWord,
                                       @PathVariable(value = "pn") int pageNumber,
                                       @PathVariable("token") String token) {
         try {
