@@ -1,0 +1,409 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kaituo.pms.dao.AttendanceMapper">
+  <resultMap id="BaseResultMap" type="com.kaituo.pms.bean.Attendance">
+    <constructor>
+      <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="jobnumber" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="name" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="deptname" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="isovertime" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="startTimeOT" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="endTimeOT" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="isWholeNight" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="wholeNightDate" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="deductIntegral" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="dataTime" javaType="java.lang.String" jdbcType="VARCHAR" />
+    </constructor>
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.kaituo.pms.bean.Attendance">
+    <constructor>
+      <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="jobnumber" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="name" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="deptname" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="isovertime" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="startTimeOT" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="endTimeOT" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="isWholeNight" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="wholeNightDate" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="deductIntegral" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="dataTime" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="attendancedata" javaType="java.lang.String" jdbcType="LONGVARCHAR" />
+    </constructor>
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, jobnumber, name, deptname, isovertime, startTimeOT, endTimeOT, isWholeNight, 
+    wholeNightDate, deductIntegral, dataTime
+  </sql>
+  <sql id="Blob_Column_List">
+    attendancedata
+  </sql>
+  <select id="selectByExampleWithBLOBs" parameterType="com.kaituo.pms.bean.AttendanceExample" resultMap="ResultMapWithBLOBs">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from attendance
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" parameterType="com.kaituo.pms.bean.AttendanceExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from attendance
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from attendance
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from attendance
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.kaituo.pms.bean.AttendanceExample">
+    delete from attendance
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.kaituo.pms.bean.Attendance">
+    insert into attendance (id, jobnumber, name, 
+      deptname, isovertime, startTimeOT, 
+      endTimeOT, isWholeNight, wholeNightDate, 
+      deductIntegral, dataTime, attendancedata
+      )
+    values (#{id,jdbcType=INTEGER}, #{jobnumber,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{deptname,jdbcType=VARCHAR}, #{isovertime,jdbcType=INTEGER}, #{starttimeot,jdbcType=TIMESTAMP}, 
+      #{endtimeot,jdbcType=TIMESTAMP}, #{iswholenight,jdbcType=INTEGER}, #{wholenightdate,jdbcType=VARCHAR}, 
+      #{deductintegral,jdbcType=INTEGER}, #{datatime,jdbcType=VARCHAR}, #{attendancedata,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.kaituo.pms.bean.Attendance">
+    insert into attendance
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="jobnumber != null">
+        jobnumber,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="deptname != null">
+        deptname,
+      </if>
+      <if test="isovertime != null">
+        isovertime,
+      </if>
+      <if test="starttimeot != null">
+        startTimeOT,
+      </if>
+      <if test="endtimeot != null">
+        endTimeOT,
+      </if>
+      <if test="iswholenight != null">
+        isWholeNight,
+      </if>
+      <if test="wholenightdate != null">
+        wholeNightDate,
+      </if>
+      <if test="deductintegral != null">
+        deductIntegral,
+      </if>
+      <if test="datatime != null">
+        dataTime,
+      </if>
+      <if test="attendancedata != null">
+        attendancedata,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="jobnumber != null">
+        #{jobnumber,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="deptname != null">
+        #{deptname,jdbcType=VARCHAR},
+      </if>
+      <if test="isovertime != null">
+        #{isovertime,jdbcType=INTEGER},
+      </if>
+      <if test="starttimeot != null">
+        #{starttimeot,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endtimeot != null">
+        #{endtimeot,jdbcType=TIMESTAMP},
+      </if>
+      <if test="iswholenight != null">
+        #{iswholenight,jdbcType=INTEGER},
+      </if>
+      <if test="wholenightdate != null">
+        #{wholenightdate,jdbcType=VARCHAR},
+      </if>
+      <if test="deductintegral != null">
+        #{deductintegral,jdbcType=INTEGER},
+      </if>
+      <if test="datatime != null">
+        #{datatime,jdbcType=VARCHAR},
+      </if>
+      <if test="attendancedata != null">
+        #{attendancedata,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.kaituo.pms.bean.AttendanceExample" resultType="java.lang.Integer">
+    select count(*) from attendance
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update attendance
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.jobnumber != null">
+        jobnumber = #{record.jobnumber,jdbcType=VARCHAR},
+      </if>
+      <if test="record.name != null">
+        name = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.deptname != null">
+        deptname = #{record.deptname,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isovertime != null">
+        isovertime = #{record.isovertime,jdbcType=INTEGER},
+      </if>
+      <if test="record.starttimeot != null">
+        startTimeOT = #{record.starttimeot,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.endtimeot != null">
+        endTimeOT = #{record.endtimeot,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.iswholenight != null">
+        isWholeNight = #{record.iswholenight,jdbcType=INTEGER},
+      </if>
+      <if test="record.wholenightdate != null">
+        wholeNightDate = #{record.wholenightdate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.deductintegral != null">
+        deductIntegral = #{record.deductintegral,jdbcType=INTEGER},
+      </if>
+      <if test="record.datatime != null">
+        dataTime = #{record.datatime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.attendancedata != null">
+        attendancedata = #{record.attendancedata,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map">
+    update attendance
+    set id = #{record.id,jdbcType=INTEGER},
+      jobnumber = #{record.jobnumber,jdbcType=VARCHAR},
+      name = #{record.name,jdbcType=VARCHAR},
+      deptname = #{record.deptname,jdbcType=VARCHAR},
+      isovertime = #{record.isovertime,jdbcType=INTEGER},
+      startTimeOT = #{record.starttimeot,jdbcType=TIMESTAMP},
+      endTimeOT = #{record.endtimeot,jdbcType=TIMESTAMP},
+      isWholeNight = #{record.iswholenight,jdbcType=INTEGER},
+      wholeNightDate = #{record.wholenightdate,jdbcType=VARCHAR},
+      deductIntegral = #{record.deductintegral,jdbcType=INTEGER},
+      dataTime = #{record.datatime,jdbcType=VARCHAR},
+      attendancedata = #{record.attendancedata,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update attendance
+    set id = #{record.id,jdbcType=INTEGER},
+      jobnumber = #{record.jobnumber,jdbcType=VARCHAR},
+      name = #{record.name,jdbcType=VARCHAR},
+      deptname = #{record.deptname,jdbcType=VARCHAR},
+      isovertime = #{record.isovertime,jdbcType=INTEGER},
+      startTimeOT = #{record.starttimeot,jdbcType=TIMESTAMP},
+      endTimeOT = #{record.endtimeot,jdbcType=TIMESTAMP},
+      isWholeNight = #{record.iswholenight,jdbcType=INTEGER},
+      wholeNightDate = #{record.wholenightdate,jdbcType=VARCHAR},
+      deductIntegral = #{record.deductintegral,jdbcType=INTEGER},
+      dataTime = #{record.datatime,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.kaituo.pms.bean.Attendance">
+    update attendance
+    <set>
+      <if test="jobnumber != null">
+        jobnumber = #{jobnumber,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="deptname != null">
+        deptname = #{deptname,jdbcType=VARCHAR},
+      </if>
+      <if test="isovertime != null">
+        isovertime = #{isovertime,jdbcType=INTEGER},
+      </if>
+      <if test="starttimeot != null">
+        startTimeOT = #{starttimeot,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endtimeot != null">
+        endTimeOT = #{endtimeot,jdbcType=TIMESTAMP},
+      </if>
+      <if test="iswholenight != null">
+        isWholeNight = #{iswholenight,jdbcType=INTEGER},
+      </if>
+      <if test="wholenightdate != null">
+        wholeNightDate = #{wholenightdate,jdbcType=VARCHAR},
+      </if>
+      <if test="deductintegral != null">
+        deductIntegral = #{deductintegral,jdbcType=INTEGER},
+      </if>
+      <if test="datatime != null">
+        dataTime = #{datatime,jdbcType=VARCHAR},
+      </if>
+      <if test="attendancedata != null">
+        attendancedata = #{attendancedata,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.kaituo.pms.bean.Attendance">
+    update attendance
+    set jobnumber = #{jobnumber,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      deptname = #{deptname,jdbcType=VARCHAR},
+      isovertime = #{isovertime,jdbcType=INTEGER},
+      startTimeOT = #{starttimeot,jdbcType=TIMESTAMP},
+      endTimeOT = #{endtimeot,jdbcType=TIMESTAMP},
+      isWholeNight = #{iswholenight,jdbcType=INTEGER},
+      wholeNightDate = #{wholenightdate,jdbcType=VARCHAR},
+      deductIntegral = #{deductintegral,jdbcType=INTEGER},
+      dataTime = #{datatime,jdbcType=VARCHAR},
+      attendancedata = #{attendancedata,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.kaituo.pms.bean.Attendance">
+    update attendance
+    set jobnumber = #{jobnumber,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      deptname = #{deptname,jdbcType=VARCHAR},
+      isovertime = #{isovertime,jdbcType=INTEGER},
+      startTimeOT = #{starttimeot,jdbcType=TIMESTAMP},
+      endTimeOT = #{endtimeot,jdbcType=TIMESTAMP},
+      isWholeNight = #{iswholenight,jdbcType=INTEGER},
+      wholeNightDate = #{wholenightdate,jdbcType=VARCHAR},
+      deductIntegral = #{deductintegral,jdbcType=INTEGER},
+      dataTime = #{datatime,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+
+  <select id="selectAll"  resultType="com.kaituo.pms.bean.Attendance">
+    select a.id as id,
+            a.jobnumber as jobnumber,
+            a.name as name,
+            a.deptname as deptname,
+            a.isovertime as isovertime,
+            a.deductIntegral as deductintegral,
+            a.startTimeOT as starttimeot,
+            a.endTimeOT as endtimeot,
+            a.wholeNightDate as wholenightdate,
+            a.isWholeNight as iswholenight,
+            a.dataTime as datatime
+            from attendance a ;
+         /*   select * from attendance;*/
+  </select>
+</mapper>
