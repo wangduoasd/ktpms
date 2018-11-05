@@ -6,6 +6,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 
@@ -15,6 +16,7 @@ import java.util.Properties;
 /*@EnableWebSecurity*/
 /*@EnableCaching*/
 @EnableTransactionManagement
+@EnableScheduling//spring 注解执行定时任务:
 public class PmsApplication {
 
     public static void main(String[] args) {
