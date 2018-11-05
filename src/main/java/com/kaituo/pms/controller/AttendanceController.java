@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.text.ParseException;
+import java.util.Arrays;
 import java.util.List;
 
 @Slf4j
@@ -100,14 +101,18 @@ public class AttendanceController {
      */
     @PostMapping(value = "/calculationOfIntegral")
     @ResponseBody
-    public OutPut calculationOfIntegral() {
+    public OutPut calculationOfIntegral() throws ParseException {
         OutPut outPut = new OutPut();
         //便利数据库所有数据
         String attendancedata;
         JSONArray json;
         List<Attendance> attendances = attendacneService.selectByExample();
+        Attendance attendance1 = attendacneService.selectById (1);
+        int caluation = CalculationOfIntegralUtil.caluation (attendance1);
+        System.err.println ("aaaaaaaaaaaaa="+caluation);
+return null;/*
         for (int i = 0; i < attendances.size(); i++) { //便利所有人
-            Attendance attendance = attendances.get(i);
+            Attendance attendance = attendances.get(i·);
             ///////
             try {
                 CalculationOfIntegralUtil.caluation(attendance);
@@ -117,7 +122,7 @@ public class AttendanceController {
             String yearMonth = attendance.getDatatime().substring(0, 6);
             System.out.println(yearMonth);
         }
-        return outPut;
+        return outPut;*/
     }
 
 

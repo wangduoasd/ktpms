@@ -18,10 +18,12 @@ public class CalculationOfIntegralUtil {
         System.out.println("map==" + map);
 
         Map<String,String> map1 = new HashMap<>();
-        map1.put("2018-09-28","08:4517:32");
+        //map1.put("2018-09-28","08:4517:32");
         if (map1 == null) {
             return 0;
         }
+
+        //TODO 这里面可以判断一下错误的时间格式
         int attendanceIntergal;
         for (Map.Entry<String, String> entry : map.entrySet()) {
             attendanceIntergal = 0;

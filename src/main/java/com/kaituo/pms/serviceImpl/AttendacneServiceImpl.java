@@ -73,6 +73,7 @@ public class AttendacneServiceImpl implements AttendacneService {
 
                 // System.out.println(attendance);
             }else {
+                //TODO 这里面可以判断一下错误的时间格式2
                 //这里是时间！！！
                 Row row = sheet.getRow(i);
 
