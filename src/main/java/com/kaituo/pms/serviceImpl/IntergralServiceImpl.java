@@ -71,4 +71,20 @@ public class IntergralServiceImpl implements IntegralService {
     public List<Integral> selectIntegralById(int userId) {
        return integralMapper.selectIntegralById(userId);
     }
+
+    /**
+     * 根据用户ID修改对应的积分明细表
+     */
+    @Override
+    public void updateByUserId(ChangeIntegral ci, Integer userId) {
+        Integral integral = integralMapper.selectByPrimaryKey(ci.getId());
+        User user = userMapper.getUserById(ci.getId());
+        integral.setUserId(user.getUserId());
+        integral.setIntegralStartnum(user.getUserIntegral());
+        integral.setIntegralChangestr("管理员变更");
+        integral.setIntegralChangeint(ci.getInteger());
+        integral.setIntegralOperator(userId);
+        integral.setIntegralEndnum(user.getUserIntegral() + ci.getInteger());
+        integralMapper.insertSelective(integral);
+    }
 }

@@ -9,19 +9,13 @@ import com.kaituo.pms.utils.OutPut;
 import lombok.extern.slf4j.Slf4j;
 
 import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.lang.reflect.Array;
 import java.text.ParseException;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @Controller
@@ -31,6 +25,7 @@ public class AttendanceController {
 
     @Autowired
     private AttendacneService attendacneService;
+
 
 
     /**
@@ -130,18 +125,33 @@ public class AttendanceController {
     @ResponseBody
     public OutPut test(){
         OutPut outPut = new OutPut();
-        Attendance attendance = attendacneService.selectById(389);
-        try {
-            int caluation = CalculationOfIntegralUtil.caluation(attendance);
-            System.out.println("最终得分=="+caluation);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+
 
         return outPut;
     }
 
+    /**
+     * 导入Excel表格，加减积分
+     */
+    @PostMapping("uploadExcelToIntergral")
+    @ResponseBody
+    public OutPut uploadExcelToIntergral(@RequestParam("file") MultipartFile file){
+        OutPut outPut = new OutPut();
+        String fileName = file.getOriginalFilename();
+        try {
+            List<Object> objects = attendacneService.uploadExcelToIntergral(fileName, file);
+            outPut.setCode(CommonEnum.SUCCESS.getCode());
+            outPut.setMessage("上传成功");
+            outPut.setData(objects);
+            return outPut;
+        } catch (Exception e) {
+            e.printStackTrace();
+            outPut.setCode(CommonEnum.ERROR.getCode());
+            outPut.setMessage("上传失败");
+            return outPut;
+        }
 
+    }
 
 
 }
