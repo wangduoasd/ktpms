@@ -13,11 +13,5 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/taskAll")
 @CrossOrigin
 public class TaskAllController {
-    @RequestMapping("/SchedulingTask")
-    public String  SchedulingTask(String cron,int id){
-        DynamicScheduledTask dynamicScheduledTask=new DynamicScheduledTask();
-        dynamicScheduledTask.setId(id);
-        dynamicScheduledTask.setCron(cron);
-        return "1";
     }
-}
+

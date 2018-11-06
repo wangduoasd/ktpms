@@ -102,5 +102,5 @@ public interface UserMapper {
 
     List<User> findRoleUser();
 
-
+    List<Integer> findall();
 }

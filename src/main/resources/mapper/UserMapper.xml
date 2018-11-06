@@ -380,7 +380,8 @@
   <!--综服中心_员工设置_模糊查询-->
   <select id="findByKeyWord" resultMap="UserSetResultMap">
         select user_id,user_name,dept_id,dept_name,dept_position_id,position_name,user_inductiontime,user_integral,user_status,user_password
-        from v_userset where user_name like concat(concat('%',#{keyWord}),'%') or dept_name like concat(concat('%',#{keyWord}),'%')
+        from
+         where user_name like concat(concat('%',#{keyWord}),'%') or dept_name like concat(concat('%',#{keyWord}),'%')
     </select>
   <insert id="addUser" parameterType="com.kaituo.pms.bean.User" >
     insert into p_user(user_name,dept_position_id,user_id,user_inductiontime,user_integral,user_status,user_password) values(#{userName},#{deptName},#{positionName},#{userId},#{userInductiontime},#{userIntegral},#{userStatus},#{userPassword})
@@ -427,6 +428,9 @@
           (SELECT user_id,induction_time FROM p_user_role GROUP BY user_id,induction_time) r,p_user u WHERE
           u.`user_id`=r.`user_id` AND u.`user_id`=v_user.`user_id`
     </select>
-
+<select id="findall" resultMap="BaseResultMap">
+    select user_id
+    from p_user
+</select>
 
 </mapper>
