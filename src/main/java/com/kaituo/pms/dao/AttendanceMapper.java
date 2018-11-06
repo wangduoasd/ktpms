@@ -43,4 +43,5 @@ public interface AttendanceMapper {
     int updateByPrimaryKey(Attendance record);
 
     List<Attendance> selectAll();
+    int  updateDeductintegral(@Param("id")int id,@Param("deductintegral")int deductintegral);
 }

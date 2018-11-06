@@ -17,4 +17,11 @@ public interface AttendacneService {
     void updateByExample(Attendance attendance);
 
     List<Attendance> selectByExample();
+
+    /**
+     * 上传Excel，修改积分
+     * @param fileName
+     * @param file
+     */
+    List<Object> uploadExcelToIntergral(String fileName, MultipartFile file) throws Exception;
 }

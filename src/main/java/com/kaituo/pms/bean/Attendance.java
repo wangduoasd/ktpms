@@ -3,30 +3,42 @@ package com.kaituo.pms.bean;
 import java.io.Serializable;
 import java.util.Date;
 
+/**
+ * 读取表格之后，将数据放入数据库的表
+ */
 public class Attendance implements Serializable {
     private Integer id;
 
-    private String jobnumber;
+    private String jobnumber; //用户工号
 
-    private String name;
+    private String name;//员工姓名
 
-    private String deptname;
+    private String deptname;//部门名称
 
-    private Integer isovertime;
+    private Integer isovertime;//是否加班，0为没有，1为加班
 
-    private Date starttimeot;
+    private Date starttimeot;//加班开始时间
 
-    private Date endtimeot;
+    private Date endtimeot;//加班结束时间
 
-    private Integer iswholenight;
+    private Integer iswholenight;//是否通宵了--
 
-    private String wholenightdate;
+    private String wholenightdate;//哪天通宵了  格式：2011-01-01，2022-02-02
 
-    private Integer deductintegral;
+        private Integer deductintegral;//获得的积分
 
-    private String datatime;
+    private String datatime;//表格的日期
 
-    private String attendancedata;
+    private String attendancedata;//打卡记录
+
+    /**
+     * 打卡记录 格式：
+     *  map
+     *      key -- 当天的打卡记录
+     *      value -- 打卡记录的值
+     * 最好计算完了积分，情况数据库 attendance
+     *
+     */
 
 
     private static final long serialVersionUID = 1L;

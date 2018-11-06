@@ -8,7 +8,7 @@ import java.util.*;
 
 public class CalculationOfIntegralUtil {
 
-    public static SimpleDateFormat hoursSdf = new SimpleDateFormat("mm:ss");
+
 
     public static int caluation(Attendance attendance) throws ParseException {
         int att = 0;
@@ -16,12 +16,12 @@ public class CalculationOfIntegralUtil {
         Map<String, String> map = convertedToMap(attendancedata);
         //判断今天是否打卡了
         System.out.println("map==" + map);
-
         Map<String,String> map1 = new HashMap<>();
-        map1.put("2018-09-28","08:4517:32");
+        //map1.put("2018-09-28","08:4517:32");
         if (map1 == null) {
             return 0;
         }
+        //TODO 这里面可以判断一下错误的时间格式
         int attendanceIntergal;
         for (Map.Entry<String, String> entry : map.entrySet()) {
             attendanceIntergal = 0;
@@ -46,7 +46,8 @@ public class CalculationOfIntegralUtil {
                     if (attendance.getIsovertime() == 1) {
                         //需要加班
                         //判断加班日期是否在范围内
-                        if (date.after(attendance.getStarttimeot()) && date.before(attendance.getEndtimeot()) && cal.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY) {
+                        if (date.after(attendance.getStarttimeot()) && date.before(attendance.getEndtimeot())
+                                && cal.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY) {
                             //在加班范围内
                             att -= 14;
                             attendanceIntergal -= 14;
@@ -140,7 +141,6 @@ public class CalculationOfIntegralUtil {
      */
     private static Map<String, String> convertedToMap(String attendancedata) {
         String replace = attendancedata.replace("{", "").replace("}", "");
-
         System.out.println("切割的格式==="+replace);
         List split = Arrays.asList(replace.split(","));
         Map<String, String> map = new HashMap<>();
@@ -171,9 +171,11 @@ public class CalculationOfIntegralUtil {
     private static int nineHoursSystem(Map.Entry<String, String> entry) throws ParseException {
         String onWork = entry.getValue().substring(0, 5);//上班打卡时间
         String offWork = entry.getValue().substring(entry.getValue().length() - 5);//下班打卡时间
-
         int late = late(onWork, "09:00");
         int early = early( "18:00",offWork);
+        if(late==0){
+            onWork="09:00";
+        }
         int i = workHours(onWork, offWork);
         return (i - late - early);
     }
@@ -207,7 +209,7 @@ public class CalculationOfIntegralUtil {
 
     //工作小时计算
     public static int workHours(String small, String big) throws ParseException {
-
+        SimpleDateFormat hoursSdf = new SimpleDateFormat("mm:ss");
         long smallTime = 0;
         long bigTime = 0;
         Calendar cal = Calendar.getInstance();
@@ -221,7 +223,7 @@ public class CalculationOfIntegralUtil {
 
     //为了保留小数且上升用的，专用于早退的计算
     public static double workHoursDouble(String small, String big) throws ParseException {
-
+        SimpleDateFormat hoursSdf = new SimpleDateFormat("mm:ss");
         double smallTime = 0;
         double bigTime = 0;
         Calendar cal = Calendar.getInstance();
@@ -235,6 +237,7 @@ public class CalculationOfIntegralUtil {
 
     //迟到
     public static int late(String small, String big) throws ParseException {
+        SimpleDateFormat hoursSdf = new SimpleDateFormat("mm:ss");
         if (hoursSdf.parse(small).after(hoursSdf.parse(big))) {
             int i = workHours(small, big);
 
@@ -246,6 +249,8 @@ public class CalculationOfIntegralUtil {
 
     //早退
     public static int early(String small, String big) throws ParseException {
+        SimpleDateFormat hoursSdf = new SimpleDateFormat("mm:ss");
+        System.out.println("small++++"+small+"big+++++"+big);
         if (hoursSdf.parse(small).after(hoursSdf.parse(big))) {
             double i = workHoursDouble(big, small);
             int a = (int) i;
@@ -260,6 +265,7 @@ public class CalculationOfIntegralUtil {
 
     //漏打卡
     public static int normalMiss(Map.Entry<String, String> entry) throws ParseException {
+        SimpleDateFormat hoursSdf = new SimpleDateFormat("mm:ss");
         String value = entry.getValue();
         if (hoursSdf.parse(value).before(hoursSdf.parse("12:00"))) {//上午
             int late = late(value, "09:00");
@@ -276,6 +282,7 @@ public class CalculationOfIntegralUtil {
 
     //漏打卡加班状态
     public static int unnormalMiss(Map.Entry<String, String> entry) throws ParseException {
+        SimpleDateFormat hoursSdf = new SimpleDateFormat("mm:ss");
         String value = entry.getValue();
         if (hoursSdf.parse(value).before(hoursSdf.parse("12:00"))) {//上午
             int late = late(value, "08:30");

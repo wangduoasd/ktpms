@@ -1,5 +1,6 @@
 package com.kaituo.pms.service;
 
+import com.kaituo.pms.bean.ChangeIntegral;
 import com.kaituo.pms.bean.Integral;
 import com.kaituo.pms.bean.Prize;
 
@@ -24,4 +25,9 @@ public interface IntegralService {
     int addPrizeIntegral(int changint,int userId,String changestr,int endnum);
     int addIntegral(int operatorId,String changestr,int userId,int changeInt,int endNum );
     List<Integral>  selectIntegralById(int userId);
+
+    /**
+     * 根据用户ID修改对应的积分明细表
+     */
+    void updateByUserId(ChangeIntegral ci, Integer userId);
 }

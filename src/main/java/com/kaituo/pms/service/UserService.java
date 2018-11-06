@@ -1,6 +1,7 @@
 package com.kaituo.pms.service;
 
 
+import com.kaituo.pms.bean.ChangeIntegral;
 import com.kaituo.pms.bean.Login;
 import com.kaituo.pms.bean.User;
 
@@ -95,4 +96,8 @@ public interface UserService {
      Login login(int userId, String password);
 
      int findUserByDeptPositionId(int deptPositionId);
+    /**
+     * 导入Excel来变动积分
+     */
+    void updateIntegralByUserId(ChangeIntegral ci);
 }

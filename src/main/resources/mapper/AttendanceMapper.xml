@@ -406,4 +406,9 @@
             from attendance a ;
          /*   select * from attendance;*/
   </select>
+  <update id="updateDeductintegral">
+      UPDATE attendance
+      SET deductintegral=#{deductintegral}
+      WHERE id=#{id}
+  </update>
 </mapper>

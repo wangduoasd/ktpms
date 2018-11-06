@@ -318,4 +318,13 @@ public class UserServiceImpl implements UserService/*,UserDetailsService*/ {
         if(users==null){return 0;}
         return users.size();
     }
+    /**
+     * 导入Excel来变动积分
+     */
+    @Override
+    public void updateIntegralByUserId(ChangeIntegral ci) {
+        User user = userMapper.selectByPrimaryKey(ci.getId());
+        user.setUserIntegral(user.getUserIntegral() - ci.getInteger());
+        int i = userMapper.updateByPrimaryKeySelective(user);
+    }
 }

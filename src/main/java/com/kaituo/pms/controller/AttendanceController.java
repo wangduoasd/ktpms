@@ -2,26 +2,28 @@ package com.kaituo.pms.controller;
 
 
 import com.kaituo.pms.bean.Attendance;
+import com.kaituo.pms.dao.AttendanceMapper;
 import com.kaituo.pms.service.AttendacneService;
 import com.kaituo.pms.utils.CalculationOfIntegralUtil;
 import com.kaituo.pms.utils.CommonEnum;
 import com.kaituo.pms.utils.OutPut;
+import com.kaituo.pms.utils.UpdateTbAttendanceThread;
 import lombok.extern.slf4j.Slf4j;
 
 import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.lang.reflect.Array;
 import java.text.ParseException;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.SynchronousQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Controller
@@ -31,6 +33,10 @@ public class AttendanceController {
 
     @Autowired
     private AttendacneService attendacneService;
+
+    @Autowired
+    AttendanceMapper attendanceMapper;
+
     /**
      * 上传Excel表格，并读取表格内容保存到数据库
      *
@@ -103,43 +109,55 @@ public class AttendanceController {
      */
     @PostMapping(value = "/calculationOfIntegral")
     @ResponseBody
-    public OutPut calculationOfIntegral() {
+    public OutPut calculationOfIntegral() throws ParseException {
         OutPut outPut = new OutPut();
+        outPut.setCode("1");
+        outPut.setMessage("成功");
         //便利数据库所有数据
         String attendancedata;
         JSONArray json;
         List<Attendance> attendances = attendacneService.selectByExample();
+        Map<String, String> map;
+        ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(20, 50,
+                10, TimeUnit.SECONDS, new SynchronousQueue<>());
         for (int i = 0; i < attendances.size(); i++) { //便利所有人
             Attendance attendance = attendances.get(i);
-            ///////
-            try {
-                CalculationOfIntegralUtil.caluation(attendance);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-            String yearMonth = attendance.getDatatime().substring(0, 6);
-            System.out.println(yearMonth);
+            threadPoolExecutor.execute(new UpdateTbAttendanceThread(attendance,attendanceMapper));
+//            String yearMonth = attendance.getDatatime().substring(0, 6);
+//            System.out.println(yearMonth);
         }
         return outPut;
     }
-
 
     @PostMapping("test")
     @ResponseBody
     public OutPut test(){
         OutPut outPut = new OutPut();
-        Attendance attendance = attendacneService.selectById(389);
-        try {
-            int caluation = CalculationOfIntegralUtil.caluation(attendance);
-            System.out.println("最终得分=="+caluation);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
         return outPut;
     }
 
+    /**
+     * 导入Excel表格，加减积分
+     */
+    @PostMapping("uploadExcelToIntergral")
+    @ResponseBody
+    public OutPut uploadExcelToIntergral(@RequestParam("file") MultipartFile file){
+        OutPut outPut = new OutPut();
+        String fileName = file.getOriginalFilename();
+        try {
+            List<Object> objects = attendacneService.uploadExcelToIntergral(fileName, file);
+            outPut.setCode(CommonEnum.SUCCESS.getCode());
+            outPut.setMessage("上传成功");
+            outPut.setData(objects);
+            return outPut;
+        } catch (Exception e) {
+            e.printStackTrace();
+            outPut.setCode(CommonEnum.ERROR.getCode());
+            outPut.setMessage("上传失败");
+            return outPut;
+        }
 
+    }
 
 
 }
