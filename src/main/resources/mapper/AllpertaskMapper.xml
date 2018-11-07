@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.kaituo.pms.dao.AllpertaskMapper">
-    <select id="findcronbyid" parameterType="java.lang.Integer" resultType="com.kaituo.pms.bean.Allpertask">
+
+    <select id="findallpertask" parameterType="java.lang.Integer" resultType="com.kaituo.pms.bean.Allpertask">
 	    select
 	    	*
 	    from
 	    	p_allpertask
-	    where
-	    	allpertask_id = #{allpertask_id,jdbcType=INTEGER}
+	    	order by
+	    	allpertask_currenttime
+	    	desc
 	</select>
 
 	<insert id="addAllpertask" parameterType="java.lang.Integer" >
@@ -18,7 +20,25 @@
      values
      (#{allpertask_name,jdbcType=VARCHAR},#{allpertask_difficulty,jdbcType=INTEGER},
      #{allpertask_price,jdbcType=INTEGER} ,#{allpertask_award,jdbcType=INTEGER},#{allpertask_time,jdbcType=INTEGER}
-     ,#{allpertask_starttime,jdbcType=INTEGER},#{allpertask_endtime,jdbcType=INTEGER}
-     ,#{allpertask_status,jdbcType=INTEGER})
+     ,#{allpertask_starttime,jdbcType=TIMESTAMP},#{allpertask_endtime,jdbcType=TIMESTAMP}
+     ,#{allpertask_status,jdbcType=TINYINT})
 	</insert>
+
+	<update id="updateAllpertask" parameterType="map">
+		update p_allpertask
+		set allpertask_id=#{allpertask.allpertask_id,jdbcType=INTEGER},
+		    allpertask_name=#{allpertask.allpertask_name,jdbcType=VARCHAR},
+		    allpertask_difficulty=#{allpertask.allpertask_difficulty,jdbcType=INTEGER},
+            allpertask_price=#{allpertask.allpertask_price,jdbcType=INTEGER} ,
+            allpertask_award=#{allpertask.allpertask_award,jdbcType=INTEGER},
+            allpertask_time=#{allpertask.allpertask_time,jdbcType=INTEGER},
+            allpertask_starttime=#{allpertask.allpertask_starttime,jdbcType=TIMESTAMP},
+            allpertask_endtime=#{allpertask.allpertask_endtime,jdbcType=TIMESTAMP},
+            allpertask_status= #{allpertask.allpertask_status,jdbcType=TINYINT}
+	</update>
+
+	<delete id="deleteAllpertask" parameterType="java.lang.Integer">
+		delete from p_allpertask
+		where allpertask_id=#{allpertask_id,jdbcType=INTEGER}
+	</delete>
 </mapper>

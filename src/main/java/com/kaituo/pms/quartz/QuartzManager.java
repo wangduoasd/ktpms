@@ -1,7 +1,14 @@
 package com.kaituo.pms.quartz;
 
+import com.kaituo.pms.config.WebMvcConf;
 import lombok.Data;
 import org.quartz.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.scheduling.quartz.SchedulerFactoryBean;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
 
 /**
  * @author wangduo
@@ -9,12 +16,14 @@ import org.quartz.*;
  */
 @Data
 public class QuartzManager {
-    //注入调度
+   // 注入调度
     private Scheduler scheduler;
+
+
     //新增定时任务
     @SuppressWarnings ({"unchecked","rawtypes"})
-    public void addjob(String jobName, String jobGroupName, String triggerName, String triggerGroupName,
-                       Class jobClass, String cron,String status){
+    public  void addjob(String jobName, String jobGroupName, String triggerName, String triggerGroupName,
+                              Class jobClass, String cron, String status) throws InterruptedException {
         try {
             //1.指定要运行的任务，设置任务名、任务组名
             JobDetail jobDetail=JobBuilder.newJob (jobClass)
@@ -36,15 +45,18 @@ public class QuartzManager {
             //启动调度器
             if(!scheduler.isShutdown ()){
                 scheduler.start ();
+
             }
         }catch (SchedulerException e){
             e.printStackTrace ();
         }
     }
     //启动所有的定时任务
-    public void startJobs(){
+  //  @PostConstruct
+    public void startJobs() throws InterruptedException {
         try{
             scheduler.start ();
+
         }catch (Exception e){
             throw new RuntimeException (e);
         }
