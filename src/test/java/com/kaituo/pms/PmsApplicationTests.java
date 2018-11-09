@@ -16,22 +16,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class PmsApplicationTests {
-@Autowired
-private QuartzManager quartzManager;
+
     @Test
     public void contextLoads() {
 
-        try {
-            quartzManager.addjob ("first",
-                    "firstGroup",
-                    "cronTrigger1",
-                    "triggerGroup1",
-                    ScheduleTask.class,
-                    "0 42 21 6 11 ?",
-                    "0");
-        } catch (InterruptedException e) {
-            e.printStackTrace ();
-        }
-    }
 
+    }
 }

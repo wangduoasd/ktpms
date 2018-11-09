@@ -1,6 +1,8 @@
 package com.kaituo.pms.dao;
 
 import com.kaituo.pms.bean.Allpertask;
+import org.apache.ibatis.annotations.Mapper;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
@@ -8,6 +10,8 @@ import java.util.List;
  * @author wangduo
  * @date 2018/11/5 - 14:40
  */
+@Mapper
+@Repository
 public interface AllpertaskMapper {
     /**
      * 根据任务id查询任务
