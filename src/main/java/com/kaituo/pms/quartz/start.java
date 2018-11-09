@@ -21,7 +21,7 @@ public class start {
                 "cronTrigger1",
                 "triggerGroup1",
                  ScheduleTask.class,
-                "0/1 * * * * ?",
+                "0 46 10 7 11 ? 2018 ",
                 "0"
         );
         quartzManager.addjob (

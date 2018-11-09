@@ -24,4 +24,10 @@ public interface AttendacneService {
      * @param file
      */
     List<Object> uploadExcelToIntergral(String fileName, MultipartFile file) throws Exception;
+    void test();
+    /**
+     * 上传计算后的积分
+     */
+    void calculationOfIntegral(List<Attendance> attendances);
+
 }

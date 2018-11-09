@@ -9,13 +9,16 @@ import java.util.*;
 public class CalculationOfIntegralUtil {
 
 
-
+    /**
+     * @param attendance
+     * @return
+     * @throws ParseException
+     */
     public static int caluation(Attendance attendance) throws ParseException {
         int att = 0;
         String attendancedata = attendance.getAttendancedata();
         Map<String, String> map = convertedToMap(attendancedata);
         //判断今天是否打卡了
-        System.out.println("map==" + map);
         Map<String,String> map1 = new HashMap<>();
         //map1.put("2018-09-28","08:4517:32");
         if (map1 == null) {
@@ -23,116 +26,88 @@ public class CalculationOfIntegralUtil {
         }
         //TODO 这里面可以判断一下错误的时间格式
         int attendanceIntergal;
+        Calendar cal = Calendar.getInstance();
+        Date date=new Date();
+        String replace;
         for (Map.Entry<String, String> entry : map.entrySet()) {
             attendanceIntergal = 0;
             //打卡的日期
-            Date date = convertedToDate(entry.getKey());
-            Calendar cal = Calendar.getInstance();
+             date = convertedToDate(entry.getKey());
             cal.setTime(date);
-
             //如果打卡记录为空
             if (entry.getValue() == "" || entry.getValue() == null) {
-                //这个人没打卡，看着一天是否是工作日
-                String replace = entry.getKey().replace("-", "");
+                //这个人没打卡，看今天是否加班
+                    //需要加班
+                    //判断加班日期是否在范围内
+                    if (attendance.getStarttimeot()!=null&&attendance.getEndtimeot()!=null&&
+                            date.after(attendance.getStarttimeot()) && date.before(attendance.getEndtimeot())
+                        /*&& cal.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY*/) {
+                        //在加班范围内
+                        att -= 14;
+                        attendanceIntergal -= 14;
+                      //  System.err.println("加班"+entry.getKey()+"日积分为："+attendanceIntergal);
+                        continue; //加班日没打卡，扣14分
+                    }else{
+                    //这个人没打卡，看着一天是否是工作日
+                        replace = entry.getKey().replace("-", "");
+                    int i = HolidayUtil.TimeDemo(replace);
+                    if (i == 0) {  //工作日
+                        att -= 9;
+                        attendanceIntergal -= 9;
+                        //System.err.println("工作日"+entry.getKey()+"日积分为："+attendanceIntergal);
+                        continue ;//工作日没打卡直接扣分
+                    } else { //非工作日
+                        att+=0;
+                        attendanceIntergal += 0;
+                        //System.err.println("非工作日，不加班"+entry.getKey()+"日积分为："+attendanceIntergal);
+                        continue ;//不是工作日，也不用加班，就没有积分
+                    }
+                }
+            }else {
+                //打卡记录不为空
+                //打卡记录的格式是否有问题
+                if (entry.getValue().length() == 5) {
+                    if (attendance.getIsovertime() != 1) {    //漏打卡，不加班
+                        //att += unnormalMiss(entry);
+                        //attendanceIntergal += normalMiss(entry);
+                        att -= 9;
+                        attendanceIntergal -= 9;
+                       // System.err.println("漏打卡，不加班" + entry.getKey() + "日积分为：" + attendanceIntergal);
+                        continue;
+                    }
+                    if (date.after(attendance.getStarttimeot()) && date.before(attendance.getEndtimeot()) && cal.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY) {
+                        //在加班范围内
+                        //att += normalMiss(entry);
+                        //attendanceIntergal += unnormalMiss(entry);
+                        att -= 14;
+                        attendanceIntergal -= 14;
+                        //System.err.println("漏打卡，加班" + entry.getKey() + "日积分为：" + attendanceIntergal);
+                        continue;
+                    }
 
-                int i = HolidayUtil.TimeDemo(replace);
-                if (i == 0) {  //工作日
-                    att -= 9;
-                    attendanceIntergal -= 9;
-                    System.err.println(entry.getKey()+"日积分为："+attendanceIntergal);
-                    continue ;//工作日没打卡直接扣分
-                } else { //非工作日
-                    //判断是否需要加班
+                } else {
+                    //正常打卡，格式没毛病
+                    //加班制度
                     if (attendance.getIsovertime() == 1) {
-                        //需要加班
-                        //判断加班日期是否在范围内
-                        if (date.after(attendance.getStarttimeot()) && date.before(attendance.getEndtimeot())
-                                && cal.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY) {
+                        if (date.after(attendance.getStarttimeot()) && date.before(attendance.getEndtimeot())) {
                             //在加班范围内
-                            att -= 14;
-                            attendanceIntergal -= 14;
-                            System.err.println(entry.getKey()+"日积分为："+attendanceIntergal);
-                            continue; //加班日没打卡，扣14分
+                            att += fourteenHoursSystem(entry);
+                            attendanceIntergal += fourteenHoursSystem(entry);
+                            //System.err.println("正常加班" + entry.getKey() + "日积分为：" + attendanceIntergal);
+                            continue;
                         }
                     }
-                    att+=0;
-                    attendanceIntergal += 0;
-                    System.err.println(entry.getKey()+"日积分为："+attendanceIntergal);
-                    continue ;//不是工作日，也不用加班，就没有积分
-                }
-            }
-            //打卡记录不为空
-            //打卡记录的格式是否有问题
-            if (entry.getValue().length() == 5) {
-                //打卡有问题，要么漏打卡，要么通宵了
-                if (attendance.getIswholenight() == 1) {
-                    //说明通宵了
-                    //查看当前日期是否为通宵日期，不为则过
-                    List<String> neightList = Arrays.asList(attendance.getWholenightdate().split(","));
-                    if (neightList.contains(entry.getKey())) {
-                        //今天他通宵了
-                        //通宵算法
-                        att += wholeNightSystem(entry);
-                        attendanceIntergal += wholeDayTimeSystem(entry);
-                        System.err.println(entry.getKey()+"日积分为："+attendanceIntergal);
-                        continue;
-                    }
-                    //判断当前日期的上一天
-                    cal.setTime(date);
-                    cal.add(Calendar.DAY_OF_MONTH, -1);
-
-                    if (neightList.contains(cal.getTime())) {
-                        att += wholeDayTimeSystem(entry);//通宵2
-                        attendanceIntergal += wholeDayTimeSystem(entry);
-                        System.err.println(entry.getKey()+"日积分为："+attendanceIntergal);
-                        continue;
-                    }
-
-                }
-                //没有通宵。漏打卡
-                if(attendance.getIsovertime() != 1){    //漏打卡，不加班
-                    //att += unnormalMiss(entry);
-                    //attendanceIntergal += normalMiss(entry);
-                    att -= 9;
-                    attendanceIntergal -= 9;
-                    System.err.println(entry.getKey()+"日积分为："+attendanceIntergal);
+                    //正常制度
+                    att += nineHoursSystem(entry);
+                    attendanceIntergal += nineHoursSystem(entry);
+                   // System.err.println("非加班正常" + entry.getKey() + "日积分为：" + attendanceIntergal);
                     continue;
                 }
-                if (date.after(attendance.getStarttimeot()) && date.before(attendance.getEndtimeot()) && cal.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY) {
-                    //在加班范围内
-                    //att += normalMiss(entry);
-                    //attendanceIntergal += unnormalMiss(entry);
-                    att -= 14;
-                    attendanceIntergal -= 14;
-                    System.err.println(entry.getKey()+"日积分为："+attendanceIntergal);
-                    continue;
-                }
-
-            } else {
-                //正常打卡，格式没毛病
-                //加班制度
-                if(attendance.getIsovertime() == 1){
-                    if ( date.after(attendance.getStarttimeot()) && date.before(attendance.getEndtimeot())) {
-                        //在加班范围内
-                        att += fourteenHoursSystem(entry);
-                        attendanceIntergal += fourteenHoursSystem(entry);
-                        System.err.println(entry.getKey()+"日积分为："+attendanceIntergal);
-                        continue;
-                    }
-                }
-
-                //正常制度
-                att += nineHoursSystem(entry);
-                attendanceIntergal += nineHoursSystem(entry);
-                System.err.println(entry.getKey()+"日积分为："+attendanceIntergal);
-                continue;
             }
         }
         System.out.println(attendance.getName()+"的积分是="+att);
         return att;
     }
-
-
     /**
      * 字符串转为Map
      *
@@ -141,7 +116,6 @@ public class CalculationOfIntegralUtil {
      */
     private static Map<String, String> convertedToMap(String attendancedata) {
         String replace = attendancedata.replace("{", "").replace("}", "");
-        System.out.println("切割的格式==="+replace);
         List split = Arrays.asList(replace.split(","));
         Map<String, String> map = new HashMap<>();
         String o;
@@ -149,7 +123,6 @@ public class CalculationOfIntegralUtil {
             o = (String) split.get(a);
             String[] split1 = o.split("=");
             String str1 = split1[0].trim();
-
             if (split1.length != 1) {
                 String str2 = split1[1].trim();
                 map.put(str1, str2);
@@ -159,16 +132,14 @@ public class CalculationOfIntegralUtil {
         }
         return map;
     }
-
     //字符串转为日期格式
     public static Date convertedToDate(String str) throws ParseException {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date parse = sdf.parse(str);
         return parse;
     }
-
     //9小时制度
-    private static int nineHoursSystem(Map.Entry<String, String> entry) throws ParseException {
+    private static double nineHoursSystem(Map.Entry<String, String> entry) throws ParseException {
         String onWork = entry.getValue().substring(0, 5);//上班打卡时间
         String offWork = entry.getValue().substring(entry.getValue().length() - 5);//下班打卡时间
         int late = late(onWork, "09:00");
@@ -176,40 +147,33 @@ public class CalculationOfIntegralUtil {
         if(late==0){
             onWork="09:00";
         }
-        int i = workHours(onWork, offWork);
+        int i = workHours(onWork, offWork,"09:00");
+        //System.out.println(entry.getKey()+"-"+i+"-"+early+"-"+late);
         return (i - late - early);
     }
-
     //14小时制度
-    public static int fourteenHoursSystem(Map.Entry<String, String> entry) throws ParseException {
+    public static double fourteenHoursSystem(Map.Entry<String, String> entry) throws ParseException {
         String onWork = entry.getValue().substring(0, 5);//上班打卡时间
         String offWork = entry.getValue().substring(entry.getValue().length() - 5);//下班打卡时间
-
         int late = late(onWork, "08:30");
+        if(late==0){
+            onWork="08:30";
+        }
         int early = early("22:30" , offWork);
-        int i = workHours(onWork, offWork);
+        int i = workHours(onWork, offWork,"08:30");
+        //System.out.println(entry.getKey()+"-"+i+"-"+early+"-"+late);
         return (i - late - early);
     }
-
-    //通宵制度
-    public static int wholeNightSystem(Map.Entry<String, String> entry) throws ParseException {
-        String onWork = entry.getValue().substring(0, 5);//上班打卡时间
-        int late = late(onWork, "09:00");
-        int i = workHours(onWork, "23:59");
-        return (i - late);
-    }
-
-    //通宵制度(转天)
-    public static int wholeDayTimeSystem(Map.Entry<String, String> entry) throws ParseException {
-        String onWork = entry.getValue().substring(0, 5);//下班打卡时间
-
-        int i = workHours("00:00", onWork);
-        return (i);
-    }
-
     //工作小时计算
-    public static int workHours(String small, String big) throws ParseException {
+    public static int workHours(String small, String big,String standard) throws ParseException {
         SimpleDateFormat hoursSdf = new SimpleDateFormat("mm:ss");
+        String compare=small.substring(0,1)+":00";
+        int i=0;
+        if (hoursSdf.parse(small).after(hoursSdf.parse(standard))) {
+            if (hoursSdf.parse(small).after(hoursSdf.parse(compare))) {
+                i=-1;
+            }
+        }
         long smallTime = 0;
         long bigTime = 0;
         Calendar cal = Calendar.getInstance();
@@ -217,10 +181,9 @@ public class CalculationOfIntegralUtil {
         smallTime = cal.getTimeInMillis();
         cal.setTime(hoursSdf.parse(big));
         bigTime = cal.getTimeInMillis();
-        int i = (int) (bigTime - smallTime) / (1000 * 60);
+         i+= (int) (bigTime - smallTime) / (1000 * 60);
         return i;
     }
-
     //为了保留小数且上升用的，专用于早退的计算
     public static double workHoursDouble(String small, String big) throws ParseException {
         SimpleDateFormat hoursSdf = new SimpleDateFormat("mm:ss");
@@ -234,66 +197,32 @@ public class CalculationOfIntegralUtil {
         double i = (bigTime - smallTime) / (1000 * 60);
         return i;
     }
-
     //迟到
     public static int late(String small, String big) throws ParseException {
         SimpleDateFormat hoursSdf = new SimpleDateFormat("mm:ss");
         if (hoursSdf.parse(small).after(hoursSdf.parse(big))) {
-            int i = workHours(small, big);
-
-            System.out.println("迟到了" + (i) + "小时");
-            return i;
-        }
-        return 0;
-    }
-
-    //早退
-    public static int early(String small, String big) throws ParseException {
-        SimpleDateFormat hoursSdf = new SimpleDateFormat("mm:ss");
-        System.out.println("small++++"+small+"big+++++"+big);
-        if (hoursSdf.parse(small).after(hoursSdf.parse(big))) {
-            double i = workHoursDouble(big, small);
-            int a = (int) i;
-            if (i > a) {
-                a += 1;
+            double i = workHoursDouble(small, big);
+            int a=(int)i;
+            if(i!=a){
+                a=a+1;
             }
-            System.out.println("早退了" + (i) + "小时");
+            //System.out.println(small+"***"+a+i);
             return a;
         }
         return 0;
     }
-
-    //漏打卡
-    public static int normalMiss(Map.Entry<String, String> entry) throws ParseException {
+    //早退
+    public static int early(String small, String big) throws ParseException {
         SimpleDateFormat hoursSdf = new SimpleDateFormat("mm:ss");
-        String value = entry.getValue();
-        if (hoursSdf.parse(value).before(hoursSdf.parse("12:00"))) {//上午
-            int late = late(value, "09:00");
-            int i = workHours(value, "12:00");
-            return (i - late - 4);
-        } else {
-
-            int early = early("18:00", value);
-
-            int i = workHours("13:00", value);
-            return (i - early - 5);
+        if (hoursSdf.parse(small).after(hoursSdf.parse(big))) {
+            double i = workHoursDouble(big, small);
+            int a = (int) i;
+            if(i!=a){
+                a=a+1;
+            }
+           // System.out.println(big+a+i);
+            return a;
         }
-    }
-
-    //漏打卡加班状态
-    public static int unnormalMiss(Map.Entry<String, String> entry) throws ParseException {
-        SimpleDateFormat hoursSdf = new SimpleDateFormat("mm:ss");
-        String value = entry.getValue();
-        if (hoursSdf.parse(value).before(hoursSdf.parse("12:00"))) {//上午
-            int late = late(value, "08:30");
-            int i = workHours(value, "12:00");
-            return (i - late);
-        } else {
-
-            int early = early("22:30", value);
-
-            int i = workHours("13:00", value);
-            return (i - early);
-        }
+        return 0;
     }
 }

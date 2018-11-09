@@ -5,7 +5,10 @@ import com.kaituo.pms.bean.AttendanceExample;
 import com.kaituo.pms.bean.ChangeIntegral;
 import com.kaituo.pms.dao.AttendanceMapper;
 import com.kaituo.pms.error.MyException;
+import com.kaituo.pms.quartz.QuartzManager;
+import com.kaituo.pms.quartz.ScheduleTask;
 import com.kaituo.pms.service.AttendacneService;
+import com.kaituo.pms.utils.UpdateTbAttendanceThread;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -13,6 +16,8 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,6 +27,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class AttendacneServiceImpl implements AttendacneService {
@@ -176,5 +184,51 @@ public class AttendacneServiceImpl implements AttendacneService {
         }
 
         return allList;
+    }
+
+    @Override
+    public void test(){
+        ApplicationContext context=new ClassPathXmlApplicationContext("classpath:quartz-context.xml");
+        QuartzManager quartzManager=(QuartzManager)context.getBean("quartzManager");
+        quartzManager.addjob (
+                "first",
+                "firstGroup",
+                "cronTrigger1",
+                "triggerGroup1",
+                ScheduleTask.class,
+                "0/1 * * * * ?",
+                "0"
+        );
+        quartzManager.addjob (
+                "sec",
+                "firstGroup",
+                "cronTrigger2",
+                "triggerGroup1",
+                ScheduleTask.class,
+                "0/2 * * * * ?",
+                "1"
+        );
+    }
+
+    @Override
+    public void calculationOfIntegral(List<Attendance> attendances) {
+        //构建线程池。
+        ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(30, 60,
+                10, TimeUnit.SECONDS, new LinkedBlockingQueue<>());
+        Attendance attendance=new Attendance();
+        for (int i = 0; i < attendances.size(); i++) {
+            //便利所有人
+             attendance = attendances.get(i);
+//            int attr=0;
+//            attr = CalculationOfIntegralUtil.caluation(attendance);
+//            attendanceMapper.updateDeductintegral(attendance.getId(),attr);
+            try {
+                threadPoolExecutor.execute(new UpdateTbAttendanceThread(attendance,attendanceMapper));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        //更新计算过后员工的信息。
+        // attendanceMapper.updateEndNum();
     }
 }

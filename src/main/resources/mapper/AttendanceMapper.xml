@@ -411,4 +411,15 @@
       SET deductintegral=#{deductintegral}
       WHERE id=#{id}
   </update>
+  <update id="updateEndNum">
+    UPDATE
+      p_integral p,attendance a
+    set
+      p.integral_endnum=p.integral_endnum+a.deductintegral
+    WHERE
+      p.user_id=a.jobnumber
+  </update>
+  <delete id="deleteAll">
+      DELETE FROM attendance
+  </delete>
 </mapper>

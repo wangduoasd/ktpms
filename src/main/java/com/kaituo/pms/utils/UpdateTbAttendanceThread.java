@@ -24,7 +24,6 @@ public class UpdateTbAttendanceThread implements Runnable {
     public void run() {
         int attr= 0;
         try {
-
             attr = CalculationOfIntegralUtil.caluation(attendance);
             attendanceMapper.updateDeductintegral(attendance.getId(),attr);
             System.out.println(attr);
