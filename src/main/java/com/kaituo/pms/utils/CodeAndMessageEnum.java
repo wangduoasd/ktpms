@@ -136,7 +136,14 @@ NOREASON("-48" , "未知错误"),
     USER_ADD_USERID_ERROR("-51","工号不能为零或负数"),
     USER_AUTH_ADD_ERROR("-52","如要取消该用户所有权限，请直接删除"),
     USER_STATUS_ERROR("-53","用户积分已被冻结"),
-    KEY_WORD_EMPTY("-54","请输入搜索关键词")
+    KEY_WORD_EMPTY("-54","请输入搜索关键词"),
+    SELECT_USERID_EMPTY("-55","员工id查询为空"),
+    ADD_PERTASK_ERROR("-56","添加全员的任务信息失败"),
+    ADD_PERTASKUSER_ERROR("-57","添加人员与全员任务不匹配"),
+    ADD_JOBSTART_ERROR("-58","添加定时开始任务失败"),
+    ADD_JOBEND_ERROR("-59","添加定时任务失败"),
+    END_TIME_ERROR("-60","结束时间小于当前时间"),
+    TRIGGER_EMPTY("-61","触发器为空")
     ;
 
     private String code;

@@ -5,7 +5,7 @@ import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
-import java.sql.Date;
+import java.util.Date;
 
 
 /**
@@ -14,6 +14,7 @@ import java.sql.Date;
  */
 @Data
 public class AllpertaskUser implements Serializable {
+    private Integer user_allpertask_id;
     private Integer allpertask_id;
     private Integer user_id;
     private Integer user_status;

@@ -2,20 +2,24 @@ package com.kaituo.pms.dao;
 
 import com.kaituo.pms.bean.Allpertask;
 import com.kaituo.pms.bean.AllpertaskUser;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 /**
  * @author wangduo
  * @date 2018/11/6 - 14:33
  */
+@Mapper
+@Repository
 public interface AllpertaskUserMapper {
     /**
      * 添加全员任务id和每个人的id,默认没领取
-     * @param userid
+     * @param user_id
      * @param allpertask_id
      * @return
      */
-    int adduser(Integer userid,Integer allpertask_id);
-
+    int adduser(@Param ("allpertask_id") Integer allpertask_id, @Param ("user_id")Integer user_id);
     /**
      * 修改领取为获取时间，
      * @param allpertaskUser

@@ -1,8 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.kaituo.pms.dao.AllpertaskUserMapper">
-    <insert id="adduser" parameterType="java.lang.Integer" >
-	 insert into p_allpertask_user (user_id,allpertask_id)
-     values (#{userId,jdbcType=INTEGER},#{allpertaskId,jdbcType=INTEGER})
+
+    <insert id="adduser" keyProperty="user_allpertask_id">
+	 insert into p_allpertask_user (allpertask_id,user_id)
+     values (#{allpertask_id,jdbcType=INTEGER},#{user_id,jdbcType=INTEGER})
 	</insert>
+
+    <select id="findAllpertask" parameterType="java.lang.Integer" resultType="com.kaituo.pms.bean.AllpertaskUser">
+        select *
+        from p_allpertask_user
+        where user_id=#{user_id,jdbcType=INTEGER}
+    </select>
+
+    <update id="updateuser" parameterType="java.lang.Integer" >
+        update p_allpertask_user
+        set allpertask_id=#{allpertaskUser.allpertask_id,jdbcType=INTEGER}
+        user_id=#{allpertaskUser.user_id,jdbcType=INTEGER},
+        user_status=#{allpertaskUser.user_status,jdbcType=TINYINT},
+        user_gettime=#{allpertaskUser.user_gettime,jdbcType=TIMESTAMP}
+        where allpertask_id=#{allpertaskUser.allpertask_id,jdbcType=INTEGER}
+    </update>
+
+    <delete id="deleteAllpertaskUser" parameterType="java.lang.Integer">
+		delete from p_allpertask_user
+		where allpertask_id=#{allpertask_id,jdbcType=INTEGER}
+	</delete>
+
 </mapper>

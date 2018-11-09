@@ -428,7 +428,7 @@
           (SELECT user_id,induction_time FROM p_user_role GROUP BY user_id,induction_time) r,p_user u WHERE
           u.`user_id`=r.`user_id` AND u.`user_id`=v_user.`user_id`
     </select>
-<select id="findall" resultMap="BaseResultMap">
+<select id="findall"  resultType="java.lang.Integer">
     select user_id
     from p_user
 </select>
