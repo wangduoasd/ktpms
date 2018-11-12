@@ -368,7 +368,12 @@ public class AllpertaskServiceImpl implements AllpertaskService {
         } catch (MyException e) {
             throw new MyException (CodeAndMessageEnum.GIVEUPALLPERTASK_FAIL);
         }
-        Allpertask allpertask=allpertaskMapper.findallpertaskbyid (allpertaskid);
+        Allpertask allpertask= null;
+        try {
+            allpertask = allpertaskMapper.findallpertaskbyid (allpertaskid);
+        } catch (MyException e) {
+            throw new MyException (CodeAndMessageEnum.FIND_PERTASK_ERROR);
+        }
         //定时结束，状态变为未领取
         quartzManager.removeJob (
                 allpertask.getAllpertask_name (),
