@@ -57,7 +57,7 @@ public class QuartzManager {
     }
     //修改定时任务cron表达式
     public void modifyJobTime( String triggerName, String triggerGroupName,
-                         Class jobClass, String cron,Date endtime){
+                          String cron,Date endtime){
          try{
              TriggerKey triggerKey=TriggerKey.triggerKey (triggerName,triggerGroupName);
              CronTrigger trigger= (CronTrigger) scheduler.getTrigger (triggerKey);
