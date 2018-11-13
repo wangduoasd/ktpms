@@ -3,6 +3,7 @@ package com.kaituo.pms.quartz;
 
 import com.kaituo.pms.bean.Allpertask;
 import com.kaituo.pms.dao.AllpertaskMapper;
+import com.kaituo.pms.dao.AllpertaskUserMapper;
 import org.quartz.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -14,9 +15,9 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  * @date 2018/11/5 - 13:26
  * 任务类
  */
-public class ScheduleTask  implements Job {
+public class ScheduleTaskPer  implements Job {
     @Autowired
-    AllpertaskMapper allpertaskMapper;
+    AllpertaskUserMapper allpertaskUserMapper;
     //注入调度
     private Scheduler scheduler;
 
@@ -35,11 +36,10 @@ public class ScheduleTask  implements Job {
 
         int jobSay1 = dataMap.getInt ("status");
         int jobSay2 = dataMap.getInt ("task_id");
-        Allpertask allpertask=new Allpertask ();
-        allpertask.setAllpertask_id (jobSay2);
-        allpertask.setAllpertask_status (jobSay1);
-        allpertaskMapper.updateAllpertask (allpertask);
-        System.out.println("Instance " + key + " of DumbJob says: " + jobSay1 );
+        int JobSay3 = dataMap.getInt ("user_id");
+
+        allpertaskUserMapper.updateuserbyids (jobSay2,JobSay3,jobSay1);
+//        System.out.println("Instance " + key + " of DumbJob says: " + jobSay1 );
 
 
     }

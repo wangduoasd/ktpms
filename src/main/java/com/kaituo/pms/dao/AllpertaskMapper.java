@@ -14,7 +14,7 @@ import java.util.List;
 @Repository
 public interface AllpertaskMapper {
     /**
-     * 根据任务id查询任务
+     * 查询任务(未删除的)
      * @param
      * @return
      */
@@ -23,7 +23,7 @@ public interface AllpertaskMapper {
     /**
      * 添加全员任务
      * @param allpertask
-     * @return
+     * @return id
      */
     int addAllpertask(Allpertask allpertask);
 
@@ -40,4 +40,19 @@ public interface AllpertaskMapper {
      * @return
      */
     int deleteAllpertask(Integer allpertask_id);
+
+    /**
+     * 根据id查询任务名称
+     * @param allpertask_id
+     * @return pertaskName
+     */
+    String findpertaskbyid(Integer allpertask_id);
+
+    /**
+     * 根据任务id查询所有信息
+     * @param allpertask_id
+     * @return
+     */
+   Allpertask findallpertaskbyid(Integer allpertask_id);
+
 }

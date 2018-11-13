@@ -7,6 +7,7 @@
 	    	*
 	    from
 	    	p_allpertask
+	    where allpertask_status &lt;3
 	    	order by
 	    	allpertask_currenttime
 	    	desc
@@ -38,8 +39,29 @@
          where allpertask_id = #{allpertask.allpertask_id,jdbcType=INTEGER}
 	</update>
 
-	<delete id="deleteAllpertask" parameterType="java.lang.Integer">
-		delete from p_allpertask
-		where allpertask_id=#{allpertask_id,jdbcType=INTEGER}
-	</delete>
+	<update id="deleteAllpertask" parameterType="java.lang.Integer">
+		update  p_allpertask
+		set
+		   allpertask_status=3
+	</update>
+
+	<select id="findpertaskbyid" parameterType="java.lang.Integer" resultType="String">
+	    select
+	    	allpertask_name
+	    from
+	    	p_allpertask
+	    where allpertask_id=#{allpertask_id,jdbcType=INTEGER}
+	    and allpertask_status！=3
+	</select>
+
+	<select id="findallpertaskbyid" parameterType="java.lang.Integer" resultType="com.kaituo.pms.bean.Allpertask">
+	    select
+	    	*
+	    from
+	    	p_allpertask
+	    	order by
+	    	allpertask_currenttime
+	    	desc
+	    where 	allpertask_id=#{allpertask_id,jdbcType=INTEGER}
+	</select>
 </mapper>
