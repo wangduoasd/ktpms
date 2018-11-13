@@ -39,13 +39,15 @@ public class CalculationOfIntegralUtil {
                 //这个人没打卡，看今天是否加班
                     //需要加班
                     //判断加班日期是否在范围内
-                    if (attendance.getStarttimeot()!=null&&attendance.getEndtimeot()!=null&&
-                            date.after(attendance.getStarttimeot()) && date.before(attendance.getEndtimeot())
-                        /*&& cal.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY*/) {
+                //对时间的多重判断，增加用户的友好性
+                if (attendance.getStarttimeot()!=null&&attendance.getEndtimeot()!=null&&
+                        (date.equals(attendance.getStarttimeot())|| date.after(attendance.getStarttimeot()))
+                        && (date.before(attendance.getEndtimeot())||date.equals(attendance.getEndtimeot()))){
                         //在加班范围内
                         att -= 14;
                         attendanceIntergal -= 14;
-                      //  System.err.println("加班"+entry.getKey()+"日积分为："+attendanceIntergal);
+
+                       // System.err.println("加班"+entry.getKey()+"日积分为："+attendanceIntergal);
                         continue; //加班日没打卡，扣14分
                     }else{
                     //这个人没打卡，看着一天是否是工作日
@@ -54,12 +56,12 @@ public class CalculationOfIntegralUtil {
                     if (i == 0) {  //工作日
                         att -= 9;
                         attendanceIntergal -= 9;
-                        //System.err.println("工作日"+entry.getKey()+"日积分为："+attendanceIntergal);
+                       // System.err.println("工作日"+entry.getKey()+"日积分为："+attendanceIntergal);
                         continue ;//工作日没打卡直接扣分
                     } else { //非工作日
                         att+=0;
                         attendanceIntergal += 0;
-                        //System.err.println("非工作日，不加班"+entry.getKey()+"日积分为："+attendanceIntergal);
+                      //  System.err.println("非工作日，不加班"+entry.getKey()+"日积分为："+attendanceIntergal);
                         continue ;//不是工作日，也不用加班，就没有积分
                     }
                 }
@@ -67,15 +69,19 @@ public class CalculationOfIntegralUtil {
                 //打卡记录不为空
                 //打卡记录的格式是否有问题
                 if (entry.getValue().length() == 5) {
-                    if (attendance.getIsovertime() != 1) {    //漏打卡，不加班
+                    if (attendance.getStarttimeot()==null&&attendance.getEndtimeot()==null){
+                       //漏打卡，不加班
                         //att += unnormalMiss(entry);
                         //attendanceIntergal += normalMiss(entry);
                         att -= 9;
                         attendanceIntergal -= 9;
                        // System.err.println("漏打卡，不加班" + entry.getKey() + "日积分为：" + attendanceIntergal);
                         continue;
-                    }
-                    if (date.after(attendance.getStarttimeot()) && date.before(attendance.getEndtimeot()) && cal.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY) {
+                }
+                //对时间的多重判断，增加用户的友好性
+                    if (attendance.getStarttimeot()!=null&&attendance.getEndtimeot()!=null&&
+                            (date.equals(attendance.getStarttimeot())|| date.after(attendance.getStarttimeot()))
+                            && (date.before(attendance.getEndtimeot())||date.equals(attendance.getEndtimeot()))) {
                         //在加班范围内
                         //att += normalMiss(entry);
                         //attendanceIntergal += unnormalMiss(entry);
@@ -88,15 +94,16 @@ public class CalculationOfIntegralUtil {
                 } else {
                     //正常打卡，格式没毛病
                     //加班制度
-                    if (attendance.getIsovertime() == 1) {
-                        if (date.after(attendance.getStarttimeot()) && date.before(attendance.getEndtimeot())) {
+                        if (attendance.getStarttimeot()!=null&&attendance.getEndtimeot()!=null&&
+                                (date.equals(attendance.getStarttimeot())|| date.after(attendance.getStarttimeot()))
+                                && (date.before(attendance.getEndtimeot())||date.equals(attendance.getEndtimeot()))){
                             //在加班范围内
                             att += fourteenHoursSystem(entry);
                             attendanceIntergal += fourteenHoursSystem(entry);
-                            //System.err.println("正常加班" + entry.getKey() + "日积分为：" + attendanceIntergal);
+                           // System.err.println("正常加班" + entry.getKey() + "日积分为：" + attendanceIntergal);
                             continue;
                         }
-                    }
+
                     //正常制度
                     att += nineHoursSystem(entry);
                     attendanceIntergal += nineHoursSystem(entry);
