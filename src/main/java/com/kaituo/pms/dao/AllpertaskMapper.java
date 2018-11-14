@@ -2,6 +2,7 @@ package com.kaituo.pms.dao;
 
 import com.kaituo.pms.bean.Allpertask;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -32,7 +33,7 @@ public interface AllpertaskMapper {
      * @param allpertask
      * @return
      */
-    int updateAllpertask(Allpertask allpertask);
+    int updateAllpertask(@Param("allpertask") Allpertask allpertask);
 
     /**
      * 删除全员任务

@@ -37,8 +37,8 @@
             allpertask_time=#{allpertask.allpertask_time,jdbcType=INTEGER},
             allpertask_starttime=#{allpertask.allpertask_starttime,jdbcType=TIMESTAMP},
             allpertask_endtime=#{allpertask.allpertask_endtime,jdbcType=TIMESTAMP},
-            allpertask_status= #{allpertask.allpertask_status,jdbcType=TINYINT}
-            allpertask_image = #{allpertask_image,jdbcType=VARCHAR}
+            allpertask_status= #{allpertask.allpertask_status,jdbcType=TINYINT},
+            allpertask_image = #{allpertask.allpertask_image,jdbcType=VARCHAR}
          where allpertask_id = #{allpertask.allpertask_id,jdbcType=INTEGER}
 	</update>
 

@@ -1,6 +1,7 @@
 package com.kaituo.pms.bean;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Builder;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -28,4 +29,5 @@ public class Allpertask implements Serializable {
     private Integer allpertask_status;
     private Date allpertask_currenttime;
     private String allpertask_image;
+
 }
