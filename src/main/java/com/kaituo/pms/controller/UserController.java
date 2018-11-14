@@ -108,16 +108,13 @@ public class UserController {
             if (null == token1){
                 return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
             }
-
             Integer userId = token1.getUserId();
             User personalDetail = userService.findPersonalDetail(userId);
             if(personalDetail==null){
                 personalDetail=userService.findUserById(userId);
-
               }
             if (null != personalDetail){
                 return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS , personalDetail);}
-
         } catch (Exception e) {
             e.printStackTrace();
             log.error("" + e.getMessage());

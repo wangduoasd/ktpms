@@ -43,4 +43,14 @@ public interface AttendanceMapper {
     int updateByPrimaryKey(Attendance record);
 
     List<Attendance> selectAll();
+    int  updateDeductintegral(@Param("id")int id,@Param("deductintegral")int deductintegral);
+
+    /**
+     * 更新所有员工的积分
+     */
+    void updateEndNum();
+    /**
+     * 删除本月积分计算所得所有数据
+     */
+    void deleteAll();
 }

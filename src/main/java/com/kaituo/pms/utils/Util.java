@@ -209,7 +209,7 @@ public class Util {
         String basePath = "";
 
         if(os.toLowerCase().startsWith("win")){
-            basePath = "E:/fileUpload";
+            basePath = "D:/fileUpload";
         } else {
             basePath = "/var/www/jifen.kaituo.local";
         }
