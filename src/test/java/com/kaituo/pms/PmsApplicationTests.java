@@ -4,7 +4,6 @@ import com.kaituo.pms.bean.FileUploadRecord;
 import com.kaituo.pms.dao.FileUploadRecordMapper;
 import com.kaituo.pms.quartz.QuartzManager;
 import com.kaituo.pms.quartz.ScheduleTask;
-import com.kaituo.pms.quartz.Start;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

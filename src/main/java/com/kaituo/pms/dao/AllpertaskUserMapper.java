@@ -49,20 +49,20 @@ public interface AllpertaskUserMapper {
      * @param allpertaskUser
      * @return
      */
-    int updateuserbyids(AllpertaskUser allpertaskUser);
+    int updateuserbyids(@Param("allpertaskUser")AllpertaskUser allpertaskUser);
 
     /**
      * 根据id修改状态（放弃任务）
      * @param allpertaskUser
      * @return
      */
-    int updateuserbyids2(AllpertaskUser allpertaskUser);
+    int updateuserbyids2(@Param("allpertaskUser")AllpertaskUser allpertaskUser);
     /**
      * 根据id修改状态（审核驳回）
      * @param allpertaskUser
      * @return
      */
-    int updateuserbyids3(AllpertaskUser allpertaskUser);
+    int updateuserbyids3(@Param("allpertaskUser")AllpertaskUser allpertaskUser);
     /**
      * 查询某条任务状态
      * @param allpertask_id
@@ -85,12 +85,12 @@ public interface AllpertaskUserMapper {
      * 任务状态通过审核变为已完成
      * @param allpertaskUser
      */
-    void updateTOfinish(AllpertaskUser allpertaskUser);
+    void updateTOfinish(@Param("allpertaskUser")AllpertaskUser allpertaskUser);
 
     /**
      * 任务状态变为审核中有完成时间
      * @param allpertaskUser
      */
-    void updateTOnofinish(AllpertaskUser allpertaskUser);
+    void updateTOnofinish(@Param("allpertaskUser")AllpertaskUser allpertaskUser);
 
 }
