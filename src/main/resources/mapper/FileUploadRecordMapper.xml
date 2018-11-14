@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kaituo.pms.dao.FileUploadRecordMapper" >
+    <resultMap id="BaseResultMap" type="com.kaituo.pms.bean.FileUploadRecord" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="file_name" property="fileName" jdbcType="VARCHAR" />
+        <result column="uploadfile_user" property="uploadfileUser" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <select id="selectAllRecord"  resultMap="BaseResultMap">
+        SELECT * FROM file_upload_record;
+    </select>
+    <insert id="insertFileRecord" parameterType="com.kaituo.pms.bean.FileUploadRecord">
+        INSERT
+        INTO
+        file_upload_record (file_name,uploadfile_user)
+        VALUES
+        (#{fileUploadRecord.fileName},#{fileUploadRecord.uploadfileUser})
+    </insert>
+    <delete id="deleteFileRecord" parameterType="String">
+        DELETE FROM file_upload_record WHERE file_name=#{fileName};
+    </delete>
+</mapper>
