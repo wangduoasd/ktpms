@@ -41,12 +41,12 @@ public interface AllpertaskMapper {
      */
     int deleteAllpertask(Integer allpertask_id);
 
-    /**
-     * 根据id查询任务名称
-     * @param allpertask_id
-     * @return pertaskName
-     */
-    String findpertaskbyid(Integer allpertask_id);
+//    /**
+//     * 根据id查询任务名称
+//     * @param allpertask_id
+//     * @return pertaskName
+//     */
+//    String findpertaskbyid(Integer allpertask_id);
 
     /**
      * 根据任务id查询所有信息

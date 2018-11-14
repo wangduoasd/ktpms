@@ -16,12 +16,14 @@
 	<insert id="addAllpertask" parameterType="com.kaituo.pms.bean.Allpertask" useGeneratedKeys="true" keyProperty="allpertask_id">
 	 insert into p_allpertask
 	 (allpertask_name,allpertask_difficulty,allpertask_price
-	 ,allpertask_award,allpertask_time,allpertask_starttime,allpertask_endtime
+	 ,allpertask_award,allpertask_time,allpertask_starttime,allpertask_endtime,allpertask_image
 	)
      values
      (#{allpertask_name,jdbcType=VARCHAR},#{allpertask_difficulty,jdbcType=INTEGER},
      #{allpertask_price,jdbcType=INTEGER} ,#{allpertask_award,jdbcType=INTEGER},#{allpertask_time,jdbcType=INTEGER}
-     ,#{allpertask_starttime,jdbcType=TIMESTAMP},#{allpertask_endtime,jdbcType=TIMESTAMP}
+     ,#{allpertask_starttime,jdbcType=TIMESTAMP},#{allpertask_endtime,jdbcType=TIMESTAMP},
+     #{allpertask_image,jdbcType=VARCHAR}
+
      )
 	</insert>
 
@@ -36,6 +38,7 @@
             allpertask_starttime=#{allpertask.allpertask_starttime,jdbcType=TIMESTAMP},
             allpertask_endtime=#{allpertask.allpertask_endtime,jdbcType=TIMESTAMP},
             allpertask_status= #{allpertask.allpertask_status,jdbcType=TINYINT}
+            allpertask_image = #{allpertask_image,jdbcType=VARCHAR}
          where allpertask_id = #{allpertask.allpertask_id,jdbcType=INTEGER}
 	</update>
 

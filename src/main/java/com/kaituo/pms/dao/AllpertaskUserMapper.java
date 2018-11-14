@@ -23,12 +23,7 @@ public interface AllpertaskUserMapper {
      * @return
      */
     int adduser(@Param ("allpertask_id") Integer allpertask_id, @Param ("user_id")Integer user_id);
-    /**
-     * 修改领取为获取时间，
-     * @param allpertaskUser
-     * @return
-     */
-    int updateuser(AllpertaskUser allpertaskUser);
+
     /**
      * 删除全员任务
      * @param allpertask_id
@@ -43,30 +38,59 @@ public interface AllpertaskUserMapper {
     List<AllpertaskUser> findAllpertask(Integer user_id);
 
     /**
-     * @return 领取人数
+     * @return 领取人(分别是谁userid)
      */
-    int findAllpertask_count_status(Integer allpertask_id);
+    List<Integer> findAllpertask_userid(Integer allpertask_id);
+
+
 
     /**
-     * 根据id修改状态(强制修改，将用户状态设为未领取)
-     * @param allpertask_id
+     * 根据id修改状态（领取任务）
+     * @param allpertaskUser
      * @return
      */
-    int updateuserbyid(Integer allpertask_id);
+    int updateuserbyids(AllpertaskUser allpertaskUser);
 
     /**
-     * 根据id修改状态（领取任务）(放弃任务)
+     * 根据id修改状态（放弃任务）
+     * @param allpertaskUser
+     * @return
+     */
+    int updateuserbyids2(AllpertaskUser allpertaskUser);
+    /**
+     * 根据id修改状态（审核驳回）
+     * @param allpertaskUser
+     * @return
+     */
+    int updateuserbyids3(AllpertaskUser allpertaskUser);
+    /**
+     * 查询某条任务状态
      * @param allpertask_id
      * @param user_id
-     * @param user_status
      * @return
      */
-    int updateuserbyids(@Param ("allpertask_id") Integer allpertask_id,
-                        @Param ("user_id") Integer user_id,
-                        @Param ("user_status") Integer user_status);
-
     AllpertaskUser findAllpertaskbyids(@Param ("allpertask_id") Integer allpertask_id,
                                        @Param ("user_id") Integer user_id
     );
+
+    /**
+     * 查询审核中的任务
+     * @return  List<AllpertaskUser>
+     */
+    List<AllpertaskUser> find_allpertaskfinish();
+
+
+
+    /**
+     * 任务状态通过审核变为已完成
+     * @param allpertaskUser
+     */
+    void updateTOfinish(AllpertaskUser allpertaskUser);
+
+    /**
+     * 任务状态变为审核中有完成时间
+     * @param allpertaskUser
+     */
+    void updateTOnofinish(AllpertaskUser allpertaskUser);
 
 }

@@ -2,6 +2,7 @@ package com.kaituo.pms.quartz;
 
 
 import com.kaituo.pms.bean.Allpertask;
+import com.kaituo.pms.bean.AllpertaskUser;
 import com.kaituo.pms.dao.AllpertaskMapper;
 import com.kaituo.pms.dao.AllpertaskUserMapper;
 import org.quartz.*;
@@ -37,8 +38,11 @@ public class ScheduleTaskPer  implements Job {
         int jobSay1 = dataMap.getInt ("status");
         int jobSay2 = dataMap.getInt ("task_id");
         int JobSay3 = dataMap.getInt ("user_id");
-
-        allpertaskUserMapper.updateuserbyids (jobSay2,JobSay3,jobSay1);
+        AllpertaskUser allpertaskUser=new AllpertaskUser ();
+        allpertaskUser.setUser_id (JobSay3);
+        allpertaskUser.setAllpertask_id (jobSay2);
+        allpertaskUser.setUser_status (jobSay1);
+        allpertaskUserMapper.updateuserbyids (allpertaskUser);
 //        System.out.println("Instance " + key + " of DumbJob says: " + jobSay1 );
 
 

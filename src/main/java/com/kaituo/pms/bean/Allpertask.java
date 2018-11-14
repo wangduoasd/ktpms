@@ -27,4 +27,5 @@ public class Allpertask implements Serializable {
     private Date allpertask_endtime;
     private Integer allpertask_status;
     private Date allpertask_currenttime;
+    private String allpertask_image;
 }

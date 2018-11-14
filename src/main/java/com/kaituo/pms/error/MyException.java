@@ -1,6 +1,7 @@
 package com.kaituo.pms.error;
 
 import com.kaituo.pms.utils.CodeAndMessageEnum;
+import lombok.Data;
 
 /**
  * @author 张金行
@@ -10,6 +11,7 @@ import com.kaituo.pms.utils.CodeAndMessageEnum;
  * @Description:
  * @date 2018/9/5 000511:34
  */
+@Data
 public class MyException extends RuntimeException {
     private String code;
 

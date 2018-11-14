@@ -13,38 +13,47 @@
         where user_id=#{user_id,jdbcType=INTEGER}
     </select>
 
-    <update id="updateuser" parameterType="java.lang.Integer" >
-        update p_allpertask_user
-        set allpertask_id=#{allpertaskUser.allpertask_id,jdbcType=INTEGER}
-        user_id=#{allpertaskUser.user_id,jdbcType=INTEGER},
-        user_status=#{allpertaskUser.user_status,jdbcType=TINYINT},
-        user_gettime=#{allpertaskUser.user_gettime,jdbcType=TIMESTAMP}
-        where allpertask_id=#{allpertaskUser.allpertask_id,jdbcType=INTEGER}
-    </update>
-
     <delete id="deleteAllpertaskUser" parameterType="java.lang.Integer">
 		delete from p_allpertask_user
 		where allpertask_id=#{allpertask_id,jdbcType=INTEGER}
+		and user_status=0
 	</delete>
 
-    <update id="updateuserbyid" parameterType="java.lang.Integer" >
-        update p_allpertask_user
-        set   user_status=#{0,jdbcType=TINYINT},
-        where allpertask_id=#{allpertask_id,jdbcType=INTEGER}
-    </update>
-
-    <select id="findAllpertask_count_status" parameterType="java.lang.Integer" resultType="Integer">
-        select count(*)
+    <select id="findAllpertask_userid" parameterType="java.lang.Integer" resultType="Integer">
+        select user_id
         from p_allpertask_user
         where allpertask_id=#{allpertask_id,jdbcType=INTEGER}
-        and user_status=1
+        and user_status >0
     </select>
 
-    <update id="updateuserbyids"  parameterType="java.lang.Integer">
-        update p_allpertask
+    <update id="updateuserbyids"  parameterType="com.kaituo.pms.bean.AllpertaskUser">
+        update p_allpertask_user
         set   user_status=#{allpertaskUser.user_status,jdbcType=TINYINT}
+              user_gettime=#{allpertaskUser.user_gettime,jdbcType=TIMESTAMP}
+              user_finishtime=#{allpertaskUser.user_finishtime,jdbcType=TIMESTAMP}
         where allpertask_id=#{allpertaskUser.allpertask_id,jdbcType=INTEGER}
         and  user_id=#{allpertaskUser.user_id,jdbcType=INTEGER}
+        and user_status=0
+    </update>
+
+    <update id="updateuserbyids2"  parameterType="com.kaituo.pms.bean.AllpertaskUser">
+        update p_allpertask_user
+        set   user_status=#{allpertaskUser.user_status,jdbcType=TINYINT}
+              user_gettime=#{allpertaskUser.user_gettime,jdbcType=TIMESTAMP}
+              user_finishtime=#{allpertaskUser.user_finishtime,jdbcType=TIMESTAMP}
+        where allpertask_id=#{allpertaskUser.allpertask_id,jdbcType=INTEGER}
+        and  user_id=#{allpertaskUser.user_id,jdbcType=INTEGER}
+        and user_status=1
+    </update>
+
+    <update id="updateuserbyids3"  parameterType="com.kaituo.pms.bean.AllpertaskUser">
+        update p_allpertask_user
+        set   user_status=#{allpertaskUser.user_status,jdbcType=TINYINT}
+              user_gettime=#{allpertaskUser.user_gettime,jdbcType=TIMESTAMP}
+              user_finishtime=#{allpertaskUser.user_finishtime,jdbcType=TIMESTAMP}
+        where allpertask_id=#{allpertaskUser.allpertask_id,jdbcType=INTEGER}
+        and  user_id=#{allpertaskUser.user_id,jdbcType=INTEGER}
+        and user_status=2
     </update>
 
     <select id="findAllpertaskbyids" parameterType="java.lang.Integer" resultType="com.kaituo.pms.bean.AllpertaskUser">
@@ -54,5 +63,26 @@
         and allpertask_id=#{allpertask_id,jdbcType=INTEGER}
     </select>
 
+    <select id="find_allpertaskfinish"  resultType="com.kaituo.pms.bean.AllpertaskUser">
+        select *
+        from p_allpertask_user
+        where user_status=2
+    </select>
 
+    <update id="updateTOfinish" parameterType="com.kaituo.pms.bean.AllpertaskUser">
+        update p_allpertask_user
+        set   user_status=#{allpertaskUser.user_status,jdbcType=TINYINT}
+        where allpertask_id=#{allpertaskUser.allpertask_id,jdbcType=INTEGER}
+        and  user_id=#{allpertaskUser.user_id,jdbcType=INTEGER}
+        and user_status=2
+    </update>
+
+    <update id="updateTOnofinish"  parameterType="com.kaituo.pms.bean.AllpertaskUser">
+        update p_allpertask_user
+        set   user_status=#{allpertaskUser.user_status,jdbcType=TINYINT}
+              user_finishtime=#{allpertaskUser.user_finishtime,jdbcType=TIMESTAMP}
+        where allpertask_id=#{allpertaskUser.allpertask_id,jdbcType=INTEGER}
+        and  user_id=#{allpertaskUser.user_id,jdbcType=INTEGER}
+        and user_status=1
+    </update>
 </mapper>
