@@ -1,6 +1,9 @@
 package com.kaituo.pms.utils;
 
+import com.kaituo.pms.DTO.AttendanceDTO;
+import com.kaituo.pms.bean.Attendance;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -8,10 +11,7 @@ import java.net.URLEncoder;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 /**
  * @program: pms
@@ -241,5 +241,15 @@ public class Util {
     public static Timestamp getTimestamp() {
         String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
         return  Timestamp.valueOf(time);
+    }
+    public static List<AttendanceDTO> AttendanceConv(List<Attendance> attendances){
+        List<AttendanceDTO> attendanceDTOS=new ArrayList<AttendanceDTO>();
+        for (Attendance at:attendances
+             ) {
+            AttendanceDTO attendanceDTO=new AttendanceDTO();
+            BeanUtils.copyProperties(at,attendanceDTO);
+            attendanceDTOS.add(attendanceDTO);
+        }
+        return attendanceDTOS;
     }
 }

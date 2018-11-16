@@ -1,6 +1,7 @@
 package com.kaituo.pms.controller;
 
 
+import com.kaituo.pms.DTO.AttendanceDTO;
 import com.kaituo.pms.bean.Attendance;
 import com.kaituo.pms.bean.FileUploadRecord;
 import com.kaituo.pms.bean.Token;
@@ -90,19 +91,20 @@ public class AttendanceController {
     @ResponseBody
     public OutJSON selectAttendance() {
         try {
-            String token =ContextHolderUtils.getRequest().getHeader("token");
-            // 检查token并获得userID
-            Token token1 = tokenService.selectUserIdByToken(token);
-            if (null == token1){
-                return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
-            }
-            // 权限控制
-
-            if(roleService.checkRole(Constant.ROLE_TASK,token1.getUserId())){
-                return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
-            }
+//            String token =ContextHolderUtils.getRequest().getHeader("token");
+//            // 检查token并获得userID
+//            Token token1 = tokenService.selectUserIdByToken(token);
+//            if (null == token1){
+//                return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+//            }
+//            // 权限控制
+//
+//            if(roleService.checkRole(Constant.ROLE_TASK,token1.getUserId())){
+//                return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+//            }
             List<Attendance> attendances = attendacneService.selectAll();
-            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,attendances);
+            List<AttendanceDTO> attendanceDTOS=Util.AttendanceConv(attendances);
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,attendanceDTOS);
         } catch (Exception e) {
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
         }
