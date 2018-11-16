@@ -5,6 +5,7 @@ import com.kaituo.pms.service.AllpertaskService;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -25,7 +26,7 @@ public class AllpertaskServiceImplTest {
     AllpertaskService allpertaskService;
 
     @Test
-    public void distribute_Allpertask() {
+    public void distribute_Allpertask() throws SchedulerException {
 
         Allpertask allpertask = new Allpertask();
         allpertask.setAllpertask_name("第一个任务");
@@ -49,34 +50,45 @@ public class AllpertaskServiceImplTest {
 
     @Test
     public void find_allpertaskfinish() {
+        System.out.println ("-------------------------------------------");
+        System.out.println (allpertaskService.find_allpertaskfinish ());
     }
 
     @Test
     public void pass_allpertask() {
+        allpertaskService.pass_allpertask (9,1);
     }
 
     @Test
-    public void fail_allpertask() {
+    public void fail_allpertask() throws InterruptedException {
+        allpertaskService.fail_allpertask (8,3);
     }
 
     @Test
     public void find_Allpertask_ofuser() {
+        allpertaskService.find_Allpertask_ofuser (2,1);
     }
 
     @Test
     public void allpertaskList() {
+        allpertaskService.AllpertaskList ();
     }
 
     @Test
     public void get_Allpertask() throws Exception {
-        System.out.println(allpertaskService.get_Allpertask(6,1));
+        allpertaskService.get_Allpertask(8,2);
+        System.out.println (allpertaskService.get_Allpertask(8,3));
+        allpertaskService.get_Allpertask(9,2);
+        System.out.println (allpertaskService.get_Allpertask(9,1));
     }
 
     @Test
     public void giveup_allpertask() {
+        allpertaskService.giveup_allpertask (8,2);
     }
 
     @Test
     public void finish_allpertask() {
+        allpertaskService.finish_allpertask (9,1);
     }
 }

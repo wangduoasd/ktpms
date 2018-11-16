@@ -1,9 +1,12 @@
 package com.kaituo.pms.quartz;
 
+import com.kaituo.pms.dao.AllpertaskMapper;
 import com.kaituo.pms.error.MyException;
 import com.kaituo.pms.utils.CodeAndMessageEnum;
 import lombok.Data;
 import org.quartz.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.Date;
 
@@ -13,10 +16,20 @@ import java.util.Date;
  * @date 2018/11/5 - 20:17
  */
 @Data
+@Service
 public class QuartzManager {
-
     //注入调度
+    @Autowired
     private Scheduler scheduler;
+
+    public QuartzManager(Scheduler scheduler){
+        this.scheduler = scheduler;
+    }
+
+    private AllpertaskMapper allpertaskMapper;
+
+
+
 
     //新增定时任务
     @SuppressWarnings ({"unchecked","rawtypes"})
@@ -29,6 +42,7 @@ public class QuartzManager {
                     .usingJobData ("status",status)
                     .usingJobData ("task_id",allpertaskid)
                     .build ();
+           // scheduler.getContext().put("allpertaskMapper",allpertaskMapper);
             //2.配置触发器
             //a.新建一个触发器构造类
             TriggerBuilder<Trigger> triggerBuilder=TriggerBuilder.newTrigger ();
@@ -47,6 +61,7 @@ public class QuartzManager {
             scheduler.scheduleJob (jobDetail,trigger);
             //启动调度器
             if(!scheduler.isShutdown ()){
+
                 scheduler.start ();
             }
 

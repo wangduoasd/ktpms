@@ -28,8 +28,8 @@
 
     <update id="updateuserbyids"  parameterType="com.kaituo.pms.bean.AllpertaskUser">
         update p_allpertask_user
-        set   user_status=#{allpertaskUser.user_status,jdbcType=TINYINT}
-              user_gettime=#{allpertaskUser.user_gettime,jdbcType=TIMESTAMP}
+        set   user_status=#{allpertaskUser.user_status,jdbcType=TINYINT},
+              user_gettime=#{allpertaskUser.user_gettime,jdbcType=TIMESTAMP},
               user_finishtime=#{allpertaskUser.user_finishtime,jdbcType=TIMESTAMP}
         where allpertask_id=#{allpertaskUser.allpertask_id,jdbcType=INTEGER}
         and  user_id=#{allpertaskUser.user_id,jdbcType=INTEGER}
@@ -38,8 +38,8 @@
 
     <update id="updateuserbyids2"  parameterType="com.kaituo.pms.bean.AllpertaskUser">
         update p_allpertask_user
-        set   user_status=#{allpertaskUser.user_status,jdbcType=TINYINT}
-              user_gettime=#{allpertaskUser.user_gettime,jdbcType=TIMESTAMP}
+        set   user_status=#{allpertaskUser.user_status,jdbcType=TINYINT},
+              user_gettime=#{allpertaskUser.user_gettime,jdbcType=TIMESTAMP},
               user_finishtime=#{allpertaskUser.user_finishtime,jdbcType=TIMESTAMP}
         where allpertask_id=#{allpertaskUser.allpertask_id,jdbcType=INTEGER}
         and  user_id=#{allpertaskUser.user_id,jdbcType=INTEGER}
@@ -48,8 +48,8 @@
 
     <update id="updateuserbyids3"  parameterType="com.kaituo.pms.bean.AllpertaskUser">
         update p_allpertask_user
-        set   user_status=#{allpertaskUser.user_status,jdbcType=TINYINT}
-              user_gettime=#{allpertaskUser.user_gettime,jdbcType=TIMESTAMP}
+        set   user_status=#{allpertaskUser.user_status,jdbcType=TINYINT},
+              user_gettime=#{allpertaskUser.user_gettime,jdbcType=TIMESTAMP},
               user_finishtime=#{allpertaskUser.user_finishtime,jdbcType=TIMESTAMP}
         where allpertask_id=#{allpertaskUser.allpertask_id,jdbcType=INTEGER}
         and  user_id=#{allpertaskUser.user_id,jdbcType=INTEGER}
@@ -79,7 +79,7 @@
 
     <update id="updateTOnofinish"  parameterType="com.kaituo.pms.bean.AllpertaskUser">
         update p_allpertask_user
-        set   user_status=#{allpertaskUser.user_status,jdbcType=TINYINT}
+        set   user_status=#{allpertaskUser.user_status,jdbcType=TINYINT},
               user_finishtime=#{allpertaskUser.user_finishtime,jdbcType=TIMESTAMP}
         where allpertask_id=#{allpertaskUser.allpertask_id,jdbcType=INTEGER}
         and  user_id=#{allpertaskUser.user_id,jdbcType=INTEGER}

@@ -1,12 +1,28 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+<!--<?xml version="1.0" encoding="UTF-8"?>-->
+<!--<beans xmlns="http://www.springframework.org/schema/beans"-->
+       <!--xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"-->
+       <!--xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">-->
 
-    <bean id="scheduler" lazy-init="true" autowire="no" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
-    </bean>
-    <bean id="quartzManager" class="com.kaituo.pms.quartz.QuartzManager" lazy-init="false" init-method="startJobs">
-        <property name="scheduler" ref="scheduler"></property>
-    </bean>
+    <!--<bean id="SchedulerFactoryBean" lazy-init="true" autowire="no" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">-->
 
-</beans>
+        <!--&lt;!&ndash; 这里配置任务不随spring容器初始化而自动启动 &ndash;&gt;-->
+        <!--<property name="autoStartup" value="false"/>-->
+    <!--</bean>-->
+
+    <!--<bean id="quartzManager" class="com.kaituo.pms.quartz.QuartzManager" lazy-init="false" init-method="startJobs">-->
+        <!--<property name="scheduler" ref="SchedulerFactoryBean"></property>-->
+    <!--</bean>-->
+
+    <!--&lt;!&ndash;<bean id="AllpertaskService" class="com.kaituo.pms.serviceImpl.AllpertaskServiceImpl"></bean>&ndash;&gt;-->
+    <!--<bean name="ScheduleTask" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">-->
+           <!--<property name="jobClass" value="com.kaituo.pms.quartz.ScheduleTask" />-->
+        <!--&lt;!&ndash;<property name="jobDataAsMap">&ndash;&gt;-->
+            <!--&lt;!&ndash;<map>&ndash;&gt;-->
+                <!--&lt;!&ndash;<entry key="AllpertaskService" value-ref="AllpertaskService"></entry>&ndash;&gt;-->
+            <!--&lt;!&ndash;</map>&ndash;&gt;-->
+
+        <!--&lt;!&ndash;</property>&ndash;&gt;-->
+
+    <!--</bean>-->
+
+<!--</beans>-->

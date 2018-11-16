@@ -18,6 +18,7 @@ public class OutPut {
 
 
 
+
     public OutPut(){
         this.code=CommonEnum.ERROR.getCode();
         this.message=CommonEnum.ERROR.getName();
@@ -68,5 +69,12 @@ public class OutPut {
         outPut.setCode(CommonEnum.NOLOGGING.getCode());
         outPut.setMessage(CommonEnum.NOLOGGING.getName());
         return outPut;
+    }
+    public  static OutPut getInstance(CodeAndMessageEnum codeAndMessageEnum){
+        OutPut outPut = new OutPut();
+        outPut.data=null;
+        outPut.code = codeAndMessageEnum.getCode();
+        outPut.message = codeAndMessageEnum.getMessage();
+        return  outPut;
     }
 }

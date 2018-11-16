@@ -3,6 +3,7 @@ package com.kaituo.pms.service;
 
 import com.kaituo.pms.DTO.AllpertaskDTO;
 import com.kaituo.pms.bean.Allpertask;
+import org.quartz.SchedulerException;
 
 import java.util.Date;
 import java.util.List;
@@ -38,4 +39,5 @@ public interface AllpertaskService {
 
     //完成任务
     void finish_allpertask(int allpertaskid,int userid);
+
 }

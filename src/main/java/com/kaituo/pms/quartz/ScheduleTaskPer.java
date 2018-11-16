@@ -29,7 +29,7 @@ public class ScheduleTaskPer  implements Job {
      */
 
     @Override
-    public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
+    public void execute(JobExecutionContext jobExecutionContext)  {
 
         JobKey key = jobExecutionContext.getJobDetail().getKey();
 

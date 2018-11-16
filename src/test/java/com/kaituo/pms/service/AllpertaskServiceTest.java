@@ -4,6 +4,7 @@ import com.kaituo.pms.bean.Allpertask;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -26,7 +27,7 @@ public class AllpertaskServiceTest {
     @Autowired
     AllpertaskService allpertaskService;
     @Test
-    public void distribute_Allpertask() throws ParseException {
+    public void distribute_Allpertask() throws ParseException, SchedulerException {
         Allpertask allpertask=new Allpertask ();
         allpertask.setAllpertask_name ("扫地");
         allpertask.setAllpertask_difficulty (3);

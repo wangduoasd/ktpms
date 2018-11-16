@@ -12,6 +12,8 @@ import com.kaituo.pms.quartz.ScheduleTask;
 import com.kaituo.pms.quartz.ScheduleTaskPer;
 import com.kaituo.pms.service.AllpertaskService;
 import com.kaituo.pms.utils.CodeAndMessageEnum;
+import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -32,6 +34,8 @@ import java.util.List;
 @Transactional(rollbackFor =MyException.class )
 public class AllpertaskServiceImpl implements AllpertaskService {
     @Autowired
+    private QuartzManager quartzManager;
+    @Autowired
    private UserMapper userMapper;
     @Autowired
     private   AllpertaskMapper allpertaskMapper;
@@ -39,9 +43,9 @@ public class AllpertaskServiceImpl implements AllpertaskService {
     private   AllpertaskUserMapper allpertaskUserMapper;
     @Autowired
     private IntegralMapper integralMapper;
+
     int i=0;
-    ApplicationContext context=new ClassPathXmlApplicationContext ("classpath:quartz-context.xml");
-    QuartzManager quartzManager=(QuartzManager)context.getBean("quartzManager");
+
 
     /**
      * 添加全员人物
@@ -75,6 +79,7 @@ public class AllpertaskServiceImpl implements AllpertaskService {
             String startCron = formatter.format(starttime);
 
             try {
+               // scheduler.getContext().put("allpertaskService",allpertaskService);
                 quartzManager.addjob (
                         name,
                         "start_jobGroup",
@@ -255,7 +260,7 @@ public class AllpertaskServiceImpl implements AllpertaskService {
      * @return
      */
     @Override
-    public void pass_allpertask(int allpertask_id, int userid) {
+     public void pass_allpertask(int allpertask_id, int userid) {
         AllpertaskUser allpertaskUser = new AllpertaskUser ();
         allpertaskUser.setUser_id (userid);
         allpertaskUser.setUser_status (3);
@@ -264,6 +269,43 @@ public class AllpertaskServiceImpl implements AllpertaskService {
         allpertaskUserMapper.updateTOfinish (allpertaskUser);
         //重新添加对应关系
         allpertaskUserMapper.adduser (allpertask_id,userid);
+        //加积分
+        Allpertask allpertask= null;
+        try {
+            allpertask = allpertaskMapper.findallpertaskbyid (allpertask_id);
+        } catch (MyException e) {
+            throw new MyException (CodeAndMessageEnum.FIND_PERTASK_ERROR);
+        }
+        User user= null;
+        try {
+            user = userMapper.selectByPrimaryKey (userid);
+        } catch (MyException e) {
+            throw new MyException (CodeAndMessageEnum.GET_USERINFORMATION_ERROR);
+        }
+        int integral= user.getUserIntegral ();//当前用户总积分
+        int award=allpertask.getAllpertask_award ();//奖励的积分
+        int price=allpertask.getAllpertask_price ();//返还的押金
+        int count=integral+award+price;//奖励后后的总积分
+        Integral integral1=new Integral();
+        integral1.setUserId (userid);
+        integral1.setIntegralStartnum (integral);
+        integral1.setIntegralChangestr ("完成全员任务时，要奖励积分，返还押金");
+        integral1.setIntegralChangeint (award+price);
+        integral1.setIntegralEndnum (count);
+        try {
+            integralMapper.insert (integral1);//添加详细信息
+        } catch (MyException e) {
+            throw new MyException (CodeAndMessageEnum.UPDATE_INTEGRAL_ERROR);
+        }
+        User user1=new User();
+        user1.setUserIntegral (count);
+        UserExample example=new UserExample ();
+        example.createCriteria ().andUserIdEqualTo (userid);
+        try {
+            userMapper.updateByExampleSelective (user1,example);
+        } catch (MyException e) {
+            throw new MyException (CodeAndMessageEnum.UPDATE_INTEGRALUSER_ERROR);
+        }
     }
 
     /**
@@ -473,7 +515,17 @@ public class AllpertaskServiceImpl implements AllpertaskService {
      */
     @Override
     public String get_Allpertask(int allpertaskid, int userid) throws InterruptedException {
+        Allpertask allpertask = null;
         try {
+            allpertask = allpertaskMapper.findallpertaskbyid (allpertaskid);
+        } catch (MyException e) {
+            throw new MyException (CodeAndMessageEnum.FIND_PERTASK_ERROR);
+        }
+        try {
+            if(allpertask.getAllpertask_status ()!=1){
+                String message="任务未开始";
+                return message;
+            }
             AllpertaskUser allpertaskUser = new AllpertaskUser ();
             allpertaskUser.setUser_id (userid);
             allpertaskUser.setUser_status (1);
@@ -486,12 +538,7 @@ public class AllpertaskServiceImpl implements AllpertaskService {
            return message;
         }
         //扣除押金
-        Allpertask allpertask = null;
-        try {
-            allpertask = allpertaskMapper.findallpertaskbyid (allpertaskid);
-        } catch (MyException e) {
-            throw new MyException (CodeAndMessageEnum.FIND_PERTASK_ERROR);
-        }
+
         //对积分表做减法，需要积分表操作,获取user表中的积分
         User user = null;
         try {
@@ -613,8 +660,10 @@ public class AllpertaskServiceImpl implements AllpertaskService {
     @Override
     public void finish_allpertask(int allpertaskid, int userid) {
         try {
+            Date time=new Date();
             AllpertaskUser allpertaskUser = new AllpertaskUser ();
             allpertaskUser.setAllpertask_id (allpertaskid);
+            allpertaskUser.setUser_finishtime (time);
             allpertaskUser.setUser_status (2);
             allpertaskUser.setUser_id (userid);
             allpertaskUserMapper.updateTOnofinish (allpertaskUser);
@@ -635,36 +684,7 @@ public class AllpertaskServiceImpl implements AllpertaskService {
                 "领取任务"
         );
         //加对应积分
-        User user= null;
-        try {
-            user = userMapper.selectByPrimaryKey (userid);
-        } catch (MyException e) {
-          throw new MyException (CodeAndMessageEnum.GET_USERINFORMATION_ERROR);
-        }
-        int integral= user.getUserIntegral ();//当前用户总积分
-        int award=allpertask.getAllpertask_award ();//奖励的积分
-        int price=allpertask.getAllpertask_price ();//返还的押金
-        int count=integral+award+price;//奖励后后的总积分
-        Integral integral1=new Integral();
-        integral1.setUserId (userid);
-        integral1.setIntegralStartnum (integral);
-        integral1.setIntegralChangestr ("完成全员任务时，要奖励积分，返还押金");
-        integral1.setIntegralChangeint (award+price);
-        integral1.setIntegralEndnum (count);
-        try {
-            integralMapper.insert (integral1);//添加详细信息
-        } catch (MyException e) {
-            throw new MyException (CodeAndMessageEnum.UPDATE_INTEGRAL_ERROR);
-        }
-        User user1=new User();
-        user1.setUserIntegral (count);
-        UserExample example=new UserExample ();
-        example.createCriteria ().andUserIdEqualTo (userid);
-        try {
-            userMapper.updateByExampleSelective (user1,example);
-        } catch (MyException e) {
-           throw new MyException (CodeAndMessageEnum.UPDATE_INTEGRALUSER_ERROR);
-        }
+
         allpertaskUserMapper.adduser (allpertaskid,userid);
     }
 
