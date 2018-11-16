@@ -23,7 +23,7 @@ import java.text.ParseException;
 import java.util.List;
 
 @Slf4j
-@Controller
+@RestController
 @RequestMapping("/attendance")
 @CrossOrigin
 public class AttendanceController {
@@ -246,11 +246,16 @@ public class AttendanceController {
      * @return
      * @throws IOException
      */
-    @RequestMapping(value = "/deleteFile", method = RequestMethod.POST)
+    @PostMapping("/deleteFile")
     public OutJSON deleteFile(String fileName)  {
         try {
             boolean flag=attendacneService.downFile(fileName);
-            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,flag);
+            if(flag){
+                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,flag);
+            }else {
+                return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR,flag);
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
