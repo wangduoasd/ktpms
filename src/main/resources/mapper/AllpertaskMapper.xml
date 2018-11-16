@@ -30,15 +30,7 @@
 	<update id="updateAllpertask" parameterType="com.kaituo.pms.bean.Allpertask">
 		update p_allpertask
 		set
-		    allpertask_name=#{allpertask.allpertask_name,jdbcType=VARCHAR},
-		    allpertask_difficulty=#{allpertask.allpertask_difficulty,jdbcType=INTEGER},
-            allpertask_price=#{allpertask.allpertask_price,jdbcType=INTEGER} ,
-            allpertask_award=#{allpertask.allpertask_award,jdbcType=INTEGER},
-            allpertask_time=#{allpertask.allpertask_time,jdbcType=INTEGER},
-            allpertask_starttime=#{allpertask.allpertask_starttime,jdbcType=TIMESTAMP},
-            allpertask_endtime=#{allpertask.allpertask_endtime,jdbcType=TIMESTAMP},
-            allpertask_status= #{allpertask.allpertask_status,jdbcType=TINYINT},
-            allpertask_image = #{allpertask.allpertask_image,jdbcType=VARCHAR}
+            allpertask_status= #{allpertask.allpertask_status,jdbcType=TINYINT}
          where allpertask_id = #{allpertask.allpertask_id,jdbcType=INTEGER}
 	</update>
 
@@ -46,25 +38,17 @@
 		update  p_allpertask
 		set
 		   allpertask_status=3
+		   where allpertask_id = #{allpertask.allpertask_id,jdbcType=INTEGER}
 	</update>
-
-	<select id="findpertaskbyid" parameterType="java.lang.Integer" resultType="String">
-	    select
-	    	allpertask_name
-	    from
-	    	p_allpertask
-	    where allpertask_id=#{allpertask_id,jdbcType=INTEGER}
-	    and allpertask_status！=3
-	</select>
 
 	<select id="findallpertaskbyid" parameterType="java.lang.Integer" resultType="com.kaituo.pms.bean.Allpertask">
 	    select
 	    	*
 	    from
 	    	p_allpertask
+	    where 	allpertask_id=#{allpertask_id,jdbcType=INTEGER}
 	    	order by
 	    	allpertask_currenttime
 	    	desc
-	    where 	allpertask_id=#{allpertask_id,jdbcType=INTEGER}
 	</select>
 </mapper>

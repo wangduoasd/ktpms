@@ -1,5 +1,8 @@
 package com.kaituo.pms.controller;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.kaituo.pms.DTO.AllpertaskDTO;
 import com.kaituo.pms.bean.Allpertask;
 import com.kaituo.pms.bean.Task;
 import com.kaituo.pms.bean.Token;
@@ -9,14 +12,15 @@ import com.kaituo.pms.service.RoleService;
 import com.kaituo.pms.service.TokenService;
 import com.kaituo.pms.utils.*;
 import lombok.extern.slf4j.Slf4j;
+import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import static com.kaituo.pms.utils.OutJSON.getInstance;
@@ -35,10 +39,20 @@ public class AllpertaskController {
     TokenService tokenService;
     @Autowired
     RoleService roleService;
-    @PostMapping("authority/five/tasks/statusAll")
-    public OutPut distributeAllTask(MultipartFile file,Allpertask allpertask,String start,String end){
+
+    /**
+     *发布任务
+     * @param file 文件路径
+     * @param allpertask
+     * @param start 开始时间
+     * @param end 结束时间
+     * @return id
+     * @throws ParseException
+     */
+
+    @PostMapping("authority/five/tasks/manage/statusAll")
+    public OutPut distributeAllTask(MultipartFile file,Allpertask allpertask,String start,String end) throws ParseException{
         try {
-            int id=allpertaskService.distribute_Allpertask(allpertask);
             String token =ContextHolderUtils.getRequest().getHeader("token");
             // 检查token并获得userID
             Token token1 = tokenService.selectUserIdByToken(token);
@@ -70,24 +84,277 @@ public class AllpertaskController {
                     // 获取相对路径
                     String url = (String) map.get ("url");
                     url = url.replace (Util.seperator, "/");
+                    allpertask.setAllpertask_image (url);
             }
-//            SimpleDateFormat formatter = new SimpleDateFormat ("ss mm HH dd MM  yyyy");
-//            String endCron = formatter.format (totime);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date startat =  sdf.parse(start);;
+            Date endat=sdf.parse (end);
+            allpertask.setAllpertask_starttime (startat);
+            allpertask.setAllpertask_endtime (endat);
+            int id=allpertaskService.distribute_Allpertask(allpertask);
             return ResultUtil.success (id);
         } catch (MyException e) {
             return ResultUtil.error (e.getCode (), e.getMessage ());
         }
 
     }
-    @PutMapping("authority/five/tasks/deleteAll")
-    public OutPut deleteAllTask(Integer Allpertask_id){
+
+    /**
+     * 删除任务（备用，可删除已过期且无人领的任务关系p_allpertask_user）
+     * @param Allpertask_id
+     * @return
+     */
+    @PutMapping("authority/five/tasks/manage/deleteAll")
+    public OutPut deleteAllTask(@RequestParam("Allpertask_id") Integer Allpertask_id){
         try {
+            String token =ContextHolderUtils.getRequest().getHeader("token");
+            // 检查token并获得userID
+            Token token1 = tokenService.selectUserIdByToken(token);
+            if (null == token1){
+                return  OutPut.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
+            // 权限控制
+
+            if(roleService.checkRole(Constant.ROLE_TASK,token1.getUserId())){
+                return  OutPut.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
             allpertaskService.delete_Allpertask (Allpertask_id);
+            return ResultUtil.success ();
+        } catch (MyException e) {
+            return ResultUtil.error (e.getCode (), e.getMessage ());
+        }
+
+    }
+
+    /**
+     * 任务列表（管理员）
+     * @param pn
+     * @return
+     */
+   @GetMapping(value = "authority/five/tasks/manage/select/{pn}")
+    public OutPut AllpertaskList(@PathVariable(value="pn")Integer pn){
+        //引入PageHelper分页插件
+        //查询只需要调用,传入的页码，以及每页的大小
+        PageHelper.startPage(pn,10);
+        //startpage后面紧的这个查询就是一个分页查询
+       List<AllpertaskDTO> allpertaskDTOList= null;
+       try {
+           allpertaskDTOList = allpertaskService.find_Allpertask_ofadmin ();
+       } catch (MyException e) {
+           return ResultUtil.error(e.getCode (), e.getMessage ());
+       }
+       //使用pageinfo包装查询后的结果，只需要将pageinfo交给页面就行了
+        //封装了详细的分页信息，包括我们查询出来的数据,传入连续显示的页数。
+        PageInfo page = new PageInfo(allpertaskDTOList);
+        return ResultUtil.success(page);
+    }
+
+    /**
+     * 审核列表
+     * @param pn
+     * @return
+     */
+    @GetMapping(value = "authority/five/tasks/manage/checkselect/{pn}")
+    public OutPut CheckAllpertaskList(@PathVariable(value="pn")Integer pn){
+        //引入PageHelper分页插件
+        //查询只需要调用,传入的页码，以及每页的大小
+        PageHelper.startPage(pn,10);
+        //startpage后面紧的这个查询就是一个分页查询
+        List<AllpertaskDTO> allpertaskDTOList= null;
+        try {
+            allpertaskDTOList = allpertaskService.find_allpertaskfinish();
+        } catch (MyException e) {
+            return ResultUtil.error(e.getCode (), e.getMessage ());
+        }
+
+        PageInfo page = new PageInfo(allpertaskDTOList);
+        return ResultUtil.success(page);
+    }
+
+    /**
+     * 审核通过
+     * @param allpertask_id
+     * @param userid
+     * @return
+     */
+    @PostMapping(value = "authority/five/tasks/manage/checkpass")
+    public OutPut Check_Pass(@RequestParam("allpertask_id")int allpertask_id, @RequestParam("userid")int userid){
+        try {
+            String token =ContextHolderUtils.getRequest().getHeader("token");
+            // 检查token并获得userID
+            Token token1 = tokenService.selectUserIdByToken(token);
+            if (null == token1){
+                return  OutPut.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
+            // 权限控制
+
+            if(roleService.checkRole(Constant.ROLE_TASK,token1.getUserId())){
+                return  OutPut.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
+            allpertaskService.pass_allpertask (allpertask_id,userid);
             return ResultUtil.success ();
         } catch (MyException e) {
             return ResultUtil.error (e.getCode (), e.getMessage ());
         }
     }
 
+    /**
+     * 审核未通过
+     * @param allpertask_id
+     * @param userid
+     * @return
+     * @throws InterruptedException
+     */
+    @PutMapping(value = "authority/five/tasks/manage/checkfail")
+    public OutPut Check_Fail(@RequestParam("allpertask_id")int allpertask_id, @RequestParam("userid")int userid) throws InterruptedException {
+        try {
+            String token =ContextHolderUtils.getRequest().getHeader("token");
+            // 检查token并获得userID
+            Token token1 = tokenService.selectUserIdByToken(token);
+            if (null == token1){
+                return  OutPut.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
+            // 权限控制
 
+            if(roleService.checkRole(Constant.ROLE_TASK,token1.getUserId())){
+                return  OutPut.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
+            String message=allpertaskService.fail_allpertask (allpertask_id,userid);
+            return ResultUtil.success (message);
+        } catch (MyException e) {
+            return ResultUtil.error (e.getCode (), e.getMessage ());
+        }
+
+
+    }
+
+    /**
+     * 我的任务列表(进行中1，审核中2，已完成3)
+     * @param pn
+     * @return
+     */
+    @GetMapping(value = "authority/five/tasks/employee/select/{pn}/{status}")
+    public OutPut AllpertaskListstaff(@PathVariable(value="pn")Integer pn,
+                                      @PathVariable(value="status")Integer status){
+        String token =ContextHolderUtils.getRequest().getHeader("token");
+        // 检查token并获得userID
+        Token token1 = tokenService.selectUserIdByToken(token);
+        int userId=token1.getUserId ();
+        //引入PageHelper分页插件
+        //查询只需要调用,传入的页码，以及每页的大小
+        PageHelper.startPage(pn,10);
+        //startpage后面紧的这个查询就是一个分页查询
+        List<AllpertaskDTO> allpertaskDTOList= null;
+        try {
+            allpertaskDTOList = allpertaskService.find_Allpertask_ofuser (userId,status);
+        } catch (MyException e) {
+            return ResultUtil.error(e.getCode (), e.getMessage ());
+        }
+        //使用pageinfo包装查询后的结果，只需要将pageinfo交给页面就行了
+        PageInfo page = new PageInfo(allpertaskDTOList);
+        return ResultUtil.success(page);
+    }
+
+    /**
+     * 任务大厅
+     * @param pn
+     * @return
+     */
+    @GetMapping(value = "authority/five/tasks/select/{pn}")
+    public OutPut AllstafftaskList(@PathVariable(value="pn")Integer pn){
+        //引入PageHelper分页插件
+        //查询只需要调用,传入的页码，以及每页的大小
+        PageHelper.startPage(pn,10);
+        //startpage后面紧的这个查询就是一个分页查询
+        List<AllpertaskDTO> allpertaskDTOList= null;
+        try {
+            allpertaskDTOList = allpertaskService.AllpertaskList ();
+        } catch (MyException e) {
+            return ResultUtil.error(e.getCode (), e.getMessage ());
+        }
+
+        PageInfo page = new PageInfo(allpertaskDTOList);
+        return ResultUtil.success(page);
+    }
+
+    /**
+     *领取任务
+     * @param allpertask_id
+     * @return
+     * @throws Exception
+     */
+    @PostMapping(value = "authority/five/tasks/employee/get")
+    public OutPut getAllpertask(@RequestParam("allpertask_id")int allpertask_id) throws Exception {
+        try {
+            String token =ContextHolderUtils.getRequest().getHeader("token");
+            // 检查token并获得userID
+            Token token1 = tokenService.selectUserIdByToken(token);
+           int userId= token1.getUserId ();
+            if (null == token1){
+                return  OutPut.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
+            // 权限控制
+
+            if(roleService.checkRole(Constant.ROLE_TASK,token1.getUserId())){
+                return  OutPut.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
+            String message=allpertaskService.get_Allpertask (allpertask_id,userId);
+            return ResultUtil.success (message);
+        } catch (MyException e) {
+            return ResultUtil.error (e.getCode (), e.getMessage ());
+        }
+    }
+
+    /**
+     *取消任务
+     * @param allpertask_id
+     * @return
+     */
+    @PutMapping(value = "authority/five/tasks/employee/giveup")
+    public OutPut giveUpAllpertask(@RequestParam("allpertask_id")int allpertask_id) {
+        try {
+            String token = ContextHolderUtils.getRequest ().getHeader ("token");
+            // 检查token并获得userID
+            Token token1 = tokenService.selectUserIdByToken (token);
+            int userId = token1.getUserId ();
+            if (null == token1) {
+                return OutPut.getInstance (CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
+            // 权限控制
+
+            if (roleService.checkRole (Constant.ROLE_TASK, token1.getUserId ())) {
+                return OutPut.getInstance (CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
+            allpertaskService.giveup_allpertask (allpertask_id, userId);
+            return ResultUtil.success ();
+        } catch (MyException e) {
+            return ResultUtil.error (e.getCode (), e.getMessage ());
+        }
+    }
+        /**
+         *完成任务
+         * @param allpertask_id
+         * @return
+         */
+    @PutMapping(value = "authority/five/tasks/employee/finish")
+     public OutPut finishAllpertask(@RequestParam("allpertask_id")int allpertask_id) {
+            try {
+                String token =ContextHolderUtils.getRequest().getHeader("token");
+                // 检查token并获得userID
+                Token token1 = tokenService.selectUserIdByToken(token);
+                int userId= token1.getUserId ();
+                if (null == token1){
+                    return  OutPut.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+                }
+                // 权限控制
+
+                if(roleService.checkRole(Constant.ROLE_TASK,token1.getUserId())){
+                    return  OutPut.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+                }
+                allpertaskService.finish_allpertask (allpertask_id,userId);
+                return ResultUtil.success ();
+            } catch (MyException e) {
+                return ResultUtil.error (e.getCode (), e.getMessage ());
+            }
+    }
 }
