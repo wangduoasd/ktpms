@@ -622,6 +622,7 @@ public class UserController {
                 return OutJSON.getInstance(CodeAndMessageEnum.USER_LOGIN_ERROR);
             }
             String passwordMD5 = MD5Util.getMD5(password);
+            System.out.println (passwordMD5);
             Login login = userService.login(userId, passwordMD5);
             if (login == null) {
                 return OutJSON.getInstance(CodeAndMessageEnum.USER_LOGIN_ERROR);
