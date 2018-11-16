@@ -1,5 +1,6 @@
 package com.kaituo.pms.utils;
 
+import com.kaituo.pms.error.MyException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,21 +21,21 @@ import java.util.UUID;
 @Slf4j
 public class uploadFile {
 
-    public static String upload(MultipartFile file){
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+    public static String upload(String  fileName,MultipartFile file){
+//        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         if (file.isEmpty()) {
             return "文件为空";
         }
-        // 获取文件名
-        String fileName = file.getOriginalFilename();
-        log.info("上传的文件名为：" + fileName);
-        // 获取文件的后缀名
-        String suffixName = fileName.substring(fileName.lastIndexOf("."));
-        log.info("上传的后缀名为：" + suffixName);
-        // 文件上传后的路径
-        //文件名称为日期+文件名称+后缀
-        fileName=fileName.substring(0,fileName.lastIndexOf("."));
-        fileName = format.format(new Date())+fileName+"--"+ UUID.randomUUID() + suffixName;
+//        // 获取文件名
+//        String fileName = file.getOriginalFilename();
+//        log.info("上传的文件名为：" + fileName);
+//        // 获取文件的后缀名
+//        String suffixName = fileName.substring(fileName.lastIndexOf("."));
+//        log.info("上传的后缀名为：" + suffixName);
+//        // 文件上传后的路径
+//        //文件名称为日期+文件名称+后缀
+//        fileName=fileName.substring(0,fileName.lastIndexOf("."));
+//        fileName = format.format(new Date())+fileName+"--"+ UUID.randomUUID() + suffixName;
         // 检测是否存在目录
         String path=Util.getImgBasePath()+"\\image\\"+fileName;
         Util.makeDirPath(path);
@@ -70,6 +71,7 @@ public class uploadFile {
             response.setHeader("content-disposition", "attachment;filename=" + URLEncoder.encode(realname, "UTF-8"));
             //读取要下载的文件，保存到文件输入流
             FileInputStream in = new FileInputStream(fileSaveRootPath + "\\" + fileName);
+
             //创建输出流
             OutputStream out = response.getOutputStream();
             //创建缓冲区

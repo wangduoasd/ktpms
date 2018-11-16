@@ -28,4 +28,17 @@ public interface AttendacneService {
      */
     void calculationOfIntegral(List<Attendance> attendances);
 
+    /**
+     * 上传文件并同步信息到数据库
+     * @param file
+     * @param username
+     */
+    void uploadFile( MultipartFile file,String username);
+
+    /**
+     * 删除服务器文件（积分考勤表）及数据库记录
+     * @param filename
+     * @return
+     */
+    boolean downFile(String filename);
 }
