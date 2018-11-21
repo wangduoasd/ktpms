@@ -1,12 +1,14 @@
 package com.kaituo.pms.controller;
 
 
+import com.kaituo.pms.DTO.AttendanceDTO;
 import com.kaituo.pms.bean.Attendance;
 import com.kaituo.pms.bean.FileUploadRecord;
 import com.kaituo.pms.bean.Token;
 import com.kaituo.pms.dao.AttendanceMapper;
 import com.kaituo.pms.dao.FileUploadRecordMapper;
 import com.kaituo.pms.service.AttendacneService;
+import com.kaituo.pms.service.RoleService;
 import com.kaituo.pms.service.TokenService;
 import com.kaituo.pms.utils.*;
 import lombok.extern.slf4j.Slf4j;
@@ -36,6 +38,8 @@ public class AttendanceController {
     TokenService tokenService;
     @Autowired
     FileUploadRecordMapper fileUploadRecordMapper;
+    @Autowired
+    RoleService roleService;
     /**
      * 上传Excel表格，并读取表格内容保存到数据库
      *
@@ -44,23 +48,31 @@ public class AttendanceController {
     @PostMapping(value = "/uploadExcel")
     @ResponseBody
     public OutJSON uploadExcel(@RequestParam("file") MultipartFile file,String username) {
-//        String token =ContextHolderUtils.getRequest().getHeader("token");
-//        Token token1 = tokenService.selectUserIdByToken(token);
-//        if (null == token1){
-//            return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
-//        }
-        System.out.println(username);
         String fileName = file.getOriginalFilename();
         try {
+            String token =ContextHolderUtils.getRequest().getHeader("token");
+            // 检查token并获得userID
+            Token token1 = tokenService.selectUserIdByToken(token);
+            if (null == token1){
+                return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
+            // 权限控制
+
+            if(roleService.checkRole(Constant.ROLE_TASK,token1.getUserId())){
+                return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
             Boolean flag=false;
             //读取表格内容保存到数据库
             if (username==""||username==null) {
                 flag=false;
             }else {
+                //删除数据库Attendance中存在的全部数据
                 attendanceMapper.deleteAll();
+                //写入数据
                 flag = attendacneService.uploadExcel(fileName, file);
             }
             if(flag){
+                //上传文件，写入数据库。
                 attendacneService.uploadFile(file,username);
                 return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);
             }else {
@@ -79,14 +91,10 @@ public class AttendanceController {
     @GetMapping(value = "selectAttendance")
     @ResponseBody
     public OutJSON selectAttendance() {
-//        String token =ContextHolderUtils.getRequest().getHeader("token");
-//        Token token1 = tokenService.selectUserIdByToken(token);
-//        if (null == token1){
-//            return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
-//        }
         try {
             List<Attendance> attendances = attendacneService.selectAll();
-            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,attendances);
+            List<AttendanceDTO> attendanceDTOS=Util.AttendanceConv(attendances);
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,attendanceDTOS);
         } catch (Exception e) {
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
         }
@@ -97,13 +105,19 @@ public class AttendanceController {
     @PostMapping(value = "/updateAttendances")
     @ResponseBody
     public OutJSON updateAttendances(@RequestBody List<Attendance> attendanceList) {
-//        String token =ContextHolderUtils.getRequest().getHeader("token");
-//        Token token1 = tokenService.selectUserIdByToken(token);
-//        System.out.println(token1);
-//        if (null == token1){
-//            return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
-//        }
+
         try {
+            String token =ContextHolderUtils.getRequest().getHeader("token");
+            // 检查token并获得userID
+            Token token1 = tokenService.selectUserIdByToken(token);
+            if (null == token1){
+                return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
+            // 权限控制
+
+            if(roleService.checkRole(Constant.ROLE_TASK,token1.getUserId())){
+                return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
             for (int i = 0; i < attendanceList.size(); i++) {
                 attendacneService.updateByExample(attendanceList.get(i));
             }
@@ -120,13 +134,18 @@ public class AttendanceController {
     @PostMapping(value = "/calculationOfIntegral")
     @ResponseBody
     public OutJSON calculationOfIntegral() throws ParseException {
-//        String token =ContextHolderUtils.getRequest().getHeader("token");
-//        Token token1 = tokenService.selectUserIdByToken(token);
-//        System.out.println(token1);
-//        if (null == token1){
-//            return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
-//        }
         try {
+            String token =ContextHolderUtils.getRequest().getHeader("token");
+            // 检查token并获得userID
+            Token token1 = tokenService.selectUserIdByToken(token);
+            if (null == token1){
+                return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
+            // 权限控制
+
+            if(roleService.checkRole(Constant.ROLE_TASK,token1.getUserId())){
+                return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
             List<Attendance> attendances = attendacneService.selectByExample();
             attendacneService.calculationOfIntegral(attendances);
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);
@@ -144,11 +163,6 @@ public class AttendanceController {
     @PostMapping("uploadExcelToIntergral")
     @ResponseBody
     public OutJSON uploadExcelToIntergral(@RequestParam("file") MultipartFile file){
-//        String token =ContextHolderUtils.getRequest().getHeader("token");
-//        Token token1 = tokenService.selectUserIdByToken(token);
-//        if (null == token1){
-//            return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
-//        }
         String fileName = file.getOriginalFilename();
         try {
             List<Object> objects = attendacneService.uploadExcelToIntergral(fileName, file);
@@ -160,27 +174,7 @@ public class AttendanceController {
 
     }
 
-    /**
-     * 删除所有attendance
-     * @return
-     * @throws ParseException
-     */
-//    @PostMapping("deleteAll")
-//    @ResponseBody
-//    public OutJSON deleteAll() throws ParseException {
-////        String token =ContextHolderUtils.getRequest().getHeader("token");
-////        Token token1 = tokenService.selectUserIdByToken(token);
-////        if (null == token1){
-////            return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
-////        }
-//        try {
-//            attendanceMapper.deleteAll();
-//            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
-//        }
-//    }
+
 
     /**
      * 更新计算过后数据的员工积分
@@ -190,12 +184,18 @@ public class AttendanceController {
     @PostMapping("updateEndNum")
     @ResponseBody
     public OutJSON updateEndNum() throws ParseException {
-//        String token =ContextHolderUtils.getRequest().getHeader("token");
-//        Token token1 = tokenService.selectUserIdByToken(token);
-//        if (null == token1){
-//            return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
-//        }
         try {
+            String token =ContextHolderUtils.getRequest().getHeader("token");
+            // 检查token并获得userID
+            Token token1 = tokenService.selectUserIdByToken(token);
+            if (null == token1){
+                return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
+            // 权限控制
+
+            if(roleService.checkRole(Constant.ROLE_TASK,token1.getUserId())){
+                return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
             attendanceMapper.updateEndNum();
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);
         } catch (Exception e) {
@@ -212,6 +212,17 @@ public class AttendanceController {
     @ResponseBody
     public OutJSON selectAllRecord() {
         try {
+            String token =ContextHolderUtils.getRequest().getHeader("token");
+            // 检查token并获得userID
+            Token token1 = tokenService.selectUserIdByToken(token);
+            if (null == token1){
+                return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
+            // 权限控制
+
+            if(roleService.checkRole(Constant.ROLE_TASK,token1.getUserId())){
+                return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+            }
             List<FileUploadRecord> list=fileUploadRecordMapper.selectAllRecord();
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,list);
         } catch (Exception e) {
@@ -220,47 +231,8 @@ public class AttendanceController {
         }
     }
 
-    /**
-     * 下载服务器文件（积分考勤表）
-     * @param request
-     * @param response
-     * @param fileName
-     * @return
-     * @throws IOException
-     */
-    @RequestMapping(value = "/download", method = RequestMethod.GET)
-    public OutJSON download(HttpServletRequest request, HttpServletResponse response, String fileName)  {
-        System.out.println("jinru ");
-        try {
-            String message=uploadFile.download(request,response,fileName);
-            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,message);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
-        }
-    }
 
-    /**
-     * 删除服务器文件（积分考勤表）及数据库记录
-     * @param fileName
-     * @return
-     * @throws IOException
-     */
-    @PostMapping("/deleteFile")
-    public OutJSON deleteFile(String fileName)  {
-        try {
-            boolean flag=attendacneService.downFile(fileName);
-            if(flag){
-                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,flag);
-            }else {
-                return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR,flag);
-            }
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
-        }
-    }
 }
 
 

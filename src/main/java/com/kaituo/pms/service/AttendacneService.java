@@ -35,10 +35,10 @@ public interface AttendacneService {
      */
     void uploadFile( MultipartFile file,String username);
 
-    /**
-     * 删除服务器文件（积分考勤表）及数据库记录
-     * @param filename
-     * @return
-     */
-    boolean downFile(String filename);
+//    /**
+//     * 删除服务器文件（积分考勤表）及数据库记录
+//     * @param filename
+//     * @return
+//     */
+//    boolean downFile(String filename);
 }
