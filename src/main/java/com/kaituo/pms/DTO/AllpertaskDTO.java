@@ -23,16 +23,28 @@ public class AllpertaskDTO {
     private Integer allpertask_price;
     private Integer allpertask_award;
     private Integer allpertask_time;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat( pattern = "yyyy-MM-dd HH:mm:ss")
     private Date allpertask_starttime;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat( pattern = "yyyy-MM-dd HH:mm:ss")
     private Date allpertask_endtime;
     private Integer allpertask_status;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat( pattern = "yyyy-MM-dd HH:mm:ss")
     private Date allpertask_currenttime;
     private String allpertask_image;
+    private String allpertask_describe;
     /**
      * 全员任务中间表数据
      */
+
     private Integer user_status;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat( pattern = "yyyy-MM-dd HH:mm:ss")
     private Date user_gettime;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat( pattern = "yyyy-MM-dd HH:mm:ss")
     private Date user_finishtime;
     /**
      * 领取人数（）
@@ -41,6 +53,6 @@ public class AllpertaskDTO {
     /**
      * 领取人名
      */
-    private List<String> username;
+    private List<GetalltaskperDTO> getalltaskperList;
     private Date resttime;
 }

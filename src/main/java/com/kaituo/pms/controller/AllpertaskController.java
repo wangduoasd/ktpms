@@ -1,10 +1,10 @@
 package com.kaituo.pms.controller;
 
+
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.kaituo.pms.DTO.AllpertaskDTO;
 import com.kaituo.pms.bean.Allpertask;
-import com.kaituo.pms.bean.Task;
 import com.kaituo.pms.bean.Token;
 import com.kaituo.pms.error.MyException;
 import com.kaituo.pms.service.AllpertaskService;
@@ -12,16 +12,13 @@ import com.kaituo.pms.service.RoleService;
 import com.kaituo.pms.service.TokenService;
 import com.kaituo.pms.utils.*;
 import lombok.extern.slf4j.Slf4j;
-import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.kaituo.pms.utils.OutJSON.getInstance;
 
@@ -158,17 +155,20 @@ public class AllpertaskController {
     public OutPut CheckAllpertaskList(@PathVariable(value="pn")Integer pn){
         //引入PageHelper分页插件
         //查询只需要调用,传入的页码，以及每页的大小
-        PageHelper.startPage(pn,10);
+
+
         //startpage后面紧的这个查询就是一个分页查询
-        List<AllpertaskDTO> allpertaskDTOList= null;
         try {
-            allpertaskDTOList = allpertaskService.find_allpertaskfinish();
+            PageHelper.startPage(pn,10);
+            List<AllpertaskDTO>  allpertaskDTOList = allpertaskService.find_allpertaskfinish();
+            PageInfo page = new PageInfo(allpertaskDTOList,5);
+            return ResultUtil.success(page);
         } catch (MyException e) {
             return ResultUtil.error(e.getCode (), e.getMessage ());
         }
 
-        PageInfo page = new PageInfo(allpertaskDTOList);
-        return ResultUtil.success(page);
+
+
     }
 
     /**
@@ -233,13 +233,21 @@ public class AllpertaskController {
      * @param pn
      * @return
      */
-    @GetMapping(value = "authority/five/tasks/employee/select/{pn}/{status}")
-    public OutPut AllpertaskListstaff(@PathVariable(value="pn")Integer pn,
-                                      @PathVariable(value="status")Integer status){
-        String token =ContextHolderUtils.getRequest().getHeader("token");
+    @GetMapping(value = "authority/five/tasks/employee/select/{pn}/{status}/{token}")
+    public OutPut AllpertaskListstaff(@PathVariable(value="pn")int pn,
+                                      @PathVariable(value="status")int status,
+                                      @PathVariable(value="token")String token
+    ){
         // 检查token并获得userID
         Token token1 = tokenService.selectUserIdByToken(token);
-        int userId=token1.getUserId ();
+        if (null == token1){
+            return OutPut.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+        }
+        if (null == token1.getUserId()){
+            return OutPut.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+        }
+
+        int userId = token1.getUserId();
         //引入PageHelper分页插件
         //查询只需要调用,传入的页码，以及每页的大小
         PageHelper.startPage(pn,10);
@@ -261,20 +269,26 @@ public class AllpertaskController {
      * @return
      */
     @GetMapping(value = "authority/five/tasks/select/{pn}")
-    public OutPut AllstafftaskList(@PathVariable(value="pn")Integer pn){
+    public OutPut AllstafftaskList(@PathVariable("pn")int pn){
         //引入PageHelper分页插件
         //查询只需要调用,传入的页码，以及每页的大小
-        PageHelper.startPage(pn,10);
+
         //startpage后面紧的这个查询就是一个分页查询
-        List<AllpertaskDTO> allpertaskDTOList= null;
+
         try {
-            allpertaskDTOList = allpertaskService.AllpertaskList ();
+            //PageHelper.startPage (pn,10);
+//            allpertaskService.AllpertaskList (pn,10);
+
+//            System.out.println ("--------------------------------------------------------------------------");
+//            System.out.println (allpertaskDTOList);
+//            PageInfo page = new PageInfo(allpertaskDTOList);
+//            page.setTotal (allpertaskDTOList.size ());
+            return ResultUtil.success( allpertaskService.AllpertaskList (pn,10));
         } catch (MyException e) {
             return ResultUtil.error(e.getCode (), e.getMessage ());
         }
 
-        PageInfo page = new PageInfo(allpertaskDTOList);
-        return ResultUtil.success(page);
+
     }
 
     /**

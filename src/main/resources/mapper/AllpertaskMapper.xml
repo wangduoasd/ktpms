@@ -8,9 +8,6 @@
 	    from
 	    	p_allpertask
 	    where allpertask_status &lt;3
-	    	order by
-	    	allpertask_currenttime
-	    	desc
 	</select>
 
 	<insert id="addAllpertask" parameterType="com.kaituo.pms.bean.Allpertask" useGeneratedKeys="true" keyProperty="allpertask_id">

@@ -71,7 +71,7 @@ public class AllpertaskServiceImplTest {
 
     @Test
     public void allpertaskList() {
-        allpertaskService.AllpertaskList ();
+        //allpertaskService.AllpertaskList ();
     }
 
     @Test

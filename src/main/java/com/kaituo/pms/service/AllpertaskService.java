@@ -1,6 +1,7 @@
 package com.kaituo.pms.service;
 
 
+import com.github.pagehelper.PageInfo;
 import com.kaituo.pms.DTO.AllpertaskDTO;
 import com.kaituo.pms.bean.Allpertask;
 import org.quartz.SchedulerException;
@@ -30,7 +31,7 @@ public interface AllpertaskService {
    //查询任务（进行中,历史记录）（用户）status用于判断（进行中,历史记录）
     List<AllpertaskDTO> find_Allpertask_ofuser(int userid,int status);
     //任务大厅
-    List<AllpertaskDTO> AllpertaskList();
+    PageInfo AllpertaskList(int pn, int Pagesize);
     //领取任务
     String get_Allpertask(int allpertaskid,int userid) throws Exception;
 

@@ -1,27 +1,23 @@
-package com.kaituo.pms.bean;
+package com.kaituo.pms.DTO;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import java.io.Serializable;
 import java.util.Date;
-
 
 /**
  * @author wangduo
- * @date 2018/11/1 - 16:49
+ * @date 2018/11/20 - 10:43
  */
 @Data
-public class AllpertaskUser implements Serializable {
-    private Integer user_allpertask_id;
-    private Integer allpertask_id;
-    private Integer user_id;
-    private Integer user_status;
+public class GetalltaskperDTO {
+    private int userid;
+    private String username;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat( pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date user_gettime;
+    private Date gettime;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat( pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date user_finishtime;
+    private Date finishtime;
 }

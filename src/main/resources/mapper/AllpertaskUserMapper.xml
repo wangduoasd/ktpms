@@ -12,6 +12,24 @@
         from p_allpertask_user
         where user_id=#{user_id,jdbcType=INTEGER}
     </select>
+    <select id="findpertask1" parameterType="java.lang.Integer" resultType="com.kaituo.pms.bean.AllpertaskUser">
+        select *
+        from p_allpertask_user
+        where user_id=#{user_id,jdbcType=INTEGER}
+        and user_status=1
+    </select>
+    <select id="findpertask2" parameterType="java.lang.Integer" resultType="com.kaituo.pms.bean.AllpertaskUser">
+        select *
+        from p_allpertask_user
+        where user_id=#{user_id,jdbcType=INTEGER}
+        and user_status=2
+    </select>
+    <select id="findpertask3" parameterType="java.lang.Integer" resultType="com.kaituo.pms.bean.AllpertaskUser">
+        select *
+        from p_allpertask_user
+        where user_id=#{user_id,jdbcType=INTEGER}
+        and user_status=3
+    </select>
 
     <delete id="deleteAllpertaskUser" parameterType="java.lang.Integer">
 		delete from p_allpertask_user
@@ -61,12 +79,20 @@
         from p_allpertask_user
         where user_id=#{user_id,jdbcType=INTEGER}
         and allpertask_id=#{allpertask_id,jdbcType=INTEGER}
+        and user_status>0
     </select>
 
     <select id="find_allpertaskfinish"  resultType="com.kaituo.pms.bean.AllpertaskUser">
         select *
         from p_allpertask_user
         where user_status=2
+    </select>
+    <select id="findAllpertaskbyids1" resultType="com.kaituo.pms.bean.AllpertaskUser">
+         select *
+        from p_allpertask_user
+        where user_id=#{user_id,jdbcType=INTEGER}
+        and allpertask_id=#{allpertask_id,jdbcType=INTEGER}
+        and user_status = 1
     </select>
 
     <update id="updateTOfinish" parameterType="com.kaituo.pms.bean.AllpertaskUser">
