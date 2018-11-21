@@ -1,6 +1,5 @@
 package com.kaituo.pms.serviceImpl;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.kaituo.pms.bean.Attendance;
 import com.kaituo.pms.bean.AttendanceExample;
 import com.kaituo.pms.bean.ChangeIntegral;
@@ -8,10 +7,12 @@ import com.kaituo.pms.bean.FileUploadRecord;
 import com.kaituo.pms.dao.AttendanceMapper;
 import com.kaituo.pms.dao.FileUploadRecordMapper;
 import com.kaituo.pms.error.MyException;
+import com.kaituo.pms.quartz.QuartzManager;
+import com.kaituo.pms.quartz.ScheduleTask;
 import com.kaituo.pms.service.AttendacneService;
 import com.kaituo.pms.utils.UpdateTbAttendanceThread;
 import com.kaituo.pms.utils.Util;
-import com.kaituo.pms.utils.UploadFile;
+import com.kaituo.pms.utils.uploadFile;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -19,12 +20,15 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -37,14 +41,6 @@ public class AttendacneServiceImpl implements AttendacneService {
     private AttendanceMapper attendanceMapper;
     @Autowired
     FileUploadRecordMapper fileUploadRecordMapper;
-
-    /**
-     * 上传的Excle数据写入数据库
-     * @param fileName
-     * @param file
-     * @return
-     * @throws IOException
-     */
     @Override
     public boolean uploadExcel(String fileName, MultipartFile file) throws IOException {
         boolean notNull = false;
@@ -193,10 +189,7 @@ public class AttendacneServiceImpl implements AttendacneService {
     }
 
 
-    /**
-     * 计算积分,并写入数据库
-     * @param attendances
-     */
+
     @Override
     public void calculationOfIntegral(List<Attendance> attendances) {
         //构建线程池。
@@ -221,34 +214,37 @@ public class AttendacneServiceImpl implements AttendacneService {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void uploadFile( MultipartFile file,String username) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         String fileName = file.getOriginalFilename();
+        // 获取文件的后缀名
+        String suffixName = fileName.substring(fileName.lastIndexOf("."));
+        // 文件上传后的路径
+        //文件名称为日期+文件名称+后缀
+        fileName=fileName.substring(0,fileName.lastIndexOf("."));
+        fileName = format.format(new Date())+fileName+"--"+ UUID.randomUUID() + suffixName;
         FileUploadRecord fileUploadRecord = new FileUploadRecord(fileName, username);
         //上传记录保存到数据库
         fileUploadRecordMapper.insertFileRecord(fileUploadRecord);
         //上传文件到服务器
-        try {
-            new UploadFile().upload(fileName,file);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
+        uploadFile.upload(fileName,file);
     }
 
-//    /**
-//     * 删除文件及数据库记录
-//     * @param filename
-//     * @return
-//     */
-//    @Transactional(rollbackFor = Exception.class)
-//    @Override
-//    public boolean  downFile(String filename) {
-//        fileUploadRecordMapper.deleteFileRecord(filename);
-////        String fname = Util.getImgBasePath() + "\\file\\" + filename;
-//        boolean flag= false;
-//        try {
-//            flag = new UploadFile().deleteFile(filename);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return flag;
-//    }
+    /**
+     * 删除文件及数据库记录
+     * @param filename
+     * @return
+     */
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public boolean  downFile(String filename) {
+        fileUploadRecordMapper.deleteFileRecord(filename);
+        String fname = Util.getImgBasePath() + "\\image\\" + filename;
+        boolean flag= false;
+        try {
+            flag = uploadFile.deleteFile(fname);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return flag;
+    }
 }
