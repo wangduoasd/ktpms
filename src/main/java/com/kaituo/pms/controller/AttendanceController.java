@@ -48,8 +48,6 @@ public class AttendanceController {
     @PostMapping(value = "/uploadExcel")
     @ResponseBody
     public OutJSON uploadExcel(@RequestParam("file") MultipartFile file,String username) {
-
-        System.out.println(username);
         String fileName = file.getOriginalFilename();
         try {
             String token =ContextHolderUtils.getRequest().getHeader("token");
@@ -68,10 +66,13 @@ public class AttendanceController {
             if (username==""||username==null) {
                 flag=false;
             }else {
+                //删除数据库Attendance中存在的全部数据
                 attendanceMapper.deleteAll();
+                //写入数据
                 flag = attendacneService.uploadExcel(fileName, file);
             }
             if(flag){
+                //上传文件，写入数据库。
                 attendacneService.uploadFile(file,username);
                 return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);
             }else {
@@ -91,17 +92,6 @@ public class AttendanceController {
     @ResponseBody
     public OutJSON selectAttendance() {
         try {
-//            String token =ContextHolderUtils.getRequest().getHeader("token");
-//            // 检查token并获得userID
-//            Token token1 = tokenService.selectUserIdByToken(token);
-//            if (null == token1){
-//                return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
-//            }
-//            // 权限控制
-//
-//            if(roleService.checkRole(Constant.ROLE_TASK,token1.getUserId())){
-//                return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
-//            }
             List<Attendance> attendances = attendacneService.selectAll();
             List<AttendanceDTO> attendanceDTOS=Util.AttendanceConv(attendances);
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,attendanceDTOS);
@@ -241,56 +231,8 @@ public class AttendanceController {
         }
     }
 
-    /**
-     * 下载服务器文件（积分考勤表）
-     * @param request
-     * @param response
-     * @param fileName
-     * @return
-     * @throws IOException
-     */
-    @RequestMapping(value = "/download", method = RequestMethod.GET)
-    public OutJSON download(HttpServletRequest request, HttpServletResponse response, String fileName)  {
-        try {
-            String message=uploadFile.download(request,response,fileName);
-            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,message);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
-        }
-    }
 
-    /**
-     * 删除服务器文件（积分考勤表）及数据库记录
-     * @param fileName
-     * @return
-     * @throws IOException
-     */
-    @PostMapping("/deleteFile")
-    public OutJSON deleteFile(String fileName)  {
-        try {
-            String token =ContextHolderUtils.getRequest().getHeader("token");
-            // 检查token并获得userID
-            Token token1 = tokenService.selectUserIdByToken(token);
-            if (null == token1){
-                return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
-            }
-            // 权限控制
 
-            if(roleService.checkRole(Constant.ROLE_TASK,token1.getUserId())){
-                return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
-            }
-            boolean flag=attendacneService.downFile(fileName);
-            if(flag){
-                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,flag);
-            }else {
-                return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR,flag);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
-        }
-    }
 }
 
 
