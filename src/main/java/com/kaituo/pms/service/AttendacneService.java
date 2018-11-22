@@ -33,7 +33,7 @@ public interface AttendacneService {
      * @param file
      * @param username
      */
-    void uploadFile( MultipartFile file,String username);
+     void uploadFile( MultipartFile file,String username,Integer status);
 
 //    /**
 //     * 删除服务器文件（积分考勤表）及数据库记录

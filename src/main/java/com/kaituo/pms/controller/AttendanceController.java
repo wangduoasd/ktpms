@@ -47,7 +47,7 @@ public class AttendanceController {
      */
     @PostMapping(value = "/uploadExcel")
     @ResponseBody
-    public OutJSON uploadExcel(@RequestParam("file") MultipartFile file,String username) {
+    public OutJSON uploadExcel(@RequestParam("file") MultipartFile file,String username,Integer status) {
         String fileName = file.getOriginalFilename();
         try {
             String token =ContextHolderUtils.getRequest().getHeader("token");
@@ -73,7 +73,7 @@ public class AttendanceController {
             }
             if(flag){
                 //上传文件，写入数据库。
-                attendacneService.uploadFile(file,username);
+                attendacneService.uploadFile(file,username,status);
                 return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);
             }else {
                 return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);

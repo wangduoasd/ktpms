@@ -31,4 +31,11 @@ public interface FileRecordMapper {
      */
     void deleteByFileId(Integer id);
 
+    /**
+     * 根据id查询文件操作记录
+     * @param id
+     * @return
+     */
+    List<FileRecord> selectByFileId(Integer id);
+
 }

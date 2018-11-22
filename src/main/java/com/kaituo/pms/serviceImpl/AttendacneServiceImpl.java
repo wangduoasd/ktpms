@@ -220,11 +220,17 @@ public class AttendacneServiceImpl implements AttendacneService {
     }
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void uploadFile( MultipartFile file,String username) {
+    public void uploadFile( MultipartFile file,String username,Integer status) {
         String fileName = file.getOriginalFilename();
-        FileUploadRecord fileUploadRecord = new FileUploadRecord(fileName, username);
-        //上传记录保存到数据库
-        fileUploadRecordMapper.insertFileRecord(fileUploadRecord);
+        FileUploadRecord f=fileUploadRecordMapper.selectByFileName(fileName);
+        //查询此文件是否在数据库中存在，不存在则加入，存在则按照上传人姓名做适当修改。
+        //在服务器存储则名称相同为替换，不存在副本
+        if (f==null){
+            FileUploadRecord fileUploadRecord = new FileUploadRecord(fileName,username,status);
+            fileUploadRecordMapper.insertFileRecord(fileUploadRecord);
+        }else{
+            fileUploadRecordMapper.updateUserNameByFileName(username,fileName);
+        }
         //上传文件到服务器
         try {
             new UploadFile().upload(fileName,file);

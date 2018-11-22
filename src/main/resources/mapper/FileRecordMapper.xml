@@ -20,4 +20,7 @@
     <delete id="deleteByFileId" parameterType="Integer" >
         DELETE FROM file_record WHERE file_id=#{id}
     </delete>
+    <select id="selectByFileId" parameterType="Integer" resultMap="BaseResultMap">
+         SELECT * FROM file_record WHERE file_id=#{id};
+    </select>
 </mapper>

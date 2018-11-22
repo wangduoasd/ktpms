@@ -3,6 +3,7 @@ package com.kaituo.pms.bean;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author @chnxy_xrabbit
@@ -15,10 +16,13 @@ public class FileUploadRecord {
     private Integer readingQuantity;
     private Integer downloads;
     private String uploadfileUser;
+    private Integer status;
     private Date createTime;
+    private List<FileRecord> fileRecords;
 
-    public FileUploadRecord(String fileName, String uploadfileUser) {
+    public FileUploadRecord(String fileName, String uploadfileUser, Integer status) {
         this.fileName = fileName;
         this.uploadfileUser = uploadfileUser;
+        this.status = status;
     }
 }

@@ -2,6 +2,8 @@ package com.kaituo.pms.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
 import com.google.common.collect.ImmutableMap;
 import com.kaituo.pms.bean.FileRecord;
@@ -54,7 +56,7 @@ public class FileController {
      */
     @RequestMapping(value = "fileUpload", method = RequestMethod.POST)
     public String fileUpload(@RequestParam("file") MultipartFile file,String userName,
-                             HttpServletRequest request) throws JsonProcessingException {
+                             HttpServletRequest request,Integer status) throws JsonProcessingException {
         String token =ContextHolderUtils.getRequest().getHeader("token");
         // 检查token并获得userID
         Token token1 = tokenService.selectUserIdByToken(token);
@@ -82,7 +84,7 @@ public class FileController {
             //查询此文件是否在数据库中存在，不存在则加入，存在则按照上传人姓名做适当修改。
             //在服务器存储则名称相同为替换，不存在副本
             if (f==null){
-                FileUploadRecord fileUploadRecord = new FileUploadRecord(fileName, userName);
+                FileUploadRecord fileUploadRecord = new FileUploadRecord(fileName, userName,status);
                 fileUploadRecordMapper.insertFileRecord(fileUploadRecord);
             }else{
                 fileUploadRecordMapper.updateUserNameByFileName(userName,fileName);
@@ -130,29 +132,27 @@ public class FileController {
     }
 
     /**
-     * 获取文件夹全部文件列表
+     * 获取全部上传文件列表
      * @return
      * @throws JsonProcessingException
      */
-    @RequestMapping(value = "listFiles", method = RequestMethod.GET)
-    public String getFiles() throws JsonProcessingException {
-        String token =ContextHolderUtils.getRequest().getHeader("token");
-        // 检查token并获得userID
-        Token token1 = tokenService.selectUserIdByToken(token);
-        if (null == token1){
-            new ObjectMapper().writeValueAsString(new ReturnResponse<String>(0, "请重新登录", null));
+    @RequestMapping(value = "listFiles", method = RequestMethod.POST)
+    public String getFiles(Integer status,Integer pageNO) throws JsonProcessingException {
+        //从文件夹中获取文件列表
+//        List<Map<String, String>> list = Lists.newArrayList();
+//        File file = new File(fileDir + demoPath);
+//        if (file.exists()) {
+//            Arrays.stream(file.listFiles()).forEach(file1 -> list.add(ImmutableMap.of("fileName", demoDir + "/" + file1.getName())));
+//        }
+        PageHelper.startPage(pageNO,10);
+        List<FileUploadRecord> list=fileUploadRecordMapper.selectAllRecord(status);
+        for (FileUploadRecord f:list
+             ) {
+            List<FileRecord> lt=fileRecordMapper.selectByFileId(f.getId());
+            f.setFileRecords(lt);
         }
-        // 权限控制
-
-        if(roleService.checkRole(Constant.ROLE_TASK,token1.getUserId())){
-            new ObjectMapper().writeValueAsString(new ReturnResponse<String>(0, "请重新登录", null));
-        }
-        List<Map<String, String>> list = Lists.newArrayList();
-        File file = new File(fileDir + demoPath);
-        if (file.exists()) {
-            Arrays.stream(file.listFiles()).forEach(file1 -> list.add(ImmutableMap.of("fileName", demoDir + "/" + file1.getName())));
-        }
-        return new ObjectMapper().writeValueAsString(list);
+        PageInfo page = new PageInfo(list);
+        return new ObjectMapper().writeValueAsString(page);
     }
 
     /**
@@ -213,16 +213,16 @@ public class FileController {
         List<FileRecord> list=fileRecordMapper.selectAllFileRecord();
         return new ObjectMapper().writeValueAsString(list);
     }
-    /**
-     * 获取文件浏览次数
-     * @return
-     * @throws JsonProcessingException
-     */
-    @RequestMapping(value = "listFileRecordCount", method = RequestMethod.POST)
-    public String listFileRecordCount() throws JsonProcessingException {
-        List<FileUploadRecord> list=fileUploadRecordMapper.selectAllRecord();
-        return new ObjectMapper().writeValueAsString(list);
-    }
+//    /**
+//     * 获取文件浏览次数
+//     * @return
+//     * @throws JsonProcessingException
+//     */
+//    @RequestMapping(value = "listFileRecordCount", method = RequestMethod.POST)
+//    public String listFileRecordCount() throws JsonProcessingException {
+//        List<FileUploadRecord> list=fileUploadRecordMapper.selectAllRecord();
+//        return new ObjectMapper().writeValueAsString(list);
+//    }
 
 //    /**
 //     * 删除服务器文件（积分考勤表）及数据库记录

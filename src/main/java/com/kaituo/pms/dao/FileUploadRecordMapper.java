@@ -18,7 +18,7 @@ public interface FileUploadRecordMapper {
      * 查询所有文件导入记录
      * @return
      */
-    List<FileUploadRecord> selectAllRecord();
+    List<FileUploadRecord> selectAllRecord(Integer status);
     /**
      * 添加上传文件的记录
      * @param fileUploadRecord
