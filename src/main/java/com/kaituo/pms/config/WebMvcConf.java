@@ -32,7 +32,7 @@ public  class WebMvcConf extends WebMvcConfigurerAdapter {
         //其中OTA表示访问的前缀。"file:D:/OTA/"是文件真实的存储路径
         registry.addResourceHandler("/image/**").addResourceLocations("file:D:/fileUpload/image/");
         registry.addResourceHandler("/file/**").addResourceLocations("file:D:/fileUpload/file/");
-
+        registry.addResourceHandler("/**").addResourceLocations("file:D:/fileUpload/");
         registry.addResourceHandler("/img/**").addResourceLocations("file:/var/www/jifen.kaituo.local/img/");
 
         registry.addResourceHandler("/PDF/**").addResourceLocations("file:D:/PDFfile/PDF/");

@@ -30,4 +30,30 @@ public interface FileUploadRecordMapper {
      * @param fileName
      */
     void deleteFileRecord(@Param("fileName")String  fileName);
+
+    /**
+     *
+     * 阅读量加一操作
+     * @param id
+     */
+    void updateReading(Integer id);
+    /**
+     *
+     * 下载量加一操作
+     * @param id
+     */
+    void updateDownload(Integer id);
+
+    /**
+     * 根据文件名称，查询id
+     * @param fileName
+     */
+    FileUploadRecord selectByFileName(String fileName);
+
+    /**
+     * 根据文件名，修改上传人姓名
+     * @param userName
+     * @param fileName
+     */
+    void updateUserNameByFileName(@Param("userName") String  userName,@Param("fileName")String fileName);
 }

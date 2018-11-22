@@ -413,9 +413,9 @@
   </update>
   <update id="updateEndNum">
     UPDATE
-      p_integral p,attendance a
+      p_user p ,attendance a
     set
-      p.integral_endnum=p.integral_endnum+a.deductintegral
+      p.user_integral=p.user_integral+a.deductintegral
     WHERE
       p.user_id=a.jobnumber
   </update>

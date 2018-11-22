@@ -4,6 +4,7 @@
     <resultMap id="BaseResultMap" type="com.kaituo.pms.bean.FileUploadRecord" >
         <id column="id" property="id" jdbcType="INTEGER" />
         <result column="file_name" property="fileName" jdbcType="VARCHAR" />
+        <result column="reading_quantity" property="readingQuantity" jdbcType="INTEGER" />
         <result column="uploadfile_user" property="uploadfileUser" jdbcType="VARCHAR" />
         <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     </resultMap>
@@ -20,4 +21,31 @@
     <delete id="deleteFileRecord" parameterType="String">
         DELETE FROM file_upload_record WHERE file_name=#{fileName};
     </delete>
+    <update id="updateReading" parameterType="Integer">
+        UPDATE
+         file_upload_record
+        SET
+         reading_quantity=reading_quantity+1
+        WHERE
+         id=#{id}
+    </update>
+    <update id="updateDownload" parameterType="Integer">
+        UPDATE
+         file_upload_record
+        SET
+         downloads=downloads+1
+        WHERE
+         id=#{id}
+    </update>
+    <select id="selectByFileName" parameterType="String" resultMap="BaseResultMap">
+        SELECT id FROM file_upload_record WHERE file_name=#{fileName}
+    </select>
+    <update id="updateUserNameByFileName" parameterType="String">
+         UPDATE
+         file_upload_record
+        SET
+         uploadfile_user=#{userName}
+        WHERE
+        file_name=#{fileName}
+    </update>
 </mapper>

@@ -204,34 +204,32 @@ public class AttendanceController {
         }
     }
 
-    /**
-     * 查询所有上传文件（积分考勤表）
-     * @return
-     */
-    @RequestMapping(value = "selectAllRecord")
-    @ResponseBody
-    public OutJSON selectAllRecord() {
-        try {
-            String token =ContextHolderUtils.getRequest().getHeader("token");
-            // 检查token并获得userID
-            Token token1 = tokenService.selectUserIdByToken(token);
-            if (null == token1){
-                return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
-            }
-            // 权限控制
-
-            if(roleService.checkRole(Constant.ROLE_TASK,token1.getUserId())){
-                return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
-            }
-            List<FileUploadRecord> list=fileUploadRecordMapper.selectAllRecord();
-            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,list);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
-        }
-    }
-
-
+//    /**
+//     * 查询所有上传文件（积分考勤表）
+//     * @return
+//     */
+//    @RequestMapping(value = "selectAllRecord")
+//    @ResponseBody
+//    public OutJSON selectAllRecord() {
+//        try {
+//            String token =ContextHolderUtils.getRequest().getHeader("token");
+//            // 检查token并获得userID
+//            Token token1 = tokenService.selectUserIdByToken(token);
+//            if (null == token1){
+//                return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+//            }
+//            // 权限控制
+//
+//            if(roleService.checkRole(Constant.ROLE_TASK,token1.getUserId())){
+//                return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+//            }
+//            List<FileUploadRecord> list=fileUploadRecordMapper.selectAllRecord();
+//            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,list);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
+//        }
+//    }
 
 }
 

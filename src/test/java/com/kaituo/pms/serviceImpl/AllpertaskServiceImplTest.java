@@ -1,6 +1,7 @@
 package com.kaituo.pms.serviceImpl;
 
 import com.kaituo.pms.bean.Allpertask;
+import com.kaituo.pms.dao.FileUploadRecordMapper;
 import com.kaituo.pms.service.AllpertaskService;
 import org.junit.After;
 import org.junit.Test;
@@ -24,7 +25,12 @@ public class AllpertaskServiceImplTest {
 
     @Autowired
     AllpertaskService allpertaskService;
-
+    @Autowired
+    FileUploadRecordMapper fileUploadRecordMapper;
+    @Test
+    public  void selectByFileName(){
+        System.out.println(fileUploadRecordMapper.selectByFileName("考勤魔板.xlsx"));
+    }
     @Test
     public void distribute_Allpertask() throws SchedulerException {
 

@@ -12,6 +12,8 @@ import java.util.Date;
 public class FileUploadRecord {
     private Integer id;
     private String fileName;
+    private Integer readingQuantity;
+    private Integer downloads;
     private String uploadfileUser;
     private Date createTime;
 
