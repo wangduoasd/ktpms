@@ -10,11 +10,10 @@ import java.util.List;
 
 /**
  * @author wangduo
- * @date 2018/11/9 - 17:35
- * 数据拼装层
+ * @date 2018/11/21 - 21:28
  */
 @Data
-public class AllpertaskDTO {
+public class AllpertaskDTO1 {
     /**
      * 全员任务表数据
      */
@@ -39,20 +38,14 @@ public class AllpertaskDTO {
     /**
      * 全员任务中间表数据
      */
-    private Integer user_status;
+
+
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat( pattern = "yyyy-MM-dd HH:mm:ss")
     private Date user_gettime;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat( pattern = "yyyy-MM-dd HH:mm:ss")
     private Date user_finishtime;
-    /**
-     * 领取人数（）
-     */
-    private Integer count;
-    /**
-     * 领取人名
-     */
-    private List<GetalltaskperDTO> getalltaskperList;
-    private Date resttime;
+    private Integer user_status;
+    List<GetalltaskperDTO> getalltaskperDTOS;
 }
