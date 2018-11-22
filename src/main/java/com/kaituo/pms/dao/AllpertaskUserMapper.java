@@ -36,9 +36,7 @@ public interface AllpertaskUserMapper {
      * @return
      */
     List<AllpertaskUser> findAllpertask(Integer user_id);
-    List<AllpertaskUser> findpertask1(Integer user_id);
-    List<AllpertaskUser> findpertask2(Integer user_id);
-    List<AllpertaskUser> findpertask3(Integer user_id);
+
     /**
      * @return 领取人(分别是谁userid)
      */
@@ -71,16 +69,10 @@ public interface AllpertaskUserMapper {
      * @param user_id
      * @return
      */
-   List< AllpertaskUser> findAllpertaskbyids(@Param ("allpertask_id") Integer allpertask_id,
+    AllpertaskUser findAllpertaskbyids(@Param ("allpertask_id") Integer allpertask_id,
                                        @Param ("user_id") Integer user_id
     );
 
-     AllpertaskUser findAllpertaskbyid0(@Param ("allpertask_id") Integer allpertask_id,
-                                              @Param ("user_id") Integer user_id
-    );
-  AllpertaskUser findAllpertaskbyids1(@Param ("allpertask_id") Integer allpertask_id,
-                                              @Param ("user_id") Integer user_id
-    );
     /**
      * 查询审核中的任务
      * @return  List<AllpertaskUser>
@@ -100,6 +92,5 @@ public interface AllpertaskUserMapper {
      * @param allpertaskUser
      */
     void updateTOnofinish(@Param("allpertaskUser")AllpertaskUser allpertaskUser);
-
 
 }

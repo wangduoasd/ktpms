@@ -420,6 +420,6 @@
       p.user_id=a.jobnumber
   </update>
   <delete id="deleteAll">
-      DELETE  FROM attendance
+      DELETE  FROM attendance;
   </delete>
 </mapper>
