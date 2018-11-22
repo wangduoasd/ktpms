@@ -3,6 +3,7 @@ package com.kaituo.pms.service;
 
 import com.github.pagehelper.PageInfo;
 import com.kaituo.pms.DTO.AllpertaskDTO;
+import com.kaituo.pms.DTO.GetalltaskperDTO;
 import com.kaituo.pms.bean.Allpertask;
 import org.quartz.SchedulerException;
 
@@ -41,4 +42,8 @@ public interface AllpertaskService {
     //完成任务
     void finish_allpertask(int allpertaskid,int userid);
 
+
+    List<GetalltaskperDTO> findpertest(Integer allpertask_id);
+
+    public PageInfo findallpertasktest1(int pn, int Pagesize);
 }

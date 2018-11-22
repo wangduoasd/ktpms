@@ -87,8 +87,13 @@ public class AllpertaskServiceImplTest {
         allpertaskService.giveup_allpertask (8,2);
     }
 
+
     @Test
     public void finish_allpertask() {
         allpertaskService.finish_allpertask (9,1);
+    }
+    @Test
+    public void findallpertasktest1(){
+        allpertaskService.findallpertasktest1 (1,10);
     }
 }

@@ -75,12 +75,15 @@ public class AllpertaskController {
                 // 如果是2
                 case Constant.IMG_UPLOSD_EMPTY:
                     // 返回图片为空
-                    return OutPut.getInstance (CodeAndMessageEnum.PUBLISHING_TASK_IMAGE_IS_EMPTY);
+                    allpertask.setAllpertask_image ("/image/kaituo.png");
                 // 如果是1则为上传成功
                 case Constant.IMG_UPLOSD_SUCCESS:
                     // 获取相对路径
                     String url = (String) map.get ("url");
                     url = url.replace (Util.seperator, "/");
+                    if(url==null||url.equals ("")){
+                        url="/image/kaituo.png";
+                    }
                     allpertask.setAllpertask_image (url);
             }
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -174,15 +177,15 @@ public class AllpertaskController {
     /**
      * 审核通过
      * @param allpertask_id
-     * @param userid
      * @return
      */
     @PostMapping(value = "authority/five/tasks/manage/checkpass")
-    public OutPut Check_Pass(@RequestParam("allpertask_id")int allpertask_id, @RequestParam("userid")int userid){
+    public OutPut Check_Pass(@RequestParam("allpertask_id")int allpertask_id){
         try {
             String token =ContextHolderUtils.getRequest().getHeader("token");
             // 检查token并获得userID
             Token token1 = tokenService.selectUserIdByToken(token);
+            int userid= token1.getUserId ();
             if (null == token1){
                 return  OutPut.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
             }
@@ -201,16 +204,16 @@ public class AllpertaskController {
     /**
      * 审核未通过
      * @param allpertask_id
-     * @param userid
      * @return
      * @throws InterruptedException
      */
     @PutMapping(value = "authority/five/tasks/manage/checkfail")
-    public OutPut Check_Fail(@RequestParam("allpertask_id")int allpertask_id, @RequestParam("userid")int userid) throws InterruptedException {
+    public OutPut Check_Fail(@RequestParam("allpertask_id")int allpertask_id) throws InterruptedException {
         try {
             String token =ContextHolderUtils.getRequest().getHeader("token");
             // 检查token并获得userID
             Token token1 = tokenService.selectUserIdByToken(token);
+            int userid= token1.getUserId ();
             if (null == token1){
                 return  OutPut.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
             }
@@ -278,17 +281,14 @@ public class AllpertaskController {
         try {
             //PageHelper.startPage (pn,10);
 //            allpertaskService.AllpertaskList (pn,10);
-
 //            System.out.println ("--------------------------------------------------------------------------");
 //            System.out.println (allpertaskDTOList);
 //            PageInfo page = new PageInfo(allpertaskDTOList);
 //            page.setTotal (allpertaskDTOList.size ());
             return ResultUtil.success( allpertaskService.AllpertaskList (pn,10));
         } catch (MyException e) {
-            return ResultUtil.error(e.getCode (), e.getMessage ());
+            return ResultUtil.error(e.getCode(), e.getMessage ());
         }
-
-
     }
 
     /**
@@ -313,6 +313,9 @@ public class AllpertaskController {
                 return  OutPut.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
             }
             String message=allpertaskService.get_Allpertask (allpertask_id,userId);
+            if(message!=null){
+                return ResultUtil.error ("99",message);
+            }
             return ResultUtil.success (message);
         } catch (MyException e) {
             return ResultUtil.error (e.getCode (), e.getMessage ());

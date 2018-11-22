@@ -74,7 +74,11 @@ public interface AllpertaskUserMapper {
    List< AllpertaskUser> findAllpertaskbyids(@Param ("allpertask_id") Integer allpertask_id,
                                        @Param ("user_id") Integer user_id
     );
-   AllpertaskUser findAllpertaskbyids1(@Param ("allpertask_id") Integer allpertask_id,
+
+     AllpertaskUser findAllpertaskbyid0(@Param ("allpertask_id") Integer allpertask_id,
+                                              @Param ("user_id") Integer user_id
+    );
+  AllpertaskUser findAllpertaskbyids1(@Param ("allpertask_id") Integer allpertask_id,
                                               @Param ("user_id") Integer user_id
     );
     /**
@@ -96,5 +100,6 @@ public interface AllpertaskUserMapper {
      * @param allpertaskUser
      */
     void updateTOnofinish(@Param("allpertaskUser")AllpertaskUser allpertaskUser);
+
 
 }

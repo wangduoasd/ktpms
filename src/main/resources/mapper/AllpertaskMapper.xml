@@ -13,13 +13,13 @@
 	<insert id="addAllpertask" parameterType="com.kaituo.pms.bean.Allpertask" useGeneratedKeys="true" keyProperty="allpertask_id">
 	 insert into p_allpertask
 	 (allpertask_name,allpertask_difficulty,allpertask_price
-	 ,allpertask_award,allpertask_time,allpertask_starttime,allpertask_endtime,allpertask_image
+	 ,allpertask_award,allpertask_time,allpertask_starttime,allpertask_endtime,allpertask_image,allpertask_describe
 	)
      values
      (#{allpertask_name,jdbcType=VARCHAR},#{allpertask_difficulty,jdbcType=INTEGER},
      #{allpertask_price,jdbcType=INTEGER} ,#{allpertask_award,jdbcType=INTEGER},#{allpertask_time,jdbcType=INTEGER}
      ,#{allpertask_starttime,jdbcType=TIMESTAMP},#{allpertask_endtime,jdbcType=TIMESTAMP},
-     #{allpertask_image,jdbcType=VARCHAR}
+     #{allpertask_image,jdbcType=VARCHAR},#{allpertask_describe,jdbcType=VARCHAR}
 
      )
 	</insert>
@@ -48,4 +48,17 @@
 	    	allpertask_currenttime
 	    	desc
 	</select>
+
+	<select id="findpertasktest" parameterType="java.lang.Integer" resultType="com.kaituo.pms.DTO.GetalltaskperDTO">
+		SELECT bb.user_id,bb.user_name,bb.user_gettime,bb.user_finishtime FROM(SELECT aa.*,u.user_name from (select t.*,tu.user_gettime,tu.user_finishtime,tu.user_status,tu.user_id from p_allpertask t LEFT JOIN p_allpertask_user tu ON tu.allpertask_id=t.allpertask_id) aa
+		LEFT JOIN v_userset u on  aa.user_id=u.user_id where aa.allpertask_status &lt;2 and  aa.user_status!=0)bb where bb.allpertask_id=#{allpertask_id,jdbcType=INTEGER}
+	</select>
+	<select id="findallpertasktset" parameterType="java.lang.Integer" resultType="com.kaituo.pms.DTO.AllpertaskDTO1">
+	    select
+	    	*
+	    from
+	    	p_allpertask
+	    where allpertask_status &lt;2
+	</select>
+
 </mapper>
