@@ -129,13 +129,26 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public List<com.kaituo.pms.bean.Task> listTaskByStatus(int status) {
+    public List<com.kaituo.pms.bean.Task> listTaskByStatus(int status,Integer or) {
 
         TaskExample example = new TaskExample();
         TaskExample.Criteria criteria = example.createCriteria();
         example.setOrderByClause("task_starttime DESC");
         criteria.andTaskStatusEqualTo(status);
-        return taskMapper.selectByExample(example);
+/**
+ * 一是单次任务，二是循环任务
+ */
+        if(or==1){
+            criteria.andTaskCountnumberEqualTo (or);
+            return taskMapper.selectByExample(example);
+        }else {
+            criteria.andTaskNumberNotEqualTo (1);
+            return taskMapper.selectByExample(example);
+        }
+
+
+
+
     }
 
     /**
@@ -226,7 +239,7 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public OutJSON getPendingTaskByPage(Integer pageNumber, Integer pageSize, int status) {
+    public OutJSON getPendingTaskByPage(Integer pageNumber, Integer pageSize, int status,Integer or) {
         // 如果每页条数为空则将每页条数设为4
         if (null==pageSize){
             pageSize = 4;
@@ -238,7 +251,7 @@ public class TaskServiceImpl implements TaskService {
         if (0<total){
             // 分页
             PageHelper.startPage(pageNumber, pageSize);
-            List<com.kaituo.pms.bean.Task> list = listTaskByStatus(status);
+            List<com.kaituo.pms.bean.Task> list = listTaskByStatus(status,or);
 
             Map<String , Object> pageMap = new HashMap<>(2);
 

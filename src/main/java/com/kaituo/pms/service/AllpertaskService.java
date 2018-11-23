@@ -3,6 +3,7 @@ package com.kaituo.pms.service;
 
 import com.github.pagehelper.PageInfo;
 import com.kaituo.pms.DTO.AllpertaskDTO;
+import com.kaituo.pms.DTO.AllpertaskDTO1;
 import com.kaituo.pms.DTO.GetalltaskperDTO;
 import com.kaituo.pms.bean.Allpertask;
 import org.quartz.SchedulerException;
@@ -21,16 +22,16 @@ public interface AllpertaskService {
      //软删除（管理）
     void delete_Allpertask(Integer Allpertask_id);
      //查询任务（管理）（过期和没过期的，已领取和未领取）
-    List<AllpertaskDTO> find_Allpertask_ofadmin();
+    List<AllpertaskDTO1> find_Allpertask_ofadmin();
     //审核任务列表
-    List<AllpertaskDTO> find_allpertaskfinish();
+    List<AllpertaskDTO1> find_allpertaskfinish();
     //审核通过
     void pass_allpertask(int allpertask_id,int userid);//重新创建全员任务与人员的关系
     //审核驳回
     String fail_allpertask(int allpertask_id,int userid) throws InterruptedException;//变回正在已领取，返回message（被驳回）
    // void update_Allpertask(Allpertask allpertask);
    //查询任务（进行中,历史记录）（用户）status用于判断（进行中,历史记录）
-    List<AllpertaskDTO> find_Allpertask_ofuser(int userid,int status);
+   PageInfo find_Allpertask_ofuser(int userid,int status,int pn);
     //任务大厅
     PageInfo AllpertaskList(int pn, int Pagesize);
     //领取任务
@@ -45,5 +46,5 @@ public interface AllpertaskService {
 
     List<GetalltaskperDTO> findpertest(Integer allpertask_id);
 
-    public PageInfo findallpertasktest1(int pn, int Pagesize);
+   // public PageInfo findallpertasktest1(int pn, int Pagesize);
 }

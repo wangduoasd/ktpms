@@ -12,12 +12,12 @@ import java.util.Date;
  */
 @Data
 public class GetalltaskperDTO {
-    private int userid;
-    private String username;
+    private int user_id;
+    private String user_name;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat( pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date gettime;
+    private Date user_gettime;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat( pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date finishtime;
+    private Date user_finishtime;
 }

@@ -1,5 +1,7 @@
 package com.kaituo.pms.dao;
 
+import com.kaituo.pms.DTO.AllpertaskDTO;
+import com.kaituo.pms.DTO.AllpertaskDTO1;
 import com.kaituo.pms.bean.Allpertask;
 import com.kaituo.pms.bean.AllpertaskUser;
 import org.apache.ibatis.annotations.Mapper;
@@ -36,9 +38,9 @@ public interface AllpertaskUserMapper {
      * @return
      */
     List<AllpertaskUser> findAllpertask(Integer user_id);
-    List<AllpertaskUser> findpertask1(Integer user_id);
-    List<AllpertaskUser> findpertask2(Integer user_id);
-    List<AllpertaskUser> findpertask3(Integer user_id);
+    List<AllpertaskDTO> findpertask1(Integer user_id);
+    List<AllpertaskDTO> findpertask2(Integer user_id);
+    List<AllpertaskDTO> findpertask3(Integer user_id);
     /**
      * @return 领取人(分别是谁userid)
      */

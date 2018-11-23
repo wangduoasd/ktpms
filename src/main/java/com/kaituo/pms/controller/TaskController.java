@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.Map;
 
@@ -46,13 +47,14 @@ public class TaskController {
      * @param callPage 调用的页面
      * @param pageNamber 目标页面
      * @return: com.kaituo.pms.utils.OutJSON
-     * @Author: 苏泽华
+     * @Author: 苏泽华,王铎
      * @Date: 2018/8/13
      */
-    @GetMapping("tasks/status/list/{callPage}/{pageNumber}/u/{token}")
+    @GetMapping("tasks/status/list/{callPage}/{pageNumber}/u/{token}/{or}")
     public OutJSON findCollectionStatus(@PathVariable("callPage") String callPage ,
                                         @PathVariable(value = "token") String token,
-                                        @PathVariable(value = "pageNumber") int pageNamber ) {
+                                        @PathVariable(value = "pageNumber") int pageNamber,
+                                        @PathVariable(value = "or") int or) {
         // 检查token并获得userID
         Token token1 = tokenService.selectUserIdByToken(token);
         if (null == token1){
@@ -82,19 +84,19 @@ public class TaskController {
                     }
                     //查询所有已发布但未被领取的任务的信息
                     //分页
-                    return taskService.getPendingTaskByPage(pageNamber , null , status);
+                    return taskService.getPendingTaskByPage(pageNamber , 10 , status,or);
                 // 未完成页面调用
                 case Constant.MISSION_CENTER_TASK_LIST_UNDONE:
                     // 处理超时数据
                     taskService.timeOutDetection();
                     //查询所有已发布但未被领取的任务的信息
                     //分页
-                    return taskService.getUndoneByPage(pageNamber , null , userId);
+                    return taskService.getUndoneByPage(pageNamber , 10 , userId);
                 // 已完成页面调用
                 case Constant.MISSION_CENTER_TASK_LIST_COMPLETED:
                     //查询所有当前id的已完成数据
                     //分页
-                    return taskService.getStatesTaskByPage(pageNamber , null , Constant.MISSION_COMPLETED , userId);
+                    return taskService.getStatesTaskByPage(pageNamber , 10 , Constant.MISSION_COMPLETED , userId);
                 default:
                     return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR,"调用页面错误");
             }
@@ -227,7 +229,7 @@ public class TaskController {
      * @Date: 2018/8/20
      */
     @PostMapping("authority/five/tasks/status")
-    public OutJSON publishTask(MultipartFile file,String starttime , String endtime , Task task){
+    public OutJSON publishTask(MultipartFile file,String starttime , String endtime , Task task) throws ParseException {
         String token =ContextHolderUtils.getRequest().getHeader("token");
         // 检查token并获得userID
         Token token1 = tokenService.selectUserIdByToken(token);
@@ -253,12 +255,15 @@ public class TaskController {
             // 如果是2
             case Constant.IMG_UPLOSD_EMPTY :
                 // 返回图片为空
-                return OutJSON.getInstance(CodeAndMessageEnum.PUBLISHING_TASK_IMAGE_IS_EMPTY);
+                task.setTaskImage ("/image/kaituo.png");
             // 如果是1则为上传成功
             case Constant.IMG_UPLOSD_SUCCESS :
                 // 获取相对路径
                 String url = (String) map.get("url");
                 url = url.replace(Util.seperator , "/");
+                if(url==null||url.equals ("")){
+                url="/image/kaituo.png";
+            }
                 // 时间处理
                 Date startDate = Util.stampToDate(starttime);
                 Date endDate = Util.stampToDate(endtime);
@@ -437,7 +442,7 @@ public class TaskController {
      * @Date: 2018/8/21
      */
     @PutMapping("authority/five/task/again")
-    public OutJSON republish(MultipartFile file,String starttime , String endtime , Task task){
+    public OutJSON republish(MultipartFile file,String starttime , String endtime , Task task) throws ParseException {
 
         String token =ContextHolderUtils.getRequest().getHeader("token");
         // 检查token并获得userID

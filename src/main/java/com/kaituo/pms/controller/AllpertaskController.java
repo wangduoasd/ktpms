@@ -4,6 +4,8 @@ package com.kaituo.pms.controller;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.kaituo.pms.DTO.AllpertaskDTO;
+import com.kaituo.pms.DTO.AllpertaskDTO1;
+import com.kaituo.pms.DTO.GetalltaskperDTO;
 import com.kaituo.pms.bean.Allpertask;
 import com.kaituo.pms.bean.Token;
 import com.kaituo.pms.error.MyException;
@@ -137,7 +139,7 @@ public class AllpertaskController {
         //查询只需要调用,传入的页码，以及每页的大小
         PageHelper.startPage(pn,10);
         //startpage后面紧的这个查询就是一个分页查询
-       List<AllpertaskDTO> allpertaskDTOList= null;
+       List<AllpertaskDTO1> allpertaskDTOList= null;
        try {
            allpertaskDTOList = allpertaskService.find_Allpertask_ofadmin ();
        } catch (MyException e) {
@@ -163,7 +165,7 @@ public class AllpertaskController {
         //startpage后面紧的这个查询就是一个分页查询
         try {
             PageHelper.startPage(pn,10);
-            List<AllpertaskDTO>  allpertaskDTOList = allpertaskService.find_allpertaskfinish();
+            List<AllpertaskDTO1>  allpertaskDTOList = allpertaskService.find_allpertaskfinish();
             PageInfo page = new PageInfo(allpertaskDTOList,5);
             return ResultUtil.success(page);
         } catch (MyException e) {
@@ -253,17 +255,17 @@ public class AllpertaskController {
         int userId = token1.getUserId();
         //引入PageHelper分页插件
         //查询只需要调用,传入的页码，以及每页的大小
-        PageHelper.startPage(pn,10);
+
         //startpage后面紧的这个查询就是一个分页查询
-        List<AllpertaskDTO> allpertaskDTOList= null;
+        PageInfo allpertaskDTOList= null;
         try {
-            allpertaskDTOList = allpertaskService.find_Allpertask_ofuser (userId,status);
+            allpertaskDTOList = allpertaskService.find_Allpertask_ofuser (userId,status,pn);
         } catch (MyException e) {
             return ResultUtil.error(e.getCode (), e.getMessage ());
         }
         //使用pageinfo包装查询后的结果，只需要将pageinfo交给页面就行了
-        PageInfo page = new PageInfo(allpertaskDTOList);
-        return ResultUtil.success(page);
+
+        return ResultUtil.success(allpertaskDTOList);
     }
 
     /**
@@ -373,5 +375,24 @@ public class AllpertaskController {
             } catch (MyException e) {
                 return ResultUtil.error (e.getCode (), e.getMessage ());
             }
+    }
+
+    /**
+     * 领取人
+     * @param allpertask_id
+     * @return
+     */
+    @GetMapping(value = "authority/five/tasks/select/getper/{allpertask_id}")
+    public OutPut getper(@PathVariable("allpertask_id")int allpertask_id){
+        //引入PageHelper分页插件
+        //查询只需要调用,传入的页码，以及每页的大小
+        //startpage后面紧的这个查询就是一个分页查询
+        try {
+           List<GetalltaskperDTO> getalltaskperDTOList= allpertaskService.findpertest (allpertask_id);
+            System.out.println (getalltaskperDTOList);
+            return ResultUtil.success(getalltaskperDTOList);
+        } catch (MyException e) {
+            return ResultUtil.error(e.getCode(), e.getMessage ());
+        }
     }
 }

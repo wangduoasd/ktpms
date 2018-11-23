@@ -66,7 +66,7 @@ public class AllpertaskServiceImplTest {
 
     @Test
     public void find_Allpertask_ofuser() {
-        allpertaskService.find_Allpertask_ofuser (2,1);
+      //  allpertaskService.find_Allpertask_ofuser (2,1);
     }
 
     @Test
@@ -92,8 +92,8 @@ public class AllpertaskServiceImplTest {
     public void finish_allpertask() {
         allpertaskService.finish_allpertask (9,1);
     }
-    @Test
-    public void findallpertasktest1(){
-        allpertaskService.findallpertasktest1 (1,10);
-    }
+//    @Test
+//    public void findallpertasktest1(){
+//        allpertaskService.findallpertasktest1 (1,10);
+//    }
 }

@@ -39,7 +39,8 @@ public class AllpertaskDTO1 {
      * 全员任务中间表数据
      */
 
-
+    private int userid;
+    private String username;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat( pattern = "yyyy-MM-dd HH:mm:ss")
     private Date user_gettime;

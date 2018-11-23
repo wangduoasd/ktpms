@@ -31,7 +31,7 @@ public interface TaskService {
      *@Author: 苏泽华
      *@Date: 2018/8/9
      */
-    List<Task> listTaskByStatus(int status);
+    List<Task> listTaskByStatus(int status,int or);
 
     /**
      * 查询指定状态的任务信息(已完成)
@@ -40,7 +40,7 @@ public interface TaskService {
      *@Author: 苏泽华
      *@Date: 2018/8/9
      */
-    List<Task> listTaskByStatus(int status , int userId);
+    List<Task> listTaskByStatus(int status , Integer userId);
 
     /**
      * 获取未完成页面所需的数据
@@ -50,7 +50,7 @@ public interface TaskService {
      * @Author: 苏泽华
      * @Date: 2018/8/13
      */
-    List<Task>listUnfinishedTask(int userId);
+    List<Task> listUnfinishedTask(int userId);
 
     /**
      * 查询指定状态的任务信息的条数
@@ -81,7 +81,7 @@ public interface TaskService {
      * @Author: 苏泽华
      * @Date: 2018/8/9
      */
-    OutJSON getPendingTaskByPage(Integer pageNamber , Integer pageSize , int status);
+    OutJSON getPendingTaskByPage(Integer pageNamber , Integer pageSize , int status,Integer or);
     /**
      * 将获得的任务数据封装成map(已完成)
      * @Description:  将获得的任务数据封装成map
