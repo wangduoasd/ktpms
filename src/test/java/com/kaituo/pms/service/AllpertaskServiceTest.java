@@ -27,7 +27,7 @@ public class AllpertaskServiceTest {
     @Autowired
     AllpertaskService allpertaskService;
     @Test
-    public void distribute_Allpertask() {
+    public void distribute_Allpertask() throws ParseException, SchedulerException {
         Allpertask allpertask=new Allpertask ();
         allpertask.setAllpertask_name ("扫地");
         allpertask.setAllpertask_difficulty (3);

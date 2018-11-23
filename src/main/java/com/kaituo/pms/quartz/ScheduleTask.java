@@ -25,8 +25,7 @@ public class ScheduleTask implements Job {
     //注入调度
     @Autowired
     private AllpertaskMapper allpertaskMapper;
-    @Autowired
-    private Scheduler scheduler;
+
 
     /**
      * Execute the actual job. The job data map will already have been
@@ -38,7 +37,6 @@ public class ScheduleTask implements Job {
     @Override
     public void execute(JobExecutionContext jobExecutionContext){
 
-        JobKey key = jobExecutionContext.getJobDetail().getKey();
         JobDataMap dataMap = jobExecutionContext.getJobDetail().getJobDataMap();
 //        try {
 //            allpertaskMapper= (AllpertaskMapper) jobExecutionContext.getScheduler().getContext().get("allpertaskMapper");

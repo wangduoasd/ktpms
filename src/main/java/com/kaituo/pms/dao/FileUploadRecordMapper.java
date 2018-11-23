@@ -18,7 +18,7 @@ public interface FileUploadRecordMapper {
      * 查询所有文件导入记录
      * @return
      */
-    List<FileUploadRecord> selectAllRecord();
+    List<FileUploadRecord> selectAllRecord(Integer status);
     /**
      * 添加上传文件的记录
      * @param fileUploadRecord
@@ -30,4 +30,30 @@ public interface FileUploadRecordMapper {
      * @param fileName
      */
     void deleteFileRecord(@Param("fileName")String  fileName);
+
+    /**
+     *
+     * 阅读量加一操作
+     * @param id
+     */
+    void updateReading(Integer id);
+    /**
+     *
+     * 下载量加一操作
+     * @param id
+     */
+    void updateDownload(Integer id);
+
+    /**
+     * 根据文件名称，查询id
+     * @param fileName
+     */
+    FileUploadRecord selectByFileName(String fileName);
+
+    /**
+     * 根据文件名，修改上传人姓名
+     * @param userName
+     * @param fileName
+     */
+    void updateUserNameByFileName(@Param("userName") String  userName,@Param("fileName")String fileName);
 }

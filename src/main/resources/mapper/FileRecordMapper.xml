@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kaituo.pms.dao.FileRecordMapper" >
+    <resultMap id="BaseResultMap" type="com.kaituo.pms.bean.FileRecord" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="file_id" property="fileId" jdbcType="INTEGER" />
+        <result column="reading_username" property="readingUserName" jdbcType="VARCHAR" />
+        <result column="downing_username" property="downingUserName" jdbcType="VARCHAR" />
+    </resultMap>
+    <select id="selectAllFileRecord"  resultMap="BaseResultMap">
+        SELECT * FROM file_record;
+    </select>
+    <insert id="insertRecord" parameterType="com.kaituo.pms.bean.FileRecord">
+        INSERT
+        INTO
+        file_record (file_id,reading_username,downing_username)
+        VALUES
+        (#{fileRecord.fileId},#{fileRecord.readingUserName},#{fileRecord.downingUserName})
+    </insert>
+    <delete id="deleteByFileId" parameterType="Integer" >
+        DELETE FROM file_record WHERE file_id=#{id}
+    </delete>
+    <select id="selectByFileId" parameterType="Integer" resultMap="BaseResultMap">
+         SELECT * FROM file_record WHERE file_id=#{id};
+    </select>
+</mapper>

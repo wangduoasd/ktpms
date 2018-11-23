@@ -1,3 +1,16 @@
+
 spring:
     profiles:
       active: dev
+    ## Freemarker 配置
+    freemarker:
+            charset: UTF-8
+            cache: false
+            expose-request-attributes: true
+            request-context-attribute: request
+            expose-session-attributes: true
+            content-type: text/html
+            template-loader-path: classpath:/web/
+            suffix: .ftl
+            check-template-location: true
+
