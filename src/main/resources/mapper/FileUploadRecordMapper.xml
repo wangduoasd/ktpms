@@ -8,16 +8,15 @@
         <result column="uploadfile_user" property="uploadfileUser" jdbcType="VARCHAR" />
         <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     </resultMap>
-    <select id="selectAllRecord" parameterType="Integer" resultMap="BaseResultMap">
-        SELECT * FROM file_upload_record WHERE status=#{status}
-
+    <select id="selectAllRecord" resultMap="BaseResultMap">
+        SELECT * FROM file_upload_record WHERE status=#{status} AND file_name like concat(concat('%',#{fileName}),'%')
     </select>
     <insert id="insertFileRecord" parameterType="com.kaituo.pms.bean.FileUploadRecord">
         INSERT
         INTO
         file_upload_record (file_name,uploadfile_user,status)
         VALUES
-        (#{fileUploadRecord.fileName},#{fileUploadRecord.uploadfileUser})
+        (#{fileUploadRecord.fileName},#{fileUploadRecord.uploadfileUser},#{fileUploadRecord.status})
     </insert>
     <delete id="deleteFileRecord" parameterType="String">
         DELETE FROM file_upload_record WHERE file_name=#{fileName};
@@ -47,6 +46,6 @@
         SET
          uploadfile_user=#{userName}
         WHERE
-        file_name=#{fileName}
+         file_name=#{fileName}
     </update>
 </mapper>
