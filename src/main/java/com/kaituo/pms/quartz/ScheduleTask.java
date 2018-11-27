@@ -51,9 +51,6 @@ public class ScheduleTask implements Job {
         Allpertask allpertask=new Allpertask ();
         allpertask.setAllpertask_id (jobSay2);
         allpertask.setAllpertask_status (jobSay1);
-        for(int i=0;i<10;i++) {
-            System.out.println ("-------------------------------------------------");
-        }
         try {
 //            try {
 //              allpertaskService= (AllpertaskService) jobExecutionContext.getScheduler().getContext().get("allpertaskService");

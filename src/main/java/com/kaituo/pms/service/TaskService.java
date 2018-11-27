@@ -11,7 +11,6 @@ public interface TaskService {
 
     /**
      * 验证是否过期，过期则修改数据库中任务状态
-     * @param status 任务状态
      * @Author: 苏泽华
      * @Date: 2018/8/13
      */
@@ -31,7 +30,7 @@ public interface TaskService {
      *@Author: 苏泽华
      *@Date: 2018/8/9
      */
-    List<Task> listTaskByStatus(int status);
+    List<Task> listTaskByStatus(int status,int or);
 
     /**
      * 查询指定状态的任务信息(已完成)
@@ -40,7 +39,7 @@ public interface TaskService {
      *@Author: 苏泽华
      *@Date: 2018/8/9
      */
-    List<Task> listTaskByStatus(int status , int userId);
+    List<Task> listTaskByStatus(int status , Integer userId);
 
     /**
      * 获取未完成页面所需的数据
@@ -50,7 +49,7 @@ public interface TaskService {
      * @Author: 苏泽华
      * @Date: 2018/8/13
      */
-    List<Task>listUnfinishedTask(int userId);
+    List<Task> listUnfinishedTask(int userId,int status);
 
     /**
      * 查询指定状态的任务信息的条数
@@ -81,7 +80,7 @@ public interface TaskService {
      * @Author: 苏泽华
      * @Date: 2018/8/9
      */
-    OutJSON getPendingTaskByPage(Integer pageNamber , Integer pageSize , int status);
+    OutJSON getPendingTaskByPage(Integer pageNamber , Integer pageSize , int status,Integer or);
     /**
      * 将获得的任务数据封装成map(已完成)
      * @Description:  将获得的任务数据封装成map
@@ -106,7 +105,7 @@ public interface TaskService {
      * @Author: 苏泽华
      * @Date: 2018/8/13
      */
-    OutJSON getUndoneByPage(Integer pageNamber, Integer pageSize , int userId);
+    OutJSON getUndoneByPage(Integer pageNamber, Integer pageSize , int userId,int status);
 
     /**
      * 通过任务id获得对应任务信息
@@ -144,7 +143,7 @@ public interface TaskService {
      * 发布任务
      * @Description:
      * @Param:
-     * @param task
+     * @param:task
      * @return: boolean
      * @Author: 苏泽华
      * @Date: 2018/8/15
@@ -170,7 +169,7 @@ public interface TaskService {
      * @Author: 苏泽华
      * @Date: 2018/8/20
      */
-    OutJSON listPendingTask(int pageNamber , Integer pageSize);
+    OutJSON listPendingTask(int pageNamber , Integer pageSize,int num);
 
     /**
      * 风控中心——任务管理——失效任务
@@ -252,5 +251,5 @@ public interface TaskService {
      */
     boolean republish(Task task);
 
-
+    void cannel(int taskId);
 }

@@ -1,5 +1,8 @@
 package com.kaituo.pms.dao;
 
+import com.kaituo.pms.DTO.AllpertaskDTO;
+import com.kaituo.pms.DTO.AllpertaskDTO1;
+import com.kaituo.pms.DTO.GetalltaskperDTO;
 import com.kaituo.pms.bean.Allpertask;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -54,6 +57,30 @@ public interface AllpertaskMapper {
      * @param allpertask_id
      * @return
      */
-   Allpertask findallpertaskbyid(Integer allpertask_id);
+   Allpertask findallpertaskbyid(@Param("allpertask_id")Integer allpertask_id);
 
+    /**
+     * 领取人列表
+     * @param allpertask_id
+     * @return
+     */
+    List<GetalltaskperDTO> findpertasktest(@Param("allpertask_id")Integer allpertask_id);
+
+    /**
+     * 任务大厅
+     * @return
+     */
+    List<AllpertaskDTO1>  findallpertasktset();
+
+    /**
+     * 任务列表
+     * @return
+     */
+    List<AllpertaskDTO1>  findallpertasktset1();
+
+    /**
+     * 审核列表
+     * @return
+     */
+    List<AllpertaskDTO1>  findallpertasktset2();
 }

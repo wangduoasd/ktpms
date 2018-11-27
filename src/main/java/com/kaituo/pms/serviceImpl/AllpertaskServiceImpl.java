@@ -1,6 +1,10 @@
 package com.kaituo.pms.serviceImpl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.kaituo.pms.DTO.AllpertaskDTO;
+import com.kaituo.pms.DTO.AllpertaskDTO1;
+import com.kaituo.pms.DTO.GetalltaskperDTO;
 import com.kaituo.pms.bean.*;
 import com.kaituo.pms.dao.AllpertaskMapper;
 import com.kaituo.pms.dao.AllpertaskUserMapper;
@@ -12,15 +16,12 @@ import com.kaituo.pms.quartz.ScheduleTask;
 import com.kaituo.pms.quartz.ScheduleTaskPer;
 import com.kaituo.pms.service.AllpertaskService;
 import com.kaituo.pms.utils.CodeAndMessageEnum;
-import org.quartz.Scheduler;
-import org.quartz.SchedulerException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -186,39 +187,50 @@ public class AllpertaskServiceImpl implements AllpertaskService {
      * @return
      */
     @Override
-    public List<AllpertaskDTO> find_Allpertask_ofadmin() {
-        List<AllpertaskDTO> allpertaskDTOList=new ArrayList<> ();
-        List<Allpertask> allpertaskList = null;
-        try {
-            //查询未被删除的全员任务
-            allpertaskList = allpertaskMapper.findallpertask ();
-        } catch (MyException e) {
-           throw new MyException (CodeAndMessageEnum.FIND_PERTASK_ERROR);
-        }
-        for (Allpertask allpertask : allpertaskList) {
-            AllpertaskDTO allpertaskDTO = new AllpertaskDTO ();
-            //将任务信息复制到dto中
-            BeanUtils.copyProperties (allpertask, allpertaskDTO);
-            List<Integer> userids= null;
-            try {
-                //查询userid集合
-                userids = allpertaskUserMapper.findAllpertask_userid (allpertask.getAllpertask_id ());
-            } catch (MyException e) {
-                throw new MyException (CodeAndMessageEnum.GETALLPERTASK_COUNT_FAIL);
-            }
-            List<String> usernames=new ArrayList<> ();
-            //查询username，并加入list集合
-            for(Integer userid:userids) {
-                //这是视图获取的，如果出现人员看不到的话，请更改这里,我调用的是别人的mapper
-                //todo 怪我咯
-                String username=userMapper.getUserById (userid).getUserName ();
-                usernames.add(username);
-            }
-            allpertaskDTO.setUsername (usernames);
-            allpertaskDTOList.add (allpertaskDTO);
-        }
-
-        return allpertaskDTOList;
+    public List<AllpertaskDTO1> find_Allpertask_ofadmin() {
+          List<AllpertaskDTO1> allpertaskDTO1List=allpertaskMapper.findallpertasktset1 ();
+          return allpertaskDTO1List;
+//        List<AllpertaskDTO> allpertaskDTOList=new ArrayList<> ();
+//        List<Allpertask> allpertaskList = null;
+//        try {
+//            //查询未被删除的全员任务
+//
+//            allpertaskList = allpertaskMapper.findallpertask ();
+//        } catch (MyException e) {
+//           throw new MyException (CodeAndMessageEnum.FIND_PERTASK_ERROR);
+//        }
+//        for (Allpertask allpertask : allpertaskList) {
+//            AllpertaskDTO allpertaskDTO = new AllpertaskDTO ();
+//            //将任务信息复制到dto中
+//            BeanUtils.copyProperties (allpertask, allpertaskDTO);
+//            List<Integer> userids= null;
+//            try {
+//                //查询userid集合
+//                userids = allpertaskUserMapper.findAllpertask_userid (allpertask.getAllpertask_id ());
+//            } catch (MyException e) {
+//                throw new MyException (CodeAndMessageEnum.GETALLPERTASK_COUNT_FAIL);
+//            }
+//            List<GetalltaskperDTO> getalltaskperList = new ArrayList<> ();
+//            //查询username，并加入list集合
+//            for(Integer userid:userids) {
+//                //这是视图获取的，如果出现人员看不到的话，请更改这里,我调用的是别人的mapper
+//                //todo 怪我咯
+//                String username=userMapper.getUserById (userid).getUserName ();
+//                List<AllpertaskUser> allpertaskUserlist =allpertaskUserMapper.findAllpertaskbyids(allpertask.getAllpertask_id (),userid);
+//               for(AllpertaskUser allpertaskUser:allpertaskUserlist) {
+//                   GetalltaskperDTO getalltaskperDTO = new GetalltaskperDTO ();
+//                   getalltaskperDTO.setUserid (userid);
+//                   getalltaskperDTO.setUsername (username);
+//                   getalltaskperDTO.setGettime (allpertaskUser.getUser_gettime ());
+//                   getalltaskperDTO.setFinishtime (allpertaskUser.getUser_finishtime ());
+//                   getalltaskperList.add (getalltaskperDTO);
+//
+//               }
+//        }
+//            allpertaskDTO.setGetalltaskperList (getalltaskperList);
+//            allpertaskDTOList.add (allpertaskDTO);
+//        }
+//        return allpertaskDTOList;
     }
 
     /**
@@ -226,31 +238,34 @@ public class AllpertaskServiceImpl implements AllpertaskService {
      * @return allpertaskDTOList
      */
     @Override
-    public List<AllpertaskDTO> find_allpertaskfinish() {
-        //查询审核中的任务人员中间表（list）
-        List<AllpertaskUser> allpertaskUserList=allpertaskUserMapper.find_allpertaskfinish ();
-        List<AllpertaskDTO> allpertaskDTOList=new ArrayList<> ();
-        List<String> usernames=new ArrayList<> ();
-        //遍历list
-        for(AllpertaskUser allpertaskUser:allpertaskUserList){
-            AllpertaskDTO allpertaskDTO=new AllpertaskDTO ();
-            Integer allpertask_id=allpertaskUser.getAllpertask_id ();
-            //查询对应全员任务
-            Allpertask allpertask=allpertaskMapper.findallpertaskbyid (allpertask_id);
-            //属性复制
-            BeanUtils.copyProperties (allpertask,allpertaskDTO);
-            //将各种信息放入dto
-            allpertaskDTO.setUser_status (allpertaskUser.getUser_status ());
-            allpertaskDTO.setUser_gettime (allpertaskUser.getUser_gettime ());
-            allpertaskDTO.setUser_finishtime (allpertaskUser.getUser_finishtime ());
-            Integer userid= allpertaskUser.getUser_id ();
-            //根据id查询username放入集合（这里其实不用集合，但不想加字段了）
-            String username=userMapper.getUserById (userid).getUserName ();
-            usernames.add(username);
-            allpertaskDTO.setUsername (usernames);
-            allpertaskDTOList.add (allpertaskDTO);
-        }
-        return allpertaskDTOList;
+    public List<AllpertaskDTO1> find_allpertaskfinish() {
+        List<AllpertaskDTO1> allpertaskDTO1List=allpertaskMapper.findallpertasktset2 ();
+//        //查询审核中的任务人员中间表（list）
+//        List<AllpertaskUser> allpertaskUserList=allpertaskUserMapper.find_allpertaskfinish ();
+//        List<AllpertaskDTO> allpertaskDTOList=new ArrayList<> ();
+//        //遍历list
+//        for(AllpertaskUser allpertaskUser:allpertaskUserList){
+//            AllpertaskDTO allpertaskDTO=new AllpertaskDTO ();
+//            Integer allpertask_id=allpertaskUser.getAllpertask_id ();
+//            //查询对应全员任务
+//            Allpertask allpertask=allpertaskMapper.findallpertaskbyid (allpertask_id);
+//            //属性复制
+//            BeanUtils.copyProperties (allpertask,allpertaskDTO);
+//            //将各种信息放入dto
+//            allpertaskDTO.setUser_status (allpertaskUser.getUser_status ());
+//            allpertaskDTO.setUser_gettime (allpertaskUser.getUser_gettime ());
+//            allpertaskDTO.setUser_finishtime (allpertaskUser.getUser_finishtime ());
+//            Integer userid= allpertaskUser.getUser_id ();
+//            //根据id查询username放入集合（这里其实不用集合，但不想加字段了）
+//            String username=userMapper.getUserById (userid).getUserName ();
+//            List<GetalltaskperDTO> getalltaskperList=new ArrayList<> ();
+//            GetalltaskperDTO getalltaskperDTO=new GetalltaskperDTO ();
+//            getalltaskperDTO.setUsername (username);
+//            getalltaskperList.add (getalltaskperDTO);
+//            allpertaskDTO.setGetalltaskperList (getalltaskperList);
+//            allpertaskDTOList.add (allpertaskDTO);
+//        }
+        return allpertaskDTO1List;
     }
 
     /**
@@ -382,85 +397,60 @@ public class AllpertaskServiceImpl implements AllpertaskService {
      */
 
     @Override
-    public List<AllpertaskDTO> find_Allpertask_ofuser(int userid,int status) {
+    public PageInfo find_Allpertask_ofuser(int userid,int status,int pn) {
 
-            //数据拼接返回给前台
-            List<AllpertaskDTO> allpertaskDTOList=new ArrayList<> ();
-
-            List<AllpertaskUser> allpertaskUserList= null;
-            try {
-                allpertaskUserList = allpertaskUserMapper.findAllpertask (userid);
-            } catch (MyException e) {
-               throw new MyException (CodeAndMessageEnum.FIND_PERTASKUSER_ERROR);
-            }
-            for(AllpertaskUser allpertaskUser:allpertaskUserList) {
+            List<AllpertaskDTO> allpertaskUserList= null;
                 switch (status) {
                     case 1://进行中
-                        if (allpertaskUser.getUser_status () == 1) {
-                            Allpertask allpertask = null;
+                        PageHelper.startPage(pn,10);
                             try {
-                                allpertask = allpertaskMapper.findallpertaskbyid (allpertaskUser.getAllpertask_id ());
+                                //引入PageHelper分页插件
+                                //查询只需要调用,传入的页码，以及每页的大小
+                                allpertaskUserList = allpertaskUserMapper.findpertask1(userid);
+
                             } catch (MyException e) {
-                                throw new MyException (CodeAndMessageEnum.FIND_PERTASK_ERROR);
+                                throw new MyException (CodeAndMessageEnum.FIND_PERTASKUSER_ERROR);
                             }
+                        for(AllpertaskDTO allpertaskUser:allpertaskUserList) {
+                                Date now = new Date ();
+                                long resttimes = allpertaskUser.getUser_gettime ().getTime ()
+                                        + (allpertaskUser.getAllpertask_time () * 3600000)
+                                        - now.getTime ();
+                                if (resttimes > 0) {
+                                   int resttime= (int) (resttimes/1000);
+                                    allpertaskUser.setResttime (resttime);
 
-                            AllpertaskDTO allpertaskDTO = new AllpertaskDTO ();
-                            BeanUtils.copyProperties (allpertask, allpertaskDTO);
-                            allpertaskDTO.setUser_gettime (allpertaskUser.getUser_gettime ());
-                            allpertaskDTO.setUser_status (allpertaskUser.getUser_status ());
-                            Date now = new Date ();
-
-                           long resttimes= allpertaskUser.getUser_gettime ().getTime ()
-                                   +(allpertask.getAllpertask_time ()*3600000)
-                                   -now.getTime ();
-                           if(resttimes>0) {
-                               Date resttime = new Date (resttimes);
-                               allpertaskDTO.setResttime (resttime);
-                           }else{
-                               long resttime1=allpertask.getAllpertask_endtime ().getTime ()-now.getTime ();
-                               Date resttime = new Date (resttime1);
-                               allpertaskDTO.setResttime (resttime);
-                           }
-                            allpertaskDTOList.add (allpertaskDTO);
+                                } else {
+                                    long resttime1 = allpertaskUser.getAllpertask_endtime ().getTime () - now.getTime ();
+                                    int resttime= (int) (resttime1/1000);
+                                    allpertaskUser.setResttime (resttime);
+                                }
+                            //allpertaskUserList.add (allpertaskUser);
                         }
-
+                        PageInfo page = new PageInfo(allpertaskUserList,5);
+                        return page;
 
                     case 2://审核中
-                        if (allpertaskUser.getUser_status () == 2) {
-                            Allpertask allpertask = null;
-                            try {
-                                allpertask = allpertaskMapper.findallpertaskbyid (allpertaskUser.getAllpertask_id ());
-                            } catch (MyException e) {
-                                throw new MyException (CodeAndMessageEnum.FIND_PERTASK_ERROR);
-                            }
-
-                            AllpertaskDTO allpertaskDTO = new AllpertaskDTO ();
-                            BeanUtils.copyProperties (allpertask, allpertaskDTO);
-                            allpertaskDTO.setUser_gettime (allpertaskUser.getUser_gettime ());
-                            allpertaskDTO.setUser_status (allpertaskUser.getUser_status ());
-                            allpertaskDTO.setUser_finishtime (allpertaskUser.getUser_finishtime ());
-                            allpertaskDTOList.add (allpertaskDTO);
+                        PageHelper.startPage(pn,10);
+                        try {
+                            allpertaskUserList = allpertaskUserMapper.findpertask2 (userid);
+                        } catch (MyException e) {
+                            throw new MyException (CodeAndMessageEnum.FIND_PERTASKUSER_ERROR);
                         }
-
+                        PageInfo page1 = new PageInfo(allpertaskUserList,5);
+                        return page1;
 
                     case 3://已完成
-                        if (allpertaskUser.getUser_status () == 3) {
-                            Allpertask allpertask = null;
-                            try {
-                                allpertask = allpertaskMapper.findallpertaskbyid (allpertaskUser.getAllpertask_id ());
-                            } catch (MyException e) {
-                                throw new MyException (CodeAndMessageEnum.FIND_PERTASK_ERROR);
-                            }
-                            AllpertaskDTO allpertaskDTO = new AllpertaskDTO ();
-                            BeanUtils.copyProperties (allpertask, allpertaskDTO);
-                            allpertaskDTO.setUser_gettime (allpertaskUser.getUser_gettime ());
-                            allpertaskDTO.setUser_status (allpertaskUser.getUser_status ());
-                            allpertaskDTO.setUser_finishtime (allpertaskUser.getUser_finishtime ());
-                            allpertaskDTOList.add (allpertaskDTO);
+                        PageHelper.startPage(pn,10);
+                        try {
+                            allpertaskUserList = allpertaskUserMapper.findpertask3 (userid);
+                        } catch (MyException e) {
+                            throw new MyException (CodeAndMessageEnum.FIND_PERTASKUSER_ERROR);
                         }
-                }
+                        PageInfo page2 = new PageInfo(allpertaskUserList,5);
+                        return page2;
             }
-                   return allpertaskDTOList;
+        return null;
     }
 
 
@@ -470,43 +460,13 @@ public class AllpertaskServiceImpl implements AllpertaskService {
      * @return
      */
     @Override
-    public List<AllpertaskDTO> AllpertaskList() {
-        List<AllpertaskDTO> allpertaskDTOList=new ArrayList<> ();
-        List<Allpertask> allpertaskList = null;
-        try {
-            //
-            allpertaskList = allpertaskMapper.findallpertask();
-        } catch (MyException e) {
-            throw new MyException (CodeAndMessageEnum.FIND_PERTASK_ERROR);
-        }
-        for (Allpertask allpertask : allpertaskList) {
-            if(allpertask.getAllpertask_status ()<2) {
-                AllpertaskDTO allpertaskDTO = new AllpertaskDTO ();
-                BeanUtils.copyProperties (allpertask, allpertaskDTO);
-                List<Integer> userids = null;
-                try {
-                    userids = allpertaskUserMapper.findAllpertask_userid (allpertask.getAllpertask_id ());
-                } catch (MyException e) {
-                    throw new MyException (CodeAndMessageEnum.GETALLPERTASK_COUNT_FAIL);
-                }
-                List<String> usernames=new ArrayList<> ();
-                //查询username，并加入list集合
-                for(Integer userid:userids) {
-                    //这是视图获取的，如果出现人员看不到的话，请更改这里，我调用的是别人的mapper
-                    //todo 怪我咯
-                    i++;
-                    String username=userMapper.getUserById (userid).getUserName ();
-                    usernames.add(username);
-                }
-                allpertaskDTO.setCount (i);
-                allpertaskDTO.setUsername (usernames);
-                allpertaskDTOList.add (allpertaskDTO);
-            }
-        }
+    public PageInfo AllpertaskList(int pn,int Pagesize) {
+        PageHelper.startPage (pn,10);
+        List<AllpertaskDTO1> allpertaskDTO1List=allpertaskMapper.findallpertasktset ();
+        PageInfo pageInfo=new PageInfo (allpertaskDTO1List);
+        return   pageInfo;
 
-        return allpertaskDTOList;
-    }
-
+        }
     /**
      * 领取任务
      * @param allpertaskid
@@ -532,7 +492,14 @@ public class AllpertaskServiceImpl implements AllpertaskService {
             Date time=new Date();
             allpertaskUser.setUser_gettime (time);
             allpertaskUser.setAllpertask_id (allpertaskid);
-            allpertaskUserMapper.updateuserbyids (allpertaskUser);
+
+            AllpertaskUser allpertaskUser2=allpertaskUserMapper.findAllpertaskbyid0(allpertaskid, userid);
+           if(allpertaskUser2!=null) {
+               allpertaskUserMapper.updateuserbyids (allpertaskUser);
+           }else {
+               String message="您已领取该任务";
+               return message;
+           }
         } catch (MyException e) {
            String message="您已领取该任务";
            return message;
@@ -572,7 +539,7 @@ public class AllpertaskServiceImpl implements AllpertaskService {
         //定时开始（定时任务为状态变为未领取）
         AllpertaskUser allpertaskUser = null;
         try {
-            allpertaskUser = allpertaskUserMapper.findAllpertaskbyids (allpertaskid, userid);
+            allpertaskUser = allpertaskUserMapper.findAllpertaskbyids1 (allpertaskid, userid);
         } catch (MyException e) {
             throw new MyException (CodeAndMessageEnum.FIND_PERTASKUSER_ERROR);
         }
@@ -685,9 +652,41 @@ public class AllpertaskServiceImpl implements AllpertaskService {
         );
         //加对应积分
 
-        allpertaskUserMapper.adduser (allpertaskid,userid);
     }
 
+    /**
+     * 查看领取人
+     * @param allpertask_id
+     * @return
+     */
+    @Override
+    public  List<GetalltaskperDTO> findpertest(Integer allpertask_id) {
+       List<GetalltaskperDTO> getalltaskperDTOList= allpertaskMapper.findpertasktest (allpertask_id);
+        return getalltaskperDTOList;
+    }
+
+
+//    @Override
+//    public PageInfo findallpertasktest1(int pn, int Pagesize) {
+//        PageHelper.startPage (pn,10);
+//        List<AllpertaskDTO1> allpertaskDTO1List=allpertaskMapper.findallpertasktset ();
+//
+//        if (allpertaskDTO1List != null) {
+//            for (int i = 0; i < allpertaskDTO1List.size (); i++) {
+//                List<GetalltaskperDTO> getalltaskperDTOList = allpertaskMapper.findpertasktest (allpertaskDTO1List.get (i).getAllpertask_id ());
+//
+//                if (getalltaskperDTOList != null) {
+//                    allpertaskDTO1List.get (i).getGetalltaskperDTOS ().addAll (getalltaskperDTOList);
+//                }
+//            }
+//        }
+//        PageInfo pageInfo=new PageInfo (allpertaskDTO1List);
+//        return  pageInfo;
+//
+//     }
+
+
+    // }
 
 //    /**
 //     * 修改全员任务

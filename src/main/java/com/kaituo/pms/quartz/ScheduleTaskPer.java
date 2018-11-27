@@ -42,7 +42,7 @@ public class ScheduleTaskPer  implements Job {
         allpertaskUser.setUser_id (JobSay3);
         allpertaskUser.setAllpertask_id (jobSay2);
         allpertaskUser.setUser_status (jobSay1);
-        allpertaskUserMapper.updateuserbyids (allpertaskUser);
+        allpertaskUserMapper.updateuserbyids2 (allpertaskUser);
 //        System.out.println("Instance " + key + " of DumbJob says: " + jobSay1 );
 
 

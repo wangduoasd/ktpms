@@ -1,5 +1,7 @@
 package com.kaituo.pms.dao;
 
+import com.kaituo.pms.DTO.AllpertaskDTO;
+import com.kaituo.pms.DTO.AllpertaskDTO1;
 import com.kaituo.pms.bean.Allpertask;
 import com.kaituo.pms.bean.AllpertaskUser;
 import org.apache.ibatis.annotations.Mapper;
@@ -36,7 +38,9 @@ public interface AllpertaskUserMapper {
      * @return
      */
     List<AllpertaskUser> findAllpertask(Integer user_id);
-
+    List<AllpertaskDTO> findpertask1(Integer user_id);
+    List<AllpertaskDTO> findpertask2(Integer user_id);
+    List<AllpertaskDTO> findpertask3(Integer user_id);
     /**
      * @return 领取人(分别是谁userid)
      */
@@ -69,10 +73,16 @@ public interface AllpertaskUserMapper {
      * @param user_id
      * @return
      */
-    AllpertaskUser findAllpertaskbyids(@Param ("allpertask_id") Integer allpertask_id,
+   List< AllpertaskUser> findAllpertaskbyids(@Param ("allpertask_id") Integer allpertask_id,
                                        @Param ("user_id") Integer user_id
     );
 
+     AllpertaskUser findAllpertaskbyid0(@Param ("allpertask_id") Integer allpertask_id,
+                                              @Param ("user_id") Integer user_id
+    );
+  AllpertaskUser findAllpertaskbyids1(@Param ("allpertask_id") Integer allpertask_id,
+                                              @Param ("user_id") Integer user_id
+    );
     /**
      * 查询审核中的任务
      * @return  List<AllpertaskUser>
@@ -93,4 +103,5 @@ public interface AllpertaskUserMapper {
      */
     void updateTOnofinish(@Param("allpertaskUser")AllpertaskUser allpertaskUser);
 
+    List<AllpertaskDTO> findpertask00();
 }

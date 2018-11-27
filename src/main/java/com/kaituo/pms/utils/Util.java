@@ -7,7 +7,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.net.URLEncoder;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -56,10 +55,13 @@ public class Util {
     * @Author: su
     * @Date: 2018/7/27 
     */ 
-    public static Date stampToDate(String stamp){
+    public static Date stampToDate(String stamp) throws ParseException {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        long lt = new Long(stamp);
-        Date date = new Date(lt);
+
+            Date date = simpleDateFormat.parse (stamp);
+
+//        long lt = new Long(stamp);
+//        Date date = new Date(lt);
         return date;
     }
 

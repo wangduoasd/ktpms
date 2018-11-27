@@ -4,6 +4,7 @@ import com.kaituo.pms.bean.Allpertask;
 import com.kaituo.pms.bean.Task;
 import com.kaituo.pms.bean.Token;
 import com.kaituo.pms.bean.User;
+import com.kaituo.pms.error.MyException;
 import com.kaituo.pms.service.RoleService;
 import com.kaituo.pms.service.TaskService;
 import com.kaituo.pms.service.TokenService;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.Map;
 
@@ -46,13 +48,14 @@ public class TaskController {
      * @param callPage 调用的页面
      * @param pageNamber 目标页面
      * @return: com.kaituo.pms.utils.OutJSON
-     * @Author: 苏泽华
+     * @Author: 苏泽华,王铎
      * @Date: 2018/8/13
      */
-    @GetMapping("tasks/status/list/{callPage}/{pageNumber}/u/{token}")
+    @GetMapping("tasks/status/list/{callPage}/{pageNumber}/u/{token}/{num}")
     public OutJSON findCollectionStatus(@PathVariable("callPage") String callPage ,
                                         @PathVariable(value = "token") String token,
-                                        @PathVariable(value = "pageNumber") int pageNamber ) {
+                                        @PathVariable(value = "pageNumber") int pageNamber,
+                                        @PathVariable(value = "num") int or) {
         // 检查token并获得userID
         Token token1 = tokenService.selectUserIdByToken(token);
         if (null == token1){
@@ -82,19 +85,20 @@ public class TaskController {
                     }
                     //查询所有已发布但未被领取的任务的信息
                     //分页
-                    return taskService.getPendingTaskByPage(pageNamber , null , status);
+                    return taskService.getPendingTaskByPage(pageNamber , 10 , status,or);
                 // 未完成页面调用
                 case Constant.MISSION_CENTER_TASK_LIST_UNDONE:
                     // 处理超时数据
                     taskService.timeOutDetection();
                     //查询所有已发布但未被领取的任务的信息
                     //分页
-                    return taskService.getUndoneByPage(pageNamber , null , userId);
+                    //分成审核中和未完成
+                    return taskService.getUndoneByPage(pageNamber , 10 , userId,or);
                 // 已完成页面调用
                 case Constant.MISSION_CENTER_TASK_LIST_COMPLETED:
                     //查询所有当前id的已完成数据
                     //分页
-                    return taskService.getStatesTaskByPage(pageNamber , null , Constant.MISSION_COMPLETED , userId);
+                    return taskService.getStatesTaskByPage(pageNamber , 10 , Constant.MISSION_COMPLETED , userId);
                 default:
                     return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR,"调用页面错误");
             }
@@ -216,6 +220,29 @@ public class TaskController {
     }
 
     /**
+     * 领取人取消任务
+     * @param taskId
+     * @return
+     */
+    @PutMapping("tasks/status/four/cannel/{taskId}")
+    public OutJSON cannelTask(@PathVariable("taskId") Integer taskId) {
+        String token = ContextHolderUtils.getRequest ().getHeader ("token");
+        // 检查token并获得userID
+        Token token1 = tokenService.selectUserIdByToken (token);
+        if (null == token1) {
+            return OutJSON.getInstance (CodeAndMessageEnum.TOKEN_EXPIRED);
+        }
+        if (null == token1.getUserId ()) {
+            return OutJSON.getInstance (CodeAndMessageEnum.TOKEN_EXPIRED);
+        }
+        try {
+            taskService.cannel(taskId);
+        } catch (MyException e) {
+            return OutJSON.getInstance(CodeAndMessageEnum.CANNEL_TASK_ERROR, null);
+        }
+        return OutJSON.getInstance(CodeAndMessageEnum.CANNEL_TASK_SUCCESS, null);
+    }
+    /**
      * 发布任务
      * @Param:
      * @param file
@@ -227,7 +254,7 @@ public class TaskController {
      * @Date: 2018/8/20
      */
     @PostMapping("authority/five/tasks/status")
-    public OutJSON publishTask(MultipartFile file,String starttime , String endtime , Task task){
+    public OutJSON publishTask(MultipartFile file,String starttime , String endtime , Task task) throws ParseException {
         String token =ContextHolderUtils.getRequest().getHeader("token");
         // 检查token并获得userID
         Token token1 = tokenService.selectUserIdByToken(token);
@@ -253,12 +280,15 @@ public class TaskController {
             // 如果是2
             case Constant.IMG_UPLOSD_EMPTY :
                 // 返回图片为空
-                return OutJSON.getInstance(CodeAndMessageEnum.PUBLISHING_TASK_IMAGE_IS_EMPTY);
+                task.setTaskImage ("/image/kaituo.png");
             // 如果是1则为上传成功
             case Constant.IMG_UPLOSD_SUCCESS :
                 // 获取相对路径
                 String url = (String) map.get("url");
                 url = url.replace(Util.seperator , "/");
+                if(url==null||url.equals ("")){
+                url="/image/kaituo.png";
+            }
                 // 时间处理
                 Date startDate = Util.stampToDate(starttime);
                 Date endDate = Util.stampToDate(endtime);
@@ -284,17 +314,20 @@ public class TaskController {
      * 任务管理,分页查寻任务
      * @param callPage 调用的页面
      * @param pageNamber 目标页面
-     * @param pageSize 每页条数
+     * @param
      * @return: com.kaituo.pms.utils.OutJSON
      * @Author: 苏泽华
      * @Date: 2018/8/13
      */
-    @GetMapping(value = {"authority/five/tasks/management/{callPage}/{pageNamber}/{pageSize}/{token:.+}" ,
-            "authority/five/tasks/management/{callPage}/{pageNamber}/{token:.+}"})
+//    @GetMapping(value = {"authority/five/tasks/management/{callPage}/{pageNamber}/{pageSize}/{token:.+}" ,
+//            "authority/five/tasks/management/{callPage}/{pageNamber}/{token:.+}"})
+    @GetMapping(value = "authority/five/tasks/management/{callPage}/{pageNamber}/{token:.+}/{num}")
     public OutJSON getManagementPagination(@PathVariable("callPage") String callPage ,
                                         @PathVariable(value = "pageNamber") int pageNamber ,
-                                        @PathVariable(value = "pageSize" , required = false) Integer pageSize ,
-                                        @PathVariable(value = "token") String token) {
+                                       // @PathVariable(value = "pageSize" , required = false) Integer pageSize ,
+                                        @PathVariable(value = "token") String token,
+                                        @PathVariable(value = "num") int num
+    ) {
         // 检查token并获得userID
         Token token1 = tokenService.selectUserIdByToken(token);
         if (null == token1){
@@ -317,18 +350,18 @@ public class TaskController {
                 case Constant.RISK_CONTROL_CENTER_TASK_MANAGEMENT_RELEASED_TASK:
                     //查询所有已发布任务的信息
                     //分页
-                    return taskService.listPublishedTask(pageNamber , pageSize);
+                    return taskService.listPublishedTask(pageNamber , 10);
                 // 待审核页面调用
                 case Constant.RISK_CONTROL_CENTER_TASK_MANAGEMENT_PENDING_TASK:
 
                     //查询所有状态为待审核的任务的信息
                     //分页
-                    return taskService.listPendingTask(pageNamber , pageSize);
+                    return taskService.listPendingTask(pageNamber , 10,  num);
                 // 失效任务页面调用
                 case Constant.RISK_CONTROL_CENTER_TASK_MANAGEMENT_INVALID_TASK:
                     //查询所有当前id的已完成数据
                     //分页
-                    return taskService.lisInvalidTask(pageNamber , pageSize);
+                    return taskService.lisInvalidTask(pageNamber , 10);
                 default:
                     return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR,"调用页面错误");
             }
@@ -369,6 +402,9 @@ public class TaskController {
         }
 
     }
+
+
+
 
     /**
      * 任务审核
@@ -437,7 +473,7 @@ public class TaskController {
      * @Date: 2018/8/21
      */
     @PutMapping("authority/five/task/again")
-    public OutJSON republish(MultipartFile file,String starttime , String endtime , Task task){
+    public OutJSON republish(MultipartFile file,String starttime , String endtime , Task task) throws ParseException {
 
         String token =ContextHolderUtils.getRequest().getHeader("token");
         // 检查token并获得userID

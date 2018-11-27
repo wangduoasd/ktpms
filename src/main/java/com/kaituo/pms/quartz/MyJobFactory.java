@@ -11,13 +11,9 @@ import org.springframework.stereotype.Component;
  * @date 2018/11/16 - 11:13
  */
 @Component
-public class MyJobFactory extends AdaptableJobFactory
-
-{
-
-        @Autowired
-
- private AutowireCapableBeanFactory beanFactory;
+public class MyJobFactory extends AdaptableJobFactory {
+            @Autowired
+            private AutowireCapableBeanFactory beanFactory;
             public MyJobFactory(AutowireCapableBeanFactory factory) {
                 this.beanFactory = factory;
             }
@@ -27,20 +23,10 @@ public class MyJobFactory extends AdaptableJobFactory
       * 这里覆盖了super的createJobInstance方法，对其创建出来的类再进行autowire。
 
       */
-
-         @Override
-
-protected Object createJobInstance(TriggerFiredBundle bundle) throws Exception {
-             System.out.println (bundle);
-        Object jobInstance = super.createJobInstance(bundle);
-
-         beanFactory.autowireBean(jobInstance);
-
-         return jobInstance;
-
+        @Override
+        protected Object createJobInstance(TriggerFiredBundle bundle) throws Exception {
+             Object jobInstance = super.createJobInstance(bundle);
+             beanFactory.autowireBean(jobInstance);
+             return jobInstance;
         }
-
-        }
-
-
-
+ }

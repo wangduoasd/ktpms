@@ -1,7 +1,6 @@
 package com.kaituo.pms.serviceImpl;
 
 import com.kaituo.pms.bean.Allpertask;
-import com.kaituo.pms.dao.FileUploadRecordMapper;
 import com.kaituo.pms.service.AllpertaskService;
 import org.junit.After;
 import org.junit.Test;
@@ -25,12 +24,7 @@ public class AllpertaskServiceImplTest {
 
     @Autowired
     AllpertaskService allpertaskService;
-    @Autowired
-    FileUploadRecordMapper fileUploadRecordMapper;
-    @Test
-    public  void selectByFileName(){
-        System.out.println(fileUploadRecordMapper.selectByFileName("考勤魔板.xlsx"));
-    }
+
     @Test
     public void distribute_Allpertask() throws SchedulerException {
 
@@ -72,12 +66,12 @@ public class AllpertaskServiceImplTest {
 
     @Test
     public void find_Allpertask_ofuser() {
-        allpertaskService.find_Allpertask_ofuser (2,1);
+      //  allpertaskService.find_Allpertask_ofuser (2,1);
     }
 
     @Test
     public void allpertaskList() {
-        allpertaskService.AllpertaskList ();
+        //allpertaskService.AllpertaskList ();
     }
 
     @Test
@@ -93,8 +87,13 @@ public class AllpertaskServiceImplTest {
         allpertaskService.giveup_allpertask (8,2);
     }
 
+
     @Test
     public void finish_allpertask() {
         allpertaskService.finish_allpertask (9,1);
     }
+//    @Test
+//    public void findallpertasktest1(){
+//        allpertaskService.findallpertasktest1 (1,10);
+//    }
 }
