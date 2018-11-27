@@ -89,10 +89,10 @@ public class FileController {
             }else{
                 fileUploadRecordMapper.updateUserNameByFileName(userName,fileName);
             }
-            return new ObjectMapper().writeValueAsString(new ReturnResponse<String>(0, "SUCCESS", null));
+            return new ObjectMapper().writeValueAsString(new ReturnResponse<String>(1, "SUCCESS", null));
         } catch (IOException e) {
             e.printStackTrace();
-            return new ObjectMapper().writeValueAsString(new ReturnResponse<String>(1, "FAILURE", null));
+            return new ObjectMapper().writeValueAsString(new ReturnResponse<String>(-1, "FAILURE", null));
         }
     }
 
@@ -128,7 +128,7 @@ public class FileController {
         //删除上传记录
         fileUploadRecordMapper.deleteFileRecord(fileName);
 
-        return new ObjectMapper().writeValueAsString(new ReturnResponse<String>(0, "SUCCESS", null));
+        return new ObjectMapper().writeValueAsString(new ReturnResponse<String>(1, "SUCCESS", null));
     }
 
     /**
@@ -174,10 +174,10 @@ public class FileController {
             fileUploadRecordMapper.updateDownload(fileUploadRecords.getId());
             FileRecord fileRecord=new FileRecord(fileUploadRecords.getId(),null,userName);
             fileRecordMapper.insertRecord(fileRecord);
-            return new ObjectMapper().writeValueAsString(new ReturnResponse<String>(0, "SUCCESS", null));
+            return new ObjectMapper().writeValueAsString(new ReturnResponse<String>(1, "SUCCESS", null));
         } catch (Exception e) {
             e.printStackTrace();
-            return new ObjectMapper().writeValueAsString(new ReturnResponse<String>(1, "FAILURE", null));
+            return new ObjectMapper().writeValueAsString(new ReturnResponse<String>(-1, "FAILURE", null));
         }
     }
 
@@ -199,14 +199,14 @@ public class FileController {
                 fileUploadRecordMapper.updateReading(fileUploadRecords.getId());
                 FileRecord fileRecord=new FileRecord(fileUploadRecords.getId(),userName,null);
                 fileRecordMapper.insertRecord(fileRecord);
-                return new ObjectMapper().writeValueAsString(new ReturnResponse<String>(0, "SUCCESS", null));
+                return new ObjectMapper().writeValueAsString(new ReturnResponse<String>(1, "SUCCESS", null));
             }else{
-                return new ObjectMapper().writeValueAsString(new ReturnResponse<String>(1, "FAILURE", null));
+                return new ObjectMapper().writeValueAsString(new ReturnResponse<String>(-1, "FAILURE", null));
             }
 
         } catch (Exception e) {
             e.printStackTrace();
-            return new ObjectMapper().writeValueAsString(new ReturnResponse<String>(1, "FAILURE", null));
+            return new ObjectMapper().writeValueAsString(new ReturnResponse<String>(-1, "FAILURE", null));
         }
     }
     /**

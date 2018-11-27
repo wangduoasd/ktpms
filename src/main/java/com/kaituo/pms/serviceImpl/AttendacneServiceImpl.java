@@ -131,8 +131,10 @@ public class AttendacneServiceImpl implements AttendacneService {
         AttendanceExample example = new AttendanceExample();
         AttendanceExample.Criteria criteria = example.createCriteria();
         criteria.andIdEqualTo(attendance.getId());
-        attendance.setId(null);
-        attendanceMapper.updateByExampleSelective(attendance,example);
+
+        //attendance.setId(null);
+       // attendanceMapper.updateByExampleSelective(attendance,example);
+        attendanceMapper.updateByExample(attendance,example);
     }
 
     /**
@@ -209,10 +211,13 @@ public class AttendacneServiceImpl implements AttendacneService {
 //            int attr=0;
 //            attr = CalculationOfIntegralUtil.caluation(attendance);
 //            attendanceMapper.updateDeductintegral(attendance.getId(),attr);
-            try {
                 threadPoolExecutor.execute(new UpdateTbAttendanceThread(attendance,attendanceMapper));
-            } catch (Exception e) {
-                e.printStackTrace();
+                //threadPoolExecutor.shutdown();dd
+        }
+        //判断线程是否完成
+        while (true) {
+            if (threadPoolExecutor.getActiveCount()==0) {
+                break;
             }
         }
         //更新计算过后员工的信息。

@@ -1,12 +1,15 @@
 package com.kaituo.pms.controller;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kaituo.pms.DTO.AttendanceDTO;
 import com.kaituo.pms.bean.Attendance;
 import com.kaituo.pms.bean.FileUploadRecord;
 import com.kaituo.pms.bean.Token;
 import com.kaituo.pms.dao.AttendanceMapper;
 import com.kaituo.pms.dao.FileUploadRecordMapper;
+import com.kaituo.pms.previewModel.ReturnResponse;
 import com.kaituo.pms.service.AttendacneService;
 import com.kaituo.pms.service.RoleService;
 import com.kaituo.pms.service.TokenService;
@@ -105,7 +108,6 @@ public class AttendanceController {
     @PostMapping(value = "/updateAttendances")
     @ResponseBody
     public OutJSON updateAttendances(@RequestBody List<Attendance> attendanceList) {
-
         try {
             String token =ContextHolderUtils.getRequest().getHeader("token");
             // 检查token并获得userID
@@ -118,7 +120,7 @@ public class AttendanceController {
                 return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
             }
             for (int i = 0; i < attendanceList.size(); i++) {
-                attendacneService.updateByExample(attendanceList.get(i));
+                    attendacneService.updateByExample(attendanceList.get(i));
             }
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);
         } catch (Exception e) {
@@ -132,25 +134,25 @@ public class AttendanceController {
      */
     @PostMapping(value = "/calculationOfIntegral")
     @ResponseBody
-    public OutJSON calculationOfIntegral() throws ParseException {
+    public String calculationOfIntegral() throws JsonProcessingException {
         try {
             String token =ContextHolderUtils.getRequest().getHeader("token");
             // 检查token并获得userID
             Token token1 = tokenService.selectUserIdByToken(token);
             if (null == token1){
-                return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+                new ObjectMapper().writeValueAsString(new ReturnResponse<String>(0, "请重新登录", null));
             }
             // 权限控制
 
             if(roleService.checkRole(Constant.ROLE_TASK,token1.getUserId())){
-                return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+                new ObjectMapper().writeValueAsString(new ReturnResponse<String>(0, "请重新登录", null));
             }
             List<Attendance> attendances = attendacneService.selectByExample();
             attendacneService.calculationOfIntegral(attendances);
-            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);
+            return new ObjectMapper().writeValueAsString(new ReturnResponse<String>(1, "SUCCESS", null));
         } catch (Exception e) {
             e.printStackTrace();
-            return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
+            return new ObjectMapper().writeValueAsString(new ReturnResponse<String>(-1, "FAILURE", null));
         }
     }
 
@@ -176,30 +178,37 @@ public class AttendanceController {
 
 
     /**
-     * 更新计算过后数据的员工积分
+     * 更新计算过后数据的员工积分，即合并积分
      * @return
      * @throws ParseException
      */
     @PostMapping("updateEndNum")
     @ResponseBody
-    public OutJSON updateEndNum() throws ParseException {
+    public String updateEndNum() throws JsonProcessingException {
         try {
             String token =ContextHolderUtils.getRequest().getHeader("token");
             // 检查token并获得userID
             Token token1 = tokenService.selectUserIdByToken(token);
             if (null == token1){
-                return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+                new ObjectMapper().writeValueAsString(new ReturnResponse<String>(0, "请重新登录", null));
             }
             // 权限控制
 
             if(roleService.checkRole(Constant.ROLE_TASK,token1.getUserId())){
-                return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+                new ObjectMapper().writeValueAsString(new ReturnResponse<String>(0, "请重新登录", null));
+            }
+            List<Attendance> attendances=attendanceMapper.selectAll();
+            for (Attendance a:attendances
+                 ) {
+                if(a.getIsovertime()==1||a.getIsovertime().equals(1)){
+                    return new ObjectMapper().writeValueAsString(new ReturnResponse<String>(-1, "积分已合并", null));
+                }
             }
             attendanceMapper.updateEndNum();
-            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);
+            return new ObjectMapper().writeValueAsString(new ReturnResponse<String>(1, "SUCCESS", null));
         } catch (Exception e) {
             e.printStackTrace();
-            return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
+            return new ObjectMapper().writeValueAsString(new ReturnResponse<String>(-1, "FAILURE", null));
         }
     }
 

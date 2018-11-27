@@ -307,16 +307,8 @@
   <update id="updateByExample" parameterType="map">
     update attendance
     set id = #{record.id,jdbcType=INTEGER},
-      jobnumber = #{record.jobnumber,jdbcType=VARCHAR},
-      name = #{record.name,jdbcType=VARCHAR},
-      deptname = #{record.deptname,jdbcType=VARCHAR},
-      isovertime = #{record.isovertime,jdbcType=INTEGER},
       startTimeOT = #{record.starttimeot,jdbcType=TIMESTAMP},
-      endTimeOT = #{record.endtimeot,jdbcType=TIMESTAMP},
-      isWholeNight = #{record.iswholenight,jdbcType=INTEGER},
-      wholeNightDate = #{record.wholenightdate,jdbcType=VARCHAR},
-      deductIntegral = #{record.deductintegral,jdbcType=INTEGER},
-      dataTime = #{record.datatime,jdbcType=VARCHAR}
+      endTimeOT = #{record.endtimeot,jdbcType=TIMESTAMP}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -415,7 +407,8 @@
     UPDATE
       p_user p ,attendance a
     set
-      p.user_integral=p.user_integral+a.deductintegral
+      p.user_integral=p.user_integral+a.deductintegral,
+      a.isovertime=1
     WHERE
       p.user_id=a.jobnumber
   </update>
