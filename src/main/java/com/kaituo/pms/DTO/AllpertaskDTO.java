@@ -47,5 +47,6 @@ public class AllpertaskDTO {
     private Date user_finishtime;
     private Integer user_status;
     private Integer user_id;
+    private String user_name;
     private Integer resttime;
 }

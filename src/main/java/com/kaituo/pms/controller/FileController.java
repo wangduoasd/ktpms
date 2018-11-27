@@ -136,8 +136,9 @@ public class FileController {
      * @return
      * @throws JsonProcessingException
      */
-    @RequestMapping(value = "listFiles", method = RequestMethod.POST)
-    public String getFiles(Integer status,Integer pageNO) throws JsonProcessingException {
+    @RequestMapping(value = "listFiles", method = RequestMethod.GET)
+    public String getFiles(@RequestParam Integer status,@RequestParam Integer pageNO,@RequestParam String  fileName) throws JsonProcessingException {
+        System.out.println(pageNO);
         //从文件夹中获取文件列表
 //        List<Map<String, String>> list = Lists.newArrayList();
 //        File file = new File(fileDir + demoPath);
@@ -145,7 +146,7 @@ public class FileController {
 //            Arrays.stream(file.listFiles()).forEach(file1 -> list.add(ImmutableMap.of("fileName", demoDir + "/" + file1.getName())));
 //        }
         PageHelper.startPage(pageNO,10);
-        List<FileUploadRecord> list=fileUploadRecordMapper.selectAllRecord(status);
+        List<FileUploadRecord> list=fileUploadRecordMapper.selectAllRecord(status,fileName);
         for (FileUploadRecord f:list
              ) {
             List<FileRecord> lt=fileRecordMapper.selectByFileId(f.getId());
@@ -194,10 +195,15 @@ public class FileController {
                            String userName) throws JsonProcessingException {
         try {
             FileUploadRecord fileUploadRecords=fileUploadRecordMapper.selectByFileName(fileName);
-            fileUploadRecordMapper.updateReading(fileUploadRecords.getId());
-            FileRecord fileRecord=new FileRecord(fileUploadRecords.getId(),userName,null);
-            fileRecordMapper.insertRecord(fileRecord);
-            return new ObjectMapper().writeValueAsString(new ReturnResponse<String>(0, "SUCCESS", null));
+            if(fileUploadRecords!=null&&userName!=null){
+                fileUploadRecordMapper.updateReading(fileUploadRecords.getId());
+                FileRecord fileRecord=new FileRecord(fileUploadRecords.getId(),userName,null);
+                fileRecordMapper.insertRecord(fileRecord);
+                return new ObjectMapper().writeValueAsString(new ReturnResponse<String>(0, "SUCCESS", null));
+            }else{
+                return new ObjectMapper().writeValueAsString(new ReturnResponse<String>(1, "FAILURE", null));
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
             return new ObjectMapper().writeValueAsString(new ReturnResponse<String>(1, "FAILURE", null));

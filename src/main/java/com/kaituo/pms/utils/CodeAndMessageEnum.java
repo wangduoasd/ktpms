@@ -32,6 +32,7 @@ public enum CodeAndMessageEnum {
     RECIEVE_THE_TASK_STATUS_IS_RECEIVED("-9" , "打什么主意呢？赶快完成任务吧！"),
     // 未完成任务-提交任务
     SUBMIT_TASK_ERROR("-10" , "任务提交失败"),
+
     // 已完成页面消息
     COMPLETED_TASK("1" , "任务完成，奖励到账"),
     // 已发布页面消息
@@ -159,6 +160,9 @@ NOREASON("-48" , "未知错误"),
     UPDATE_INTEGRAL_ERROR("-71","修改积分明细表失败"),
     UPDATE_INTEGRALUSER_ERROR("-72","修改总积分失败"),
     GIVEUPALLPERTASK_FAIL("-73","取消(完成)任务失败"),
+    //取消任务
+    CANNEL_TASK_ERROR("-74" , "任务取消失败"),
+    CANNEL_TASK_SUCCESS("-75" , "任务取消成功")
     ;
 
     private String code;

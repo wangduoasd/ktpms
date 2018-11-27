@@ -15,10 +15,12 @@ import java.util.List;
 @Mapper
 public interface FileUploadRecordMapper {
     /**
-     * 查询所有文件导入记录
+     * 查询所有文件导入记录+++模糊查询
+     * @param status
+     * @param fileName
      * @return
      */
-    List<FileUploadRecord> selectAllRecord(Integer status);
+    List<FileUploadRecord> selectAllRecord(@Param("status")Integer status,@Param("fileName")String fileName);
     /**
      * 添加上传文件的记录
      * @param fileUploadRecord
