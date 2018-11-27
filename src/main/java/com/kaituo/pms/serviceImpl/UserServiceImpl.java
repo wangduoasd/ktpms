@@ -324,7 +324,7 @@ public class UserServiceImpl implements UserService/*,UserDetailsService*/ {
     @Override
     public void updateIntegralByUserId(ChangeIntegral ci) {
         User user = userMapper.selectByPrimaryKey(ci.getId());
-        user.setUserIntegral(user.getUserIntegral() - ci.getInteger());
+        user.setUserIntegral(user.getUserIntegral() - ci.getChangeInt());
         int i = userMapper.updateByPrimaryKeySelective(user);
     }
 }

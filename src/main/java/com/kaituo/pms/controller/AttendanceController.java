@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kaituo.pms.DTO.AttendanceDTO;
 import com.kaituo.pms.bean.Attendance;
+import com.kaituo.pms.bean.ChangeIntegral;
 import com.kaituo.pms.bean.FileUploadRecord;
 import com.kaituo.pms.bean.Token;
 import com.kaituo.pms.dao.AttendanceMapper;
@@ -25,6 +26,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Slf4j
@@ -211,7 +214,76 @@ public class AttendanceController {
             return new ObjectMapper().writeValueAsString(new ReturnResponse<String>(-1, "FAILURE", null));
         }
     }
+    /**
+     　  * @Description: 上传奖惩Excel表格，未写入数据库
+     　　* @param  status "pre" 预览 "up"上传
+     　　* @return com.kaituo.pms.utils.OutJSON
+     　　* @throws
+     　　* @author 张金行
+     　　* @date 2018/11/22 0022 11:21
+     　　*/
+    @PostMapping("uploadExcelToIntergral/{status}")
+    @ResponseBody
 
+    public OutJSON uploadExcelToIntergral(@RequestParam("file") MultipartFile file,@PathVariable("status") String status) {
+
+        String fileName = file.getOriginalFilename();
+        String token = ContextHolderUtils.getRequest().getHeader("token");
+        // 检查token并获得userID
+        Token token1 = tokenService.selectUserIdByToken(token);
+        if (null == token1) {
+            return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+        }
+        // 权限控制
+        if (roleService.checkRole(Constant.ROLE_DEPT, token1.getUserId())) {
+            return OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+        }
+        try {
+            if (status.equals(Constant.PRE_UP_EXCEL)) {
+                List<ChangeIntegral> objects = (List<ChangeIntegral>) attendacneService.upLoadExcelToIntergral(fileName, file, status,token1.getUserId());
+                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS, objects);
+            } else if (status.equals(Constant.UP_EXCEL)) {
+                Object o = attendacneService.upLoadExcelToIntergral(fileName, file, status,token1.getUserId());
+                if (null == o) {
+                    return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
+                } else {
+                    return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);
+                }
+            }
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
+        }
+    }
+    @RequestMapping("rewardExcel")
+    public void orderExport(HttpServletRequest request, HttpServletResponse response) {
+
+        // 导出文件的标题
+        String title = "奖惩导入模板" + Util.dateUtil(new Date()) + ".xls";
+        // 设置表格标题行
+        String[] headers = new String[]{"工号", "姓名", "变动值", "原因"};
+        // 使用流将数据导出
+        List<Object[]> dataList = new ArrayList<Object[]>();
+        Object[] objs = new Object[]{"10000","张三","10","迟到"};
+        dataList.add(objs);
+        OutputStream out = null;
+        try {
+            // 防止中文乱码
+            String headStr = "attachment; filename=\"" + new String(title.getBytes("gb2312"), "ISO8859-1") + "\"";
+            response.setContentType("octets/stream");
+            response.setContentType("APPLICATION/OCTET-STREAM");
+            response.setHeader("Content-Disposition", headStr);
+            out = response.getOutputStream();
+
+            ExportExcelSeedBack ex = new ExportExcelSeedBack(title, headers, dataList);
+            ex.export(out);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error(e.getMessage());
+
+        }
+    }
 //    /**
 //     * 查询所有上传文件（积分考勤表）
 //     * @return

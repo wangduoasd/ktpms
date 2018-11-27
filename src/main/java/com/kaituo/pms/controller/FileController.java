@@ -111,10 +111,10 @@ public class FileController {
             new ObjectMapper().writeValueAsString(new ReturnResponse<String>(0, "请重新登录", null));
         }
         // 权限控制
-
         if(roleService.checkRole(Constant.ROLE_TASK,token1.getUserId())){
             new ObjectMapper().writeValueAsString(new ReturnResponse<String>(0, "请重新登录", null));
         }
+        System.out.println(fileName);
         if (fileName.contains("/")) {
             fileName = fileName.substring(fileName.lastIndexOf("/") + 1);
         }

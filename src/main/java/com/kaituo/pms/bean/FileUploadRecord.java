@@ -1,6 +1,7 @@
 package com.kaituo.pms.bean;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.List;
  * @date 2018/11/13 16:18
  */
 @Data
+
 public class FileUploadRecord {
     private Integer id;
     private String fileName;
@@ -25,4 +27,5 @@ public class FileUploadRecord {
         this.uploadfileUser = uploadfileUser;
         this.status = status;
     }
+    public FileUploadRecord(){}
 }

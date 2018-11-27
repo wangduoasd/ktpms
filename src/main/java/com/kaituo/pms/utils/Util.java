@@ -254,4 +254,56 @@ public class Util {
         }
         return attendanceDTOS;
     }
+    public static Map<String,Object> fileUpload(MultipartFile file, String imgRelativePath, String fileName) {
+        /**
+         * 文件上传
+         *
+         * */
+        Map<String,Object> outPut =new HashMap<>(2);
+        outPut.put("code",Constant.IMG_UPLOSD_ERROR);
+        outPut.put("url","");
+
+
+        if(null==file || file.isEmpty()){
+            outPut.put("code",Constant.IMG_UPLOSD_EMPTY);
+            return outPut;
+        }
+        int size = (int) file.getSize();
+
+        log.info(fileName + size);
+
+        String relativeAddr = imgRelativePath + fileName;
+        // 创建目录
+        makeDirPath(imgRelativePath);
+
+        File dest = new File(getImgBasePath() + relativeAddr);
+
+        try {
+
+            //保存文件
+            file.transferTo(dest);
+            outPut.put("code",Constant.IMG_UPLOSD_SUCCESS);
+            outPut.put("url",imgRelativePath+fileName);
+            return outPut;
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("com.kaituo.pms.utils.Util.FileUpload ==>"+e.getMessage() , e);
+            return outPut;
+        }
+    }
+    public static String getExcelRelativePath(){
+        // 获取操作系统
+        String os = System.getProperty("os.name");
+        // 声明路径
+        String relativePath = "";
+
+        if(os.toLowerCase().startsWith("win")){
+            relativePath = "/excel/";
+        } else {
+            relativePath = "/exc/";
+        }
+        relativePath = relativePath.replace("/" , seperator);
+        return relativePath;
+    }
+
 }
