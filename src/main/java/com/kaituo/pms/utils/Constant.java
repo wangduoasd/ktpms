@@ -118,7 +118,13 @@ public class Constant {
     public static final int ROLE_PRIZE_RELEASE = 4;
     public static final int ROLE_SURE_EXCHANGE = 5;
     public static final int ROLE_ALL = 6;
-
+    //奖惩表上传
+    public static final String PRE_UP_EXCEL ="pre" ;
+    public static final String UP_EXCEL ="up" ;
+    //奖惩表上传 同图片上传
+    public static final int FILE_UPLOSD_ERROR = 0;
+    public static final int FILE_UPLOSD_SUCCESS =1 ;
+    public static final int FILE_UPLOSD_EMPTY = 2;
 
 
 }

@@ -35,6 +35,8 @@ public interface AttendacneService {
      */
      void uploadFile( MultipartFile file,String username,Integer status);
 
+    Object upLoadExcelToIntergral(String fileName, MultipartFile file, String status, Integer userId) throws IOException;
+
 //    /**
 //     * 删除服务器文件（积分考勤表）及数据库记录
 //     * @param filename

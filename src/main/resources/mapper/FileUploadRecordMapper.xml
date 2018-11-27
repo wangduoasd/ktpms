@@ -15,7 +15,7 @@
     <insert id="insertFileRecord" parameterType="com.kaituo.pms.bean.FileUploadRecord">
         INSERT
         INTO
-        file_upload_record (file_name,uploadfile_user,status)
+        file_upload_record (file_name,uploadfile_user)
         VALUES
         (#{fileUploadRecord.fileName},#{fileUploadRecord.uploadfileUser})
     </insert>

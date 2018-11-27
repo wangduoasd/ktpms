@@ -1,14 +1,13 @@
 package com.kaituo.pms.serviceImpl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.kaituo.pms.bean.Attendance;
-import com.kaituo.pms.bean.AttendanceExample;
-import com.kaituo.pms.bean.ChangeIntegral;
-import com.kaituo.pms.bean.FileUploadRecord;
+import com.kaituo.pms.bean.*;
 import com.kaituo.pms.dao.AttendanceMapper;
 import com.kaituo.pms.dao.FileUploadRecordMapper;
+import com.kaituo.pms.dao.UserMapper;
 import com.kaituo.pms.error.MyException;
 import com.kaituo.pms.service.AttendacneService;
+import com.kaituo.pms.utils.Constant;
 import com.kaituo.pms.utils.UpdateTbAttendanceThread;
 import com.kaituo.pms.utils.Util;
 import com.kaituo.pms.utils.UploadFile;
@@ -37,6 +36,8 @@ public class AttendacneServiceImpl implements AttendacneService {
     private AttendanceMapper attendanceMapper;
     @Autowired
     FileUploadRecordMapper fileUploadRecordMapper;
+    @Autowired
+    UserMapper userMapper;
 
     /**
      * 上传的Excle数据写入数据库
@@ -184,7 +185,7 @@ public class AttendacneServiceImpl implements AttendacneService {
             ChangeIntegral ci = new ChangeIntegral();
 
             ci.setId((int)row.getCell(0).getNumericCellValue());
-            ci.setName(String.valueOf(row.getCell(1)));
+            ci.setUsername(String.valueOf(row.getCell(1)));
             ci.setInteger((int)row.getCell(2).getNumericCellValue());
             allList.add(ci);
         }
@@ -237,6 +238,83 @@ public class AttendacneServiceImpl implements AttendacneService {
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public Object upLoadExcelToIntergral(String fileName, MultipartFile file, String status, Integer userId) throws IOException {
+        if (!fileName.matches("^.+\\.(?i)(xls)$") && !fileName.matches("^.+\\.(?i)(xlsx)$")) {
+            throw new MyException("上传文件格式不正确");
+        }
+        boolean isExcel2003 = true;
+        if (fileName.matches("^.+\\.(?i)(xlsx)$")) {
+            isExcel2003 = false;
+        }
+        InputStream is = file.getInputStream();
+        Workbook wb = null;
+        if (isExcel2003) {
+            wb = new HSSFWorkbook(is);
+        } else {
+            wb = new XSSFWorkbook(is);
+        }
+        Sheet sheet = wb.getSheetAt(0);//
+        if(sheet==null){
+            return null;
+        }
+        List<ChangeIntegral> changeIntegrals = getChangeIntegrals(sheet);
+        if(status.equals(Constant.PRE_UP_EXCEL)) {
+            return changeIntegrals;
+        }else {
+            for(ChangeIntegral s:changeIntegrals){
+                User user = new User();
+                user.setUserId(s.getId());
+                user.setUserIntegral(s.getBeforeChange());
+                userMapper.updateByPrimaryKeySelective(user);
+            }
+            String[] split = fileName.split("\\.");
+            String newFileName=split[0]+System.currentTimeMillis()+"."+split[1];
+            Map<String, Object> map = Util.fileUpload(file, Util.getExcelRelativePath(),newFileName);
+            int key = (int) map.get("code");
+            switch (key) {
+                case Constant.FILE_UPLOSD_ERROR:
+                    return null;
+                case Constant.FILE_UPLOSD_SUCCESS:
+                    String url = (String) map.get("url");
+                    url = url.replace(Util.seperator , "/");
+                    User user = userMapper.selectByPrimaryKey(userId);
+                    FileUploadRecord fileUploadRecord = new FileUploadRecord();
+                    fileUploadRecord.setFileName(newFileName);
+                    fileUploadRecord.setUploadfileUser(user.getUserName());
+                    fileUploadRecordMapper.insertFileRecord(fileUploadRecord);
+                    return "成功";
+                case Constant.FILE_UPLOSD_EMPTY:
+                    return null;
+                default:
+                    return null;
+            }
+        }
+
+    }
+    private List<ChangeIntegral> getChangeIntegrals(Sheet sheet) {
+        //开始操作Excel表格
+        List<ChangeIntegral> allList = new ArrayList<>();
+        System.out.println("一共有多少行="+sheet.getLastRowNum());
+        for (int i = 1;i<=sheet.getLastRowNum();i++){
+            Row row = sheet.getRow(i);
+            ChangeIntegral ci = new ChangeIntegral();
+            int userid=(int)Math.round(row.getCell(0).getNumericCellValue());
+            ci.setId(userid);
+            ci.setUsername(String.valueOf(row.getCell(1)));
+            User user = userMapper.selectByPrimaryKey(userid);
+            Integer userIntegral = user.getUserIntegral();
+            ci.setBeforeChange(userIntegral);
+            int changeInt=(int)Math.round(row.getCell(2).getNumericCellValue());
+            ci.setChangeInt(changeInt);
+            ci.setAfterChange(userIntegral+changeInt);
+            ci.setChangeStr(row.getCell(3).toString());
+            allList.add(ci);
+        }
+
+        return allList;
     }
 
 //    /**
