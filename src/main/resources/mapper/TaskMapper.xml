@@ -402,4 +402,14 @@
     <select id="invalidTaskCount" resultType="java.lang.Integer">
         select count(*) from p_task t where t.task_status = 3 or t.task_status = 5 or t.task_status = 6 or t.task_status = 7
     </select>
+
+  <update id="cannel" parameterType="java.lang.Integer">
+     update p_task
+     set  task_number = 0,
+          task_status = 1,
+          user_id = null,
+          user_name = null,
+          task_gettime = null
+     where task_id = #{taskId,jdbcType=INTEGER}
+  </update>
 </mapper>

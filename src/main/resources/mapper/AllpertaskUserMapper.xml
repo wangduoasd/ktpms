@@ -118,5 +118,9 @@
         and user_status=1
     </update>
 
+    <select id="findpertask00" parameterType="java.lang.Integer" resultType="com.kaituo.pms.DTO.AllpertaskDTO">
+        select * from(select tu.*,t.user_finishtime,t.user_gettime,t.user_status,t.user_id from p_allpertask tu LEFT JOIN p_allpertask_user t ON tu.allpertask_id=t.allpertask_id)aa
+        where aa.allpertask_status &lt;2 and  aa.user_status=1
+    </select>
 
 </mapper>

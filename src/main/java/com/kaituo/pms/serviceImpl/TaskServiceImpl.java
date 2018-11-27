@@ -142,13 +142,9 @@ public class TaskServiceImpl implements TaskService {
             criteria.andTaskCountnumberEqualTo (or);
             return taskMapper.selectByExample(example);
         }else {
-            criteria.andTaskNumberNotEqualTo (1);
+            criteria.andTaskCountnumberNotEqualTo (1);
             return taskMapper.selectByExample(example);
         }
-
-
-
-
     }
 
     /**
@@ -179,12 +175,18 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public List<Task> listUnfinishedTask(int userId) {
+    public List<Task> listUnfinishedTask(int userId,int status) {
         TaskExample example = new TaskExample();
         TaskExample.Criteria criteria = example.createCriteria();
         example.setOrderByClause("task_gettime DESC");
-        criteria.andTaskStatusNotEqualTo(Constant.THE_TASK_WAS_SUCCESSFULLY_POSTED);
-        criteria.andTaskStatusNotEqualTo(Constant.MISSION_COMPLETED);
+        if(status==1) {
+            List<Integer> nums=new ArrayList<> ();
+            nums.add (2);
+//            nums.add (5);
+            criteria.andTaskStatusIn (nums);
+        }else {
+            criteria.andTaskStatusEqualTo (4);
+        }
         criteria.andUserIdEqualTo(userId);
         return taskMapper.selectByExample(example);
     }
@@ -316,7 +318,7 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public OutJSON getUndoneByPage(Integer pageNumber, Integer pageSize , int userId) {
+    public OutJSON getUndoneByPage(Integer pageNumber, Integer pageSize , int userId,int status) {
         // 如果每页条数为空则将每页条数设为4
         if (null==pageSize){
             pageSize = 4;
@@ -327,15 +329,21 @@ public class TaskServiceImpl implements TaskService {
         TaskExample example = new TaskExample();
         TaskExample.Criteria criteria = example.createCriteria();
         example.setOrderByClause("task_gettime DESC");
-        criteria.andTaskStatusNotEqualTo(Constant.THE_TASK_WAS_SUCCESSFULLY_POSTED);
-        criteria.andTaskStatusNotEqualTo(Constant.MISSION_COMPLETED);
-        criteria.andUserIdEqualTo(userId);
+       if(status==1) {
+           List<Integer> nums=new ArrayList<> ();
+           nums.add (2);
+           //nums.add (5);
+           criteria.andTaskStatusIn (nums);
+       }else {
+           criteria.andTaskStatusEqualTo (4);
+       }
+        criteria.andUserIdEqualTo (userId);
         int total = taskMapper.countByExample(example);
         // 有数据就封装map返回上层
         if (0<total){
             // 分页
             PageHelper.startPage(pageNumber, pageSize);
-            List<Task> list = listUnfinishedTask(userId);
+            List<Task> list = listUnfinishedTask(userId,status);
 
             Map<String , Object> pageMap = new HashMap<>(2);
 
@@ -524,7 +532,7 @@ public class TaskServiceImpl implements TaskService {
      * @Date: 2018/8/20
      */
     @Override
-    public OutJSON listPendingTask(int pageNamber , Integer pageSize) {
+    public OutJSON listPendingTask(int pageNamber , Integer pageSize,int num) {
         // 如果每页条数为空则将每页条数设为4
         if (null==pageSize){
             pageSize = 4;
@@ -533,6 +541,11 @@ public class TaskServiceImpl implements TaskService {
         TaskExample.Criteria criteria = taskExample.createCriteria();
         taskExample.setOrderByClause("task_starttime DESC");
         criteria.andTaskStatusEqualTo(Constant.TASK_SUBMISSION_REVIEW);
+        if(num==1) {
+            criteria.andTaskCountnumberEqualTo (1);
+        }else {
+            criteria.andTaskCountnumberNotEqualTo (1);
+        }
         // 总行数
         int total = taskMapper.countByExample(taskExample);
         // 有数据就封装map返回上层
@@ -651,7 +664,7 @@ public class TaskServiceImpl implements TaskService {
     public boolean auditPassed(int taskId) {
         Task task = taskMapper.selectByPrimaryKey(taskId);
         User user = userMapper.selectByPrimaryKey(task.getUserId());
-
+        System.out.println ("1111");
         // 判断是否是多次任务
             if(1<task.getTaskCountnumber()){
                 // 多次任务
@@ -788,4 +801,12 @@ public class TaskServiceImpl implements TaskService {
             taskMapper.updateByExample(task , taskExample);
             return true;
     }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void cannel(int taskId) {
+        taskMapper.cannel (taskId);
+    }
+
+
 }

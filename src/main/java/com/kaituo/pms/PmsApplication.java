@@ -1,6 +1,7 @@
 package com.kaituo.pms;
 
 import com.github.pagehelper.PageHelper;
+import com.kaituo.pms.quartz.ApplicationStartup;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -21,7 +22,9 @@ import java.util.Properties;
 public class PmsApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(PmsApplication.class, args);
+        SpringApplication springApplication = new SpringApplication(PmsApplication.class);
+        springApplication.addListeners(new ApplicationStartup ());
+        springApplication.run(args);
     }
     //配置mybatis的分页插件pageHelper
     @Bean

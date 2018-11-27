@@ -72,4 +72,5 @@ public interface TaskMapper {
      * @Date: 2018/8/20
      */
     int invalidTaskCount();
+    void cannel(@Param ("taskId") int taskId);
 }

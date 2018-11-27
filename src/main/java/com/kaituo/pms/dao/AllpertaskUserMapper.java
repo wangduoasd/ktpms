@@ -103,5 +103,5 @@ public interface AllpertaskUserMapper {
      */
     void updateTOnofinish(@Param("allpertaskUser")AllpertaskUser allpertaskUser);
 
-
+    List<AllpertaskDTO> findpertask00();
 }

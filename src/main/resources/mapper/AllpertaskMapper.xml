@@ -69,7 +69,7 @@
 	    	p_allpertask
 	    where allpertask_status &lt;3
 	</select>
-	<select id="findallpertasktset2" parameterType="java.lang.Integer" resultType="com.kaituo.pms.DTO.AllpertaskDTO1">
+	<select id="findallpertasktset2" parameterType="java.lang.Integer" resultType="com.kaituo.pms.DTO.AllpertaskDTO">
 		SELECT aa.*,u.user_name from (select t.*,tu.user_gettime,tu.user_finishtime,tu.user_status,tu.user_id from p_allpertask t LEFT JOIN p_allpertask_user tu ON tu.allpertask_id=t.allpertask_id) aa
 		LEFT JOIN v_userset u on  aa.user_id=u.user_id where aa.allpertask_status &lt; 3 and  aa.user_status=2
 	</select>
