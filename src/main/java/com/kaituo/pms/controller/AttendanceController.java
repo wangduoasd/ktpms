@@ -23,6 +23,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Slf4j
@@ -245,7 +247,34 @@ public class AttendanceController {
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
         }
     }
+    @RequestMapping("rewardExcel")
+    public void orderExport(HttpServletRequest request, HttpServletResponse response) {
 
+        // 导出文件的标题
+        String title = "奖惩导入模板" + Util.dateUtil(new Date()) + ".xls";
+        // 设置表格标题行
+        String[] headers = new String[]{"工号", "姓名", "变动值", "原因"};
+        // 使用流将数据导出
+        List<Object[]> dataList = new ArrayList<Object[]>();
+        Object[] objs = new Object[]{"10000","张三","10","迟到"};
+        dataList.add(objs);
+        OutputStream out = null;
+        try {
+            // 防止中文乱码
+            String headStr = "attachment; filename=\"" + new String(title.getBytes("gb2312"), "ISO8859-1") + "\"";
+            response.setContentType("octets/stream");
+            response.setContentType("APPLICATION/OCTET-STREAM");
+            response.setHeader("Content-Disposition", headStr);
+            out = response.getOutputStream();
+
+            ExportExcelSeedBack ex = new ExportExcelSeedBack(title, headers, dataList);
+            ex.export(out);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error(e.getMessage());
+
+        }
+    }
 //    /**
 //     * 查询所有上传文件（积分考勤表）
 //     * @return

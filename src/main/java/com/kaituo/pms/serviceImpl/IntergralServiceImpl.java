@@ -82,9 +82,9 @@ public class IntergralServiceImpl implements IntegralService {
         integral.setUserId(user.getUserId());
         integral.setIntegralStartnum(user.getUserIntegral());
         integral.setIntegralChangestr("管理员变更");
-        integral.setIntegralChangeint(ci.getInteger());
+        integral.setIntegralChangeint(ci.getChangeInt());
         integral.setIntegralOperator(userId);
-        integral.setIntegralEndnum(user.getUserIntegral() + ci.getInteger());
+        integral.setIntegralEndnum(user.getUserIntegral() + ci.getChangeInt());
         integralMapper.insertSelective(integral);
     }
 }

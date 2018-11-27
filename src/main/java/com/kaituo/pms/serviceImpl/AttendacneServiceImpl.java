@@ -7,10 +7,7 @@ import com.kaituo.pms.dao.FileUploadRecordMapper;
 import com.kaituo.pms.dao.UserMapper;
 import com.kaituo.pms.error.MyException;
 import com.kaituo.pms.service.AttendacneService;
-import com.kaituo.pms.utils.Constant;
-import com.kaituo.pms.utils.UpdateTbAttendanceThread;
-import com.kaituo.pms.utils.Util;
-import com.kaituo.pms.utils.UploadFile;
+import com.kaituo.pms.utils.*;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -20,10 +17,14 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.*;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -186,7 +187,7 @@ public class AttendacneServiceImpl implements AttendacneService {
 
             ci.setId((int)row.getCell(0).getNumericCellValue());
             ci.setUsername(String.valueOf(row.getCell(1)));
-            ci.setInteger((int)row.getCell(2).getNumericCellValue());
+            ci.setChangeInt((int)row.getCell(2).getNumericCellValue());
             allList.add(ci);
         }
 
@@ -284,6 +285,7 @@ public class AttendacneServiceImpl implements AttendacneService {
                     FileUploadRecord fileUploadRecord = new FileUploadRecord();
                     fileUploadRecord.setFileName(newFileName);
                     fileUploadRecord.setUploadfileUser(user.getUserName());
+                    fileUploadRecord.setStatus(3);
                     fileUploadRecordMapper.insertFileRecord(fileUploadRecord);
                     return "成功";
                 case Constant.FILE_UPLOSD_EMPTY:
