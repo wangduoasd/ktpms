@@ -114,7 +114,6 @@ public class AttendanceController {
                 return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
             }
             // 权限控制
-
             if(roleService.checkRole(Constant.ROLE_TASK,token1.getUserId())){
                 return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
             }
