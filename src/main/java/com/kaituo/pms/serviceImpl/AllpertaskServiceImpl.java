@@ -190,48 +190,6 @@ public class AllpertaskServiceImpl implements AllpertaskService {
     public List<AllpertaskDTO1> find_Allpertask_ofadmin() {
           List<AllpertaskDTO1> allpertaskDTO1List=allpertaskMapper.findallpertasktset1 ();
           return allpertaskDTO1List;
-//        List<AllpertaskDTO> allpertaskDTOList=new ArrayList<> ();
-//        List<Allpertask> allpertaskList = null;
-//        try {
-//            //查询未被删除的全员任务
-//
-//            allpertaskList = allpertaskMapper.findallpertask ();
-//        } catch (MyException e) {
-//           throw new MyException (CodeAndMessageEnum.FIND_PERTASK_ERROR);
-//        }
-//        for (Allpertask allpertask : allpertaskList) {
-//            AllpertaskDTO allpertaskDTO = new AllpertaskDTO ();
-//            //将任务信息复制到dto中
-//            BeanUtils.copyProperties (allpertask, allpertaskDTO);
-//            List<Integer> userids= null;
-//            try {
-//                //查询userid集合
-//                userids = allpertaskUserMapper.findAllpertask_userid (allpertask.getAllpertask_id ());
-//            } catch (MyException e) {
-//                throw new MyException (CodeAndMessageEnum.GETALLPERTASK_COUNT_FAIL);
-//            }
-//            List<GetalltaskperDTO> getalltaskperList = new ArrayList<> ();
-//            //查询username，并加入list集合
-//            for(Integer userid:userids) {
-//                //这是视图获取的，如果出现人员看不到的话，请更改这里,我调用的是别人的mapper
-//                //todo 怪我咯
-//                String username=userMapper.getUserById (userid).getUserName ();
-//                List<AllpertaskUser> allpertaskUserlist =allpertaskUserMapper.findAllpertaskbyids(allpertask.getAllpertask_id (),userid);
-//               for(AllpertaskUser allpertaskUser:allpertaskUserlist) {
-//                   GetalltaskperDTO getalltaskperDTO = new GetalltaskperDTO ();
-//                   getalltaskperDTO.setUserid (userid);
-//                   getalltaskperDTO.setUsername (username);
-//                   getalltaskperDTO.setGettime (allpertaskUser.getUser_gettime ());
-//                   getalltaskperDTO.setFinishtime (allpertaskUser.getUser_finishtime ());
-//                   getalltaskperList.add (getalltaskperDTO);
-//
-//               }
-//        }
-//            allpertaskDTO.setGetalltaskperList (getalltaskperList);
-//            allpertaskDTOList.add (allpertaskDTO);
-//        }
-//        return allpertaskDTOList;
-    }
 
     /**
      * 审核任务列表
