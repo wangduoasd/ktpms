@@ -16,19 +16,18 @@
     <select id="findpertask1" parameterType="java.lang.Integer" resultType="com.kaituo.pms.DTO.AllpertaskDTO">
         select * from(select tu.*,t.user_finishtime,t.user_gettime,t.user_status,t.user_id from p_allpertask tu LEFT JOIN p_allpertask_user t ON tu.allpertask_id=t.allpertask_id)aa
         where aa.allpertask_status &lt;2 and  aa.user_status=1 AND aa.user_id=#{user_id,jdbcType=INTEGER}
-        order by allpertask_status,allpertask_currenttime desc
+
     </select>
 
     <select id="findpertask2" parameterType="java.lang.Integer" resultType="com.kaituo.pms.DTO.AllpertaskDTO">
         select * from(select tu.*,t.user_finishtime,t.user_gettime,t.user_status,t.user_id from p_allpertask tu LEFT JOIN p_allpertask_user t ON tu.allpertask_id=t.allpertask_id)aa
         where aa.allpertask_status &lt;3 and  aa.user_status=2 AND aa.user_id=#{user_id,jdbcType=INTEGER}
-        order by allpertask_status,allpertask_currenttime desc
+
     </select>
 
     <select id="findpertask3" parameterType="java.lang.Integer" resultType="com.kaituo.pms.DTO.AllpertaskDTO">
       select * from(select tu.*,t.user_finishtime,t.user_gettime,t.user_status,t.user_id from p_allpertask tu LEFT JOIN p_allpertask_user t ON tu.allpertask_id=t.allpertask_id)aa
         where  aa.user_status=3 AND aa.user_id=#{user_id,jdbcType=INTEGER}
-        order by allpertask_status,allpertask_currenttime desc
     </select>
 
     <delete id="deleteAllpertaskUser" parameterType="java.lang.Integer">

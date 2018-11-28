@@ -135,6 +135,12 @@ public class AllpertaskController {
      */
    @GetMapping(value = "authority/five/tasks/manage/select/{pn}")
     public OutPut AllpertaskList(@PathVariable(value="pn")Integer pn){
+       String token =ContextHolderUtils.getRequest().getHeader("token");
+       // 检查token并获得userID
+       Token token1 = tokenService.selectUserIdByToken(token);
+       if (null == token1){
+           return  OutPut.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+       }
         //引入PageHelper分页插件
         //查询只需要调用,传入的页码，以及每页的大小
         PageHelper.startPage(pn,10);
@@ -160,7 +166,12 @@ public class AllpertaskController {
     public OutPut CheckAllpertaskList(@PathVariable(value="pn")Integer pn){
         //引入PageHelper分页插件
         //查询只需要调用,传入的页码，以及每页的大小
-
+        String token =ContextHolderUtils.getRequest().getHeader("token");
+        // 检查token并获得userID
+        Token token1 = tokenService.selectUserIdByToken(token);
+        if (null == token1){
+            return  OutPut.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+        }
 
         //startpage后面紧的这个查询就是一个分页查询
         try {
@@ -275,6 +286,12 @@ public class AllpertaskController {
      */
     @GetMapping(value = "authority/five/tasks/select/{pn}")
     public OutPut AllstafftaskList(@PathVariable("pn")int pn){
+        String token =ContextHolderUtils.getRequest().getHeader("token");
+        // 检查token并获得userID
+        Token token1 = tokenService.selectUserIdByToken(token);
+        if (null == token1){
+            return  OutPut.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+        }
         //引入PageHelper分页插件
         //查询只需要调用,传入的页码，以及每页的大小
 
@@ -373,9 +390,16 @@ public class AllpertaskController {
      */
     @GetMapping(value = "authority/five/tasks/select/getper/{allpertask_id}")
     public OutPut getper(@PathVariable("allpertask_id")int allpertask_id){
+        String token =ContextHolderUtils.getRequest().getHeader("token");
+        // 检查token并获得userID
+        Token token1 = tokenService.selectUserIdByToken(token);
+        if (null == token1){
+            return  OutPut.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
+        }
         //引入PageHelper分页插件
         //查询只需要调用,传入的页码，以及每页的大小
         //startpage后面紧的这个查询就是一个分页查询
+
         try {
            List<GetalltaskperDTO> getalltaskperDTOList= allpertaskService.findpertest (allpertask_id);
             System.out.println (getalltaskperDTOList);

@@ -71,6 +71,8 @@
 	    from
 	    	p_allpertask
 	    where allpertask_status &lt;3
+	    order by allpertask_status asc,
+	     allpertask_currenttime DESC
 	</select>
 	<select id="findallpertasktset2" parameterType="java.lang.Integer" resultType="com.kaituo.pms.DTO.AllpertaskDTO1">
 		SELECT aa.*,u.user_name from (select t.*,tu.user_gettime,tu.user_finishtime,tu.user_status,tu.user_id from p_allpertask t LEFT JOIN p_allpertask_user tu ON tu.allpertask_id=t.allpertask_id) aa

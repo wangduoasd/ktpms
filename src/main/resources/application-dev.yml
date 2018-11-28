@@ -3,21 +3,7 @@ server:
   port: 8080
   tomcat: #这个应该是配置中文乱码问题
     uri-encoding: UTF-8
-#192.168.3.124:3306
-#文件配置
-#file:
-#  dir: D:\\fileUpload\\
-#simText: txt,html,xml,java,properties,sql
-#converted:
-#  file:
-#    charset: GBK
-#media: mp3,mp4,flv,rmvb
-#office:
-#  home: C:\\Program Files (x86)\\OpenOffice 4
-#
 spring:
-#  redisson:
-#    address: https://127.0.0.1:6379
   datasource: #配置数据库
     url: jdbc:mysql://192.168.3.130:3306/jifen?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&useSSL=false
     username: root  #需要更改这三个属性！
@@ -34,8 +20,6 @@ spring:
     multipart:
       max-file-size: 100MB
       max-request-size: 100MB
-#    resources:
-#      static-locations: classpath:/META-INF/resources/,classpath:/resources/,classpath:/static/,classpath:/public/,file:${file.dir}
 #配置mybatis
 mybatis:
   mapper-locations: classpath:mapper/*.xml
