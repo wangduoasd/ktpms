@@ -475,17 +475,27 @@ public class AllpertaskServiceImpl implements AllpertaskService {
      */
     @Override
     public String get_Allpertask(int allpertaskid, int userid) throws InterruptedException {
+        User user = null;
+        try {
+            user = userMapper.selectByPrimaryKey (userid);
+        } catch (MyException e) {
+            throw new MyException (CodeAndMessageEnum.GET_USERINFORMATION_ERROR);
+        }
         Allpertask allpertask = null;
         try {
             allpertask = allpertaskMapper.findallpertaskbyid (allpertaskid);
         } catch (MyException e) {
             throw new MyException (CodeAndMessageEnum.FIND_PERTASK_ERROR);
         }
+      if(user.getUserIntegral()<allpertask.getAllpertask_price()){
+          throw new MyException (CodeAndMessageEnum.JIGEN_ERROR);
+      }
         try {
             if(allpertask.getAllpertask_status ()!=1){
                 String message="任务未开始";
                 return message;
             }
+
             AllpertaskUser allpertaskUser = new AllpertaskUser ();
             allpertaskUser.setUser_id (userid);
             allpertaskUser.setUser_status (1);
@@ -507,12 +517,7 @@ public class AllpertaskServiceImpl implements AllpertaskService {
         //扣除押金
 
         //对积分表做减法，需要积分表操作,获取user表中的积分
-        User user = null;
-        try {
-            user = userMapper.selectByPrimaryKey (userid);
-        } catch (MyException e) {
-            throw new MyException (CodeAndMessageEnum.GET_USERINFORMATION_ERROR);
-        }
+
         int integral = user.getUserIntegral ();//当前用户总积分
         int price = allpertask.getAllpertask_price ();//扣除的积分
         int count = integral - price;//扣除后的总积分

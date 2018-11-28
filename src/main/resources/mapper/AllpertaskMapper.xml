@@ -60,6 +60,9 @@
 	    from
 	    	p_allpertask
 	    where allpertask_status &lt;2
+	    order by
+	    	allpertask_currenttime
+	    	desc
 	</select>
 
 	<select id="findallpertasktset1" parameterType="java.lang.Integer" resultType="com.kaituo.pms.DTO.AllpertaskDTO1">

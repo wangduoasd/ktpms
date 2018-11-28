@@ -622,11 +622,14 @@ public class UserController {
                 return OutJSON.getInstance(CodeAndMessageEnum.USER_LOGIN_ERROR);
             }
             String passwordMD5 = MD5Util.getMD5(password);
+
             Login login = userService.login(userId, passwordMD5);
+
             if (login == null) {
                 return OutJSON.getInstance(CodeAndMessageEnum.USER_LOGIN_ERROR);
             }
             String token = JwtToken.createToken(userId);
+            System.out.println(token);
             login.setToken(token);
 
             if (tokenService.haveToken(userId)){

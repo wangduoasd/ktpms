@@ -162,7 +162,8 @@ NOREASON("-48" , "未知错误"),
     GIVEUPALLPERTASK_FAIL("-73","取消(完成)任务失败"),
     //取消任务
     CANNEL_TASK_ERROR("-74" , "任务取消失败"),
-    CANNEL_TASK_SUCCESS("-75" , "任务取消成功")
+    CANNEL_TASK_SUCCESS("-75" , "任务取消成功"),
+    JIGEN_ERROR("-76" , "积分不足")
     ;
 
     private String code;

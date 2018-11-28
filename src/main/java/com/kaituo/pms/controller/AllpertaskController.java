@@ -311,9 +311,6 @@ public class AllpertaskController {
             }
             // 权限控制
 
-            if(roleService.checkRole(Constant.ROLE_TASK,token1.getUserId())){
-                return  OutPut.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
-            }
             String message=allpertaskService.get_Allpertask (allpertask_id,userId);
             if(message!=null){
                 return ResultUtil.error ("99",message);
@@ -340,10 +337,6 @@ public class AllpertaskController {
                 return OutPut.getInstance (CodeAndMessageEnum.TOKEN_EXPIRED);
             }
             // 权限控制
-
-            if (roleService.checkRole (Constant.ROLE_TASK, token1.getUserId ())) {
-                return OutPut.getInstance (CodeAndMessageEnum.TOKEN_EXPIRED);
-            }
             allpertaskService.giveup_allpertask (allpertask_id, userId);
             return ResultUtil.success ();
         } catch (MyException e) {
@@ -366,10 +359,6 @@ public class AllpertaskController {
                     return  OutPut.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
                 }
                 // 权限控制
-
-                if(roleService.checkRole(Constant.ROLE_TASK,token1.getUserId())){
-                    return  OutPut.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
-                }
                 allpertaskService.finish_allpertask (allpertask_id,userId);
                 return ResultUtil.success ();
             } catch (MyException e) {

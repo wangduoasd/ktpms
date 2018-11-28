@@ -114,7 +114,6 @@ public class FileController {
         if(roleService.checkRole(Constant.ROLE_TASK,token1.getUserId())){
             new ObjectMapper().writeValueAsString(new ReturnResponse<String>(0, "请重新登录", null));
         }
-        System.out.println(fileName);
         if (fileName.contains("/")) {
             fileName = fileName.substring(fileName.lastIndexOf("/") + 1);
         }
@@ -138,7 +137,12 @@ public class FileController {
      */
     @RequestMapping(value = "listFiles", method = RequestMethod.GET)
     public String getFiles(@RequestParam Integer status,@RequestParam Integer pageNO,@RequestParam String  fileName) throws JsonProcessingException {
-        System.out.println(pageNO);
+        String token =ContextHolderUtils.getRequest().getHeader("token");
+        // 检查token并获得userID
+        Token token1 = tokenService.selectUserIdByToken(token);
+        if (null == token1){
+            new ObjectMapper().writeValueAsString(new ReturnResponse<String>(0, "请重新登录", null));
+        }
         //从文件夹中获取文件列表
 //        List<Map<String, String>> list = Lists.newArrayList();
 //        File file = new File(fileDir + demoPath);
@@ -167,7 +171,12 @@ public class FileController {
     @RequestMapping(value = "/download", method = RequestMethod.GET)
     public String download(HttpServletRequest request, HttpServletResponse response, String fileName,
                            String userName) throws JsonProcessingException {
-
+        String token =ContextHolderUtils.getRequest().getHeader("token");
+        // 检查token并获得userID
+        Token token1 = tokenService.selectUserIdByToken(token);
+        if (null == token1){
+            new ObjectMapper().writeValueAsString(new ReturnResponse<String>(0, "请重新登录", null));
+        }
         try {
             boolean message= new UploadFile().download(request,response,fileName);
             FileUploadRecord fileUploadRecords=fileUploadRecordMapper.selectByFileName(fileName);
@@ -193,6 +202,12 @@ public class FileController {
     @RequestMapping(value = "/reading", method = RequestMethod.GET)
     public String reading(HttpServletRequest request, HttpServletResponse response, String fileName,
                            String userName) throws JsonProcessingException {
+        String token =ContextHolderUtils.getRequest().getHeader("token");
+        // 检查token并获得userID
+        Token token1 = tokenService.selectUserIdByToken(token);
+        if (null == token1){
+            new ObjectMapper().writeValueAsString(new ReturnResponse<String>(0, "请重新登录", null));
+        }
         try {
             FileUploadRecord fileUploadRecords=fileUploadRecordMapper.selectByFileName(fileName);
             if(fileUploadRecords!=null&&userName!=null){
@@ -216,49 +231,13 @@ public class FileController {
      */
     @RequestMapping(value = "listFileRecord", method = RequestMethod.POST)
     public String listFileRecord() throws JsonProcessingException {
+        String token =ContextHolderUtils.getRequest().getHeader("token");
+        // 检查token并获得userID
+        Token token1 = tokenService.selectUserIdByToken(token);
+        if (null == token1){
+            new ObjectMapper().writeValueAsString(new ReturnResponse<String>(0, "请重新登录", null));
+        }
         List<FileRecord> list=fileRecordMapper.selectAllFileRecord();
         return new ObjectMapper().writeValueAsString(list);
     }
-//    /**
-//     * 获取文件浏览次数
-//     * @return
-//     * @throws JsonProcessingException
-//     */
-//    @RequestMapping(value = "listFileRecordCount", method = RequestMethod.POST)
-//    public String listFileRecordCount() throws JsonProcessingException {
-//        List<FileUploadRecord> list=fileUploadRecordMapper.selectAllRecord();
-//        return new ObjectMapper().writeValueAsString(list);
-//    }
-
-//    /**
-//     * 删除服务器文件（积分考勤表）及数据库记录
-//     * @param fileName
-//     * @return
-//     * @throws IOException
-//     */
-//    @PostMapping("/deleteFile")
-//    public OutJSON deleteFile(String fileName)  {
-//        try {
-//            String token = ContextHolderUtils.getRequest().getHeader("token");
-//            // 检查token并获得userID
-//            Token token1 = tokenService.selectUserIdByToken(token);
-//            if (null == token1){
-//                return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
-//            }
-//            // 权限控制
-//
-//            if(roleService.checkRole(Constant.ROLE_TASK,token1.getUserId())){
-//                return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
-//            }
-//            boolean flag=attendacneService.downFile(fileName);
-//            if(flag){
-//                return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,flag);
-//            }else {
-//                return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR,flag);
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
-//        }
-//    }
 }

@@ -96,13 +96,19 @@ public class AttendanceController {
      */
     @GetMapping(value = "selectAttendance")
     @ResponseBody
-    public OutJSON selectAttendance() {
+    public String  selectAttendance() throws JsonProcessingException{
+        String token =ContextHolderUtils.getRequest().getHeader("token");
+        // 检查token并获得userID
+        Token token1 = tokenService.selectUserIdByToken(token);
+        if (null == token1){
+            new ObjectMapper().writeValueAsString(new ReturnResponse<String>(0, "请重新登录", null));
+        }
         try {
             List<Attendance> attendances = attendacneService.selectAll();
             List<AttendanceDTO> attendanceDTOS=Util.AttendanceConv(attendances);
-            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,attendanceDTOS);
+            return new ObjectMapper().writeValueAsString(new ReturnResponse<String>(1, "SUCCESS", null));
         } catch (Exception e) {
-            return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
+            return new ObjectMapper().writeValueAsString(new ReturnResponse<String>(-1, "FAILURE", null));
         }
     }
     /**
@@ -158,27 +164,6 @@ public class AttendanceController {
             return new ObjectMapper().writeValueAsString(new ReturnResponse<String>(-1, "FAILURE", null));
         }
     }
-
-
-
-    /**
-     * 导入Excel表格，加减积分
-     */
-    @PostMapping("uploadExcelToIntergral")
-    @ResponseBody
-    public OutJSON uploadExcelToIntergral(@RequestParam("file") MultipartFile file){
-        String fileName = file.getOriginalFilename();
-        try {
-            List<Object> objects = attendacneService.uploadExcelToIntergral(fileName, file);
-            return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS,objects);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return OutJSON.getInstance(CodeAndMessageEnum.ALL_ERROR);
-        }
-
-    }
-
-
 
     /**
      * 更新计算过后数据的员工积分，即合并积分

@@ -298,9 +298,9 @@ public class Util {
         String relativePath = "";
 
         if(os.toLowerCase().startsWith("win")){
-            relativePath = "/excel/";
+            relativePath = "/file/";
         } else {
-            relativePath = "/exc/";
+            relativePath = "/file/";
         }
         relativePath = relativePath.replace("/" , seperator);
         return relativePath;
