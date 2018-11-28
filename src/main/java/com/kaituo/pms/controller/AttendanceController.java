@@ -26,7 +26,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -128,7 +130,18 @@ public class AttendanceController {
             if(roleService.checkRole(Constant.ROLE_TASK,token1.getUserId())){
                 return  OutJSON.getInstance(CodeAndMessageEnum.TOKEN_EXPIRED);
             }
+            //传入参数，字符串2018-10-12转换成时间，为 2018-10-12 08:00:00,需要转换日期，减去八小时
             for (int i = 0; i < attendanceList.size(); i++) {
+                SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                if (attendanceList.get(i).getStarttimeot() != null) {
+                    Calendar ca = Calendar.getInstance();
+                    ca.setTime(attendanceList.get(i).getStarttimeot());
+                    ca.add(Calendar.HOUR_OF_DAY, -8);
+                    attendanceList.get(i).setStarttimeot(f.parse(f.format(ca.getTime())));
+                    ca.setTime(attendanceList.get(i).getEndtimeot());
+                    ca.add(Calendar.HOUR_OF_DAY, -8);
+                    attendanceList.get(i).setEndtimeot(f.parse(f.format(ca.getTime())));
+                }
                     attendacneService.updateByExample(attendanceList.get(i));
             }
             return OutJSON.getInstance(CodeAndMessageEnum.ALL_SUCCESS);

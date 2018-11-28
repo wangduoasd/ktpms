@@ -43,7 +43,7 @@ public class AllpertaskDTO {
     @JsonFormat( timezone = "GMT+8" ,pattern = "yyyy-MM-dd HH:mm:ss")
     private Date user_gettime;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @JsonFormat( timezone = "GMT" ,pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat( timezone = "GMT+8" ,pattern = "yyyy-MM-dd HH:mm:ss")
     private Date user_finishtime;
     private Integer user_status;
     private Integer user_id;
