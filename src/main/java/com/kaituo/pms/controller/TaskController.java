@@ -350,14 +350,19 @@ public class TaskController {
                 case Constant.RISK_CONTROL_CENTER_TASK_MANAGEMENT_RELEASED_TASK:
                     //查询所有已发布任务的信息
                     //分页
+                    /**
+                     * 查询全部状态返回任务大厅
+                     */
                     return taskService.listPublishedTask(pageNamber , 10);
                 // 待审核页面调用
                 case Constant.RISK_CONTROL_CENTER_TASK_MANAGEMENT_PENDING_TASK:
 
                     //查询所有状态为待审核的任务的信息
                     //分页
+                    //num用于区别单次和循环任务
                     return taskService.listPendingTask(pageNamber , 10,  num);
                 // 失效任务页面调用
+                //2.1弃置
                 case Constant.RISK_CONTROL_CENTER_TASK_MANAGEMENT_INVALID_TASK:
                     //查询所有当前id的已完成数据
                     //分页
