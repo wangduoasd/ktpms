@@ -19,7 +19,7 @@ spring:
 #  redisson:
 #    address: https://127.0.0.1:6379
   datasource: #配置数据库
-    url: jdbc:mysql://192.168.3.128:3306/jifen?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&useSSL=false
+    url: jdbc:mysql://192.168.3.130:3306/jifen?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&useSSL=false
     username: root  #需要更改这三个属性！
     password: 1234
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -36,7 +36,6 @@ spring:
       max-request-size: 100MB
 #    resources:
 #      static-locations: classpath:/META-INF/resources/,classpath:/resources/,classpath:/static/,classpath:/public/,file:${file.dir}
-
 #配置mybatis
 mybatis:
   mapper-locations: classpath:mapper/*.xml
