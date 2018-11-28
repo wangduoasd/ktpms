@@ -388,7 +388,7 @@
   </update>
   <!--风控委查询已发布任务-->
   <select id="listPublishedTask" resultMap="BaseResultMap">
-    select * from p_task t where t.task_status = 1 or t.task_status = 2 or t.task_status = 4 order by task_status desc
+    select * from p_task  order by task_status desc
   </select>
     <!--风控委查询已发布任务总数-->
     <select id="publishedTaskCount" resultType="java.lang.Integer">
