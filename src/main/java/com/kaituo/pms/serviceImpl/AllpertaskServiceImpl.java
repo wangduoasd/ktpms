@@ -188,9 +188,9 @@ public class AllpertaskServiceImpl implements AllpertaskService {
      */
     @Override
     public List<AllpertaskDTO1> find_Allpertask_ofadmin() {
-          List<AllpertaskDTO1> allpertaskDTO1List=allpertaskMapper.findallpertasktset1 ();
-          return allpertaskDTO1List;
-
+        List<AllpertaskDTO1> allpertaskDTO1List = allpertaskMapper.findallpertasktset1 ();
+        return allpertaskDTO1List;
+    }
     /**
      * 审核任务列表
      * @return allpertaskDTOList
