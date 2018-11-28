@@ -206,7 +206,6 @@ public class TaskServiceImpl implements TaskService {
         TaskExample.Criteria criteria = example.createCriteria();
         example.setOrderByClause("task_starttime DESC");
         criteria.andTaskStatusEqualTo(status);
-
         return taskMapper.countByExample(example);
     }
 
