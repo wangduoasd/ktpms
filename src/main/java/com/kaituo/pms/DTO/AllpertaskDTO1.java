@@ -42,10 +42,10 @@ public class AllpertaskDTO1 {
     private int userid;
     private String username;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @JsonFormat( pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8" , pattern = "yyyy-MM-dd HH:mm:ss")
     private Date user_gettime;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @JsonFormat( pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8" , pattern = "yyyy-MM-dd HH:mm:ss")
     private Date user_finishtime;
     private Integer user_status;
     List<GetalltaskperDTO> getalltaskperDTOS;

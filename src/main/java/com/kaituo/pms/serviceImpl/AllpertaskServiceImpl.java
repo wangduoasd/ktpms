@@ -500,11 +500,13 @@ public class AllpertaskServiceImpl implements AllpertaskService {
             allpertaskUser.setUser_id (userid);
             allpertaskUser.setUser_status (1);
             Date time=new Date();
+            System.out.println(time);
             allpertaskUser.setUser_gettime (time);
             allpertaskUser.setAllpertask_id (allpertaskid);
 
             AllpertaskUser allpertaskUser2=allpertaskUserMapper.findAllpertaskbyid0(allpertaskid, userid);
            if(allpertaskUser2!=null) {
+               System.out.println(allpertaskUser);
                allpertaskUserMapper.updateuserbyids (allpertaskUser);
            }else {
                String message="您已领取该任务";
