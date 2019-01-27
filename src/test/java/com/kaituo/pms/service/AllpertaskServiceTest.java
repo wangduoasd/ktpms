@@ -10,10 +10,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 
-import java.sql.Date;
+import java.util.Collection;
+import java.util.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.concurrent.ConcurrentMap;
 
 import static org.junit.Assert.*;
 
@@ -43,10 +45,20 @@ public class AllpertaskServiceTest {
 
     @Test
     public void delete_Allpertask() {
+          Date bb=new Date(1970);
+          Date aa=new Date(1900,1,1);
 
     }
 
+    public  void aa(String str){
+         str+="aaaaa";
+    }
     @Test
-    public void update_Allpertask() {
+    public  void update_Allpertask() {
+
+         String str="ssss";
+         str="111";
+        aa(str);
+        System.out.println (str);
     }
 }

@@ -5,7 +5,7 @@ server:
     uri-encoding: UTF-8
 spring:
   datasource: #配置数据库
-    url: jdbc:mysql://192.168.3.130:3306/jifen?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&useSSL=false
+    url: jdbc:mysql://localhost:3306/jifen?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&useSSL=false
     username: root  #需要更改这三个属性！
     password: 1234
     driver-class-name: com.mysql.cj.jdbc.Driver

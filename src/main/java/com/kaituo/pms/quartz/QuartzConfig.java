@@ -22,9 +22,7 @@ public class QuartzConfig {
     }
 
     /**
-     * 配置SchedulerFactoryBean
-     * <p>
-     * 将一个方法产生为Bean并交给Spring容器管理
+     * l
      */
     @Bean
     public SchedulerFactoryBean schedulerFactoryBean() {
