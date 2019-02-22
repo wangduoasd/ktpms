@@ -104,7 +104,6 @@ public class AllpertaskServiceImpl implements AllpertaskService {
         if(endtime.after (new Date ())){
             SimpleDateFormat formatter = new SimpleDateFormat("ss mm HH dd MM ? yyyy");
             String endCron = formatter.format(endtime);
-
             try {
                 quartzManager.addjob (
                         name,
